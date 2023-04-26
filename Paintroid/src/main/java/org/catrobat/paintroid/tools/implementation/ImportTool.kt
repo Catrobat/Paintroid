@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ *  Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,7 +20,9 @@ package org.catrobat.paintroid.tools.implementation
 
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.PointF
 import android.os.Bundle
+import androidx.test.espresso.idling.CountingIdlingResource
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.tools.ContextCallback
 import org.catrobat.paintroid.tools.ToolPaint
@@ -37,14 +39,17 @@ class ImportTool(
     toolOptionsViewController: ToolOptionsViewController,
     toolPaint: ToolPaint,
     workspace: Workspace,
+    idlingResource: CountingIdlingResource,
     commandManager: CommandManager,
     override var drawTime: Long
 ) : BaseToolWithRectangleShape(
-    contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager
+    contextCallback, toolOptionsViewController, toolPaint, workspace, idlingResource, commandManager
 ) {
 
     override val toolType: ToolType
         get() = ToolType.IMPORTPNG
+
+    override fun toolPositionCoordinates(coordinate: PointF): PointF = coordinate
 
     init {
         rotationEnabled = true
@@ -70,7 +75,7 @@ class ImportTool(
     override fun onClickOnButton() {
         drawingBitmap?.let {
             highlightBox()
-            val command = commandFactory.createStampCommand(
+            val command = commandFactory.createClipboardCommand(
                 it,
                 toolPosition,
                 boxWidth,

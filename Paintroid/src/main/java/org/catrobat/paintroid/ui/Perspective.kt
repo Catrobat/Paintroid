@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,6 +22,7 @@ import android.graphics.Canvas
 import android.graphics.PointF
 import android.graphics.Rect
 import androidx.annotation.VisibleForTesting
+import org.catrobat.paintroid.MainActivity
 import kotlin.jvm.Synchronized
 import kotlin.math.max
 import kotlin.math.min
@@ -29,14 +30,11 @@ import kotlin.math.min
 const val MIN_SCALE = 0.1f
 const val MAX_SCALE = 100f
 private const val SCROLL_BORDER = 50f
-private const val BORDER_ZOOM_FACTOR = 0.95f
 
 open class Perspective(private var bitmapWidth: Int, private var bitmapHeight: Int) {
-    @VisibleForTesting
     @JvmField
     var surfaceWidth = 0
 
-    @VisibleForTesting
     @JvmField
     var surfaceHeight = 0
 
@@ -51,14 +49,11 @@ open class Perspective(private var bitmapWidth: Int, private var bitmapHeight: I
     @VisibleForTesting
     var surfaceScale = 1f
 
-    @VisibleForTesting
     @JvmField
     var surfaceTranslationX = 0f
 
-    @VisibleForTesting
     @JvmField
     var surfaceTranslationY = 0f
-    var fullscreen = false
 
     @VisibleForTesting
     var initialTranslationY = 0f
@@ -72,22 +67,39 @@ open class Perspective(private var bitmapWidth: Int, private var bitmapHeight: I
 
     val scaleForCenterBitmap: Float
         get() {
-            val screenSizeRatio = surfaceWidth.toFloat() / surfaceHeight
-            val bitmapSizeRatio = bitmapWidth.toFloat() / bitmapHeight
-            var ratioDependentScale = if (screenSizeRatio > bitmapSizeRatio) {
-                surfaceHeight.toFloat() / bitmapHeight
-            } else {
-                surfaceWidth.toFloat() / bitmapWidth
+            var ratioDependentScale = 0f
+            val displayHeight: Int? = mainActivity?.resources?.displayMetrics?.heightPixels
+            var screenSizeRatio = 0f
+
+            if (displayHeight != null) {
+                screenSizeRatio = surfaceWidth.toFloat() / displayHeight.toFloat()
             }
+
+            val bitmapSizeRatio = bitmapWidth.toFloat() / bitmapHeight
+            if (screenSizeRatio > bitmapSizeRatio) {
+                if (displayHeight != null) {
+                    ratioDependentScale = displayHeight.toFloat() / bitmapHeight.toFloat()
+                }
+            } else {
+                ratioDependentScale = surfaceWidth.toFloat() / bitmapWidth.toFloat()
+            }
+
             ratioDependentScale = min(ratioDependentScale, 1f)
             ratioDependentScale = max(ratioDependentScale, MIN_SCALE)
+
             return ratioDependentScale
         }
 
+    // counts to 2 at the start of the app. makes it so that the reset method will
+    // be called at the start of the app in Drawingsurface.kt surfaceChanged.
+    var callResetScaleAndTransformationOnStartUp = 0
     private var initialTranslationX = 0f
+    var oldHeight = 0f
+    var mainActivity: MainActivity? = null
 
     @Synchronized
     fun setSurfaceFrame(surfaceFrame: Rect) {
+        if (surfaceHeight == 0) oldHeight = surfaceFrame.bottom.toFloat()
         surfaceFrame.apply {
             surfaceWidth = right
             surfaceCenterX = exactCenterX()
@@ -114,8 +126,31 @@ open class Perspective(private var bitmapWidth: Int, private var bitmapHeight: I
             surfaceTranslationY = surfaceHeight / 2f - bitmapHeight / 2f
             initialTranslationY = surfaceTranslationY
         }
-        val zoomFactor = if (fullscreen) 1.0f else BORDER_ZOOM_FACTOR
+        val zoomFactor = calculateZoomFactor()
+
         surfaceScale = scaleForCenterBitmap * zoomFactor
+    }
+
+    @Synchronized
+    fun calculateZoomFactor(): Float {
+        val displayHeight: Int? = mainActivity?.resources?.displayMetrics?.heightPixels
+        if (bitmapHeight > bitmapWidth) {
+            if (bitmapHeight > surfaceHeight) {
+                return 1.0f
+            } else {
+                if (displayHeight != null) {
+                    return displayHeight.toFloat() / bitmapHeight.toFloat()
+                } else {
+                    return surfaceHeight.toFloat() / bitmapHeight.toFloat()
+                }
+            }
+        } else {
+            if (bitmapWidth >= surfaceWidth) {
+                return 1.0f
+            } else {
+                return surfaceWidth.toFloat() / bitmapWidth.toFloat()
+            }
+        }
     }
 
     @Synchronized
@@ -175,15 +210,5 @@ open class Perspective(private var bitmapWidth: Int, private var bitmapHeight: I
     fun applyToCanvas(canvas: Canvas) {
         canvas.scale(surfaceScale, surfaceScale, surfaceCenterX, surfaceCenterY)
         canvas.translate(surfaceTranslationX, surfaceTranslationY)
-    }
-
-    open fun enterFullscreen() {
-        fullscreen = true
-        resetScaleAndTranslation()
-    }
-
-    open fun exitFullscreen() {
-        fullscreen = false
-        resetScaleAndTranslation()
     }
 }

@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ *  Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,6 +18,7 @@
  */
 package org.catrobat.paintroid.tools.options
 
+import android.view.View
 import org.catrobat.paintroid.tools.FontType
 
 interface TextToolOptionsView {
@@ -31,6 +32,10 @@ interface TextToolOptionsView {
     )
 
     fun setCallback(listener: Callback)
+
+    fun getTopLayout(): View
+
+    fun getBottomLayout(): View
 
     interface Callback {
         fun setText(text: String)

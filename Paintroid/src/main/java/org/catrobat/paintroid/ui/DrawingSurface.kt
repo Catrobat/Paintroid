@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ *  Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,33 +26,30 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PixelFormat
-import android.graphics.Point
 import android.graphics.PointF
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
 import android.graphics.Rect
 import android.graphics.Shader
 import android.os.Build
-import android.os.Handler
-import android.os.Looper
 import android.util.AttributeSet
 import android.util.Log
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import androidx.core.content.ContextCompat
+import androidx.test.espresso.idling.CountingIdlingResource
 import androidx.fragment.app.FragmentManager
 import org.catrobat.paintroid.R
-import org.catrobat.paintroid.colorpicker.ColorPickerDialog
-import org.catrobat.paintroid.common.COLOR_PICKER_DIALOG_TAG
+import org.catrobat.paintroid.UserPreferences
 import org.catrobat.paintroid.contract.LayerContracts
 import org.catrobat.paintroid.listener.DrawingSurfaceListener
-import org.catrobat.paintroid.listener.DrawingSurfaceListener.AutoScrollTask
-import org.catrobat.paintroid.listener.DrawingSurfaceListener.AutoScrollTaskCallback
 import org.catrobat.paintroid.listener.DrawingSurfaceListener.DrawingSurfaceListenerCallback
 import org.catrobat.paintroid.tools.Tool
 import org.catrobat.paintroid.tools.ToolReference
-import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
+import org.catrobat.paintroid.ui.zoomwindow.ZoomWindowController
+import org.catrobat.paintroid.ui.viewholder.DrawerLayoutViewHolder
+import org.catrobat.paintroid.ui.zoomwindow.DefaultZoomWindowController
 
 open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
     private val canvasRect = Rect()
@@ -68,7 +65,11 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
     private lateinit var perspective: Perspective
     private lateinit var toolReference: ToolReference
     private lateinit var toolOptionsViewController: ToolOptionsViewController
+    private lateinit var drawerLayoutViewHolder: DrawerLayoutViewHolder
     private lateinit var fragmentManager: FragmentManager
+    private lateinit var idlingResource: CountingIdlingResource
+    private lateinit var zoomController: ZoomWindowController
+    private lateinit var sharedPreferences: UserPreferences
 
     constructor(context: Context?, attrSet: AttributeSet?) : super(context, attrSet)
 
@@ -88,8 +89,6 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
         val shader = BitmapShader(checkerboard, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT)
         checkeredPattern.shader = shader
         checkeredPattern.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC)
-        val handler = Handler(Looper.getMainLooper())
-        val autoScrollTask = AutoScrollTask(handler, AutoScrollTaskCallbackImpl())
         val density = resources.displayMetrics.density
         val callback: DrawingSurfaceListenerCallback = object : DrawingSurfaceListenerCallback {
             override fun getCurrentTool(): Tool? = toolReference.tool
@@ -109,7 +108,7 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
             override fun getToolOptionsViewController(): ToolOptionsViewController =
                 toolOptionsViewController
         }
-        drawingSurfaceListener = DrawingSurfaceListener(autoScrollTask, callback, density)
+        drawingSurfaceListener = DrawingSurfaceListener(callback, density)
         setOnTouchListener(drawingSurfaceListener)
     }
 
@@ -121,14 +120,23 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
         layerModel: LayerContracts.Model,
         perspective: Perspective,
         toolReference: ToolReference,
+        idlingResource: CountingIdlingResource,
+        fragmentManager: FragmentManager,
         toolOptionsViewController: ToolOptionsViewController,
-        fragmentManager: FragmentManager
+        drawerLayoutViewHolder: DrawerLayoutViewHolder,
+        zoomController: ZoomWindowController,
+        sharedPreferences: UserPreferences
     ) {
         this.layerModel = layerModel
         this.perspective = perspective
         this.toolReference = toolReference
         this.toolOptionsViewController = toolOptionsViewController
+        this.idlingResource = idlingResource
         this.fragmentManager = fragmentManager
+        this.drawerLayoutViewHolder = drawerLayoutViewHolder
+        this.zoomController = zoomController
+        drawingSurfaceListener.setZoomController(zoomController, sharedPreferences)
+        this.sharedPreferences = sharedPreferences
     }
 
     @Synchronized
@@ -150,16 +158,48 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
                 surfaceViewCanvas.drawRect(canvasRect, checkeredPattern)
                 surfaceViewCanvas.drawRect(canvasRect, framePaint)
 
-                val iterator = layerModel.listIterator(layerModel.layerCount)
-
-                while (iterator.hasPrevious()) {
-                    iterator.previous().bitmap?.let {
-                        surfaceViewCanvas.drawBitmap(it, 0f, 0f, null)
+                layerModel.layers.asReversed().forEach { layer ->
+                    if (layer.isVisible) {
+                        val alphaPaint = Paint().apply {
+                            alpha = layer.getValueForOpacityPercentage()
+                        }
+                        surfaceViewCanvas.drawBitmap(layer.bitmap, 0f, 0f, alphaPaint)
                     }
                 }
 
                 val tool = toolReference.tool
-                tool?.draw(surfaceViewCanvas)
+                when (zoomController.checkIfToolCompatibleWithZoomWindow(tool)) {
+                    DefaultZoomWindowController.Constants.NOT_COMPATIBLE ->
+                        tool?.draw(surfaceViewCanvas)
+
+                    DefaultZoomWindowController.Constants.COMPATIBLE_NEW -> {
+                        val bitmapOfDrawingBoard = Bitmap.createBitmap(
+                            layerModel.width, layerModel.height, Bitmap.Config.ARGB_8888)
+
+                        tool?.draw(surfaceViewCanvas)
+
+                        val canvas = Canvas(bitmapOfDrawingBoard)
+                        tool?.draw(canvas)
+
+                        handler.post(
+                            Runnable {
+                                zoomController.getBitmap(bitmapOfDrawingBoard)
+                            }
+                        )
+                    }
+                    DefaultZoomWindowController.Constants.COMPATIBLE_ALL -> {
+                        val bitmapOfDrawingBoard = layerModel.currentLayer?.bitmap
+                        surfaceViewCanvas.setBitmap(bitmapOfDrawingBoard)
+
+                        tool?.draw(surfaceViewCanvas)
+
+                        handler.post(
+                            Runnable {
+                                zoomController.getBitmap(bitmapOfDrawingBoard)
+                            }
+                        )
+                    }
+                }
             }
         }
     }
@@ -183,30 +223,19 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
         }
     }
 
-    fun enableAutoScroll() {
-        drawingSurfaceListener.enableAutoScroll()
-    }
-
-    fun disableAutoScroll() {
-        drawingSurfaceListener.disableAutoScroll()
-    }
-
     @Synchronized
     fun setBitmap(bitmap: Bitmap?) {
-        layerModel.currentLayer?.bitmap = bitmap
+        layerModel.currentLayer?.bitmap = bitmap!!
     }
-
-    fun isPointOnCanvas(pointX: Int, pointY: Int): Boolean =
-        pointX > 0 && pointX < layerModel.width && pointY > 0 && pointY < layerModel.height
 
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
         surfaceReady = true
-        val currentToolType = toolReference.tool?.toolType
-        var isColorPickerDialogAdded = false
-        fragmentManager.findFragmentByTag(COLOR_PICKER_DIALOG_TAG)?.let { fragment -> isColorPickerDialogAdded = (fragment as ColorPickerDialog).isAdded }
-        if (currentToolType != ToolType.IMPORTPNG && currentToolType != ToolType.TRANSFORM && currentToolType != ToolType.TEXT && !isColorPickerDialogAdded) {
+
+        if (perspective.callResetScaleAndTransformationOnStartUp != 2) {
             perspective.resetScaleAndTranslation()
+            perspective.callResetScaleAndTransformationOnStartUp++
         }
+
         perspective.setSurfaceFrame(holder.surfaceFrame)
         drawingThread?.start()
         refreshDrawingSurface()
@@ -221,39 +250,6 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
     override fun surfaceDestroyed(holder: SurfaceHolder) {
         surfaceReady = false
         drawingThread?.stop()
-    }
-
-    private open inner class AutoScrollTaskCallbackImpl : AutoScrollTaskCallback {
-        override fun isPointOnCanvas(pointX: Int, pointY: Int): Boolean =
-            this@DrawingSurface.isPointOnCanvas(pointX, pointY)
-
-        override fun refreshDrawingSurface() {
-            this@DrawingSurface.refreshDrawingSurface()
-        }
-
-        override fun handleToolMove(coordinate: PointF) {
-            toolReference.tool?.handleMove(coordinate)
-        }
-
-        override fun getToolAutoScrollDirection(
-            pointX: Float,
-            pointY: Float,
-            screenWidth: Int,
-            screenHeight: Int
-        ): Point? =
-            toolReference.tool?.getAutoScrollDirection(pointX, pointY, screenWidth, screenHeight)
-
-        override fun getPerspectiveScale(): Float = perspective.scale
-
-        override fun translatePerspective(dx: Float, dy: Float) {
-            perspective.translate(dx, dy)
-        }
-
-        override fun convertToCanvasFromSurface(surfacePoint: PointF) {
-            perspective.convertToCanvasFromSurface(surfacePoint)
-        }
-
-        override fun getCurrentToolType(): ToolType? = toolReference.tool?.toolType
     }
 
     private inner class DrawLoop : Runnable {
@@ -279,13 +275,16 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
             var canvas: Canvas? = null
             synchronized(holder) {
                 try {
+                    idlingResource.increment()
                     canvas = holder.lockCanvas()
                     canvas?.let {
                         doDraw(it)
                     }
+                    canvas
                 } catch (e: IllegalArgumentException) {
                     Log.e(TAG, "run: ", e)
                 } finally {
+                    idlingResource.decrement()
                     canvas?.let {
                         holder.unlockCanvasAndPost(it)
                     }

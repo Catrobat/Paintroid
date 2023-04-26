@@ -27,14 +27,16 @@ import android.util.DisplayMetrics
 import android.view.Menu
 import androidx.annotation.ColorInt
 import androidx.annotation.StringRes
+import org.catrobat.paintroid.UserPreferences
+import org.catrobat.paintroid.command.serialization.CommandSerializer
+import org.catrobat.paintroid.colorpicker.ColorHistory
 import org.catrobat.paintroid.common.MainActivityConstants.ActivityRequestCode
 import org.catrobat.paintroid.dialog.PermissionInfoDialog.PermissionType
 import org.catrobat.paintroid.iotasks.CreateFile.CreateFileCallback
 import org.catrobat.paintroid.iotasks.LoadImage.LoadImageCallback
 import org.catrobat.paintroid.iotasks.SaveImage.SaveImageCallback
-import org.catrobat.paintroid.model.CommandManagerModel
+import org.catrobat.paintroid.iotasks.WorkspaceReturnValue
 import org.catrobat.paintroid.tools.ToolType
-import org.catrobat.paintroid.tools.Workspace
 import org.catrobat.paintroid.ui.LayerAdapter
 import java.io.File
 
@@ -56,6 +58,8 @@ interface MainActivityContracts {
         fun showRateUsDialog()
 
         fun showFeedbackDialog()
+
+        fun showZoomWindowSettingsDialog(sharedPreferences: UserPreferences)
 
         fun showAdvancedSettingsDialog()
 
@@ -159,9 +163,9 @@ interface MainActivityContracts {
 
         fun refreshDrawingSurface()
 
-        fun enterFullscreen()
+        fun enterHideButtons()
 
-        fun exitFullscreen()
+        fun exitHideButtons()
 
         fun showContentLoadingProgressBar()
 
@@ -188,7 +192,9 @@ interface MainActivityContracts {
 
         fun removeMoreOptionsItems(menu: Menu?)
 
-        fun loadImageClicked()
+        fun replaceImageClicked()
+
+        fun addImageToCurrentLayerClicked()
 
         fun loadNewImage()
 
@@ -202,15 +208,17 @@ interface MainActivityContracts {
 
         fun shareImageClicked()
 
-        fun enterFullscreenClicked()
+        fun enterHideButtonsClicked()
 
-        fun exitFullscreenClicked()
+        fun exitHideButtonsClicked()
 
         fun backToPocketCodeClicked()
 
         fun showHelpClicked()
 
         fun showAboutClicked()
+
+        fun showZoomWindowSettingsClicked(sharedPreferences: UserPreferences)
 
         fun showAdvancedSettingsClicked()
 
@@ -246,7 +254,7 @@ interface MainActivityContracts {
 
         fun saveImageConfirmClicked(requestCode: Int, uri: Uri?)
 
-        fun saveCopyConfirmClicked(requestCode: Int)
+        fun saveCopyConfirmClicked(requestCode: Int, uri: Uri?)
 
         fun undoClicked()
 
@@ -294,9 +302,11 @@ interface MainActivityContracts {
 
         fun saveNewTemporaryImage()
 
-        fun openTemporaryFile(workspace: Workspace): CommandManagerModel?
+        fun openTemporaryFile(): WorkspaceReturnValue?
 
         fun checkForTemporaryFile(): Boolean
+
+        fun setColorHistoryAfterLoadImage(colorHistory: ColorHistory?)
     }
 
     interface Model {
@@ -306,17 +316,30 @@ interface MainActivityContracts {
         var isFullscreen: Boolean
         var isOpenedFromCatroid: Boolean
         var isOpenedFromFormulaEditorInCatroid: Boolean
+        var colorHistory: ColorHistory
+
+        fun wasInitialAnimationPlayed(): Boolean
+
+        fun setInitialAnimationPlayed(wasInitialAnimationPlayed: Boolean)
     }
 
     interface Interactor {
-        fun saveCopy(callback: SaveImageCallback, requestCode: Int, workspace: Workspace, context: Context)
+        fun saveCopy(
+            callback: SaveImageCallback,
+            requestCode: Int,
+            layerModel: LayerContracts.Model,
+            commandSerializer: CommandSerializer,
+            uri: Uri?,
+            context: Context
+        )
 
         fun createFile(callback: CreateFileCallback, requestCode: Int, filename: String)
 
         fun saveImage(
             callback: SaveImageCallback,
             requestCode: Int,
-            workspace: Workspace,
+            layerModel: LayerContracts.Model,
+            commandSerializer: CommandSerializer,
             uri: Uri?,
             context: Context
         )
@@ -327,7 +350,7 @@ interface MainActivityContracts {
             uri: Uri?,
             context: Context,
             scaling: Boolean,
-            workspace: Workspace
+            commandSerializer: CommandSerializer,
         )
     }
 
@@ -357,6 +380,8 @@ interface MainActivityContracts {
         fun closeDrawer(gravity: Int, animate: Boolean)
 
         fun isDrawerOpen(gravity: Int): Boolean
+
+        fun isDrawerVisible(gravity: Int): Boolean
 
         fun openDrawer(gravity: Int)
     }

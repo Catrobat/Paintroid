@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ *  Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,17 +21,14 @@ package org.catrobat.paintroid.tools.implementation
 import android.graphics.Bitmap
 import android.graphics.PointF
 import android.graphics.RectF
-import org.catrobat.paintroid.command.serialization.CommandSerializationUtilities
 import org.catrobat.paintroid.contract.LayerContracts
-import org.catrobat.paintroid.model.LayerModel
 import org.catrobat.paintroid.tools.Workspace
 import org.catrobat.paintroid.ui.Perspective
 
 class DefaultWorkspace(
-    private val layerModel: LayerContracts.Model,
-    override val perspective: Perspective,
-    private val listener: Listener,
-    private val serializationHelper: CommandSerializationUtilities
+    override val layerModel: LayerContracts.Model,
+    override var perspective: Perspective,
+    private val listener: Listener
 ) : Workspace {
     override val height: Int
         get() = layerModel.height
@@ -46,12 +43,12 @@ class DefaultWorkspace(
         get() = perspective.surfaceHeight
 
     override val bitmapOfAllLayers: Bitmap?
-        get() = LayerModel.getBitmapOfAllLayersToSave(layerModel.layers)
+        get() = layerModel.getBitmapOfAllLayers()
 
-    override val bitmapLisOfAllLayers: List<Bitmap?>
-        get() = LayerModel.getBitmapListOfAllLayers(layerModel.layers)
+    override val bitmapListOfAllLayers: List<Bitmap?>
+        get() = layerModel.getBitmapListOfAllLayers()
 
-    override val bitmapOfCurrentLayer: Bitmap?
+    override var bitmapOfCurrentLayer: Bitmap? = null
         get() = layerModel.currentLayer?.bitmap?.let { Bitmap.createBitmap(it) }
 
     override val currentLayerIndex: Int
@@ -76,9 +73,6 @@ class DefaultWorkspace(
         perspective.setBitmapDimensions(width, height)
         perspective.resetScaleAndTranslation()
     }
-
-    override fun getCommandSerializationHelper(): CommandSerializationUtilities =
-        serializationHelper
 
     override fun getCanvasPointFromSurfacePoint(surfacePoint: PointF): PointF =
         perspective.getCanvasPointFromSurfacePoint(surfacePoint)

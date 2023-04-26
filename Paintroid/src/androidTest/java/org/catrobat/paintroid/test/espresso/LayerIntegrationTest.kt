@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,21 +26,28 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.net.Uri
+import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.contrib.RecyclerViewActions.scrollToPosition
+import androidx.test.espresso.idling.CountingIdlingResource
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
-import androidx.test.espresso.matcher.RootMatchers
-import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.isClickable
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.isEnabled
 import androidx.test.espresso.matcher.ViewMatchers.isRoot
+import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
+import junit.framework.AssertionFailedError
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.R
-import org.catrobat.paintroid.common.MAX_LAYERS
 import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider
 import org.catrobat.paintroid.test.espresso.util.EspressoUtils
@@ -54,6 +61,7 @@ import org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteract
 import org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction
 import org.catrobat.paintroid.test.espresso.util.wrappers.TransformToolOptionsViewInteraction
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule
+import org.catrobat.paintroid.test.utils.ToastMatcher
 import org.catrobat.paintroid.tools.ToolType
 import org.hamcrest.Matchers
 import org.junit.After
@@ -63,6 +71,8 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.io.File
+
+private const val FOUR_LAYERS = 4
 
 @RunWith(AndroidJUnit4::class)
 class LayerIntegrationTest {
@@ -79,6 +89,7 @@ class LayerIntegrationTest {
     private var bitmapWidth = 0
     private lateinit var activity: Activity
     private lateinit var deletionFileList: ArrayList<File?>
+    private lateinit var idlingResource: CountingIdlingResource
 
     @Before
     fun setUp() {
@@ -87,6 +98,8 @@ class LayerIntegrationTest {
         val workspace = launchActivityRule.activity.workspace
         bitmapHeight = workspace.height
         bitmapWidth = workspace.width
+        idlingResource = launchActivityRule.activity.idlingResource
+        IdlingRegistry.getInstance().register(idlingResource)
     }
 
     @After
@@ -96,23 +109,22 @@ class LayerIntegrationTest {
                 Assert.assertTrue(file.delete())
             }
         }
+        IdlingRegistry.getInstance().unregister(idlingResource)
     }
 
     @Test
     fun testShowLayerMenu() {
         LayerMenuViewInteraction.onLayerMenuView()
             .performOpen()
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+            .check(matches(isDisplayed()))
     }
 
     @Test
     fun testInitialSetup() {
         LayerMenuViewInteraction.onLayerMenuView()
-            .check(ViewAssertions.matches(Matchers.not(ViewMatchers.isDisplayed())))
-        LayerMenuViewInteraction.onLayerMenuView().onButtonAdd()
-            .check(ViewAssertions.matches(Matchers.allOf(ViewMatchers.isEnabled(), UiMatcher.withDrawable(R.drawable.ic_pocketpaint_layers_add))))
-        LayerMenuViewInteraction.onLayerMenuView().onButtonDelete()
-            .check(ViewAssertions.matches(Matchers.allOf(Matchers.not(ViewMatchers.isEnabled()), UiMatcher.withDrawable(R.drawable.ic_pocketpaint_layers_delete_disabled))))
+            .check(matches(Matchers.not(isDisplayed())))
+        assertIfLayerAddButtonIsEnabled()
+        assertIfLayerDeleteButtonIsDisabled()
     }
 
     @Test
@@ -125,45 +137,37 @@ class LayerIntegrationTest {
     }
 
     @Test
-    fun testTryAddMoreLayersThanLimit() {
-        LayerMenuViewInteraction.onLayerMenuView()
-            .checkLayerCount(1)
-            .performOpen()
-            .performAddLayer()
-            .performAddLayer()
-            .performAddLayer()
-            .checkLayerCount(4)
-            .performAddLayer()
-            .checkLayerCount(4)
-    }
-
-    @Test
     fun testButtonsAddOneLayer() {
         LayerMenuViewInteraction.onLayerMenuView()
             .performOpen()
             .performAddLayer()
             .checkLayerCount(2)
         LayerMenuViewInteraction.onLayerMenuView().onButtonAdd()
-            .check(ViewAssertions.matches(Matchers.allOf(ViewMatchers.isEnabled(), UiMatcher.withDrawable(R.drawable.ic_pocketpaint_layers_add))))
-        LayerMenuViewInteraction.onLayerMenuView().onButtonDelete()
-            .check(ViewAssertions.matches(Matchers.allOf(ViewMatchers.isEnabled(), UiMatcher.withDrawable(R.drawable.ic_pocketpaint_layers_delete))))
+            .check(
+                assertIfAddLayerButtonIsEnabled()
+            )
+        assertIfDeleteLayerButtonIsDisabled()
         LayerMenuViewInteraction.onLayerMenuView()
             .performAddLayer()
             .performAddLayer()
             .checkLayerCount(4)
-        LayerMenuViewInteraction.onLayerMenuView().onButtonAdd()
-            .check(ViewAssertions.matches(Matchers.allOf(Matchers.not(ViewMatchers.isEnabled()), UiMatcher.withDrawable(R.drawable.ic_pocketpaint_layers_add_disabled))))
-        LayerMenuViewInteraction.onLayerMenuView().onButtonDelete()
-            .check(ViewAssertions.matches(Matchers.allOf(ViewMatchers.isEnabled(), UiMatcher.withDrawable(R.drawable.ic_pocketpaint_layers_delete))))
         LayerMenuViewInteraction.onLayerMenuView()
             .performDeleteLayer()
             .performDeleteLayer()
             .performDeleteLayer()
             .checkLayerCount(1)
+    }
+
+    private fun assertIfLayerAddButtonIsEnabled() {
         LayerMenuViewInteraction.onLayerMenuView().onButtonAdd()
-            .check(ViewAssertions.matches(Matchers.allOf(ViewMatchers.isEnabled(), UiMatcher.withDrawable(R.drawable.ic_pocketpaint_layers_add))))
-        LayerMenuViewInteraction.onLayerMenuView().onButtonDelete()
-            .check(ViewAssertions.matches(Matchers.allOf(Matchers.not(ViewMatchers.isEnabled()), UiMatcher.withDrawable(R.drawable.ic_pocketpaint_layers_delete_disabled))))
+            .check(
+                matches(
+                    Matchers.allOf(
+                        isEnabled(),
+                        UiMatcher.withDrawable(R.drawable.ic_pocketpaint_layers_add)
+                    )
+                )
+            )
     }
 
     @Test
@@ -175,23 +179,64 @@ class LayerIntegrationTest {
             .performAddLayer()
             .performClose()
             .checkLayerCount(4)
-        LayerMenuViewInteraction.onLayerMenuView().onButtonAdd()
-            .check(ViewAssertions.matches(Matchers.allOf(Matchers.not(ViewMatchers.isEnabled()), UiMatcher.withDrawable(R.drawable.ic_pocketpaint_layers_add_disabled))))
-        LayerMenuViewInteraction.onLayerMenuView().onButtonDelete()
-            .check(ViewAssertions.matches(Matchers.allOf(ViewMatchers.isEnabled(), UiMatcher.withDrawable(R.drawable.ic_pocketpaint_layers_delete))))
         TopBarViewInteraction.onTopBarView()
             .performOpenMoreOptions()
+
         onView(withText(R.string.menu_new_image))
             .perform(click())
         onView(withText(R.string.discard_button_text))
             .perform(click())
         LayerMenuViewInteraction.onLayerMenuView().onButtonAdd()
-            .check(ViewAssertions.matches(Matchers.allOf(ViewMatchers.isEnabled(), UiMatcher.withDrawable(R.drawable.ic_pocketpaint_layers_add))))
-        LayerMenuViewInteraction.onLayerMenuView().onButtonDelete()
-            .check(ViewAssertions.matches(Matchers.allOf(Matchers.not(ViewMatchers.isEnabled()), UiMatcher.withDrawable(R.drawable.ic_pocketpaint_layers_delete_disabled))))
+            .check(
+                assertIfAddLayerButtonIsEnabled()
+            )
+        assertIfLayerDeleteButtonIsDisabled()
         LayerMenuViewInteraction.onLayerMenuView()
             .checkLayerCount(1)
     }
+
+    private fun assertIfDeleteLayerButtonIsDisabled() {
+        LayerMenuViewInteraction.onLayerMenuView().onButtonDelete()
+            .check(
+                matches(
+                    Matchers.allOf(
+                        isEnabled(),
+                        UiMatcher.withDrawable(R.drawable.ic_pocketpaint_layers_delete)
+                    )
+                )
+            )
+    }
+
+    private fun assertIfLayerAddButtonIsDisabled() {
+        LayerMenuViewInteraction.onLayerMenuView().onButtonAdd()
+            .check(
+                matches(
+                    Matchers.allOf(
+                        Matchers.not(isEnabled()),
+                        UiMatcher.withDrawable(R.drawable.ic_pocketpaint_layers_add_disabled)
+                    )
+                )
+            )
+    }
+
+    private fun assertIfLayerDeleteButtonIsDisabled() {
+        LayerMenuViewInteraction.onLayerMenuView().onButtonDelete()
+            .check(
+                matches(
+                    Matchers.allOf(
+                        Matchers.not(isEnabled()),
+                        UiMatcher.withDrawable(R.drawable.ic_pocketpaint_layers_delete_disabled)
+                    )
+                )
+            )
+    }
+
+    private fun assertIfAddLayerButtonIsEnabled() = matches(
+        Matchers.allOf(
+            isEnabled(),
+            UiMatcher.withDrawable(R.drawable.ic_pocketpaint_layers_add)
+        )
+    )
 
     @Test
     fun testUndoRedoLayerAdd() {
@@ -380,7 +425,6 @@ class LayerIntegrationTest {
             .performAutoCrop()
         TopBarViewInteraction.onTopBarView()
             .performClickCheckmark()
-            .performClickCheckmark()
         ToolBarViewInteraction.onToolBarView()
             .performOpenToolOptionsView()
         TransformToolOptionsViewInteraction.onTransformToolOptionsView()
@@ -402,6 +446,7 @@ class LayerIntegrationTest {
             .checkLayerWidthMatches(26)
         LayerMenuViewInteraction.onLayerMenuView()
             .performOpen()
+            .performScrollToPositionInLayerNavigation(3)
             .performSelectLayer(3)
             .performClose()
         TransformToolOptionsViewInteraction.onTransformToolOptionsView()
@@ -451,6 +496,7 @@ class LayerIntegrationTest {
             .checkLayerWidthMatches(bitmapHeight)
         LayerMenuViewInteraction.onLayerMenuView()
             .performOpen()
+            .performScrollToPositionInLayerNavigation(3)
             .performSelectLayer(3)
             .performClose()
         TransformToolOptionsViewInteraction.onTransformToolOptionsView()
@@ -511,6 +557,52 @@ class LayerIntegrationTest {
     }
 
     @Test
+    fun testLayerOpacity() {
+        ToolBarViewInteraction.onToolBarView()
+            .performSelectTool(ToolType.FILL)
+
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
+
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
+
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
+            .checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
+
+        LayerMenuViewInteraction.onLayerMenuView()
+            .performOpen()
+            .performSetOpacityTo(50, 0)
+            .performClose()
+
+        ToolBarViewInteraction.onToolBarView()
+            .performSelectTool(ToolType.PIPETTE)
+
+        val fiftyPercentOpacityBlack = Color.argb(255 / 2, 0, 0, 0)
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
+            .checkPixelColor(fiftyPercentOpacityBlack, BitmapLocationProvider.MIDDLE)
+
+        LayerMenuViewInteraction.onLayerMenuView()
+            .performOpen()
+            .performSetOpacityTo(0, 0)
+            .performClose()
+
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
+            .checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE)
+    }
+
+    @Test
+    fun testOpacityAndVisibilityIconDisabled() {
+        LayerMenuViewInteraction.onLayerMenuView()
+            .performOpen()
+
+        onView(withId(R.id.pocketpaint_layer_side_nav_button_visibility))
+                .check(matches(Matchers.not(isEnabled())))
+        onView(withId(R.id.pocketpaint_layer_side_nav_button_opacity))
+                .check(matches(Matchers.not(isEnabled())))
+    }
+
+    @Test
     fun testLayerOrderUndoDelete() {
         ToolBarViewInteraction.onToolBarView()
             .performSelectTool(ToolType.FILL)
@@ -522,8 +614,8 @@ class LayerIntegrationTest {
             .checkLayerCount(2)
             .performClose()
         ToolPropertiesInteraction.onToolProperties()
-            .setColorResource(R.color.pocketpaint_color_picker_green1)
-            .checkMatchesColorResource(R.color.pocketpaint_color_picker_green1)
+            .setColorResource(R.color.pocketpaint_color_merge_layer)
+            .checkMatchesColorResource(R.color.pocketpaint_color_merge_layer)
         DrawingSurfaceInteraction.onDrawingSurfaceView()
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
         LayerMenuViewInteraction.onLayerMenuView()
@@ -543,7 +635,7 @@ class LayerIntegrationTest {
         DrawingSurfaceInteraction.onDrawingSurfaceView()
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
         ToolPropertiesInteraction.onToolProperties()
-            .checkMatchesColorResource(R.color.pocketpaint_color_picker_green1)
+            .checkMatchesColorResource(R.color.pocketpaint_color_merge_layer)
     }
 
     @Test
@@ -647,8 +739,11 @@ class LayerIntegrationTest {
             .performToggleLayerVisibility(0)
             .performStartDragging(0)
         onView(withText(R.string.no_longclick_on_hidden_layer))
-            .inRoot(RootMatchers.withDecorView(Matchers.not(launchActivityRule.activity.window.decorView)))
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+            .inRoot(
+                ToastMatcher().apply {
+                    matches(isDisplayed())
+                }
+            )
     }
 
     @Test
@@ -661,7 +756,13 @@ class LayerIntegrationTest {
             .performClose()
         ToolBarViewInteraction.onToolBarView()
             .onToolsClicked()
-        onView(withText(R.string.no_tools_on_hidden_layer)).inRoot(RootMatchers.withDecorView(Matchers.not(launchActivityRule.activity.window.decorView))).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        onView(
+            withText(R.string.no_tools_on_hidden_layer)
+        ).inRoot(
+            ToastMatcher().apply {
+                matches(isDisplayed())
+            }
+        )
     }
 
     @Test
@@ -676,6 +777,7 @@ class LayerIntegrationTest {
         TopBarViewInteraction.onTopBarView()
             .performOpenMoreOptions()
         onView(withText(R.string.menu_load_image)).perform(click())
+        onView(withText(R.string.menu_replace_image)).perform(click())
         Intents.release()
         onView(withText(R.string.dialog_warning_new_image)).check(ViewAssertions.doesNotExist())
         onView(withText(R.string.pocketpaint_ok)).perform(click())
@@ -687,7 +789,57 @@ class LayerIntegrationTest {
             .performAddLayer()
             .performAddLayer()
             .performAddLayer()
-            .checkLayerCount(MAX_LAYERS)
+            .checkLayerCount(FOUR_LAYERS)
+    }
+
+    @Test
+    fun testAddTenLayers() {
+        LayerMenuViewInteraction.onLayerMenuView()
+            .checkLayerCount(1)
+            .performOpen()
+            .performAddLayer()
+            .checkLayerCount(2)
+            .performAddLayer()
+            .checkLayerCount(3)
+            .performAddLayer()
+            .checkLayerCount(4)
+            .performAddLayer()
+            .checkLayerCount(5)
+            .performAddLayer()
+            .checkLayerCount(6)
+            .performAddLayer()
+            .checkLayerCount(7)
+            .performAddLayer()
+            .checkLayerCount(8)
+            .performAddLayer()
+            .checkLayerCount(9)
+            .performAddLayer()
+            .checkLayerCount(10)
+    }
+
+    @Test
+    fun testAddAsManyLayersAsPossibleAndScrollToEndOfList() {
+        LayerMenuViewInteraction.onLayerMenuView()
+            .checkLayerCount(1)
+            .performOpen()
+            .performAddLayer()
+            .checkLayerCount(2)
+        var layerCount = 3
+        while (true) {
+            try {
+                LayerMenuViewInteraction.onLayerMenuView()
+                    .performAddLayer()
+                    .checkLayerCount(layerCount)
+                onView(withId(R.id.pocketpaint_layer_side_nav_button_add)).check(matches(isClickable()))
+                layerCount++
+            } catch (ignore: AssertionFailedError) {
+                break
+            }
+        }
+        assertIfLayerAddButtonIsDisabled()
+        LayerMenuViewInteraction.onLayerMenuView()
+            .checkLayerCount(--layerCount)
+        onView(withId(R.id.pocketpaint_layer_side_nav_list)).perform(scrollToPosition<RecyclerView.ViewHolder>(99))
     }
 
     private fun createTestImageFile(): Uri {
@@ -696,7 +848,10 @@ class LayerIntegrationTest {
             drawColor(Color.BLACK)
             drawBitmap(bitmap, 0f, 0f, null)
         }
-        val imageFile = File(launchActivityRule.activity.getExternalFilesDir(null)!!.absolutePath, "loadImage.jpg")
+        val imageFile = File(
+            launchActivityRule.activity.getExternalFilesDir(null)!!.absolutePath,
+            "loadImage.jpg"
+        )
         val imageUri = Uri.fromFile(imageFile)
         launchActivityRule.activity.myContentResolver.openOutputStream(imageUri).use { fos ->
             Assert.assertTrue(bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos))

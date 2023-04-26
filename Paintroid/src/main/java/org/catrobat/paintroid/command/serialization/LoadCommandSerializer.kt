@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ *  Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -32,7 +32,7 @@ class LoadCommandSerializer(version: Int) : VersionSerializer<LoadCommand>(versi
     }
 
     override fun write(kryo: Kryo, output: Output, command: LoadCommand) {
-        command.loadedImage.compress(Bitmap.CompressFormat.PNG, COMPRESSION_QUALITY, output)
+        command.loadedBitmap.compress(Bitmap.CompressFormat.PNG, COMPRESSION_QUALITY, output)
     }
 
     override fun read(kryo: Kryo, input: Input, type: Class<out LoadCommand>): LoadCommand =

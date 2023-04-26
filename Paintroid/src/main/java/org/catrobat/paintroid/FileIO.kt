@@ -39,6 +39,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.content.FileProvider
 import androidx.exifinterface.media.ExifInterface
 import id.zelory.compressor.Compressor
+import org.catrobat.paintroid.command.serialization.CommandSerializer
 import org.catrobat.paintroid.common.CATROBAT_IMAGE_ENDING
 import org.catrobat.paintroid.common.Constants.DOWNLOADS_DIRECTORY
 import org.catrobat.paintroid.common.Constants.PICTURES_DIRECTORY
@@ -48,10 +49,10 @@ import org.catrobat.paintroid.common.TEMP_IMAGE_NAME
 import org.catrobat.paintroid.common.TEMP_IMAGE_PATH
 import org.catrobat.paintroid.common.TEMP_IMAGE_TEMP_PATH
 import org.catrobat.paintroid.common.TEMP_PICTURE_NAME
+import org.catrobat.paintroid.contract.MainActivityContracts
 import org.catrobat.paintroid.iotasks.BitmapReturnValue
-import org.catrobat.paintroid.model.CommandManagerModel
+import org.catrobat.paintroid.iotasks.WorkspaceReturnValue
 import org.catrobat.paintroid.presenter.MainActivityPresenter
-import org.catrobat.paintroid.tools.Workspace
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -87,8 +88,7 @@ object FileIO {
 
     var catroidFlag = false
 
-    @JvmField
-    var isCatrobatImage = false
+    var navigator: MainActivityContracts.Navigator? = null
 
     @JvmField
     var storeImageUri: Uri? = null
@@ -400,7 +400,6 @@ object FileIO {
         return total
     }
 
-    @RequiresApi(Build.VERSION_CODES.Q)
     private fun getUriForFilename(contentLocationUri: Uri, filename: String, resolver: ContentResolver): Uri? {
         val selectionArgs = arrayOf(filename)
         val selection = "_display_name=?"
@@ -450,7 +449,7 @@ object FileIO {
     fun checkFileExists(fileType: FileType, filename: String, resolver: ContentResolver): Boolean {
         return when (fileType) {
             FileType.JPG, FileType.PNG -> checkFileExistsInPicturesFolder(filename, resolver)
-            FileType.CATROBAT, FileType.ORA -> checkFileExistsInDownloadsFolder(filename, resolver)
+            FileType.ORA, FileType.CATROBAT -> checkFileExistsInDownloadsFolder(filename, resolver)
         }
     }
 
@@ -548,9 +547,10 @@ object FileIO {
             inJustDecodeBounds = false
         }
         val scaling = hasEnoughMemory(resolver, bitmapUri, context)
+        val bitmap = enableAlpha(decodeBitmapFromUri(resolver, bitmapUri, options, context))
         return BitmapReturnValue(
             null,
-            enableAlpha(decodeBitmapFromUri(resolver, bitmapUri, options, context)),
+            bitmap,
             scaling
         )
     }
@@ -566,9 +566,11 @@ object FileIO {
             inJustDecodeBounds = false
             inSampleSize = getScaleFactor(resolver, bitmapUri, context)
         }
+
+        val bitmap = enableAlpha(decodeBitmapFromUri(resolver, bitmapUri, options, context))
         return BitmapReturnValue(
             null,
-            enableAlpha(decodeBitmapFromUri(resolver, bitmapUri, options, context)),
+            bitmap,
             false
         )
     }
@@ -586,14 +588,14 @@ object FileIO {
         return bitmap
     }
 
-    fun saveTemporaryPictureFile(internalMemoryPath: File, workspace: Workspace) {
+    fun saveTemporaryPictureFile(internalMemoryPath: File, commandSerializer: CommandSerializer) {
         val newFileName = "${TEMP_IMAGE_NAME}1.$CATROBAT_IMAGE_ENDING"
         val tempPath = File(internalMemoryPath, TEMP_IMAGE_DIRECTORY_NAME)
         try {
             tempPath.mkdirs()
 
             val stream = FileOutputStream("$tempPath/$newFileName")
-            workspace.getCommandSerializationHelper().writeToInternalMemory(stream)
+            commandSerializer.writeToInternalMemory(stream)
             temporaryFilePath = TEMP_IMAGE_TEMP_PATH
         } catch (e: IOException) {
             Log.e("Cannot write", "Can't write to stream", e)
@@ -636,17 +638,17 @@ object FileIO {
         temporaryFilePath = TEMP_IMAGE_PATH
     }
 
-    fun openTemporaryPictureFile(workspace: Workspace): CommandManagerModel? {
-        var commandModel: CommandManagerModel? = null
+    fun openTemporaryPictureFile(commandSerializer: CommandSerializer): WorkspaceReturnValue? {
+        var workspaceReturnValue: WorkspaceReturnValue? = null
         if (temporaryFilePath != null) {
             try {
                 val stream = FileInputStream(temporaryFilePath)
-                commandModel = workspace.getCommandSerializationHelper().readFromInternalMemory(stream)
+                workspaceReturnValue = commandSerializer.readFromInternalMemory(stream)
             } catch (e: IOException) {
                 Log.e("Cannot read", "Can't read from stream", e)
             }
         }
-        return commandModel
+        return workspaceReturnValue
     }
 
     fun deleteTempFile(internalMemoryPath: File) {

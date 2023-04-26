@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ *  Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,6 +21,7 @@ package org.catrobat.paintroid.tools.implementation
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.PointF
+import androidx.test.espresso.idling.CountingIdlingResource
 import org.catrobat.paintroid.colorpicker.OnColorPickedListener
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.tools.ContextCallback
@@ -34,9 +35,10 @@ class PipetteTool(
     toolOptionsViewController: ToolOptionsViewController,
     toolPaint: ToolPaint,
     workspace: Workspace,
+    idlingResource: CountingIdlingResource,
     commandManager: CommandManager,
     private val listener: OnColorPickedListener
-) : BaseTool(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager) {
+) : BaseTool(contextCallback, toolOptionsViewController, toolPaint, workspace, idlingResource, commandManager) {
     private var surfaceBitmap: Bitmap? = null
 
     override val toolType: ToolType
@@ -55,6 +57,8 @@ class PipetteTool(
     override fun handleMove(coordinate: PointF?): Boolean = setColor(coordinate)
 
     override fun handleUp(coordinate: PointF?): Boolean = setColor(coordinate)
+
+    override fun toolPositionCoordinates(coordinate: PointF): PointF = coordinate
 
     override fun resetInternalState() {
         updateSurfaceBitmap()

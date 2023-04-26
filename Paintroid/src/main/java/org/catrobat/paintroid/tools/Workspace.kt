@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ *  Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,7 +21,7 @@ package org.catrobat.paintroid.tools
 import android.graphics.Bitmap
 import android.graphics.PointF
 import android.graphics.RectF
-import org.catrobat.paintroid.command.serialization.CommandSerializationUtilities
+import org.catrobat.paintroid.contract.LayerContracts
 import org.catrobat.paintroid.ui.Perspective
 
 interface Workspace {
@@ -30,12 +30,13 @@ interface Workspace {
     val surfaceWidth: Int
     val surfaceHeight: Int
     val bitmapOfAllLayers: Bitmap?
-    val bitmapLisOfAllLayers: List<Bitmap?>
-    val bitmapOfCurrentLayer: Bitmap?
+    val bitmapListOfAllLayers: List<Bitmap?>
+    var bitmapOfCurrentLayer: Bitmap?
     val currentLayerIndex: Int
     val scaleForCenterBitmap: Float
     var scale: Float
-    val perspective: Perspective
+    var perspective: Perspective
+    val layerModel: LayerContracts.Model
 
     fun contains(point: PointF): Boolean
 
@@ -48,6 +49,4 @@ interface Workspace {
     fun getCanvasPointFromSurfacePoint(surfacePoint: PointF): PointF
 
     fun invalidate()
-
-    fun getCommandSerializationHelper(): CommandSerializationUtilities
 }

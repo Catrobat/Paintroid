@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ *  Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -43,20 +43,11 @@ class RotateCommand(rotateDirection: RotateDirection) : Command {
         val iterator: Iterator<LayerContracts.Layer> = layerModel.listIterator(0)
         while (iterator.hasNext()) {
             val currentLayer = iterator.next()
-            currentLayer.bitmap?.let {
-                val rotatedBitmap = Bitmap.createBitmap(
-                    it, 0, 0,
-                    layerModel.width, layerModel.height, rotateMatrix, true
-                )
-                currentLayer.bitmap = rotatedBitmap
-            }
-            currentLayer.transparentBitmap?.let {
-                val rotatedBitmap = Bitmap.createBitmap(
-                    it, 0, 0,
-                    layerModel.width, layerModel.height, rotateMatrix, true
-                )
-                currentLayer.transparentBitmap = rotatedBitmap
-            }
+            val rotatedBitmap = Bitmap.createBitmap(
+                currentLayer.bitmap, 0, 0,
+                layerModel.width, layerModel.height, rotateMatrix, true
+            )
+            currentLayer.bitmap = rotatedBitmap
         }
         val tmpWidth = layerModel.width
         layerModel.width = layerModel.height

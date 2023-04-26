@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ *  Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,6 +18,8 @@
  */
 package org.catrobat.paintroid.tools.implementation
 
+import androidx.test.espresso.idling.CountingIdlingResource
+import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.colorpicker.OnColorPickedListener
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.tools.ContextCallback
@@ -31,7 +33,7 @@ import org.catrobat.paintroid.ui.tools.DefaultBrushToolOptionsView
 import org.catrobat.paintroid.ui.tools.DefaultFillToolOptionsView
 import org.catrobat.paintroid.ui.tools.DefaultShapeToolOptionsView
 import org.catrobat.paintroid.ui.tools.DefaultSprayToolOptionsView
-import org.catrobat.paintroid.ui.tools.DefaultStampToolOptionsView
+import org.catrobat.paintroid.ui.tools.DefaultClipboardToolOptionsView
 import org.catrobat.paintroid.ui.tools.DefaultTextToolOptionsView
 import org.catrobat.paintroid.ui.tools.DefaultTransformToolOptionsView
 import org.catrobat.paintroid.ui.tools.DefaultSmudgeToolOptionsView
@@ -39,12 +41,14 @@ import org.catrobat.paintroid.ui.tools.DefaultSmudgeToolOptionsView
 private const val DRAW_TIME_INIT: Long = 30_000_000
 
 @SuppressWarnings("LongMethod")
-class DefaultToolFactory : ToolFactory {
+class DefaultToolFactory(mainActivity: MainActivity) : ToolFactory {
+    var mainActivity: MainActivity = mainActivity
     override fun createTool(
         toolType: ToolType,
         toolOptionsViewController: ToolOptionsViewController,
         commandManager: CommandManager,
         workspace: Workspace,
+        idlingResource: CountingIdlingResource,
         toolPaint: ToolPaint,
         contextCallback: ContextCallback,
         onColorPickedListener: OnColorPickedListener
@@ -57,15 +61,17 @@ class DefaultToolFactory : ToolFactory {
                 toolOptionsViewController,
                 toolPaint,
                 workspace,
+                idlingResource,
                 commandManager,
                 DRAW_TIME_INIT
             )
-            ToolType.STAMP -> StampTool(
-                DefaultStampToolOptionsView(toolLayout),
+            ToolType.CLIPBOARD -> ClipboardTool(
+                DefaultClipboardToolOptionsView(toolLayout),
                 contextCallback,
                 toolOptionsViewController,
                 toolPaint,
                 workspace,
+                idlingResource,
                 commandManager,
                 DRAW_TIME_INIT
             )
@@ -74,6 +80,7 @@ class DefaultToolFactory : ToolFactory {
                 toolOptionsViewController,
                 toolPaint,
                 workspace,
+                idlingResource,
                 commandManager,
                 DRAW_TIME_INIT
             )
@@ -82,6 +89,7 @@ class DefaultToolFactory : ToolFactory {
                 toolOptionsViewController,
                 toolPaint,
                 workspace,
+                idlingResource,
                 commandManager,
                 onColorPickedListener,
             )
@@ -91,6 +99,7 @@ class DefaultToolFactory : ToolFactory {
                 toolOptionsViewController,
                 toolPaint,
                 workspace,
+                idlingResource,
                 commandManager,
                 DRAW_TIME_INIT
             )
@@ -100,6 +109,7 @@ class DefaultToolFactory : ToolFactory {
                 toolOptionsViewController,
                 toolPaint,
                 workspace,
+                idlingResource,
                 commandManager,
                 DRAW_TIME_INIT
             )
@@ -109,6 +119,7 @@ class DefaultToolFactory : ToolFactory {
                 toolOptionsViewController,
                 toolPaint,
                 workspace,
+                idlingResource,
                 commandManager,
                 DRAW_TIME_INIT
             )
@@ -118,6 +129,7 @@ class DefaultToolFactory : ToolFactory {
                 toolOptionsViewController,
                 toolPaint,
                 workspace,
+                idlingResource,
                 commandManager,
                 DRAW_TIME_INIT
             )
@@ -127,6 +139,7 @@ class DefaultToolFactory : ToolFactory {
                 toolOptionsViewController,
                 toolPaint,
                 workspace,
+                idlingResource,
                 commandManager,
                 DRAW_TIME_INIT
             )
@@ -136,6 +149,7 @@ class DefaultToolFactory : ToolFactory {
                 toolOptionsViewController,
                 toolPaint,
                 workspace,
+                idlingResource,
                 commandManager,
                 DRAW_TIME_INIT
             )
@@ -144,6 +158,7 @@ class DefaultToolFactory : ToolFactory {
                 toolOptionsViewController,
                 toolPaint,
                 workspace,
+                idlingResource,
                 commandManager,
                 DRAW_TIME_INIT
             )
@@ -153,6 +168,7 @@ class DefaultToolFactory : ToolFactory {
                 toolOptionsViewController,
                 toolPaint,
                 workspace,
+                idlingResource,
                 commandManager,
                 DRAW_TIME_INIT
             )
@@ -162,6 +178,7 @@ class DefaultToolFactory : ToolFactory {
                 toolOptionsViewController,
                 toolPaint,
                 workspace,
+                idlingResource,
                 commandManager,
                 DRAW_TIME_INIT
             )
@@ -171,7 +188,19 @@ class DefaultToolFactory : ToolFactory {
                 toolOptionsViewController,
                 toolPaint,
                 workspace,
-                commandManager
+                idlingResource,
+                commandManager,
+            )
+            ToolType.CLIP -> ClippingTool(
+                DefaultBrushToolOptionsView(toolLayout),
+                contextCallback,
+                toolOptionsViewController,
+                toolPaint,
+                workspace,
+                idlingResource,
+                commandManager,
+                DRAW_TIME_INIT,
+                mainActivity
             )
             else -> BrushTool(
                 DefaultBrushToolOptionsView(toolLayout),
@@ -179,6 +208,7 @@ class DefaultToolFactory : ToolFactory {
                 toolOptionsViewController,
                 toolPaint,
                 workspace,
+                idlingResource,
                 commandManager,
                 DRAW_TIME_INIT
             )

@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ *  Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -31,6 +31,7 @@ import org.catrobat.paintroid.R
 import org.catrobat.paintroid.tools.ToolPaint
 
 const val STROKE_25 = 25f
+const val STROKE_10 = 10f
 
 class DefaultToolPaint(private val context: Context) : ToolPaint {
     private val bitmapPaint = Paint().apply {

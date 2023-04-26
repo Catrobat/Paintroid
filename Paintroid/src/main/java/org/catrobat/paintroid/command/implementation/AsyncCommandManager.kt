@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -41,6 +41,9 @@ open class AsyncCommandManager(
     override val isBusy: Boolean
         get() = mutex.isLocked
 
+    override val lastExecutedCommand: Command?
+        get() = commandManager.lastExecutedCommand
+
     override val commandManagerModel
         get() = commandManager.commandManagerModel
 
@@ -65,6 +68,20 @@ open class AsyncCommandManager(
                     synchronized(layerModel) { commandManager.addCommand(command) }
                 }
                 withContext(Dispatchers.Main) {
+                    commandManager.adjustUndoListForClippingTool()
+                    notifyCommandPostExecute()
+                }
+            }
+        }
+    }
+
+    override fun addCommandWithoutUndo(command: Command?) {
+        CoroutineScope(Dispatchers.Default).launch {
+            mutex.withLock {
+                if (!shuttingDown) {
+                    synchronized(layerModel) { commandManager.addCommandWithoutUndo(command) }
+                }
+                withContext(Dispatchers.Main) {
                     notifyCommandPostExecute()
                 }
             }
@@ -85,37 +102,11 @@ open class AsyncCommandManager(
     }
 
     override fun undo() {
-        CoroutineScope(Dispatchers.Default).launch {
-            mutex.withLock {
-                if (!shuttingDown) {
-                    synchronized(layerModel) {
-                        if (isUndoAvailable) {
-                            commandManager.undo()
-                        }
-                    }
-                }
-                withContext(Dispatchers.Main) {
-                    notifyCommandPostExecute()
-                }
-            }
-        }
+        manageUndoAndRedo(commandManager::undo, isUndoAvailable)
     }
 
     override fun redo() {
-        CoroutineScope(Dispatchers.Default).launch {
-            mutex.withLock {
-                if (!shuttingDown) {
-                    synchronized(layerModel) {
-                        if (isRedoAvailable) {
-                            commandManager.redo()
-                        }
-                    }
-                }
-                withContext(Dispatchers.Main) {
-                    notifyCommandPostExecute()
-                }
-            }
-        }
+        manageUndoAndRedo(commandManager::redo, isRedoAvailable)
     }
 
     override fun reset() {
@@ -127,8 +118,74 @@ open class AsyncCommandManager(
         shuttingDown = true
     }
 
+    override fun undoIgnoringColorChanges() {
+        manageUndoAndRedo(commandManager::undoIgnoringColorChanges, isUndoAvailable)
+    }
+
+    override fun undoIgnoringColorChangesAndAddCommand(command: Command) {
+        CoroutineScope(Dispatchers.Default).launch {
+            mutex.withLock {
+                if (!shuttingDown) {
+                    synchronized(layerModel) {
+                        if (isUndoAvailable) {
+                            commandManager.undoIgnoringColorChangesAndAddCommand(command)
+                        }
+                    }
+                }
+                withContext(Dispatchers.Main) {
+                    notifyCommandPostExecute()
+                }
+            }
+        }
+    }
+
+    override fun undoInConnectedLinesMode() {
+        manageUndoAndRedo(commandManager::undoInConnectedLinesMode, isUndoAvailable)
+    }
+
+    override fun redoInConnectedLinesMode() {
+        manageUndoAndRedo(commandManager::redoInConnectedLinesMode, isRedoAvailable)
+    }
+
+    override fun getCommandManagerModelForCatrobatImage(): CommandManagerModel? {
+        synchronized(layerModel) { return commandManager.getCommandManagerModelForCatrobatImage() }
+    }
+
     override fun setInitialStateCommand(command: Command) {
         synchronized(layerModel) { commandManager.setInitialStateCommand(command) }
+    }
+
+    override fun adjustUndoListForClippingTool() {
+        synchronized(layerModel) { commandManager.adjustUndoListForClippingTool() }
+    }
+
+    override fun undoInClippingTool() {
+        synchronized(layerModel) { commandManager.undoInClippingTool() }
+    }
+
+    override fun popFirstCommandInUndo() {
+        synchronized(layerModel) { commandManager.popFirstCommandInUndo() }
+    }
+
+    override fun popFirstCommandInRedo() {
+        synchronized(layerModel) { commandManager.popFirstCommandInRedo() }
+    }
+
+    private fun manageUndoAndRedo(callFunction: () -> Unit, condition: Boolean) {
+        CoroutineScope(Dispatchers.Default).launch {
+            mutex.withLock {
+                if (!shuttingDown) {
+                    synchronized(layerModel) {
+                        if (condition) {
+                            callFunction()
+                        }
+                    }
+                }
+                withContext(Dispatchers.Main) {
+                    notifyCommandPostExecute()
+                }
+            }
+        }
     }
 
     private fun notifyCommandPostExecute() {

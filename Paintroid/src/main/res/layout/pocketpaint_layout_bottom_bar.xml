@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
  *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
+ *  Copyright (C) 2010-2022 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -159,11 +159,11 @@
             style="@style/PocketPaintToolSelectionButton">
             <ImageView
                 style="@style/PocketPaintToolSelectionButtonImageView"
-                android:src="@drawable/ic_pocketpaint_tool_stamp"
-                android:contentDescription="@string/button_stamp"/>
+                android:src="@drawable/ic_pocketpaint_tool_clipboard"
+                android:contentDescription="@string/button_clipboard"/>
             <TextView
                 style="@style/PocketPaintToolSelectionButtonTextView"
-                android:text="@string/button_stamp"/>
+                android:text="@string/button_clipboard"/>
         </LinearLayout>
 
         <LinearLayout
@@ -233,6 +233,19 @@
             <TextView
                 style="@style/PocketPaintToolSelectionButtonTextView"
                 android:text="@string/button_smudge"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/pocketpaint_tools_clipping"
+            tools:ignore="UseCompoundDrawables"
+            style="@style/PocketPaintToolSelectionButton">
+            <ImageView
+                style="@style/PocketPaintToolSelectionButtonImageView"
+                android:src="@drawable/ic_pocketpaint_tool_clipping"
+                android:contentDescription="@string/button_clip"/>
+            <TextView
+                style="@style/PocketPaintToolSelectionButtonTextView"
+                android:text="@string/button_clip"/>
         </LinearLayout>
     </TableRow>
 </TableLayout>

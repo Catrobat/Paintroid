@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2015 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,9 +25,8 @@ import android.graphics.Path
 import org.catrobat.paintroid.command.Command
 import org.catrobat.paintroid.contract.LayerContracts
 
-class PathCommand(paint: Paint, path: Path) : Command {
+class PathCommand(val paint: Paint, path: Path) : Command {
 
-    var paint = paint; private set
     var path = path; private set
 
     override fun run(canvas: Canvas, layerModel: LayerContracts.Model) {

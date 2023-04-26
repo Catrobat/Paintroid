@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
  *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
+ *  Copyright (C) 2010-2022 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -34,4 +34,5 @@
     <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">நீங்கள் உங்கள் மாற்றங்களைச் சேமிக்க வேண்டுமா?</string>
     <string name="color_picker_no" tools:ignore="MissingTranslation">இல்லை</string>
     <string name="color_picker_yes" tools:ignore="MissingTranslation">ஆமாம்</string>
+    <string name="color_picker_history_recently_used" tools:ignore="MissingTranslation">recently used</string>
 </resources>

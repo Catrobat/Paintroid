@@ -53,8 +53,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
 
     signingConfigs {
@@ -83,23 +83,6 @@ android {
         signedRelease {
             signingConfig signingConfigs.signedRelease
         }
-        debug {
-            def branchName = System.getenv("BRANCH_NAME")
-            def buildNumber = System.getenv("BUILD_NUMBER")
-
-            //only rename when env is setup via jenkins
-            if (branchName && buildNumber) {
-                //loop over all variants is necessary to expose outputFileName variable
-                android.applicationVariants.all { variant ->
-                    if (variant.name == "debug") {
-                        variant.outputs.all { output ->
-                            def fileName = "${getProperty("archivesBaseName")}-debug-$branchName-${buildNumber}.apk"
-                            outputFileName = fileName
-                        }
-                    }
-                }
-            }
-        }
     }
 }
 
@@ -111,4 +94,6 @@ tasks.withType(Detekt).configureEach {
 
 dependencies {
     implementation project(':Paintroid')
+
+    implementation 'com.android.support:support-core-utils:28.0.0'
 }

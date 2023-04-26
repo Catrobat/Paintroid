@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ *  Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,8 +19,10 @@
 package org.catrobat.paintroid.controller
 
 import android.graphics.Bitmap
+import android.graphics.PointF
 import android.os.Bundle
 import android.view.View
+import androidx.test.espresso.idling.CountingIdlingResource
 import org.catrobat.paintroid.colorpicker.OnColorPickedListener
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.tools.ContextCallback
@@ -31,7 +33,7 @@ import org.catrobat.paintroid.tools.ToolPaint
 import org.catrobat.paintroid.tools.ToolReference
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.Workspace
-import org.catrobat.paintroid.tools.implementation.BaseToolWithShape
+import org.catrobat.paintroid.tools.implementation.ClippingTool
 import org.catrobat.paintroid.tools.implementation.ImportTool
 import org.catrobat.paintroid.tools.implementation.LineTool
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
@@ -42,18 +44,11 @@ class DefaultToolController(
     private val toolFactory: ToolFactory,
     private val commandManager: CommandManager,
     private val workspace: Workspace,
+    private val idlingResource: CountingIdlingResource,
     private val toolPaint: ToolPaint,
     private val contextCallback: ContextCallback
 ) : ToolController {
     private lateinit var onColorPickedListener: OnColorPickedListener
-    private val toolList =
-        hashSetOf(
-            ToolType.TEXT,
-            ToolType.TRANSFORM,
-            ToolType.IMPORTPNG,
-            ToolType.SHAPE,
-            ToolType.LINE
-        )
 
     override val isDefaultTool: Boolean
         get() = toolReference.tool?.toolType == ToolType.BRUSH
@@ -70,6 +65,8 @@ class DefaultToolController(
     private fun createAndSetupTool(toolType: ToolType): Tool {
         if (toolType != ToolType.HAND) {
             toolOptionsViewController.removeToolViews()
+        } else if (toolType != ToolType.CLIP) {
+            toolOptionsViewController.removeToolViews()
         }
         if (toolList.contains(toolType)) {
             toolOptionsViewController.showCheckmark()
@@ -81,6 +78,7 @@ class DefaultToolController(
             toolOptionsViewController,
             commandManager,
             workspace,
+            idlingResource,
             toolPaint,
             contextCallback,
             onColorPickedListener
@@ -96,8 +94,8 @@ class DefaultToolController(
         this.onColorPickedListener = onColorPickedListener
     }
 
-    override fun switchTool(toolType: ToolType, backPressed: Boolean) {
-        switchTool(createAndSetupTool(toolType), backPressed)
+    override fun switchTool(toolType: ToolType) {
+        switchTool(createAndSetupTool(toolType))
     }
 
     override fun hideToolOptionsView() {
@@ -118,23 +116,31 @@ class DefaultToolController(
         toolReference.tool?.resetInternalState(StateChange.NEW_IMAGE_LOADED)
     }
 
-    private fun switchTool(tool: Tool, backPressed: Boolean) {
+    private fun switchTool(tool: Tool) {
         val currentTool = toolReference.tool
         val currentToolType = currentTool?.toolType
-        if (toolList.contains(currentToolType) && !backPressed) {
-            val toolToApply = currentTool as BaseToolWithShape
-            toolToApply.onClickOnButton()
-        }
-
         currentToolType?.let { hidePlusIfShown(it) }
 
-        if (currentTool?.toolType == tool.toolType) {
+        if (currentToolType == tool.toolType) {
             val toolBundle = Bundle()
             currentTool.onSaveInstanceState(toolBundle)
             tool.onRestoreInstanceState(toolBundle)
         }
         toolReference.tool = tool
         workspace.invalidate()
+    }
+
+    override fun adjustClippingToolOnBackPressed(backPressed: Boolean) {
+        val clippingTool = currentTool as ClippingTool
+        if (backPressed) {
+            if (clippingTool.areaClosed) {
+                clippingTool.handleDown(PointF(0f, 0f))
+                clippingTool.wasRecentlyApplied = true
+                clippingTool.resetInternalState(StateChange.NEW_IMAGE_LOADED)
+            }
+        } else {
+            clippingTool.onClickOnButton()
+        }
     }
 
     private fun hidePlusIfShown(currentToolType: ToolType) {
@@ -152,6 +158,14 @@ class DefaultToolController(
 
     override fun enableToolOptionsView() {
         toolOptionsViewController.enable()
+    }
+
+    override fun enableHideOption() {
+        toolOptionsViewController.enableHide()
+    }
+
+    override fun disableHideOption() {
+        toolOptionsViewController.disableHide()
     }
 
     override fun createTool() {

@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ *  Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,8 +21,11 @@ package org.catrobat.paintroid
 import android.content.SharedPreferences
 import org.catrobat.paintroid.common.IMAGE_NUMBER_SHARED_PREFERENCES_TAG
 import org.catrobat.paintroid.common.SHOW_LIKE_US_DIALOG_SHARED_PREFERENCES_TAG
+import org.catrobat.paintroid.common.ZOOM_WINDOW_ENABLED_SHARED_PREFERENCES_TAG
+import org.catrobat.paintroid.common.ZOOM_WINDOW_ZOOM_PERCENTAGE_SHARED_PREFERENCES_TAG
 
 open class UserPreferences(var preferences: SharedPreferences) {
+
     open val preferenceLikeUsDialogValue: Boolean
         get() = preferences.getBoolean(SHOW_LIKE_US_DIALOG_SHARED_PREFERENCES_TAG, false)
     open var preferenceImageNumber: Int
@@ -33,11 +36,35 @@ open class UserPreferences(var preferences: SharedPreferences) {
                 .putInt(IMAGE_NUMBER_SHARED_PREFERENCES_TAG, value)
                 .apply()
         }
+    open var preferenceZoomWindowEnabled: Boolean
+        get() = preferences.getBoolean(ZOOM_WINDOW_ENABLED_SHARED_PREFERENCES_TAG, true)
+        set(value) {
+            preferences
+                .edit()
+                .putBoolean(ZOOM_WINDOW_ENABLED_SHARED_PREFERENCES_TAG, value)
+                .apply()
+        }
+
+    open var preferenceZoomWindowZoomPercentage: Int
+        get() = preferences.getInt(
+            ZOOM_WINDOW_ZOOM_PERCENTAGE_SHARED_PREFERENCES_TAG,
+            initialZoomPercent
+        )
+        set(value) {
+            preferences
+                .edit()
+                .putInt(ZOOM_WINDOW_ZOOM_PERCENTAGE_SHARED_PREFERENCES_TAG, value)
+                .apply()
+        }
 
     open fun setPreferenceLikeUsDialogValue() {
         preferences
             .edit()
             .putBoolean(SHOW_LIKE_US_DIALOG_SHARED_PREFERENCES_TAG, true)
             .apply()
+    }
+
+    companion object {
+        const val initialZoomPercent: Int = 100
     }
 }

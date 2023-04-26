@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,7 @@ import android.graphics.Color
 import android.graphics.PointF
 import android.os.Bundle
 import androidx.annotation.VisibleForTesting
+import androidx.test.espresso.idling.CountingIdlingResource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -53,9 +54,10 @@ class SprayTool(
     toolOptionsViewController: ToolOptionsViewController,
     toolPaint: ToolPaint,
     workspace: Workspace,
+    idlingResource: CountingIdlingResource,
     commandManager: CommandManager,
     override var drawTime: Long
-) : BaseTool(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager) {
+) : BaseTool(contextCallback, toolOptionsViewController, toolPaint, workspace, idlingResource, commandManager) {
 
     @VisibleForTesting
     var sprayToolScope = CoroutineScope(Dispatchers.Main)
@@ -94,12 +96,29 @@ class SprayTool(
         }
     }
 
+    private fun hideToolOptions() {
+        toolOptionsViewController.slideUp(
+            toolOptionsViewController.toolSpecificOptionsLayout, true
+        )
+    }
+
+    private fun showToolOptions() {
+        toolOptionsViewController.slideDown(
+            toolOptionsViewController.toolSpecificOptionsLayout, false
+        )
+    }
+
     override fun handleUp(coordinate: PointF?): Boolean {
         sprayToolScope.cancel()
         currentCoordinate = coordinate
         addSprayCommand()
+
+        showToolOptions()
+        super.handleUp(coordinate)
         return true
     }
+
+    override fun toolPositionCoordinates(coordinate: PointF): PointF = coordinate
 
     override fun handleMove(coordinate: PointF?): Boolean {
         currentCoordinate = coordinate
@@ -110,7 +129,8 @@ class SprayTool(
         if (sprayActive || coordinate == null) {
             return false
         }
-
+        hideToolOptions()
+        super.handleDown(coordinate)
         sprayActive = true
         currentCoordinate = coordinate
         createSprayPatternAsync()

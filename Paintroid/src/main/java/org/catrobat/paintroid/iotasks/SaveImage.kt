@@ -23,23 +23,27 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
+import androidx.test.espresso.idling.CountingIdlingResource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.catrobat.paintroid.FileIO
-import org.catrobat.paintroid.tools.Workspace
+import org.catrobat.paintroid.command.serialization.CommandSerializer
+import org.catrobat.paintroid.contract.LayerContracts
 import java.io.IOException
 import java.lang.ref.WeakReference
 
 class SaveImage(
     activity: SaveImageCallback,
     private val requestCode: Int,
-    private val workspace: Workspace,
+    private val layerModel: LayerContracts.Model,
+    private val commandSerializer: CommandSerializer,
     private var uri: Uri?,
     private val saveAsCopy: Boolean,
     private val context: Context,
-    private val scopeIO: CoroutineScope
+    private val scopeIO: CoroutineScope,
+    private val idlingResource: CountingIdlingResource
 ) {
     private val callbackRef: WeakReference<SaveImageCallback> = WeakReference(activity)
 
@@ -61,14 +65,14 @@ class SaveImage(
     }
 
     private fun saveOraFile(
-        bitmapList: List<Bitmap?>,
+        layers: List<LayerContracts.Layer>,
         uri: Uri,
         fileName: String,
         bitmap: Bitmap?,
         contentResolver: ContentResolver?
     ): Uri? = try {
         OpenRasterFileFormatConversion.saveOraFileToUri(
-            bitmapList,
+            layers,
             uri,
             fileName,
             bitmap,
@@ -80,13 +84,13 @@ class SaveImage(
     }
 
     private fun exportOraFile(
-        bitmapList: List<Bitmap?>,
+        layers: List<LayerContracts.Layer>,
         fileName: String,
         bitmap: Bitmap?,
         contentResolver: ContentResolver?
     ): Uri? = try {
         OpenRasterFileFormatConversion.exportToOraFile(
-            bitmapList,
+            layers,
             fileName,
             bitmap,
             contentResolver
@@ -108,24 +112,33 @@ class SaveImage(
         var currentUri: Uri? = null
         scopeIO.launch {
             try {
-                val bitmap = workspace.bitmapOfAllLayers
+                idlingResource.increment()
+                val bitmap = layerModel.getBitmapOfAllLayers()
                 val filename = FileIO.defaultFileName
-                currentUri = if (FileIO.isCatrobatImage) {
-                    val bitmapList = workspace.bitmapLisOfAllLayers
+                currentUri = if (FileIO.fileType == FileIO.FileType.ORA) {
+                    val layers = layerModel.layers
                     if (uri != null && filename.endsWith(FileIO.FileType.ORA.toExtension())) {
                         uri?.let {
-                            saveOraFile(bitmapList, it, filename, bitmap, callback.contentResolver)
+                            saveOraFile(layers, it, filename, bitmap, callback.contentResolver)
                         }
                     } else {
-                        val imageUri = exportOraFile(bitmapList, filename, bitmap, callback.contentResolver)
+                        val imageUri = exportOraFile(layers, filename, bitmap, callback.contentResolver)
                         imageUri
                     }
                 } else if (FileIO.fileType == FileIO.FileType.CATROBAT) {
-                    workspace.getCommandSerializationHelper().writeToFile(filename)
+                    if (uri != null) {
+                        uri?.let {
+                            commandSerializer.overWriteFile(filename, it, callback.contentResolver)
+                        }
+                    } else {
+                        commandSerializer.writeToFile(filename)
+                    }
                 } else {
                     getImageUri(callback, bitmap)
                 }
+                idlingResource.decrement()
             } catch (e: Exception) {
+                idlingResource.decrement()
                 when (e) {
                     is IOException -> Log.d(TAG, "Can't save image file", e)
                     is NullPointerException -> Log.e(TAG, "Can't load image file", e)

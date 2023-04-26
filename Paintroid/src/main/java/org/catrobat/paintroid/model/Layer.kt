@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ *  Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,25 +19,14 @@
 package org.catrobat.paintroid.model
 
 import android.graphics.Bitmap
-import android.graphics.Color
 import org.catrobat.paintroid.contract.LayerContracts
 
-open class Layer(override var bitmap: Bitmap?) : LayerContracts.Layer {
-    override var transparentBitmap: Bitmap? = null
+const val MAX_LAYER_OPACITY_PERCENTAGE = 100
+const val MAX_LAYER_OPACITY_VALUE = 255
+
+open class Layer(override var bitmap: Bitmap) : LayerContracts.Layer {
     override var isVisible: Boolean = true
+    override var opacityPercentage: Int = MAX_LAYER_OPACITY_PERCENTAGE
 
-    init {
-        bitmap?.apply {
-            transparentBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-        }
-    }
-
-    override fun switchBitmaps(isUnhide: Boolean) {
-        val tmpBitmap = transparentBitmap?.apply { copy(config, isMutable) }
-        transparentBitmap = bitmap
-        bitmap = tmpBitmap
-        if (isUnhide) {
-            transparentBitmap?.eraseColor(Color.TRANSPARENT)
-        }
-    }
+    override fun getValueForOpacityPercentage(): Int = (opacityPercentage.toFloat() / MAX_LAYER_OPACITY_PERCENTAGE * MAX_LAYER_OPACITY_VALUE).toInt()
 }

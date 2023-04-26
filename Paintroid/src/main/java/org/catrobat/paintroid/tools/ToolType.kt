@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ *  Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -80,10 +80,10 @@ enum class ToolType(
         INVALID_RESOURCE_ID,
         true
     ),
-    STAMP(
-        R.string.button_stamp,
-        R.string.help_content_stamp,
-        R.drawable.ic_pocketpaint_tool_stamp,
+    CLIPBOARD(
+        R.string.button_clipboard,
+        R.string.help_content_clipboard,
+        R.drawable.ic_pocketpaint_tool_clipboard,
         EnumSet.of(StateChange.ALL),
         R.id.pocketpaint_tools_stamp,
         INVALID_RESOURCE_ID,
@@ -203,6 +203,15 @@ enum class ToolType(
         R.drawable.ic_pocketpaint_tool_smudge,
         EnumSet.of(StateChange.ALL),
         R.id.pocketpaint_tools_smudge,
+        INVALID_RESOURCE_ID,
+        true
+    ),
+    CLIP(
+        R.string.button_clip,
+        R.string.help_content_clip,
+        R.drawable.ic_pocketpaint_tool_clipping,
+        EnumSet.of(StateChange.RESET_INTERNAL_STATE),
+        R.id.pocketpaint_tools_clipping,
         INVALID_RESOURCE_ID,
         true
     );

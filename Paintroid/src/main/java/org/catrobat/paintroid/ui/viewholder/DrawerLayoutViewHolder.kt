@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ *  Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,6 +27,8 @@ class DrawerLayoutViewHolder(private val drawerLayout: DrawerLayout) : MainActiv
     }
 
     override fun isDrawerOpen(gravity: Int): Boolean = drawerLayout.isDrawerOpen(gravity)
+
+    override fun isDrawerVisible(gravity: Int): Boolean = drawerLayout.isDrawerVisible(gravity)
 
     override fun openDrawer(gravity: Int) {
         drawerLayout.openDrawer(gravity)

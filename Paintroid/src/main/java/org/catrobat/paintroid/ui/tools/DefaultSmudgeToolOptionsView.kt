@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,11 +25,13 @@ import android.text.InputFilter
 import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.tools.helper.DefaultNumberRangeFilter
 import org.catrobat.paintroid.tools.implementation.DEFAULT_PRESSURE_IN_PERCENT
@@ -48,6 +50,7 @@ private const val MAX_VAL = 100
 class DefaultSmudgeToolOptionsView(rootView: ViewGroup) : SmudgeToolOptionsView {
     private val brushSizeText: EditText
     private val brushWidthSeekBar: SeekBar
+    private var strokeButtonsGroup: ChipGroup
     private val buttonCircle: Chip
     private val buttonRect: Chip
     private val brushToolPreview: BrushToolPreview
@@ -59,6 +62,8 @@ class DefaultSmudgeToolOptionsView(rootView: ViewGroup) : SmudgeToolOptionsView 
     private val pressureSeekBar: SeekBar
     private val dragText: EditText
     private val dragSeekBar: SeekBar
+    private val topLayout: View
+    private val bottomLayout: View
 
     companion object {
         private val TAG = DefaultSmudgeToolOptionsView::class.java.simpleName
@@ -68,6 +73,7 @@ class DefaultSmudgeToolOptionsView(rootView: ViewGroup) : SmudgeToolOptionsView 
         val inflater = LayoutInflater.from(rootView.context)
         val brushPickerView = inflater.inflate(R.layout.dialog_pocketpaint_smudge_tool, rootView, true)
         brushPickerView.apply {
+            strokeButtonsGroup = findViewById(R.id.pocketpaint_stroke_types)
             buttonCircle = findViewById(R.id.pocketpaint_stroke_ibtn_circle)
             buttonRect = findViewById(R.id.pocketpaint_stroke_ibtn_rect)
             brushWidthSeekBar = findViewById(R.id.pocketpaint_stroke_width_seek_bar)
@@ -80,6 +86,8 @@ class DefaultSmudgeToolOptionsView(rootView: ViewGroup) : SmudgeToolOptionsView 
             dragText = findViewById(R.id.pocketpaint_smudge_tool_dialog_drag_input)
             dragSeekBar = findViewById(R.id.pocketpaint_drag_seek_bar)
             dragSeekBar.setOnSeekBarChangeListener(OnDragChangedSeekBarListener())
+            topLayout = findViewById(R.id.pocketpaint_smudge_top_layout)
+            bottomLayout = findViewById(R.id.pocketpaint_smudge_bottom_layout)
         }
         brushSizeText.filters = arrayOf<InputFilter>(DefaultNumberRangeFilter(MIN_VAL, MAX_VAL))
         pressureText.filters = arrayOf<InputFilter>(DefaultNumberRangeFilter(MIN_VAL, MAX_VAL))
@@ -148,15 +156,15 @@ class DefaultSmudgeToolOptionsView(rootView: ViewGroup) : SmudgeToolOptionsView 
 
     private fun onRectButtonClicked() {
         updateStrokeCap(Cap.SQUARE)
-        buttonRect.isSelected = true
-        buttonCircle.isSelected = false
+        buttonRect.isChecked = true
+        buttonCircle.isChecked = false
         invalidate()
     }
 
     private fun onCircleButtonClicked() {
         updateStrokeCap(Cap.ROUND)
-        buttonCircle.isSelected = true
-        buttonRect.isSelected = false
+        buttonCircle.isChecked = true
+        buttonRect.isChecked = false
         invalidate()
     }
 
@@ -177,6 +185,13 @@ class DefaultSmudgeToolOptionsView(rootView: ViewGroup) : SmudgeToolOptionsView 
         )
     }
 
+    override fun setStrokeCapButtonChecked(strokeCap: Cap) {
+        when (strokeCap) {
+            Cap.ROUND -> strokeButtonsGroup.check(buttonCircle.id)
+            Cap.SQUARE -> strokeButtonsGroup.check(buttonRect.id)
+        }
+    }
+
     override fun setBrushChangedListener(onBrushChangedListener: OnBrushChangedListener) {
         this.brushChangedListener = onBrushChangedListener
     }
@@ -184,6 +199,10 @@ class DefaultSmudgeToolOptionsView(rootView: ViewGroup) : SmudgeToolOptionsView 
     override fun setBrushPreviewListener(onBrushPreviewListener: OnBrushPreviewListener) {
         brushToolPreview.setListener(onBrushPreviewListener)
         brushToolPreview.invalidate()
+    }
+
+    override fun hideCaps() {
+        // Should never be reached
     }
 
     private fun updateStrokeWidthChange(strokeWidth: Int) {
@@ -278,4 +297,8 @@ class DefaultSmudgeToolOptionsView(rootView: ViewGroup) : SmudgeToolOptionsView 
             setDragText(seekBar.progress)
         }
     }
+
+    override fun getBottomToolOptions(): View = bottomLayout
+
+    override fun getTopToolOptions(): View = topLayout
 }

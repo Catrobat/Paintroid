@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ *  Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,6 +23,7 @@ import org.catrobat.paintroid.model.CommandManagerModel
 interface CommandManager {
     val isUndoAvailable: Boolean
     val isRedoAvailable: Boolean
+    val lastExecutedCommand: Command?
     val isBusy: Boolean
     val commandManagerModel: CommandManagerModel?
 
@@ -31,6 +32,8 @@ interface CommandManager {
     fun removeCommandListener(commandListener: CommandListener)
 
     fun addCommand(command: Command?)
+
+    fun addCommandWithoutUndo(command: Command?)
 
     fun setInitialStateCommand(command: Command)
 
@@ -43,6 +46,24 @@ interface CommandManager {
     fun reset()
 
     fun shutdown()
+
+    fun undoIgnoringColorChanges()
+
+    fun undoIgnoringColorChangesAndAddCommand(command: Command)
+
+    fun undoInConnectedLinesMode()
+
+    fun redoInConnectedLinesMode()
+
+    fun getCommandManagerModelForCatrobatImage(): CommandManagerModel?
+
+    fun adjustUndoListForClippingTool()
+
+    fun undoInClippingTool()
+
+    fun popFirstCommandInUndo()
+
+    fun popFirstCommandInRedo()
 
     interface CommandListener {
         fun commandPostExecute()

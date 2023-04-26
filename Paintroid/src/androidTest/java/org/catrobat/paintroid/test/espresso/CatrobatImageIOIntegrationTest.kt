@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ *  Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,22 +16,29 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+@file:Suppress("DEPRECATION")
+
 package org.catrobat.paintroid.test.espresso
 
 import android.net.Uri
+import android.os.Environment
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.replaceText
+import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.RootMatchers
-import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
 import org.catrobat.paintroid.FileIO
 import org.catrobat.paintroid.MainActivity
+import org.catrobat.paintroid.command.serialization.CommandSerializer
 import org.catrobat.paintroid.R
+import org.catrobat.paintroid.common.CATROBAT_IMAGE_ENDING
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider
 import org.catrobat.paintroid.test.espresso.util.EspressoUtils
 import org.catrobat.paintroid.test.espresso.util.UiInteractions
@@ -60,23 +67,24 @@ class CatrobatImageIOIntegrationTest {
     @get:Rule
     val grantPermissionRule: GrantPermissionRule = EspressoUtils.grantPermissionRulesVersionCheck()
 
-    private lateinit var uriFile: Uri
+    private var uriFile: Uri? = null
     private lateinit var activity: MainActivity
 
     companion object {
         private const val IMAGE_NAME = "fileName"
     }
+
     @Before
-    fun setUp() {
-        activity = launchActivityRule.activity
-    }
+    fun setUp() { activity = launchActivityRule.activity }
 
     @After
     fun tearDown() {
-        with(File(uriFile.path!!)) {
-            if (exists()) {
-                delete()
-            }
+        val imagesDirectory =
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString()
+        val pathToFile = imagesDirectory + File.separator + IMAGE_NAME + "." + CATROBAT_IMAGE_ENDING
+        val imageFile = File(pathToFile)
+        if (imageFile.exists()) {
+            imageFile.delete()
         }
     }
 
@@ -98,9 +106,10 @@ class CatrobatImageIOIntegrationTest {
         ).inRoot(RootMatchers.isPlatformPopup()).perform(ViewActions.click())
         onView(withId(R.id.pocketpaint_image_name_save_text))
             .perform(replaceText(IMAGE_NAME))
-        onView(withText(R.string.save_button_text)).perform(ViewActions.click())
+        onView(withText(R.string.save_button_text)).check(matches(isDisplayed()))
+            .perform(ViewActions.click())
         uriFile = activity.model.savedPictureUri!!
         Assert.assertNotNull(uriFile)
-        Assert.assertNotNull(activity.workspace.getCommandSerializationHelper().readFromFile(uriFile))
+        Assert.assertNotNull(CommandSerializer(activity, activity.commandManager, activity.model).readFromFile(uriFile!!))
     }
 }

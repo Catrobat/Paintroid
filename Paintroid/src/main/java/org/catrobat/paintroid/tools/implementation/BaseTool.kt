@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,6 +25,7 @@ import android.graphics.Point
 import android.graphics.PointF
 import android.os.Bundle
 import androidx.annotation.ColorInt
+import androidx.test.espresso.idling.CountingIdlingResource
 import org.catrobat.paintroid.command.CommandFactory
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.command.implementation.DefaultCommandFactory
@@ -40,12 +41,13 @@ import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 abstract class BaseTool(
     @JvmField
     open var contextCallback: ContextCallback,
-    @JvmField
-    protected var toolOptionsViewController: ToolOptionsViewController,
+    @JvmField var toolOptionsViewController: ToolOptionsViewController,
     @JvmField
     protected var toolPaint: ToolPaint,
     @JvmField
     protected var workspace: Workspace,
+    @JvmField
+    protected var idlingResource: CountingIdlingResource,
     @JvmField
     protected var commandManager: CommandManager
 ) : Tool {
@@ -56,7 +58,7 @@ abstract class BaseTool(
     protected var scrollBehavior: ScrollBehavior
 
     @JvmField
-    protected var previousEventCoordinate: PointF?
+    var previousEventCoordinate: PointF?
 
     @JvmField
     protected var commandFactory: CommandFactory = DefaultCommandFactory()
@@ -66,6 +68,9 @@ abstract class BaseTool(
         scrollBehavior = PointScrollBehavior(scrollTolerance)
         movedDistance = PointF(0f, 0f)
         previousEventCoordinate = PointF(0f, 0f)
+        if (toolPaint != null && toolPaint.paint != null && toolPaint.paint.pathEffect != null) {
+            toolPaint.paint.pathEffect = null
+        }
     }
 
     override fun onSaveInstanceState(bundle: Bundle?) = Unit
@@ -82,6 +87,20 @@ abstract class BaseTool(
 
     override fun changePaintStrokeCap(cap: Cap) {
         toolPaint.strokeCap = cap
+    }
+
+    override fun handleDown(coordinate: PointF?): Boolean {
+        toolOptionsViewController.animateBottomAndTopNavigation(
+            true
+        )
+        return true
+    }
+
+    override fun handleUp(coordinate: PointF?): Boolean {
+        toolOptionsViewController.animateBottomAndTopNavigation(
+            false
+        )
+        return true
     }
 
     override val drawPaint

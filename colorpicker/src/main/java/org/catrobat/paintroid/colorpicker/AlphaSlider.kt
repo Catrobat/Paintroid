@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ *  Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -174,16 +174,16 @@ class AlphaSlider(
     }
 
     private fun moveTrackersIfNeeded(event: MotionEvent): Boolean {
-        if (startTouchPoint == null) {
-            return false
-        }
-        var update = true
-        val startX = startTouchPoint!!.x
-        val startY = startTouchPoint!!.y
-        if (alphaRectangle.contains(startX.toFloat(), startY.toFloat())) {
-            alphaValue = pointToAlpha(event.x.toInt())
-        } else {
-            update = false
+        var update = false
+        startTouchPoint?.apply {
+            update = true
+            val startX = x
+            val startY = y
+            if (alphaRectangle.contains(startX.toFloat(), startY.toFloat())) {
+                alphaValue = pointToAlpha(event.x.toInt())
+            } else {
+                update = false
+            }
         }
         return update
     }
@@ -219,7 +219,7 @@ class AlphaSlider(
     }
 
     private fun onColorChanged() {
-        onColorChangedListener?.colorChanged(getSelectedColor())
+        onColorChangedListener.colorChanged(getSelectedColor())
     }
 
     fun setSelectedColor(color: Int) {

@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ *  Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,7 +23,7 @@ import android.graphics.Paint
 import android.graphics.PointF
 import android.graphics.RectF
 import android.view.View
-import androidx.annotation.VisibleForTesting
+import androidx.test.espresso.idling.CountingIdlingResource
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.command.serialization.SerializablePath
 import org.catrobat.paintroid.tools.ContextCallback
@@ -42,6 +42,7 @@ class LineTool(
     toolOptionsViewController: ToolOptionsViewController,
     toolPaint: ToolPaint,
     workspace: Workspace,
+    idlingResource: CountingIdlingResource,
     commandManager: CommandManager,
     override var drawTime: Long
 ) : BaseToolWithShape(
@@ -49,41 +50,23 @@ class LineTool(
     toolOptionsViewController,
     toolPaint,
     workspace,
+    idlingResource,
     commandManager
 ) {
-    @VisibleForTesting
-    var lineFinalized: Boolean = false
-
-    @VisibleForTesting
-    var endpointSet: Boolean = false
-
-    @VisibleForTesting
-    var startpointSet: Boolean = false
-
-    @VisibleForTesting
-    var initialEventCoordinate: PointF? = null
-
-    @VisibleForTesting
-    var startPointToDraw: PointF? = null
-
-    @VisibleForTesting
-    var endPointToDraw: PointF? = null
-
-    @VisibleForTesting
-    var currentCoordinate: PointF? = null
-
     override var toolType: ToolType = ToolType.LINE
 
+    var lineFinalized: Boolean = false
+    var endpointSet: Boolean = false
+    var startpointSet: Boolean = false
+    var initialEventCoordinate: PointF? = null
+    var startPointToDraw: PointF? = null
+    var endPointToDraw: PointF? = null
+    var currentCoordinate: PointF? = null
     var toolSwitched: Boolean = false
-
     var lastSetStrokeWidth: Int = 0
-
     var connectedLines = false
-
     var undoRecentlyClicked = false
-
     var undoPreviousLineForConnectedLines = true
-
     var changeInitialCoordinateForHandleNormalLine = false
 
     companion object {
@@ -99,6 +82,7 @@ class LineTool(
             )
         )
         brushToolOptionsView.setCurrentPaint(toolPaint.paint)
+        brushToolOptionsView.setStrokeCapButtonChecked(toolPaint.strokeCap)
         if (topBarViewHolder != null && topBarViewHolder?.plusButton?.visibility == View.VISIBLE) {
             topBarViewHolder?.hidePlusButton()
         }
@@ -121,6 +105,28 @@ class LineTool(
         }
     }
 
+    fun handleStateBeforeUndo() {
+        if (!lineFinalized && startpointSet && !connectedLines) {
+            startpointSet = false
+            startPointToDraw = null
+        } else {
+            if (!undoRecentlyClicked) {
+                endpointSet = false
+                endPointToDraw = null
+            } else {
+                undoPreviousLineForConnectedLines = true
+                changeInitialCoordinateForHandleNormalLine = false
+                lineFinalized = true
+                resetInternalState()
+            }
+            undoRecentlyClicked = true
+        }
+        val isPlusVisible = topBarViewHolder!!.plusButton.visibility == View.VISIBLE
+        if (isPlusVisible && !connectedLines) {
+            topBarViewHolder!!.plusButton.visibility = View.GONE
+        }
+    }
+
     override fun drawShape(canvas: Canvas) {
         // This should never be invoked
     }
@@ -137,7 +143,7 @@ class LineTool(
             lineFinalized = false
             connectedLines = true
             undoRecentlyClicked = false
-            handleUp(newStartCoordinate)
+            handleAddedLine(newStartCoordinate)
         }
     }
 
@@ -167,7 +173,7 @@ class LineTool(
             resetInternalState()
         } else if (startpointSet && !endpointSet) {
             if (commandManager.isUndoAvailable) {
-                commandManager.undo()
+                commandManager.undoIgnoringColorChanges()
             }
             lineFinalized = true
             resetInternalState()
@@ -176,8 +182,24 @@ class LineTool(
         }
     }
 
+    private fun hideToolOptions() {
+        toolOptionsViewController.slideUp(brushToolOptionsView.getTopToolOptions(), true)
+
+        toolOptionsViewController.slideDown(
+            brushToolOptionsView.getBottomToolOptions(), true
+        )
+    }
+
+    private fun showToolOptions() {
+        toolOptionsViewController.slideDown(brushToolOptionsView.getTopToolOptions(), false)
+
+        toolOptionsViewController.slideUp(brushToolOptionsView.getBottomToolOptions(), false)
+    }
+
     override fun handleDown(coordinate: PointF?): Boolean {
         coordinate ?: return false
+        hideToolOptions()
+        super.handleDown(coordinate)
         initialEventCoordinate = PointF(coordinate.x, coordinate.y)
         previousEventCoordinate = PointF(coordinate.x, coordinate.y)
         return true
@@ -191,7 +213,7 @@ class LineTool(
             previousEventCoordinate = startPointToDraw?.let { PointF(it.x, it.y) }
             if (undoPreviousLineForConnectedLines && commandManager.isUndoAvailable && !undoRecentlyClicked) {
                 undoRecentlyClicked = false
-                commandManager.undo()
+                commandManager.undoIgnoringColorChanges()
             }
             undoPreviousLineForConnectedLines = false
             undoRecentlyClicked = false
@@ -231,14 +253,6 @@ class LineTool(
         val startY = startPointToDraw?.y
         val endX = endPointToDraw?.x
         val endY = endPointToDraw?.y
-        if (!fromHandleLine) {
-            if (commandManager.isUndoAvailable && !undoRecentlyClicked) {
-                commandManager.undo()
-            }
-            if (undoRecentlyClicked) {
-                undoRecentlyClicked = false
-            }
-        }
 
         val finalPath = SerializablePath().apply {
             if (startX != null && startY != null && endX != null && endY != null) {
@@ -247,7 +261,15 @@ class LineTool(
             }
         }
         val command = commandFactory.createPathCommand(toolPaint.paint, finalPath)
-        commandManager.addCommand(command)
+
+        if (!fromHandleLine && !undoRecentlyClicked) {
+            if (commandManager.isUndoAvailable && !undoRecentlyClicked) {
+                commandManager.undoIgnoringColorChangesAndAddCommand(command)
+            }
+        } else {
+            commandManager.addCommand(command)
+        }
+        undoRecentlyClicked = false
         resetInternalState()
         if (topBarViewHolder != null && topBarViewHolder?.plusButton?.visibility != View.VISIBLE) {
             topBarViewHolder?.showPlusButton()
@@ -277,6 +299,7 @@ class LineTool(
 
         endpointSet = true
         startpointSet = true
+        undoRecentlyClicked = false
 
         if (topBarViewHolder != null && topBarViewHolder?.plusButton?.visibility != View.VISIBLE) {
             topBarViewHolder?.showPlusButton()
@@ -291,6 +314,12 @@ class LineTool(
     }
 
     override fun handleUp(coordinate: PointF?): Boolean {
+        showToolOptions()
+        super.handleUp(coordinate)
+        return handleAddedLine(coordinate)
+    }
+
+    fun handleAddedLine(coordinate: PointF?): Boolean {
         undoPreviousLineForConnectedLines = true
         if (changeInitialCoordinateForHandleNormalLine && initialEventCoordinate == null) {
             initialEventCoordinate = startPointToDraw?.let { PointF(it.x, it.y) }
@@ -315,6 +344,8 @@ class LineTool(
         return true
     }
 
+    override fun toolPositionCoordinates(coordinate: PointF): PointF = coordinate
+
     override fun resetInternalState() {
         initialEventCoordinate = null
         currentCoordinate = null
@@ -336,7 +367,6 @@ class LineTool(
             val endX = endPointToDraw?.x
             val endY = endPointToDraw?.y
             if (commandManager.isUndoAvailable) {
-                commandManager.undo()
                 val finalPath = SerializablePath().apply {
                     if (startX != null && startY != null && endX != null && endY != null) {
                         moveTo(startX, startY)
@@ -344,14 +374,41 @@ class LineTool(
                     }
                 }
                 val command = commandFactory.createPathCommand(toolPaint.paint, finalPath)
-                commandManager.addCommand(command)
+                commandManager.undoIgnoringColorChangesAndAddCommand(command)
             }
         } else if (startpointSet && !endpointSet && !lineFinalized) {
             if (commandManager.isUndoAvailable && !undoRecentlyClicked) {
-                commandManager.undo()
-                startPointToDraw?.let { addPointCommand(it) }
+                startPointToDraw?.let {
+                    val command = commandFactory.createPointCommand(this.drawPaint, it)
+                    commandManager.undoIgnoringColorChangesAndAddCommand(command)
+                }
             }
         }
+        brushToolOptionsView.invalidate()
+    }
+
+    fun undoChangePaintColor(color: Int) {
+        handleStateBeforeUndo()
+        super.changePaintColor(color)
+        brushToolOptionsView.invalidate()
+        if (connectedLines) {
+            commandManager.undoInConnectedLinesMode()
+        } else {
+            commandManager.undo()
+        }
+    }
+
+    fun redoLineTool() {
+        undoRecentlyClicked = false
+        if (connectedLines) {
+            commandManager.redoInConnectedLinesMode()
+        } else {
+            commandManager.redo()
+        }
+    }
+
+    fun undoColorChangedCommand(color: Int) {
+        super.changePaintColor(color)
         brushToolOptionsView.invalidate()
     }
 
@@ -364,7 +421,6 @@ class LineTool(
             val endX = endPointToDraw?.x
             val endY = endPointToDraw?.y
             if (commandManager.isUndoAvailable) {
-                commandManager.undo()
                 val finalPath = SerializablePath().apply {
                     if (startX != null && startY != null && endX != null && endY != null) {
                         moveTo(startX, startY)
@@ -372,12 +428,14 @@ class LineTool(
                     }
                 }
                 val command = commandFactory.createPathCommand(toolPaint.paint, finalPath)
-                commandManager.addCommand(command)
+                commandManager.undoIgnoringColorChangesAndAddCommand(command)
             }
         } else if (startpointSet && !endpointSet && !lineFinalized && !noNewLine) {
             if (commandManager.isUndoAvailable && !undoRecentlyClicked) {
-                commandManager.undo()
-                startPointToDraw?.let { addPointCommand(it) }
+                startPointToDraw?.let {
+                    val command = commandFactory.createPointCommand(this.drawPaint, it)
+                    commandManager.undoIgnoringColorChangesAndAddCommand(command)
+                }
             }
         }
         lastSetStrokeWidth = strokeWidth
@@ -392,7 +450,6 @@ class LineTool(
             val endX = endPointToDraw?.x
             val endY = endPointToDraw?.y
             if (commandManager.isUndoAvailable) {
-                commandManager.undo()
                 val finalPath = SerializablePath().apply {
                     if (startX != null && startY != null && endX != null && endY != null) {
                         moveTo(startX, startY)
@@ -400,12 +457,14 @@ class LineTool(
                     }
                 }
                 val command = commandFactory.createPathCommand(toolPaint.paint, finalPath)
-                commandManager.addCommand(command)
+                commandManager.undoIgnoringColorChangesAndAddCommand(command)
             }
         } else if (startpointSet && !endpointSet && !lineFinalized) {
             if (commandManager.isUndoAvailable && !undoRecentlyClicked) {
-                commandManager.undo()
-                startPointToDraw?.let { addPointCommand(it) }
+                startPointToDraw?.let {
+                    val command = commandFactory.createPointCommand(this.drawPaint, it)
+                    commandManager.undoIgnoringColorChangesAndAddCommand(command)
+                }
             }
         }
         brushToolOptionsView.invalidate()

@@ -21,6 +21,7 @@ package org.catrobat.paintroid.test.espresso.screenshots
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.closeSoftKeyboard
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
@@ -64,7 +65,7 @@ class CreateMarketingScreenshots {
 
     @Test
     fun createScreenshots() {
-
+        IdlingRegistry.getInstance().register(launchActivityRule.activity.idlingResource)
         ToolBarViewInteraction.onToolBarView().performSelectTool(ToolType.FILL)
         ToolPropertiesInteraction.onToolProperties()
             .setColorResource(R.color.pocketpaint_color_picker_blue1)
@@ -84,6 +85,7 @@ class CreateMarketingScreenshots {
         screenshotSaveMenu()
 
         screenshotAdvancedSettings()
+        IdlingRegistry.getInstance().unregister(launchActivityRule.activity.idlingResource)
     }
 
     private fun screenshotAdvancedSettings() {

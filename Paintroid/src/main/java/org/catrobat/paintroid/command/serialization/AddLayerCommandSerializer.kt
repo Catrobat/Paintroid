@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ *  Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,17 +21,17 @@ package org.catrobat.paintroid.command.serialization
 import com.esotericsoftware.kryo.Kryo
 import com.esotericsoftware.kryo.io.Input
 import com.esotericsoftware.kryo.io.Output
-import org.catrobat.paintroid.command.implementation.AddLayerCommand
+import org.catrobat.paintroid.command.implementation.AddEmptyLayerCommand
 import org.catrobat.paintroid.common.CommonFactory
 
-class AddLayerCommandSerializer(version: Int) : VersionSerializer<AddLayerCommand>(version) {
-    override fun write(kryo: Kryo, output: Output, command: AddLayerCommand) {
+class AddLayerCommandSerializer(version: Int) : VersionSerializer<AddEmptyLayerCommand>(version) {
+    override fun write(kryo: Kryo, output: Output, command: AddEmptyLayerCommand) {
         // Has no member variables to save
     }
 
-    override fun read(kryo: Kryo, input: Input, type: Class<out AddLayerCommand>): AddLayerCommand =
+    override fun read(kryo: Kryo, input: Input, type: Class<out AddEmptyLayerCommand>): AddEmptyLayerCommand =
         super.handleVersions(this, kryo, input, type)
 
-    override fun readCurrentVersion(kryo: Kryo, input: Input, type: Class<out AddLayerCommand>): AddLayerCommand =
-        AddLayerCommand(CommonFactory())
+    override fun readCurrentVersion(kryo: Kryo, input: Input, type: Class<out AddEmptyLayerCommand>): AddEmptyLayerCommand =
+        AddEmptyLayerCommand(CommonFactory())
 }

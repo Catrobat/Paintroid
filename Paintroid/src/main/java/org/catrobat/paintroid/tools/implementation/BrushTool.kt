@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,7 +21,7 @@ package org.catrobat.paintroid.tools.implementation
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.PointF
-import androidx.annotation.VisibleForTesting
+import androidx.test.espresso.idling.CountingIdlingResource
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.command.serialization.SerializablePath
 import org.catrobat.paintroid.tools.ContextCallback
@@ -47,9 +47,10 @@ open class BrushTool(
     toolOptionsViewController: ToolOptionsViewController,
     toolPaint: ToolPaint,
     workspace: Workspace,
+    idlingResource: CountingIdlingResource,
     commandManager: CommandManager,
     override var drawTime: Long
-) : BaseTool(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager) {
+) : BaseTool(contextCallback, toolOptionsViewController, toolPaint, workspace, idlingResource, commandManager) {
     protected open val previewPaint: Paint
         get() = toolPaint.previewPaint
 
@@ -59,16 +60,16 @@ open class BrushTool(
     override val toolType: ToolType
         get() = ToolType.BRUSH
 
-    @VisibleForTesting
     @JvmField
     var pathToDraw: SerializablePath = SerializablePath()
-    private var initialEventCoordinate: PointF? = null
+    var initialEventCoordinate: PointF? = null
     private var pathInsideBitmap = false
     private val drawToolMovedDistance = PointF(0f, 0f)
 
-    private val pointArray = mutableListOf<PointF>()
+    val pointArray = mutableListOf<PointF>()
 
     init {
+        toolOptionsViewController.enable()
         pathToDraw.incReserve(1)
         brushToolOptionsView.setBrushChangedListener(CommonBrushChangedListener(this))
         brushToolOptionsView.setBrushPreviewListener(
@@ -78,6 +79,7 @@ open class BrushTool(
             )
         )
         brushToolOptionsView.setCurrentPaint(toolPaint.paint)
+        brushToolOptionsView.setStrokeCapButtonChecked(toolPaint.strokeCap)
     }
 
     override fun draw(canvas: Canvas) {
@@ -89,8 +91,30 @@ open class BrushTool(
         }
     }
 
+    private fun hideBrushSpecificLayoutOnHandleDown() {
+        toolOptionsViewController.slideUp(
+            brushToolOptionsView.getTopToolOptions(), true
+        )
+
+        toolOptionsViewController.slideDown(
+            brushToolOptionsView.getBottomToolOptions(), true
+        )
+    }
+
+    private fun showBrushSpecificLayoutOnHandleUp() {
+        toolOptionsViewController.slideDown(
+            brushToolOptionsView.getTopToolOptions(), false
+        )
+
+        toolOptionsViewController.slideUp(
+            brushToolOptionsView.getBottomToolOptions(), false
+        )
+    }
+
     override fun handleDown(coordinate: PointF?): Boolean {
         coordinate ?: return false
+        hideBrushSpecificLayoutOnHandleDown()
+        super.handleDown(coordinate)
         initialEventCoordinate = PointF(coordinate.x, coordinate.y)
         previousEventCoordinate = PointF(coordinate.x, coordinate.y)
         pathToDraw.moveTo(coordinate.x, coordinate.y)
@@ -125,6 +149,9 @@ open class BrushTool(
             return false
         }
 
+        showBrushSpecificLayoutOnHandleUp()
+        super.handleUp(coordinate)
+
         if (!pathInsideBitmap && workspace.contains(coordinate)) {
             pathInsideBitmap = true
         }
@@ -145,6 +172,8 @@ open class BrushTool(
             false
         }
     }
+
+    override fun toolPositionCoordinates(coordinate: PointF): PointF = coordinate
 
     override fun resetInternalState() {
         pathToDraw.rewind()
@@ -169,16 +198,14 @@ open class BrushTool(
             return false
         }
 
-        val distance = sqrt(
-            (
-                (coordinate.x - initialEventCoordinate!!.x) *
-                    (coordinate.x - initialEventCoordinate!!.x) +
-                    (coordinate.y - initialEventCoordinate!!.y)
-                ).toDouble()
-        )
-        val speed = distance / drawTime
+        var distance: Double? = null
+        initialEventCoordinate?.apply {
+            distance =
+                sqrt(((coordinate.x - x) * (coordinate.x - x) + (coordinate.y - y) * (coordinate.y - y)).toDouble())
+        }
+        val speed = distance?.div(drawTime)
 
-        if (!smoothing || speed < threshold) {
+        if (!smoothing || speed != null && speed < threshold) {
             val command = commandFactory.createPathCommand(bitmapPaint, pathToDraw)
             commandManager.addCommand(command)
         } else {

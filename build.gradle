@@ -19,37 +19,36 @@
 
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
-    ext.kotlin_version = '1.4.32'
+    ext.kotlin_version = '1.5.30'
     repositories {
+        mavenCentral()
         google()
-        jcenter()
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
+        maven { url "https://plugins.gradle.org/m2/" }
+        maven { url 'https://jitpack.io' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.0.2'
+        classpath 'com.android.tools.build:gradle:7.2.1'
         classpath 'com.hiya:jacoco-android:0.2'
-        classpath 'org.catrobat.gradle.androidemulators:android-emulators-gradle:1.6.2'
-        classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:1.0.2'
-        classpath 'com.github.panpf.bintray-publish:bintray-publish:1.0.0'
+        classpath 'com.github.Catrobat:Gradle:1.6.2'
+        classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:3.1.0'
+        classpath "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.20.0"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 
 plugins {
-    id "io.gitlab.arturbosch.detekt" version "1.14.2"
+    id "io.gitlab.arturbosch.detekt" version "1.20.0"
 }
 
 ext {
     androidCompileSdkVersion = 30
     androidMinSdkVersion = 21
-    androidTargetSdkVersion = 30
+    androidTargetSdkVersion = 31
 
     androidSupportLibraryVersion = '28.0.0'
 
-    androidVersionCode = 47
-    androidVersionName = '2.9.0'
+    androidVersionCode = 49
+    androidVersionName = '2.10.0'
 }
 
 if(project.hasProperty("snapshot")) {
@@ -60,6 +59,6 @@ allprojects {
     repositories {
         mavenLocal()
         google()
-        jcenter()
+        mavenCentral()
     }
 }

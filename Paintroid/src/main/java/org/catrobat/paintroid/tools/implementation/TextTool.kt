@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ *  Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,9 +25,11 @@ import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
 import androidx.annotation.VisibleForTesting
+import androidx.test.espresso.idling.CountingIdlingResource
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.command.serialization.SerializableTypeface
+import org.catrobat.paintroid.common.ITALIC_FONT_BOX_ADJUSTMENT
 import org.catrobat.paintroid.tools.ContextCallback
 import org.catrobat.paintroid.tools.FontType
 import org.catrobat.paintroid.tools.ToolPaint
@@ -35,6 +37,7 @@ import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.Workspace
 import org.catrobat.paintroid.tools.options.TextToolOptionsView
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
+import kotlin.Exception
 
 @VisibleForTesting
 const val TEXT_SIZE_MAGNIFICATION_FACTOR = 3f
@@ -43,7 +46,7 @@ const val TEXT_SIZE_MAGNIFICATION_FACTOR = 3f
 const val BOX_OFFSET = 20
 
 @VisibleForTesting
-const val MARGIN_TOP = 50.0f
+const val MARGIN_TOP = 200f
 
 private const val ROTATION_ENABLED = true
 private const val RESIZE_POINTS_VISIBLE = true
@@ -64,6 +67,7 @@ class TextTool(
     toolOptionsViewController: ToolOptionsViewController,
     toolPaint: ToolPaint,
     workspace: Workspace,
+    idlingResource: CountingIdlingResource,
     commandManager: CommandManager,
     override var drawTime: Long
 ) : BaseToolWithRectangleShape(
@@ -71,6 +75,7 @@ class TextTool(
     toolOptionsViewController,
     toolPaint,
     workspace,
+    idlingResource,
     commandManager
 ) {
     @VisibleForTesting
@@ -100,6 +105,9 @@ class TextTool(
     private var textSize = DEFAULT_TEXT_SIZE
     private val stc: Typeface?
     private val dubai: Typeface?
+    private var oldBoxWidth = 0f
+    private var oldBoxHeight = 0f
+    private var oldToolPosition: PointF? = null
 
     @get:VisibleForTesting
     val multilineText: Array<String>
@@ -107,6 +115,8 @@ class TextTool(
 
     override val toolType: ToolType
         get() = ToolType.TEXT
+
+    override fun toolPositionCoordinates(coordinate: PointF): PointF = coordinate
 
     init {
         rotationEnabled = ROTATION_ENABLED
@@ -126,31 +136,48 @@ class TextTool(
             }
 
             override fun setFont(fontType: FontType) {
+                if (fontType === font) return
                 this@TextTool.font = fontType
                 updateTypeface()
+                storeAttributes()
                 resetPreview()
                 workspace.invalidate()
+                applyAttributes()
             }
 
             override fun setUnderlined(underlined: Boolean) {
                 this@TextTool.underlined = underlined
                 textPaint.isUnderlineText = this@TextTool.underlined
+                storeAttributes()
                 resetPreview()
                 workspace.invalidate()
+                applyAttributes()
             }
 
             override fun setItalic(italic: Boolean) {
                 this@TextTool.italic = italic
+                if (italic) {
+                    storeAttributes(italic)
+                } else {
+                    storeAttributes()
+                }
                 updateTypeface()
                 resetPreview()
                 workspace.invalidate()
+                if (italic) {
+                    applyAttributes(italic)
+                } else {
+                    applyAttributes()
+                }
             }
 
             override fun setBold(bold: Boolean) {
                 this@TextTool.bold = bold
+                storeAttributes()
                 textPaint.isFakeBoldText = this@TextTool.bold
                 resetPreview()
                 workspace.invalidate()
+                applyAttributes()
             }
 
             override fun setTextSize(size: Int) {
@@ -177,13 +204,45 @@ class TextTool(
         updateTypeface()
     }
 
+    private fun hideTextLayout() {
+        toolOptionsViewController.slideUp(textToolOptionsView.getTopLayout(), true)
+        toolOptionsViewController.animateBottomAndTopNavigation(true)
+        toolOptionsViewController.slideDown(textToolOptionsView.getBottomLayout(), true)
+    }
+
+    private fun showTextLayout() {
+        toolOptionsViewController.slideDown(textToolOptionsView.getTopLayout(), false)
+        toolOptionsViewController.animateBottomAndTopNavigation(false)
+        toolOptionsViewController.slideUp(textToolOptionsView.getBottomLayout(), false)
+    }
+
+    override fun handleDown(coordinate: PointF?): Boolean {
+        hideTextLayout()
+        toolOptionsViewController.disable()
+        super.handleDown(coordinate)
+        toolOptionsViewController.enable()
+        return true
+    }
+
+    override fun handleUp(coordinate: PointF?): Boolean {
+        toolOptionsViewController.disable()
+        val returnValue = super.handleUp(coordinate)
+        toolOptionsViewController.enable()
+        showTextLayout()
+        return returnValue
+    }
+
     override fun drawBitmap(canvas: Canvas, boxWidth: Float, boxHeight: Float) {
         val textAscent = textPaint.ascent()
         val textDescent = textPaint.descent()
         val textHeight = (textDescent - textAscent) * multilineText.size
         val lineHeight = textHeight / multilineText.size
-        val maxTextWidth = multilineText.maxOf { line ->
+        var maxTextWidth = multilineText.maxOf { line ->
             textPaint.measureText(line)
+        }
+
+        if (italic) {
+            maxTextWidth *= ITALIC_FONT_BOX_ADJUSTMENT
         }
 
         canvas.save()
@@ -201,12 +260,11 @@ class TextTool(
         multilineText.forEachIndexed { index, textLine ->
             canvas.drawText(
                 textLine,
-                -(scaledBoxWidth / 2) + scaledWidthOffset,
+                scaledWidthOffset - scaledBoxWidth / 2 / if (italic) ITALIC_FONT_BOX_ADJUSTMENT else 1f,
                 -(scaledBoxHeight / 2) + scaledHeightOffset - textAscent + lineHeight * index,
                 textPaint
             )
         }
-
         canvas.restore()
     }
 
@@ -218,9 +276,26 @@ class TextTool(
         val maxTextWidth = multilineText.maxOf { line ->
             textPaint.measureText(line)
         }
-
         boxHeight = textHeight * multilineText.size + 2 * BOX_OFFSET
         boxWidth = maxTextWidth + 2 * BOX_OFFSET
+    }
+
+    private fun storeAttributes(italic: Boolean = false) {
+        if (italic) {
+            boxWidth *= ITALIC_FONT_BOX_ADJUSTMENT
+        }
+        oldBoxWidth = boxWidth
+        oldBoxHeight = boxHeight
+        oldToolPosition = PointF(toolPosition.x, toolPosition.y)
+    }
+    private fun applyAttributes(italic: Boolean = false) {
+        boxWidth = oldBoxWidth / if (italic) ITALIC_FONT_BOX_ADJUSTMENT else 1f
+        boxHeight = oldBoxHeight
+        if (oldToolPosition != null) {
+            toolPosition = oldToolPosition as PointF
+        } else {
+            resetBoxPosition()
+        }
     }
 
     override fun onSaveInstanceState(bundle: Bundle?) {
@@ -255,6 +330,7 @@ class TextTool(
     private fun updateTypeface() {
         val style = if (italic) Typeface.ITALIC else Typeface.NORMAL
         val textSkewX = if (italic) ITALIC_TEXT_SKEW else DEFAULT_TEXT_SKEW
+        textPaint.textSkewX = textSkewX
         when (font) {
             FontType.SANS_SERIF -> textPaint.typeface = Typeface.create(Typeface.SANS_SERIF, style)
             FontType.SERIF -> textPaint.typeface = Typeface.create(Typeface.SERIF, style)
@@ -262,14 +338,12 @@ class TextTool(
             FontType.STC ->
                 try {
                     textPaint.typeface = stc
-                    textPaint.textSkewX = textSkewX
                 } catch (e: Exception) {
                     Log.e(TAG, "stc_regular")
                 }
             FontType.DUBAI ->
                 try {
                     textPaint.typeface = dubai
-                    textPaint.textSkewX = textSkewX
                 } catch (e: Exception) {
                     Log.e(TAG, "dubai")
                 }

@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ *  Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,7 @@ import android.graphics.Paint
 import android.graphics.PointF
 import org.catrobat.paintroid.command.Command
 import org.catrobat.paintroid.command.serialization.SerializableTypeface
+import org.catrobat.paintroid.common.ITALIC_FONT_BOX_ADJUSTMENT
 import org.catrobat.paintroid.contract.LayerContracts
 
 class TextToolCommand(
@@ -51,8 +52,12 @@ class TextToolCommand(
         val textDescent = textPaint.descent()
         val textHeight = (textDescent - textAscent) * multilineText.size
         val lineHeight = textHeight / multilineText.size
-        val maxTextWidth = multilineText.maxOf { line ->
+        var maxTextWidth = multilineText.maxOf { line ->
             textPaint.measureText(line)
+        }
+
+        if (typeFaceInfo.italic) {
+            maxTextWidth *= ITALIC_FONT_BOX_ADJUSTMENT
         }
 
         with(canvas) {
@@ -72,7 +77,7 @@ class TextToolCommand(
             multilineText.forEachIndexed { index, textLine ->
                 canvas.drawText(
                     textLine,
-                    -(scaledBoxWidth / 2) + scaledWidthOffset,
+                    scaledWidthOffset - scaledBoxWidth / 2 / if (typeFaceInfo.italic) ITALIC_FONT_BOX_ADJUSTMENT else 1f,
                     -(scaledBoxHeight / 2) + scaledHeightOffset - textAscent + lineHeight * index,
                     textPaint
                 )

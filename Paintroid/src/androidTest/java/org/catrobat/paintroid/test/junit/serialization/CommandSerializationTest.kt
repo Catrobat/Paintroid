@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ *  Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,7 +28,7 @@ import android.graphics.RectF
 import com.esotericsoftware.kryo.io.Input
 import com.esotericsoftware.kryo.io.Output
 import org.catrobat.paintroid.command.Command
-import org.catrobat.paintroid.command.implementation.AddLayerCommand
+import org.catrobat.paintroid.command.implementation.AddEmptyLayerCommand
 import org.catrobat.paintroid.command.implementation.AsyncCommandManager
 import org.catrobat.paintroid.command.implementation.CompositeCommand
 import org.catrobat.paintroid.command.implementation.CropCommand
@@ -37,7 +37,7 @@ import org.catrobat.paintroid.command.implementation.DefaultCommandFactory
 import org.catrobat.paintroid.command.implementation.FillCommand
 import org.catrobat.paintroid.command.implementation.FlipCommand
 import org.catrobat.paintroid.command.implementation.GeometricFillCommand
-import org.catrobat.paintroid.command.implementation.LoadBitmapListCommand
+import org.catrobat.paintroid.command.implementation.LoadLayerListCommand
 import org.catrobat.paintroid.command.implementation.LoadCommand
 import org.catrobat.paintroid.command.implementation.MergeLayersCommand
 import org.catrobat.paintroid.command.implementation.PathCommand
@@ -50,13 +50,16 @@ import org.catrobat.paintroid.command.implementation.RotateCommand
 import org.catrobat.paintroid.command.implementation.SelectLayerCommand
 import org.catrobat.paintroid.command.implementation.SetDimensionCommand
 import org.catrobat.paintroid.command.implementation.SprayCommand
-import org.catrobat.paintroid.command.implementation.StampCommand
+import org.catrobat.paintroid.command.implementation.ClipboardCommand
 import org.catrobat.paintroid.command.implementation.TextToolCommand
 import org.catrobat.paintroid.command.implementation.SmudgePathCommand
-import org.catrobat.paintroid.command.serialization.CommandSerializationUtilities
+import org.catrobat.paintroid.command.implementation.LayerOpacityCommand
+import org.catrobat.paintroid.command.serialization.CommandSerializer
 import org.catrobat.paintroid.command.serialization.SerializablePath
 import org.catrobat.paintroid.command.serialization.SerializableTypeface
 import org.catrobat.paintroid.model.CommandManagerModel
+import org.catrobat.paintroid.model.Layer
+import org.catrobat.paintroid.model.MainActivityModel
 import org.catrobat.paintroid.tools.FontType
 import org.catrobat.paintroid.tools.drawable.HeartDrawable
 import org.catrobat.paintroid.tools.drawable.OvalDrawable
@@ -71,9 +74,10 @@ import org.mockito.Mockito.mock
 
 class CommandSerializationTest {
 
-    private lateinit var commandSerializer: CommandSerializationUtilities
+    private lateinit var commandSerializer: CommandSerializer
     private lateinit var expectedModel: CommandManagerModel
     private lateinit var paint: Paint
+    private lateinit var model: MainActivityModel
     private val commandFactory = DefaultCommandFactory()
 
     companion object {
@@ -86,8 +90,9 @@ class CommandSerializationTest {
         val context = mock(Context::class.java)
         val resources = mock(Resources::class.java)
         val commandManger = mock(AsyncCommandManager::class.java)
+        val model = mock(MainActivityModel::class.java)
 
-        commandSerializer = CommandSerializationUtilities(context, commandManger)
+        commandSerializer = CommandSerializer(context, commandManger, model)
         val initialCommand: Command =
             commandFactory.createInitCommand(WORKSPACE_WIDTH, WORKSPACE_HEIGHT)
         expectedModel = CommandManagerModel(initialCommand, ArrayList())
@@ -103,7 +108,13 @@ class CommandSerializationTest {
 
     @Test
     fun testSerializeAddLayerCommand() {
-        expectedModel.commands.add(commandFactory.createAddLayerCommand())
+        expectedModel.commands.add(commandFactory.createAddEmptyLayerCommand())
+        assertSerializeAndDeserialize()
+    }
+
+    @Test
+    fun testSerializeOpacityCommand() {
+        expectedModel.commands.add(commandFactory.createLayerOpacityCommand(0, 50))
         assertSerializeAndDeserialize()
     }
 
@@ -157,9 +168,9 @@ class CommandSerializationTest {
 
     @Test
     fun testSerializeLoadListInitCommand() {
-        val bitmapList = ArrayList<Bitmap>()
-        bitmapList.add(
-            Bitmap.createBitmap(
+        val layerList = ArrayList<Layer>()
+        layerList.add(
+            Layer(
                 Bitmap.createBitmap(
                     WORKSPACE_WIDTH,
                     WORKSPACE_HEIGHT,
@@ -167,7 +178,7 @@ class CommandSerializationTest {
                 )
             )
         )
-        expectedModel.commands.add(commandFactory.createInitCommand(bitmapList))
+        expectedModel.commands.add(commandFactory.createInitCommand(layerList))
         assertSerializeAndDeserialize()
     }
 
@@ -337,7 +348,7 @@ class CommandSerializationTest {
     @Test
     fun testSerializeStampCommand() {
         expectedModel.commands.add(
-            commandFactory.createStampCommand(
+            commandFactory.createClipboardCommand(
                 Bitmap.createBitmap(WORKSPACE_WIDTH, WORKSPACE_HEIGHT, Bitmap.Config.ARGB_8888),
                 PointF(20f, 30f), 40f, 50f, 60f
             )
@@ -351,7 +362,7 @@ class CommandSerializationTest {
             add(commandFactory.createSprayCommand(floatArrayOf(20f, 347.5f, 99.239f), paint))
             add(commandFactory.createResizeCommand(400, 200))
             add(commandFactory.createRotateCommand(RotateCommand.RotateDirection.ROTATE_RIGHT))
-            add(commandFactory.createAddLayerCommand())
+            add(commandFactory.createAddEmptyLayerCommand())
             add(commandFactory.createPointCommand(paint, PointF(30.43f, 40.28f)))
         }
     }
@@ -382,7 +393,7 @@ class CommandSerializationTest {
             return false
         }
         return when (expectedCommand) {
-            is AddLayerCommand -> true
+            is AddEmptyLayerCommand -> true
             is CompositeCommand -> equalsCompositeCommand(
                 expectedCommand, actualCommand as CompositeCommand
             )
@@ -427,11 +438,11 @@ class CommandSerializationTest {
             is LoadCommand -> equalsLoadCommand(
                 expectedCommand, actualCommand as LoadCommand
             )
-            is StampCommand -> equalsStampCommand(
-                expectedCommand, actualCommand as StampCommand
+            is ClipboardCommand -> equalsStampCommand(
+                expectedCommand, actualCommand as ClipboardCommand
             )
-            is LoadBitmapListCommand -> equalsLoadBitmapListCommand(
-                expectedCommand, actualCommand as LoadBitmapListCommand
+            is LoadLayerListCommand -> equalsLoadBitmapListCommand(
+                expectedCommand, actualCommand as LoadLayerListCommand
             )
             is TextToolCommand -> equalsTextToolCommand(
                 expectedCommand, actualCommand as TextToolCommand
@@ -445,9 +456,19 @@ class CommandSerializationTest {
             is SmudgePathCommand -> equalsSmudgePathCommand(
                 expectedCommand, actualCommand as SmudgePathCommand
             )
+            is LayerOpacityCommand -> equalsLayerOpacityCommand(
+                expectedCommand, actualCommand as LayerOpacityCommand
+            )
             else -> false
         }
     }
+
+    private fun equalsLayerOpacityCommand(
+        expectedCommand: LayerOpacityCommand,
+        actualCommand: LayerOpacityCommand
+    ) =
+        expectedCommand.position == actualCommand.position &&
+            expectedCommand.opacityPercentage == actualCommand.opacityPercentage
 
     private fun equalsCompositeCommand(
         expectedCommand: CompositeCommand,
@@ -532,24 +553,24 @@ class CommandSerializationTest {
         expectedCommand.flipDirection == actualCommand.flipDirection
 
     private fun equalsLoadCommand(expectedCommand: LoadCommand, actualCommand: LoadCommand) =
-        expectedCommand.loadedImage.sameAs(actualCommand.loadedImage)
+        expectedCommand.loadedBitmap.sameAs(actualCommand.loadedBitmap)
 
     private fun equalsLoadBitmapListCommand(
-        expectedCommand: LoadBitmapListCommand,
-        actualCommand: LoadBitmapListCommand
+        expectedCommand: LoadLayerListCommand,
+        actualCommand: LoadLayerListCommand
     ): Boolean {
-        if (expectedCommand.loadedImageList.size != actualCommand.loadedImageList.size) {
+        if (expectedCommand.loadedLayers.size != actualCommand.loadedLayers.size) {
             return false
         }
-        expectedCommand.loadedImageList.zip(actualCommand.loadedImageList).forEach { commandPair ->
-            if (!commandPair.component1()!!.sameAs(commandPair.component2())) {
+        expectedCommand.loadedLayers.zip(actualCommand.loadedLayers).forEach { commandPair ->
+            if (!commandPair.component1().bitmap.sameAs(commandPair.component2().bitmap)) {
                 return false
             }
         }
         return true
     }
 
-    private fun equalsStampCommand(expectedCommand: StampCommand, actualCommand: StampCommand) =
+    private fun equalsStampCommand(expectedCommand: ClipboardCommand, actualCommand: ClipboardCommand) =
         expectedCommand.bitmap!!.sameAs(actualCommand.bitmap) && expectedCommand.coordinates == actualCommand.coordinates &&
             expectedCommand.boxWidth == actualCommand.boxWidth && expectedCommand.boxHeight == actualCommand.boxHeight &&
             expectedCommand.boxRotation == actualCommand.boxRotation

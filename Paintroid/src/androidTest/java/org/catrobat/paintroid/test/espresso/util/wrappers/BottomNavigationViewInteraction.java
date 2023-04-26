@@ -22,10 +22,10 @@ package org.catrobat.paintroid.test.espresso.util.wrappers;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.ToolType;
 
-import androidx.test.espresso.ViewInteraction;
-
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withDrawable;
 import static org.hamcrest.Matchers.allOf;
+
+import androidx.test.espresso.ViewInteraction;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;

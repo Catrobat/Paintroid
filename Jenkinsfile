@@ -31,21 +31,11 @@ pipeline {
     }
 
     agent {
-        dockerfile {
-            filename 'Dockerfile.jenkins'
-            // 'docker build' would normally copy the whole build-dir to the container, changing the
-            // docker build directory avoids that overhead
-            dir 'docker'
-            // Pass the uid and the gid of the current user (jenkins-user) to the Dockerfile, so a
-            // corresponding user can be added. This is needed to provide the jenkins user inside
-            // the container for the ssh-agent to work.
-            // Another way would be to simply map the passwd file, but would spoil additional information
-            // Also hand in the group id of kvm to allow using /dev/kvm.
-            additionalBuildArgs '--build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g) --build-arg KVM_GROUP_ID=$(getent group kvm | cut -d: -f3)'
-            // Ensure that each executor has its own gradle cache to not affect other builds
-            // that run concurrently.
-            args '--device /dev/kvm:/dev/kvm -m=6.5G'
-            label useDebugLabelParameter('LimitedEmulator')
+         docker {
+            image 'catrobat/catrobat-paintroid:stable'
+            args '--device /dev/kvm:/dev/kvm -v /var/local/container_shared/gradle_cache/$EXECUTOR_NUMBER:/home/user/.gradle -m=6.5G'
+            label 'LimitedEmulator'
+            alwaysPull true
         }
     }
 
@@ -81,12 +71,13 @@ pipeline {
                 sh 'rm -rf Catroid; mkdir Catroid'
                 dir('Catroid') {
                     git branch: params.CATROID_BRANCH, url: 'https://github.com/Catrobat/Catroid.git'
-                    sh 'rm -f catroid/src/main/libs/*.aar'
-                    sh 'mv -f ../colorpicker/build/outputs/aar/colorpicker-debug.aar catroid/src/main/libs/colorpicker-LOCAL.aar'
-                    sh 'mv -f ../Paintroid/build/outputs/aar/Paintroid-debug.aar catroid/src/main/libs/Paintroid-LOCAL.aar'
-
-                    archiveArtifacts 'catroid/src/main/libs/colorpicker-LOCAL.aar'
-                    archiveArtifacts 'catroid/src/main/libs/Paintroid-LOCAL.aar'
+                    sh "rm -f catroid/src/main/libs/*.aar"
+                    sh "mv -f ../colorpicker/build/outputs/aar/colorpicker-debug.aar catroid/src/main/libs/colorpicker-LOCAL.aar"
+                    sh "mv -f ../Paintroid/build/outputs/aar/Paintroid-debug.aar catroid/src/main/libs/Paintroid-LOCAL.aar"
+                }
+                renameApks("${env.BRANCH_NAME}-${env.BUILD_NUMBER}")
+                dir('Catroid') {
+                    archiveArtifacts "catroid/src/main/libs/*.aar"
                     sh "./gradlew assembleCatroidDebug"
                     archiveArtifacts 'catroid/build/outputs/apk/catroid/debug/catroid-catroid-debug.apk'
                 }
@@ -124,10 +115,13 @@ pipeline {
 
                 stage('Device Tests') {
                     steps {
-                        sh './gradlew -PenableCoverage -Pjenkins startEmulator adbDisableAnimationsGlobally createDebugCoverageReport -i'
+                        sh "echo no | avdmanager create avd --force --name android28 --package 'system-images;android-28;default;x86_64'"
+                        sh "/home/user/android/sdk/emulator/emulator -no-window -no-boot-anim -noaudio -avd android28 > /dev/null 2>&1 &"
+                        sh './gradlew -PenableCoverage -Pjenkins -Pemulator=android28 -Pci createDebugCoverageReport -i'
                     }
                     post {
                         always {
+                            sh '/home/user/android/sdk/platform-tools/adb logcat -d > logcat.txt'
                             sh './gradlew stopEmulator'
                             junitAndCoverage "$reports/coverage/debug/report.xml", 'device', javaSrc
                             archiveArtifacts 'logcat.txt'

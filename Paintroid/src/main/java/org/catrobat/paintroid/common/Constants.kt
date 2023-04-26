@@ -29,6 +29,7 @@ const val ABOUT_DIALOG_FRAGMENT_TAG = "aboutdialogfragment"
 const val LIKE_US_DIALOG_FRAGMENT_TAG = "likeusdialogfragment"
 const val RATE_US_DIALOG_FRAGMENT_TAG = "rateusdialogfragment"
 const val FEEDBACK_DIALOG_FRAGMENT_TAG = "feedbackdialogfragment"
+const val ZOOM_WINDOW_SETTINGS_DIALOG_FRAGMENT_TAG = "zoomwindowsettingsdialogfragment"
 const val ADVANCED_SETTINGS_DIALOG_FRAGMENT_TAG = "advancedsettingsdialogfragment"
 const val SAVE_DIALOG_FRAGMENT_TAG = "savedialogerror"
 const val LOAD_DIALOG_FRAGMENT_TAG = "loadbitmapdialogerror"
@@ -43,16 +44,23 @@ const val CATROBAT_INFORMATION_DIALOG_TAG = "catrobatinformationdialogfragment"
 const val CATROID_MEDIA_GALLERY_FRAGMENT_TAG = "catroidmediagalleryfragment"
 const val PERMISSION_DIALOG_FRAGMENT_TAG = "permissiondialogfragment"
 const val SHOW_LIKE_US_DIALOG_SHARED_PREFERENCES_TAG = "showlikeusdialog"
+const val ZOOM_WINDOW_ENABLED_SHARED_PREFERENCES_TAG = "zoomwindowenabled"
+const val ZOOM_WINDOW_ZOOM_PERCENTAGE_SHARED_PREFERENCES_TAG = "zoomwindowzoompercentage"
 const val IMAGE_NUMBER_SHARED_PREFERENCES_TAG = "imagenumbertag"
 const val SCALE_IMAGE_FRAGMENT_TAG = "showscaleimagedialog"
 const val INDETERMINATE_PROGRESS_DIALOG_TAG = "indeterminateprogressdialogfragment"
 const val INVALID_RESOURCE_ID = 0
-const val MAX_LAYERS = 4
+const val MAX_LAYERS = 100
+const val MEGABYTE_IN_BYTE = 1_048_576L
+const val MINIMUM_HEAP_SPACE_FOR_NEW_LAYER = 40
 const val CATROBAT_IMAGE_ENDING = "catrobat-image"
 const val TEMP_IMAGE_DIRECTORY_NAME = "TemporaryImages"
 const val TEMP_IMAGE_NAME = "temporaryImage"
+const val ITALIC_FONT_BOX_ADJUSTMENT = 1.2f
 const val TEMP_IMAGE_PATH = "$TEMP_IMAGE_DIRECTORY_NAME/$TEMP_IMAGE_NAME.$CATROBAT_IMAGE_ENDING"
 const val TEMP_IMAGE_TEMP_PATH = "$TEMP_IMAGE_DIRECTORY_NAME/${TEMP_IMAGE_NAME}1.$CATROBAT_IMAGE_ENDING"
+const val SPECIFIC_FILETYPE_SHARED_PREFERENCES_NAME = "Ownfiletypepreferences"
+const val ANIMATION_DURATION: Long = 250
 
 object Constants {
     @JvmField

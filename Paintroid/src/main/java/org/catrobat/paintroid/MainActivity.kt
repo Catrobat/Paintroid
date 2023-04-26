@@ -21,6 +21,9 @@ package org.catrobat.paintroid
 import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.PointF
 import android.net.Uri
 import android.os.Build
 import android.os.Build.VERSION
@@ -31,6 +34,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowInsets
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.webkit.MimeTypeMap
@@ -40,19 +44,24 @@ import androidx.appcompat.widget.Toolbar
 import androidx.appcompat.widget.TooltipCompat
 import androidx.core.widget.ContentLoadingProgressBar
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.test.espresso.idling.CountingIdlingResource
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.catrobat.paintroid.colorpicker.ColorHistory
 import org.catrobat.paintroid.command.CommandFactory
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.command.CommandManager.CommandListener
 import org.catrobat.paintroid.command.implementation.AsyncCommandManager
 import org.catrobat.paintroid.command.implementation.DefaultCommandFactory
 import org.catrobat.paintroid.command.implementation.DefaultCommandManager
-import org.catrobat.paintroid.command.serialization.CommandSerializationUtilities
+import org.catrobat.paintroid.command.implementation.LayerOpacityCommand
+import org.catrobat.paintroid.command.serialization.CommandSerializer
 import org.catrobat.paintroid.common.CommonFactory
 import org.catrobat.paintroid.common.PAINTROID_PICTURE_NAME
 import org.catrobat.paintroid.common.PAINTROID_PICTURE_PATH
@@ -61,6 +70,7 @@ import org.catrobat.paintroid.contract.MainActivityContracts
 import org.catrobat.paintroid.contract.MainActivityContracts.MainView
 import org.catrobat.paintroid.controller.DefaultToolController
 import org.catrobat.paintroid.iotasks.OpenRasterFileFormatConversion
+import org.catrobat.paintroid.listener.DrawerLayoutListener
 import org.catrobat.paintroid.listener.PresenterColorPickedListener
 import org.catrobat.paintroid.model.LayerModel
 import org.catrobat.paintroid.model.MainActivityModel
@@ -71,12 +81,14 @@ import org.catrobat.paintroid.tools.ToolReference
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.Workspace
 import org.catrobat.paintroid.tools.implementation.BaseToolWithShape
+import org.catrobat.paintroid.tools.implementation.ClippingTool
 import org.catrobat.paintroid.tools.implementation.DefaultContextCallback
 import org.catrobat.paintroid.tools.implementation.DefaultToolFactory
 import org.catrobat.paintroid.tools.implementation.DefaultToolPaint
 import org.catrobat.paintroid.tools.implementation.DefaultToolReference
 import org.catrobat.paintroid.tools.implementation.DefaultWorkspace
 import org.catrobat.paintroid.tools.implementation.LineTool
+import org.catrobat.paintroid.tools.implementation.TransformTool
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 import org.catrobat.paintroid.ui.DrawingSurface
 import org.catrobat.paintroid.ui.KeyboardListener
@@ -92,6 +104,7 @@ import org.catrobat.paintroid.ui.viewholder.BottomNavigationViewHolder
 import org.catrobat.paintroid.ui.viewholder.DrawerLayoutViewHolder
 import org.catrobat.paintroid.ui.viewholder.LayerMenuViewHolder
 import org.catrobat.paintroid.ui.viewholder.TopBarViewHolder
+import org.catrobat.paintroid.ui.zoomwindow.DefaultZoomWindowController
 import java.io.File
 import java.util.Locale
 
@@ -101,10 +114,6 @@ private const val TEMP_IMAGE_SAVE_INTERVAL = 60
 private const val TEMP_IMAGE_IDLE_INTERVAL = 2 * TEMP_IMAGE_COROUTINE_DELAY_MILLI_SEC
 
 class MainActivity : AppCompatActivity(), MainView, CommandListener {
-
-    @VisibleForTesting
-    lateinit var model: MainActivityContracts.Model
-
     @VisibleForTesting
     lateinit var perspective: Perspective
 
@@ -115,33 +124,39 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
     lateinit var layerModel: LayerContracts.Model
 
     @VisibleForTesting
-    lateinit var commandManager: CommandManager
-
-    @VisibleForTesting
-    lateinit var toolPaint: ToolPaint
-
-    @VisibleForTesting
     lateinit var toolReference: ToolReference
 
     @VisibleForTesting
     lateinit var toolOptionsViewController: ToolOptionsViewController
 
+    var idlingResource: CountingIdlingResource = CountingIdlingResource("MainIdleResource")
+
+    @VisibleForTesting
+    lateinit var zoomWindowController: DefaultZoomWindowController
+
+    lateinit var commandManager: CommandManager
+    lateinit var toolPaint: ToolPaint
+    lateinit var bottomNavigationViewHolder: BottomNavigationViewHolder
+    lateinit var model: MainActivityContracts.Model
+
+    private lateinit var commandSerializer: CommandSerializer
     private lateinit var layerPresenter: LayerPresenter
     private lateinit var drawingSurface: DrawingSurface
     private lateinit var presenterMain: MainActivityContracts.Presenter
     private lateinit var drawerLayoutViewHolder: DrawerLayoutViewHolder
     private lateinit var keyboardListener: KeyboardListener
     private lateinit var appFragment: PaintroidApplicationFragment
-    private lateinit var defaultToolController: DefaultToolController
-    private lateinit var bottomNavigationViewHolder: BottomNavigationViewHolder
+    lateinit var defaultToolController: DefaultToolController
     private lateinit var commandFactory: CommandFactory
     private var deferredRequestPermissionsResult: Runnable? = null
     private lateinit var progressBar: ContentLoadingProgressBar
 
     @Volatile
     private var lastInteractionTime = System.currentTimeMillis()
+
     @Volatile
     private var minuteTemporaryCopiesCounter = 0
+
     @Volatile
     private var userInteraction = false
     private var isTemporaryFileSavingTest = false
@@ -212,22 +227,29 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         try {
             if (mimeType.equals("application/zip") || mimeType.equals("application/octet-stream")) {
                 try {
-                    commandManager.loadCommandsCatrobatImage(
-                        workspace.getCommandSerializationHelper().readFromFile(receivedUri)
-                    )
+                    val fileContent = commandSerializer.readFromFile(receivedUri)
+                    commandManager.loadCommandsCatrobatImage(fileContent.commandModel)
+                    presenterMain.setColorHistoryAfterLoadImage(fileContent.colorHistory)
                     return false
-                } catch (e: CommandSerializationUtilities.NotCatrobatImageException) {
+                } catch (e: CommandSerializer.NotCatrobatImageException) {
                     Log.e(TAG, "Image might be an ora file instead")
+                    OpenRasterFileFormatConversion.mainActivity = this
                     OpenRasterFileFormatConversion.importOraFile(
                         myContentResolver,
                         receivedUri
-                    ).bitmapList?.let { bitmapList ->
+                    ).layerList?.let { layerList ->
                         commandManager.setInitialStateCommand(
                             commandFactory.createInitCommand(
-                                bitmapList
+                                layerList
                             )
                         )
                     }
+                    val paint = Paint()
+                    val coordinate = PointF(0.0f, 0.0f)
+                    paint.color = Color.TRANSPARENT
+                    commandManager.addCommand(commandFactory.createPointCommand(paint, coordinate))
+                    commandManager.undo()
+                    commandManager.reset()
                 }
             } else {
                 FileIO.filename = "image"
@@ -267,12 +289,12 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         onCreateLayerMenu()
         onCreateDrawingSurface()
         presenterMain.onCreateTool()
+        OpenRasterFileFormatConversion.mainActivity = this
 
-        var isOpenedFromCatroid = false
         val receivedIntent = intent
         isTemporaryFileSavingTest = intent.getBooleanExtra("isTemporaryFileSavingTest", false)
         when {
-            validateIntent(receivedIntent) -> {
+            validateIntent(receivedIntent) && savedInstanceState == null -> {
                 if (handleIntent(receivedIntent)) {
                     commandManager.reset()
                 }
@@ -286,15 +308,22 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
                 val picturePath = intent.getStringExtra(PAINTROID_PICTURE_PATH)
                 val pictureName = intent.getStringExtra(PAINTROID_PICTURE_NAME)
                 presenterMain.initializeFromCleanState(picturePath, pictureName)
-                if (presenterMain.checkForTemporaryFile() && (!isRunningEspressoTests || isTemporaryFileSavingTest)) {
-                    commandManager.loadCommandsCatrobatImage(presenterMain.openTemporaryFile(workspace))
+
+                if (!model.isOpenedFromCatroid && presenterMain.checkForTemporaryFile() && (!isRunningEspressoTests || isTemporaryFileSavingTest)) {
+                    val workspaceReturnValue = presenterMain.openTemporaryFile()
+                    commandManager.loadCommandsCatrobatImage(workspaceReturnValue?.commandManagerModel)
+                    model.colorHistory = workspaceReturnValue?.colorHistory ?: ColorHistory()
+                    model.colorHistory.colors.lastOrNull()?.let {
+                        toolReference.tool?.changePaintColor(it)
+                        presenterMain.setBottomNavigationColor(it)
+                    }
                 }
+                workspace.perspective.setBitmapDimensions(layerModel.width, layerModel.height)
             }
             else -> {
                 val isFullscreen = savedInstanceState.getBoolean(IS_FULLSCREEN_KEY, false)
                 val isSaved = savedInstanceState.getBoolean(IS_SAVED_KEY, false)
-                isOpenedFromCatroid =
-                    savedInstanceState.getBoolean(IS_OPENED_FROM_CATROID_KEY, false)
+                val isOpenedFromCatroid = savedInstanceState.getBoolean(IS_OPENED_FROM_CATROID_KEY, false)
                 val isOpenedFromFormulaEditorInCatroid = savedInstanceState.getBoolean(
                     IS_OPENED_FROM_FORMULA_EDITOR_IN_CATROID_KEY, false
                 )
@@ -309,18 +338,30 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
 
         commandManager.addCommandListener(this)
         lastInteractionTime = System.currentTimeMillis()
-        if ((!isRunningEspressoTests || isTemporaryFileSavingTest) && !isOpenedFromCatroid) {
+        if ((!isRunningEspressoTests || isTemporaryFileSavingTest) && !model.isOpenedFromCatroid) {
             startAutoSaveCoroutine()
         }
         presenterMain.finishInitialize()
 
-        if (!org.catrobat.paintroid.BuildConfig.DEBUG) {
+        if (!BuildConfig.DEBUG) {
             val prefs = getSharedPreferences(SHARED_PREFS_NAME, 0)
 
             if (prefs.getBoolean(FIRST_LAUNCH_AFTER_INSTALL, true)) {
                 prefs.edit().putBoolean(FIRST_LAUNCH_AFTER_INSTALL, false).apply()
                 presenterMain.showHelpClicked()
             }
+        }
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (!hasFocus) {
+            presenterMain.saveNewTemporaryImage()
+            minuteTemporaryCopiesCounter = 0
+            userInteraction = false
+        }
+        this.window.decorView.apply {
+            systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE or View.SYSTEM_UI_FLAG_FULLSCREEN
         }
     }
 
@@ -335,17 +376,25 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             R.id.pocketpaint_options_export -> presenterMain.saveCopyClicked(true)
             R.id.pocketpaint_options_save_image -> presenterMain.saveImageClicked()
             R.id.pocketpaint_options_save_duplicate -> presenterMain.saveCopyClicked(false)
-            R.id.pocketpaint_options_open_image -> presenterMain.loadImageClicked()
+            R.id.pocketpaint_replace_image -> presenterMain.replaceImageClicked()
+            R.id.pocketpaint_add_to_current_layer -> presenterMain.addImageToCurrentLayerClicked()
             R.id.pocketpaint_options_new_image -> presenterMain.newImageClicked()
             R.id.pocketpaint_options_discard_image -> presenterMain.discardImageClicked()
-            R.id.pocketpaint_options_fullscreen_mode -> presenterMain.enterFullscreenClicked()
+            R.id.pocketpaint_options_fullscreen_mode -> {
+                perspective.mainActivity = this
+                presenterMain.enterHideButtonsClicked()
+            }
             R.id.pocketpaint_options_rate_us -> presenterMain.rateUsClicked()
             R.id.pocketpaint_options_help -> presenterMain.showHelpClicked()
             R.id.pocketpaint_options_about -> presenterMain.showAboutClicked()
-            android.R.id.home -> presenterMain.backToPocketCodeClicked()
             R.id.pocketpaint_share_image_button -> presenterMain.shareImageClicked()
             R.id.pocketpaint_options_feedback -> presenterMain.sendFeedback()
+            R.id.pocketpaint_zoom_window_settings ->
+                presenterMain.showZoomWindowSettingsClicked(
+                    UserPreferences(getPreferences(MODE_PRIVATE))
+                )
             R.id.pocketpaint_advanced_settings -> presenterMain.showAdvancedSettingsClicked()
+            android.R.id.home -> presenterMain.backToPocketCodeClicked()
             else -> return false
         }
         return true
@@ -398,7 +447,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         val topBarLayout = findViewById<ViewGroup>(R.id.pocketpaint_layout_top_bar)
         val bottomBarLayout = findViewById<View>(R.id.pocketpaint_main_bottom_bar)
         val bottomNavigationView = findViewById<View>(R.id.pocketpaint_main_bottom_navigation)
-        toolOptionsViewController = DefaultToolOptionsViewController(this)
+        toolOptionsViewController = DefaultToolOptionsViewController(this, idlingResource)
         drawerLayoutViewHolder = DrawerLayoutViewHolder(drawerLayout)
         val topBarViewHolder = TopBarViewHolder(topBarLayout)
         val bottomBarViewHolder = BottomBarViewHolder(bottomBarLayout)
@@ -409,42 +458,55 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         )
         perspective = Perspective(layerModel.width, layerModel.height)
         val listener = DefaultWorkspace.Listener { drawingSurface.refreshDrawingSurface() }
+        model = MainActivityModel()
         workspace = DefaultWorkspace(
             layerModel,
             perspective,
             listener,
-            CommandSerializationUtilities(this, commandManager)
+        )
+        commandSerializer = CommandSerializer(this, commandManager, model)
+        model = MainActivityModel()
+        zoomWindowController = DefaultZoomWindowController(
+            this,
+            layerModel,
+            workspace,
+            toolReference,
+            UserPreferences(getPreferences(MODE_PRIVATE))
         )
         model = MainActivityModel()
         defaultToolController = DefaultToolController(
             toolReference,
             toolOptionsViewController,
-            DefaultToolFactory(),
+            DefaultToolFactory(this),
             commandManager,
             workspace,
+            idlingResource,
             toolPaint,
             DefaultContextCallback(context)
         )
         val preferences = UserPreferences(getPreferences(MODE_PRIVATE))
+        val navigator = MainActivityNavigator(this, toolReference)
         presenterMain = MainActivityPresenter(
             this,
             this,
             model,
             workspace,
             MainActivityNavigator(this, toolReference),
-            MainActivityInteractor(),
+            MainActivityInteractor(idlingResource),
             topBarViewHolder,
             bottomBarViewHolder,
             drawerLayoutViewHolder,
             bottomNavigationViewHolder,
             DefaultCommandFactory(),
             commandManager,
-            perspective,
             defaultToolController,
             preferences,
+            idlingResource,
             context,
-            filesDir
+            filesDir,
+            commandSerializer
         )
+        FileIO.navigator = navigator
         defaultToolController.setOnColorPickedListener(PresenterColorPickedListener(presenterMain))
         keyboardListener = KeyboardListener(drawerLayout)
         setTopBarListeners(topBarViewHolder)
@@ -456,6 +518,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
 
     private fun onCreateLayerMenu() {
         val layerLayout = findViewById<NavigationView>(R.id.pocketpaint_nav_view_layer)
+        val drawerLayout = findViewById<DrawerLayout>(R.id.pocketpaint_drawer_layout)
         val layerListView = findViewById<DragAndDropListView>(R.id.pocketpaint_layer_side_nav_list)
         val layerMenuViewHolder = LayerMenuViewHolder(layerLayout)
         val layerNavigator = LayerNavigator(applicationContext)
@@ -463,13 +526,20 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             layerModel, layerListView, layerMenuViewHolder,
             commandManager, DefaultCommandFactory(), layerNavigator
         )
-        val layerAdapter = LayerAdapter(layerPresenter)
+        val layoutManager = LinearLayoutManager(applicationContext, RecyclerView.VERTICAL, false)
+        layerListView.layoutManager = layoutManager
+        layerListView.manager = layoutManager
+        val layerAdapter = LayerAdapter(layerPresenter, this)
+        layerListView.setLayerAdapter(layerAdapter)
         presenterMain.setLayerAdapter(layerAdapter)
         layerPresenter.setAdapter(layerAdapter)
         layerListView.setPresenter(layerPresenter)
         layerListView.adapter = layerAdapter
         layerPresenter.refreshLayerMenuViewHolder()
+        layerPresenter.disableVisibilityAndOpacityButtons()
         setLayerMenuListeners(layerMenuViewHolder)
+        val drawerLayoutListener = DrawerLayoutListener(this, layerPresenter)
+        drawerLayout.addDrawerListener(drawerLayoutListener)
     }
 
     private fun onCreateDrawingSurface() {
@@ -478,8 +548,12 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             layerModel,
             perspective,
             toolReference,
+            idlingResource,
+            supportFragmentManager,
             toolOptionsViewController,
-            supportFragmentManager
+            drawerLayoutViewHolder,
+            zoomWindowController,
+            UserPreferences(getPreferences(MODE_PRIVATE))
         )
         layerPresenter.setDrawingSurface(drawingSurface)
         appFragment.perspective = perspective
@@ -501,8 +575,17 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         topBar.undoButton.setOnClickListener { presenterMain.undoClicked() }
         topBar.redoButton.setOnClickListener { presenterMain.redoClicked() }
         topBar.checkmarkButton.setOnClickListener {
-            val tool = toolReference.tool as BaseToolWithShape?
-            tool?.onClickOnButton()
+            if (toolReference.tool?.toolType?.name.equals(ToolType.TRANSFORM.name)) {
+                (toolReference.tool as TransformTool).checkMarkClicked = true
+                val tool = toolReference.tool as BaseToolWithShape?
+                tool?.onClickOnButton()
+            } else if (toolReference.tool?.toolType?.name.equals(ToolType.CLIP.name)) {
+                val tool = toolReference.tool as ClippingTool?
+                tool?.onClickOnButton()
+            } else {
+                val tool = toolReference.tool as BaseToolWithShape?
+                tool?.onClickOnButton()
+            }
         }
         topBar.plusButton.setOnClickListener {
             val tool = toolReference.tool as LineTool
@@ -547,13 +630,16 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
 
     override fun commandPostExecute() {
         if (!finishing) {
-            layerPresenter.invalidate()
+            if (commandManager.lastExecutedCommand !is LayerOpacityCommand) {
+                layerPresenter.invalidate()
+            }
             presenterMain.onCommandPostExecute()
         }
     }
 
     override fun onDestroy() {
         commandManager.removeCommandListener(this)
+        presenterMain.saveNewTemporaryImage()
         if (finishing) {
             commandManager.shutdown()
             appFragment.currentTool = null
@@ -625,14 +711,16 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         drawingSurface.refreshDrawingSurface()
     }
 
-    override fun enterFullscreen() {
-        drawingSurface.disableAutoScroll()
-        window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
-        window.clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN)
+    override fun enterHideButtons() {
+        if (VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            window.insetsController?.hide(WindowInsets.Type.statusBars())
+        } else {
+            window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+            window.clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN)
+        }
     }
 
-    override fun exitFullscreen() {
-        drawingSurface.enableAutoScroll()
+    override fun exitHideButtons() {
         window.addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN)
         window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
     }
@@ -679,4 +767,8 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             }
         }
     }
+
+    fun getVersionCode(): String = runCatching {
+        packageManager.getPackageInfo(packageName, 0).versionName
+    }.getOrDefault("")
 }

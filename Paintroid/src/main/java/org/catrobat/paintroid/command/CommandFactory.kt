@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ *  Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,6 +18,7 @@
  */
 package org.catrobat.paintroid.command
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Paint
 import android.graphics.Point
@@ -27,6 +28,8 @@ import org.catrobat.paintroid.command.implementation.FlipCommand.FlipDirection
 import org.catrobat.paintroid.command.implementation.RotateCommand.RotateDirection
 import org.catrobat.paintroid.command.serialization.SerializablePath
 import org.catrobat.paintroid.command.serialization.SerializableTypeface
+import org.catrobat.paintroid.contract.LayerContracts
+import org.catrobat.paintroid.tools.ToolReference
 import org.catrobat.paintroid.tools.drawable.ShapeDrawable
 
 interface CommandFactory {
@@ -34,13 +37,15 @@ interface CommandFactory {
 
     fun createInitCommand(bitmap: Bitmap): Command
 
-    fun createInitCommand(bitmapList: List<Bitmap?>): Command
+    fun createInitCommand(layers: List<LayerContracts.Layer>): Command
 
     fun createResetCommand(): Command
 
-    fun createAddLayerCommand(): Command
+    fun createAddEmptyLayerCommand(): Command
 
     fun createSelectLayerCommand(position: Int): Command
+
+    fun createLayerOpacityCommand(position: Int, opacityPercentage: Int): Command
 
     fun createRemoveLayerCommand(index: Int): Command
 
@@ -74,7 +79,13 @@ interface CommandFactory {
 
     fun createPathCommand(paint: Paint, path: SerializablePath): Command
 
-    fun createSmudgePathCommand(bitmap: Bitmap, pointPath: MutableList<PointF>, maxPressure: Float, maxSize: Float, minSize: Float): Command
+    fun createSmudgePathCommand(
+        bitmap: Bitmap,
+        pointPath: MutableList<PointF>,
+        maxPressure: Float,
+        maxSize: Float,
+        minSize: Float
+    ): Command
 
     fun createTextToolCommand(
         multilineText: Array<String>,
@@ -89,7 +100,7 @@ interface CommandFactory {
 
     fun createResizeCommand(newWidth: Int, newHeight: Int): Command
 
-    fun createStampCommand(
+    fun createClipboardCommand(
         bitmap: Bitmap,
         toolPosition: PointF,
         boxWidth: Float,
@@ -104,5 +115,12 @@ interface CommandFactory {
         boxWidth: Float,
         boxHeight: Float,
         boxRotation: Float
+    ): Command
+
+    fun createColorChangedCommand(toolReference: ToolReference, context: Context, color: Int): Command
+
+    fun createClippingCommand(
+        bitmap: Bitmap,
+        pathBitmap: Bitmap
     ): Command
 }

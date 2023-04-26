@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ *  Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -44,12 +44,6 @@ class FlipCommand(flipDirection: FlipDirection) : Command {
             }
         }
         layerModel.currentLayer?.bitmap?.let { bitmap ->
-            val bitmapCopy = bitmap.copy(bitmap.config, bitmap.isMutable)
-            val flipCanvas = Canvas(bitmap)
-            bitmap.eraseColor(Color.TRANSPARENT)
-            flipCanvas.drawBitmap(bitmapCopy, flipMatrix, Paint())
-        }
-        layerModel.currentLayer?.transparentBitmap?.let { bitmap ->
             val bitmapCopy = bitmap.copy(bitmap.config, bitmap.isMutable)
             val flipCanvas = Canvas(bitmap)
             bitmap.eraseColor(Color.TRANSPARENT)

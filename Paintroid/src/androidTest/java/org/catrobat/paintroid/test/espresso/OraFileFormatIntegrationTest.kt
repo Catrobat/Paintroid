@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ *  Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -150,13 +150,13 @@ class OraFileFormatIntegrationTest {
             .performAddLayer()
             .checkLayerCount(2)
             .performClose()
-        onDrawingSurfaceView().perform(touchAt(DrawingSurfaceLocationProvider.TOP_MIDDLE))
+        onDrawingSurfaceView().perform(touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_MIDDLE))
         LayerMenuViewInteraction.onLayerMenuView()
             .performOpen()
             .performAddLayer()
             .checkLayerCount(3)
             .performClose()
-        onDrawingSurfaceView().perform(touchAt(DrawingSurfaceLocationProvider.BOTTOM_MIDDLE))
+        onDrawingSurfaceView().perform(touchAt(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_MIDDLE))
         onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_save_image)).perform(ViewActions.click())
         onView(withId(R.id.pocketpaint_save_dialog_spinner)).perform(ViewActions.click())
@@ -177,6 +177,7 @@ class OraFileFormatIntegrationTest {
         Intents.intending(IntentMatchers.hasAction(Intent.ACTION_GET_CONTENT)).respondWith(resultOK)
         onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_load_image)).perform(ViewActions.click())
+        onView(withText(R.string.menu_replace_image)).perform(ViewActions.click())
         LayerMenuViewInteraction.onLayerMenuView()
             .performOpen()
             .checkLayerCount(3)

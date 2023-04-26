@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,11 +25,13 @@ import android.text.InputFilter
 import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.tools.helper.DefaultNumberRangeFilter
 import org.catrobat.paintroid.tools.options.BrushToolOptionsView
@@ -44,12 +46,16 @@ private const val MIN_VAL = 1
 private const val MAX_VAL = 100
 
 class DefaultBrushToolOptionsView(rootView: ViewGroup) : BrushToolOptionsView {
-    private val brushSizeText: EditText
-    private val brushWidthSeekBar: SeekBar
-    private val buttonCircle: Chip
+    private var brushSizeText: EditText
+    private var brushWidthSeekBar: SeekBar
+    private var strokeCapButtonsGroup: ChipGroup
+    private var buttonCircle: Chip
     private val buttonRect: Chip
-    private val brushToolPreview: BrushToolPreview
+    private var brushToolPreview: BrushToolPreview
+    private val topLayout: View
+    private val bottomLayout: View
     private var brushChangedListener: OnBrushChangedListener? = null
+    private var currentView = rootView
 
     companion object {
         private val TAG = DefaultBrushToolOptionsView::class.java.simpleName
@@ -59,12 +65,15 @@ class DefaultBrushToolOptionsView(rootView: ViewGroup) : BrushToolOptionsView {
         val inflater = LayoutInflater.from(rootView.context)
         val brushPickerView = inflater.inflate(R.layout.dialog_pocketpaint_stroke, rootView, true)
         brushPickerView.apply {
+            strokeCapButtonsGroup = findViewById(R.id.pocketpaint_stroke_types)
             buttonCircle = findViewById(R.id.pocketpaint_stroke_ibtn_circle)
             buttonRect = findViewById(R.id.pocketpaint_stroke_ibtn_rect)
             brushWidthSeekBar = findViewById(R.id.pocketpaint_stroke_width_seek_bar)
             brushWidthSeekBar.setOnSeekBarChangeListener(OnBrushChangedWidthSeekBarListener())
             brushSizeText = findViewById(R.id.pocketpaint_stroke_width_width_text)
             brushToolPreview = findViewById(R.id.pocketpaint_brush_tool_preview)
+            topLayout = findViewById(R.id.pocketpaint_stroke_top_layout)
+            bottomLayout = findViewById(R.id.pocketpaint_stroke_bottom_layout)
         }
         brushSizeText.filters = arrayOf<InputFilter>(DefaultNumberRangeFilter(MIN_VAL, MAX_VAL))
         buttonCircle.setOnClickListener { onCircleButtonClicked() }
@@ -92,16 +101,31 @@ class DefaultBrushToolOptionsView(rootView: ViewGroup) : BrushToolOptionsView {
 
     private fun onRectButtonClicked() {
         updateStrokeCap(Cap.SQUARE)
-        buttonRect.isSelected = true
-        buttonCircle.isSelected = false
+        buttonRect.isChecked = true
+        buttonCircle.isChecked = false
         invalidate()
+    }
+
+    override fun hideCaps() {
+        strokeCapButtonsGroup.visibility = View.GONE
     }
 
     private fun onCircleButtonClicked() {
         updateStrokeCap(Cap.ROUND)
-        buttonCircle.isSelected = true
-        buttonRect.isSelected = false
+        buttonCircle.isChecked = true
+        buttonRect.isChecked = false
         invalidate()
+    }
+
+    fun adjustOptionsView() {
+        val inflater = LayoutInflater.from(currentView.context)
+        val brushPickerView = inflater.inflate(R.layout.dialog_pocketpaint_stroke, currentView, true)
+        brushPickerView.apply {
+            brushWidthSeekBar = findViewById(R.id.pocketpaint_stroke_width_seek_bar)
+            brushWidthSeekBar.setOnSeekBarChangeListener(OnBrushChangedWidthSeekBarListener())
+            brushSizeText = findViewById(R.id.pocketpaint_stroke_width_width_text)
+            brushToolPreview = findViewById(R.id.pocketpaint_brush_tool_preview)
+        }
     }
 
     override fun setCurrentPaint(paint: Paint) {
@@ -120,6 +144,13 @@ class DefaultBrushToolOptionsView(rootView: ViewGroup) : BrushToolOptionsView {
                     .toInt()
             )
         )
+    }
+
+    override fun setStrokeCapButtonChecked(strokeCap: Cap) {
+        when (strokeCap) {
+            Cap.ROUND -> strokeCapButtonsGroup.check(buttonCircle.id)
+            Cap.SQUARE -> strokeCapButtonsGroup.check(buttonRect.id)
+        }
     }
 
     override fun setBrushChangedListener(onBrushChangedListener: OnBrushChangedListener) {
@@ -163,4 +194,8 @@ class DefaultBrushToolOptionsView(rootView: ViewGroup) : BrushToolOptionsView {
             brushSizeText.setText(String.format(Locale.getDefault(), "%d", seekBar.progress))
         }
     }
+
+    override fun getTopToolOptions(): View = topLayout
+
+    override fun getBottomToolOptions(): View = bottomLayout
 }

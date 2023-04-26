@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ *  Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,16 +23,16 @@ import android.content.Context
 import android.net.Uri
 import android.util.Log
 import android.webkit.MimeTypeMap
+import androidx.test.espresso.idling.CountingIdlingResource
+import java.io.IOException
+import java.lang.ref.WeakReference
+import java.util.Locale
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.catrobat.paintroid.FileIO
-import org.catrobat.paintroid.command.serialization.CommandSerializationUtilities
-import org.catrobat.paintroid.tools.Workspace
-import java.io.IOException
-import java.lang.ref.WeakReference
-import java.util.Locale
+import org.catrobat.paintroid.command.serialization.CommandSerializer
 
 class LoadImage(
     callback: LoadImageCallback,
@@ -40,8 +40,9 @@ class LoadImage(
     private val uri: Uri?,
     context: Context,
     private val scaleImage: Boolean,
-    private val workspace: Workspace,
-    private val scopeIO: CoroutineScope
+    private val commandSerializer: CommandSerializer,
+    private val scopeIO: CoroutineScope,
+    private val idlingResource: CountingIdlingResource
 ) {
     private val callbackRef: WeakReference<LoadImageCallback> = WeakReference(callback)
     private val context: WeakReference<Context> = WeakReference(context)
@@ -62,8 +63,9 @@ class LoadImage(
         val mimeType: String? = getMimeType(uri, resolver)
         return if (mimeType == "application/zip" || mimeType == "application/octet-stream") {
             try {
-                BitmapReturnValue(workspace.getCommandSerializationHelper().readFromFile(uri))
-            } catch (e: CommandSerializationUtilities.NotCatrobatImageException) {
+                val fileContent = commandSerializer.readFromFile(uri)
+                BitmapReturnValue(fileContent.commandModel, fileContent.colorHistory)
+            } catch (e: CommandSerializer.NotCatrobatImageException) {
                 Log.e(TAG, "Image might be an ora file instead")
                 OpenRasterFileFormatConversion.importOraFile(
                     resolver,
@@ -89,6 +91,7 @@ class LoadImage(
 
         var returnValue: BitmapReturnValue? = null
         scopeIO.launch {
+            idlingResource.increment()
             if (uri == null) {
                 Log.e(TAG, "Can't load image file, uri is null")
             } else {
@@ -105,7 +108,11 @@ class LoadImage(
 
             withContext(Dispatchers.Main) {
                 if (!callback.isFinishing) {
-                    callback.onLoadImagePostExecute(requestCode, uri, returnValue)
+                    try {
+                        callback.onLoadImagePostExecute(requestCode, uri, returnValue)
+                    } finally {
+                        idlingResource.decrement()
+                    }
                 }
             }
         }

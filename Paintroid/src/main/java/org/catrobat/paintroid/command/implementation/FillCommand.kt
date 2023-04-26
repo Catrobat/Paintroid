@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ *  Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -35,32 +35,17 @@ class FillCommand(private val fillAlgorithmFactory: FillAlgorithmFactory, clicke
     override fun run(canvas: Canvas, layerModel: LayerContracts.Model) {
         val currentLayer = layerModel.currentLayer
         currentLayer ?: return
-        if (currentLayer.isVisible) {
-            currentLayer.bitmap?.let { bitmap ->
-                val replacementColor = bitmap.getPixel(clickedPixel.x, clickedPixel.y)
-                val fillAlgorithm = fillAlgorithmFactory.createFillAlgorithm()
-                fillAlgorithm.setParameters(
-                    bitmap,
-                    clickedPixel,
-                    paint.color,
-                    replacementColor,
-                    colorTolerance
-                )
-                fillAlgorithm.performFilling()
-            }
-        } else {
-            currentLayer.transparentBitmap?.let { bitmap ->
-                val replacementColor = bitmap.getPixel(clickedPixel.x, clickedPixel.y)
-                val fillAlgorithm = fillAlgorithmFactory.createFillAlgorithm()
-                fillAlgorithm.setParameters(
-                    bitmap,
-                    clickedPixel,
-                    paint.color,
-                    replacementColor,
-                    colorTolerance
-                )
-                fillAlgorithm.performFilling()
-            }
+        currentLayer.bitmap?.let { bitmap ->
+            val replacementColor = bitmap.getPixel(clickedPixel.x, clickedPixel.y)
+            val fillAlgorithm = fillAlgorithmFactory.createFillAlgorithm()
+            fillAlgorithm.setParameters(
+                bitmap,
+                clickedPixel,
+                paint.color,
+                replacementColor,
+                colorTolerance
+            )
+            fillAlgorithm.performFilling()
         }
     }
 

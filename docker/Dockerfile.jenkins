@@ -1,13 +1,14 @@
-FROM debian:buster
+FROM debian:bullseye
 # Android Dependencies
 # --------------------
 # Adapt the paramters below to change the dependencies.
 #
 
-# Android SDK 26.1.1
-ARG ANDROID_SDK_URL="https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip"
-
-ARG SDKMANAGER_PACKAGES="build-tools;30.0.3 platforms;android-28 cmake;3.6.4111459 system-images;android-28;default;x86_64 emulator platform-tools"
+ARG ANDROID_API_LEVEL=28
+ARG ANDROID_BUILD_TOOLS_LEVEL=30.0.3
+ARG ANDROID_NDK_VERSION=21.1.6352462
+ARG ANDROID_CLI_TOOLS_URL="https://dl.google.com/android/repository/commandlinetools-linux-8512546_latest.zip"
+ARG SDKMANAGER_PACKAGES="build-tools;${ANDROID_BUILD_TOOLS_LEVEL} platforms;android-$ANDROID_API_LEVEL cmake;3.6.4111459 system-images;android-28;default;x86_64"
 # Arguments, Environment
 # ----------------------
 #
@@ -23,7 +24,8 @@ ENV ANDROID_SDK_ROOT=$USER_HOME/android/sdk
 ENV ANDROID_AVD_HOME=$USER_HOME/avds
 # Deprecated: Still used by gradle, once gradle respects ANDROID_SDK_ROOT, this can be removed
 ENV ANDROID_HOME=$ANDROID_SDK_ROOT
-ARG _SDKMANAGER=$ANDROID_SDK_ROOT/tools/bin/sdkmanager
+ENV PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin
+ARG _SDKMANAGER=$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager
 # System Packages
 # ---------------
 #
@@ -44,12 +46,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         software-properties-common \
     && rm -rf /var/lib/apt/lists/*
 # Install Fastlane
-RUN wget --no-check-certificate -qO - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | apt-key add -
-RUN add-apt-repository --yes https://adoptopenjdk.jfrog.io/adoptopenjdk/deb/
-
-RUN apt-get update && apt-get install -y adoptopenjdk-8-hotspot
+RUN apt-get update
 RUN apt-get install -y python2
 RUN apt-get install -y --no-install-recommends \
+        openjdk-11-jdk-headless \
+        #ruby-full \
         rubygems \
         ruby-dev \
         g++ \
@@ -76,10 +77,13 @@ RUN mkdir -p $ANDROID_AVD_HOME
 # Android SDK
 # ------------------
 #
-RUN curl $ANDROID_SDK_URL --output /tmp/android_sdk.zip \
+ARG _CMD_LINE=$ANDROID_SDK_ROOT/cmdline-tools
+RUN curl $ANDROID_CLI_TOOLS_URL --output /tmp/android_sdk.zip \
     && mkdir -p $ANDROID_SDK_ROOT \
     && unzip -d $ANDROID_SDK_ROOT /tmp/android_sdk.zip \
-    && rm /tmp/android_sdk.zip
+    && rm /tmp/android_sdk.zip \
+                && mkdir -p $_CMD_LINE/latest \
+                && mv $_CMD_LINE/bin $_CMD_LINE/lib $_CMD_LINE/source.properties $_CMD_LINE/latest/
 # Android NDK
 # ----------------
 #
@@ -102,7 +106,6 @@ RUN if [ ! -z "$SDKMANAGER_PACKAGES" ]; then yes | $_SDKMANAGER $SDKMANAGER_PACK
 #       JAVA_TOOL_OPTIONS and the command line parameters.
 #       We still use it here to ensure that these settings
 #       are respected, no matter what is configured elsewhere.
-ENV _JAVA_OPTIONS="-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"
-
+ENV _JAVA_OPTIONS="-XX:+UnlockExperimentalVMOptions"
 # Accept SDK licenses
 RUN yes | $_SDKMANAGER --licenses

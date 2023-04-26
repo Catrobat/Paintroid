@@ -19,13 +19,22 @@
 package org.catrobat.paintroid.model
 
 import android.net.Uri
+import org.catrobat.paintroid.colorpicker.ColorHistory
 import org.catrobat.paintroid.contract.MainActivityContracts
 
-class MainActivityModel : MainActivityContracts.Model {
+open class MainActivityModel : MainActivityContracts.Model {
+    private var wasInitialAnimationPlayed = false
     override var isOpenedFromCatroid = false
     override var isOpenedFromFormulaEditorInCatroid = false
     override var isFullscreen = false
     override var isSaved = false
     override var savedPictureUri: Uri? = null
     override var cameraImageUri: Uri? = null
+    override var colorHistory: ColorHistory = ColorHistory()
+
+    override fun wasInitialAnimationPlayed(): Boolean = wasInitialAnimationPlayed
+
+    override fun setInitialAnimationPlayed(wasInitialAnimationPlayed: Boolean) {
+        this.wasInitialAnimationPlayed = wasInitialAnimationPlayed
+    }
 }

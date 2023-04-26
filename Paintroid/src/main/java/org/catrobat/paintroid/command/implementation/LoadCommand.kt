@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ *  Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,12 +25,12 @@ import org.catrobat.paintroid.command.Command
 import org.catrobat.paintroid.contract.LayerContracts
 import org.catrobat.paintroid.model.Layer
 
-class LoadCommand(loadedImage: Bitmap) : Command {
+class LoadCommand(loadedBitmap: Bitmap) : Command {
 
-    var loadedImage = loadedImage; private set
+    var loadedBitmap = loadedBitmap; private set
 
     override fun run(canvas: Canvas, layerModel: LayerContracts.Model) {
-        val currentLayer = Layer(loadedImage.copy(Bitmap.Config.ARGB_8888, true))
+        val currentLayer = Layer(loadedBitmap.copy(Bitmap.Config.ARGB_8888, true))
         layerModel.addLayerAt(0, currentLayer)
         layerModel.currentLayer = currentLayer
     }

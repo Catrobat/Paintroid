@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ *  Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,7 +29,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.core.text.HtmlCompat
-import org.catrobat.paintroid.BuildConfig
+import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.R
 
 class AboutDialog : AppCompatDialogFragment() {
@@ -51,7 +51,8 @@ class AboutDialog : AppCompatDialogFragment() {
         val aboutContentView = view.findViewById<TextView>(R.id.pocketpaint_about_content)
         val aboutLicenseView = view.findViewById<TextView>(R.id.pocketpaint_about_license_url)
         val aboutCatrobatView = view.findViewById<TextView>(R.id.pocketpaint_about_catrobat_url)
-        val aboutVersion = getString(R.string.pocketpaint_about_version, BuildConfig.VERSION_NAME)
+        val activity = requireActivity() as MainActivity
+        val aboutVersion = getString(R.string.pocketpaint_about_version, activity.getVersionCode())
         aboutVersionView.text = aboutVersion
         val aboutContent = getString(
             R.string.pocketpaint_about_content,

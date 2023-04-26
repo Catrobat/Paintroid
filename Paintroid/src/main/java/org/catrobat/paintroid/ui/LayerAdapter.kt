@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ *  Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,91 +19,71 @@
 package org.catrobat.paintroid.ui
 
 import android.graphics.Bitmap
-import android.graphics.Color
+import android.text.Editable
+import android.text.InputFilter
+import android.text.TextWatcher
+import android.util.Log
 import android.util.SparseArray
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
 import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.LinearLayout
-import androidx.appcompat.widget.AppCompatImageView
+import android.widget.SeekBar
+import androidx.appcompat.widget.AppCompatEditText
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.contract.LayerContracts
-import org.catrobat.paintroid.controller.DefaultToolController
-import org.catrobat.paintroid.tools.ToolType
-import org.catrobat.paintroid.ui.viewholder.BottomNavigationViewHolder
+import org.catrobat.paintroid.model.MAX_LAYER_OPACITY_PERCENTAGE
+import org.catrobat.paintroid.tools.helper.DefaultNumberRangeFilter
 
-class LayerAdapter(val presenter: LayerContracts.Presenter) : BaseAdapter(), LayerContracts.Adapter {
+private const val MIN_VAL = 0
+private const val MAX_VAL = 100
+
+private const val RESIZE_LENGTH = 400f
+
+class LayerAdapter(
+    val presenter: LayerContracts.Presenter,
+    val mainActivity: MainActivity,
+) : RecyclerView.Adapter<LayerAdapter.LayerViewHolder>(), LayerContracts.Adapter {
     private val viewHolders: SparseArray<LayerContracts.LayerViewHolder> = SparseArray()
 
-    override fun getCount() = presenter.layerCount
-
-    override fun getItem(position: Int): LayerContracts.Layer = presenter.getLayerItem(position)
-
-    override fun getItemId(position: Int) = presenter.getLayerItemId(position)
-
-    override fun notifyDataSetChanged() {
-        viewHolders.clear()
-        super.notifyDataSetChanged()
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LayerViewHolder {
+        val itemView = LayoutInflater.from(parent.context)
+            .inflate(R.layout.pocketpaint_item_layer, parent, false)
+        return LayerViewHolder(itemView, presenter)
     }
 
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View? {
-        var localConvertView = convertView
-        val viewHolder: LayerContracts.LayerViewHolder
-        if (localConvertView == null) {
-            val inflater = LayoutInflater.from(parent.context)
-            localConvertView = inflater.inflate(R.layout.pocketpaint_item_layer, parent, false)
-            viewHolder = LayerViewHolder(localConvertView, presenter)
-            localConvertView.tag = viewHolder
-        } else {
-            viewHolder = localConvertView.tag as LayerContracts.LayerViewHolder
-        }
-        viewHolders.put(position, viewHolder)
-        val isShown = presenter.isShown()
-        presenter.onBindLayerViewHolderAtPosition(position, viewHolder, isShown)
-        val checkBox = localConvertView?.findViewById<CheckBox>(R.id.pocketpaint_checkbox_layer)
-        checkBox?.setOnClickListener {
-            with(presenter) {
-                if (checkBox.isChecked) {
-                    unhideLayer(position, viewHolder)
-                    getLayerItem(position).isVisible = true
-                } else {
-                    hideLayer(position)
-                    getLayerItem(position).isVisible = false
-                }
-            }
-        }
+    override fun onBindViewHolder(holder: LayerViewHolder, position: Int) {
+        viewHolders.put(position, holder)
+        holder.bindView()
+    }
 
-        val dragHandle = localConvertView?.findViewById<AppCompatImageView>(R.id.pocketpaint_layer_drag_handle)
-        dragHandle?.setOnTouchListener { _, event ->
-            when (event.action) {
-                MotionEvent.ACTION_DOWN -> presenter.onStartDragging(position, localConvertView!!)
-                MotionEvent.ACTION_UP -> presenter.onStopDragging()
-            }
+    override fun getItemCount(): Int = presenter.layerCount
 
-            true
-        }
-
-        return localConvertView
+    fun clearViewHolders() {
+        viewHolders.clear()
     }
 
     override fun getViewHolderAt(position: Int): LayerContracts.LayerViewHolder? = viewHolders[position]
 
-    internal class LayerViewHolder(private val itemView: View, private val layerPresenter: LayerContracts.Presenter) : LayerContracts.LayerViewHolder {
-        private val layerBackground: LinearLayout = itemView.findViewById(R.id.pocketpaint_item_layer_background)
+    inner class LayerViewHolder(
+        itemView: View,
+        private val layerPresenter: LayerContracts.Presenter
+    ) : LayerContracts.LayerViewHolder, RecyclerView.ViewHolder(itemView) {
+        private val layerBackground: LinearLayout = itemView.findViewById(R.id.pocketpaint_item_layer)
         private val imageView: ImageView = itemView.findViewById(R.id.pocketpaint_item_layer_image)
+        private val dragHandle: ImageView = itemView.findViewById(R.id.pocketpaint_layer_drag_handle)
+        private val opacitySeekBar: SeekBar = itemView.findViewById(R.id.pocketpaint_layer_opacity_seekbar)
+        private val opacityEditText: AppCompatEditText = itemView.findViewById(R.id.pocketpaint_layer_opacity_value)
         private var currentBitmap: Bitmap? = null
         private val layerVisibilityCheckbox: CheckBox = itemView.findViewById(R.id.pocketpaint_checkbox_layer)
         private var isSelected = false
-
-        companion object {
-            private const val RESIZE_LENGTH = 400f
-        }
 
         override val bitmap: Bitmap?
             get() = currentBitmap
@@ -111,31 +91,102 @@ class LayerAdapter(val presenter: LayerContracts.Presenter) : BaseAdapter(), Lay
         override val view: View
             get() = itemView
 
-        override fun setSelected(position: Int, bottomNavigationViewHolder: BottomNavigationViewHolder?, defaultToolController: DefaultToolController?) {
-            if (!layerPresenter.getLayerItem(position).isVisible) {
-                defaultToolController?.switchTool(ToolType.HAND, false)
-                bottomNavigationViewHolder?.showCurrentTool(ToolType.HAND)
+        override fun bindView() {
+            val layer = layerPresenter.getLayerItem(position)
+            val isSelected = layer === layerPresenter.getSelectedLayer()
+            setSelected(isSelected)
+            setLayerVisibilityCheckbox(layer.isVisible)
+            updateImageView(layer)
+
+            layerVisibilityCheckbox.setOnClickListener {
+                val isVisible = layerVisibilityCheckbox.isChecked
+                layerPresenter.setLayerVisibility(position, isVisible)
             }
-            layerBackground.setBackgroundColor(Color.BLUE)
-            isSelected = true
+
+            layerBackground.setOnClickListener {
+                layerPresenter.setLayerSelected(position)
+            }
+
+            dragHandle.setOnTouchListener { _, event ->
+                when (event.action) {
+                    MotionEvent.ACTION_DOWN -> layerPresenter.onStartDragging(position, itemView)
+                    MotionEvent.ACTION_UP -> layerPresenter.onStopDragging()
+                }
+
+                true
+            }
+
+            opacitySeekBar.progress = layerPresenter.getLayerItem(position).opacityPercentage
+            opacityEditText.filters = arrayOf<InputFilter>(DefaultNumberRangeFilter(MIN_VAL, MAX_VAL))
+            opacityEditText.setText(layerPresenter.getLayerItem(position).opacityPercentage.toString())
+            opacityEditText.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
+
+                override fun afterTextChanged(s: Editable?) {
+                    val opacityText = s.toString()
+                    val opacityPercentage: Int = try {
+                        opacityText.toInt()
+                    } catch (exp: NumberFormatException) {
+                        exp.localizedMessage?.let {
+                            Log.d(TAG, it)
+                        }
+                        MAX_VAL
+                    }
+
+                    if (opacityPercentage != opacitySeekBar.progress) {
+                        opacitySeekBar.progress = opacityPercentage
+                        layerPresenter.changeLayerOpacity(position, opacityPercentage)
+                    }
+
+                    layerPresenter.getLayerItem(position).opacityPercentage = opacityPercentage
+                    layerPresenter.refreshDrawingSurface()
+                }
+            })
+
+            opacitySeekBar.setOnTouchListener { view, _ ->
+                view.parent.requestDisallowInterceptTouchEvent(true)
+                false
+            }
+
+            opacitySeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+                    if (fromUser) {
+                        opacityEditText.setText(progress.toString())
+                    }
+
+                    imageView.alpha = progress.toFloat() / MAX_LAYER_OPACITY_PERCENTAGE
+                }
+
+                override fun onStopTrackingTouch(seekBar: SeekBar) {
+                    layerPresenter.changeLayerOpacity(position, seekBar.progress)
+                }
+
+                override fun onStartTrackingTouch(seekBar: SeekBar) = Unit
+            })
         }
 
-        override fun setSelected() {
-            layerBackground.setBackgroundColor(Color.BLUE)
-            isSelected = true
+        override fun setSelected(isSelected: Boolean) {
+            when (getBackgroundType(isSelected)) {
+                BackgroundType.TOP_SELECTED -> layerBackground.setBackgroundResource(R.drawable.layer_item_top_selected)
+                BackgroundType.TOP_UNSELECTED -> layerBackground.setBackgroundResource(R.drawable.layer_item_top_unselected)
+                BackgroundType.BTM_SELECTED -> layerBackground.setBackgroundResource(R.drawable.layer_item_btm_selected)
+                BackgroundType.BTM_UNSELECTED -> layerBackground.setBackgroundResource(R.drawable.layer_item_btm_unselected)
+                BackgroundType.CENTER_SELECTED -> layerBackground.setBackgroundResource(R.drawable.layer_item_center_selected)
+                BackgroundType.CENTER_UNSELECTED -> layerBackground.setBackgroundResource(R.drawable.layer_item_center_unselected)
+                BackgroundType.SINGLE_SELECTED -> layerBackground.setBackgroundResource(R.drawable.layer_item_single_selected)
+                BackgroundType.SINGLE_UNSELECTED -> layerBackground.setBackgroundResource(R.drawable.layer_item_single_unselected)
+            }
+            this.isSelected = isSelected
         }
 
-        override fun setDeselected() {
-            layerBackground.setBackgroundResource(R.color.pocketpaint_colorPrimary)
-            isSelected = false
-        }
+        override fun isSelected(): Boolean = isSelected
 
-        override fun isSelected() = isSelected
-
-        override fun updateImageView(bitmap: Bitmap?) {
+        override fun updateImageView(layer: LayerContracts.Layer) {
             runBlocking {
                 launch {
-                    imageView.setImageBitmap(bitmap?.let { resizeBitmap(it) })
+                    imageView.setImageBitmap(resizeBitmap(layer.bitmap))
+                    imageView.alpha = layer.opacityPercentage.toFloat() / MAX_LAYER_OPACITY_PERCENTAGE
                 }
             }
             currentBitmap = bitmap
@@ -159,5 +210,36 @@ class LayerAdapter(val presenter: LayerContracts.Presenter) : BaseAdapter(), Lay
         }
 
         override fun setMergable() = layerBackground.setBackgroundResource(R.color.pocketpaint_color_merge_layer)
+
+        private fun getBackgroundType(isSelected: Boolean): BackgroundType {
+            if (presenter.layerCount > 2 && this.adapterPosition > 0 && this.adapterPosition < presenter.layerCount - 1) {
+                return if (isSelected) BackgroundType.CENTER_SELECTED else BackgroundType.CENTER_UNSELECTED
+            }
+
+            if (presenter.layerCount == 1) {
+                return if (isSelected) BackgroundType.SINGLE_SELECTED else BackgroundType.SINGLE_UNSELECTED
+            }
+
+            if (this.adapterPosition == presenter.layerCount - 1) {
+                return if (isSelected) BackgroundType.BTM_SELECTED else BackgroundType.BTM_UNSELECTED
+            }
+
+            return if (isSelected) BackgroundType.TOP_SELECTED else BackgroundType.TOP_UNSELECTED
+        }
+    }
+
+    companion object {
+        private val TAG = LayerAdapter::class.java.simpleName
+    }
+
+    enum class BackgroundType {
+        TOP_SELECTED,
+        TOP_UNSELECTED,
+        BTM_SELECTED,
+        BTM_UNSELECTED,
+        CENTER_SELECTED,
+        CENTER_UNSELECTED,
+        SINGLE_SELECTED,
+        SINGLE_UNSELECTED
     }
 }

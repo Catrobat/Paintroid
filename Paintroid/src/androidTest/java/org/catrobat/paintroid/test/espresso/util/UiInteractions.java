@@ -20,17 +20,20 @@
 package org.catrobat.paintroid.test.espresso.util;
 
 import android.graphics.PointF;
-import android.graphics.Rect;
+import android.util.Log;
 import android.view.InputDevice;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ListAdapter;
-import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.SeekBar;
 
 import org.hamcrest.Matcher;
 
-import androidx.test.espresso.NoMatchingViewException;
+import static org.catrobat.paintroid.test.espresso.util.CustomSwiper.ACCURATE;
+import static org.hamcrest.Matchers.is;
+
+import java.lang.reflect.Method;
+
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.ViewAssertion;
@@ -47,12 +50,10 @@ import androidx.test.espresso.action.Tapper;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.viewpager.widget.ViewPager;
 
-import static org.catrobat.paintroid.test.espresso.util.CustomSwiper.ACCURATE;
-import static org.hamcrest.Matchers.is;
-
 import static androidx.test.espresso.action.ViewActions.actionWithAssertions;
 import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
 import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast;
 import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 
@@ -84,16 +85,15 @@ public final class UiInteractions {
 		};
 	}
 
-	public static ViewAssertion assertListViewCount(final int expectedCount) {
-		return new ViewAssertion() {
-			@Override
-			public void check(View view, NoMatchingViewException noViewFoundException) {
-				if (noViewFoundException != null) {
-					throw noViewFoundException;
-				}
+	public static ViewAssertion assertRecyclerViewCount(final int expectedCount) {
+		return (view, noViewFoundException) -> {
+			if (noViewFoundException != null) {
+				throw noViewFoundException;
+			}
 
-				ListAdapter adapter = ((ListView) view).getAdapter();
-				assertThat(adapter.getCount(), is(expectedCount));
+			org.catrobat.paintroid.ui.LayerAdapter adapter = (org.catrobat.paintroid.ui.LayerAdapter) ((androidx.recyclerview.widget.RecyclerView) view).getAdapter();
+			if (adapter != null) {
+				assertThat(adapter.getItemCount(), is(expectedCount));
 			}
 		};
 	}
@@ -113,30 +113,33 @@ public final class UiInteractions {
 
 			@Override
 			public void perform(UiController uiController, View view) {
-				((SeekBar) view).setProgress(progress);
+				try {
+					Method privateSetProgressMethod = ProgressBar.class.getDeclaredMethod("setProgressInternal", Integer.TYPE, Boolean.TYPE, Boolean.TYPE);
+					privateSetProgressMethod.setAccessible(true);
+					privateSetProgressMethod.invoke(view, progress, true, true);
+				} catch (ReflectiveOperationException e) {
+					Log.e("SET PROGRESS", "could not set progress");
+				}
 			}
 		};
 	}
 
 	public static ViewAction clickOutside(final Direction direction) {
 		return actionWithAssertions(
-				new GeneralClickAction(Tap.SINGLE, new CoordinatesProvider() {
-					@Override
-					public float[] calculateCoordinates(View view) {
-						Rect r = new Rect();
-						view.getGlobalVisibleRect(r);
-						switch (direction) {
-							case ABOVE:
-								return new float[]{r.centerX(), r.top - 50};
-							case BELOW:
-								return new float[]{r.centerX(), r.bottom + 50};
-							case LEFT:
-								return new float[]{r.left - 50, r.centerY()};
-							case RIGHT:
-								return new float[]{r.right + 50, r.centerY()};
-						}
-						return null;
+				new GeneralClickAction(Tap.SINGLE, view -> {
+					android.graphics.Rect r = new android.graphics.Rect();
+					view.getGlobalVisibleRect(r);
+					switch (direction) {
+						case ABOVE:
+							return new float[]{r.centerX(), r.top - 50};
+						case BELOW:
+							return new float[]{r.centerX(), r.bottom + 50};
+						case LEFT:
+							return new float[]{r.left - 50, r.centerY()};
+						case RIGHT:
+							return new float[]{r.right + 50, r.centerY()};
 					}
+					return null;
 				}, Press.FINGER, 0, 1)
 		);
 	}
@@ -186,6 +189,14 @@ public final class UiInteractions {
 
 	public static ViewAction touchCenterLeft() {
 		return new GeneralClickAction(Tap.SINGLE, GeneralLocation.CENTER_LEFT, Press.FINGER, 0, 0);
+	}
+
+	public static ViewAction touchCenterTop() {
+		return new GeneralClickAction(Tap.SINGLE, GeneralLocation.TOP_CENTER, Press.FINGER, 0, 0);
+	}
+
+	public static ViewAction touchCenterBottom() {
+		return new GeneralClickAction(Tap.SINGLE, GeneralLocation.BOTTOM_CENTER, Press.FINGER, 0, 0);
 	}
 
 	public static ViewAction touchCenterMiddle() {
@@ -243,7 +254,7 @@ public final class UiInteractions {
 	}
 
 	private static class UnconstrainedScrollToAction implements ViewAction {
-		private ViewAction action = new ScrollToAction();
+		private final ViewAction action = new ScrollToAction();
 
 		@Override
 		public Matcher<View> getConstraints() {
@@ -263,7 +274,7 @@ public final class UiInteractions {
 
 	public static class DefinedLongTap implements Tapper {
 
-		private int longPressTimeout;
+		private final int longPressTimeout;
 
 		DefinedLongTap(int longPressTimeout) {
 			this.longPressTimeout = longPressTimeout;
@@ -304,6 +315,74 @@ public final class UiInteractions {
 		public Status sendTap(UiController uiController, float[] coordinates, float[] precision) {
 			return sendTap(uiController, coordinates, precision, InputDevice.SOURCE_UNKNOWN,
 					MotionEvent.BUTTON_PRIMARY);
+		}
+	}
+
+	public static class PressAndReleaseActions {
+
+		static MotionEvent motionEvent = null;
+
+		public static PressAction pressAction(DrawingSurfaceLocationProvider coordinates) {
+			return new PressAction(coordinates);
+		}
+
+		public static ReleaseAction releaseAction() {
+			return new ReleaseAction();
+		}
+
+		public static void tearDownPressAndRelease() {
+			motionEvent = null;
+		}
+
+		public static class PressAction implements ViewAction {
+
+			DrawingSurfaceLocationProvider coordinates;
+
+			PressAction(DrawingSurfaceLocationProvider coords) {
+				this.coordinates = coords;
+			}
+
+			@Override
+			public Matcher<View> getConstraints() {
+				return isDisplayingAtLeast(90);
+			}
+
+			@Override
+			public String getDescription() {
+				return "Press Action";
+			}
+
+			@Override
+			public void perform(UiController uiController, View view) {
+				if (motionEvent != null) {
+					throw new AssertionError("Only one view can be held at a time");
+				}
+				float[] coords = coordinates.calculateCoordinates(view);
+				float[] precision = Press.FINGER.describePrecision();
+
+				motionEvent = MotionEvents.sendDown(uiController, coords, precision).down;
+			}
+		}
+
+		public static class ReleaseAction implements ViewAction {
+
+			@Override
+			public Matcher<View> getConstraints() {
+				return isDisplayingAtLeast(90);
+			}
+
+			@Override
+			public String getDescription() {
+				return "Release";
+			}
+
+			@Override
+			public void perform(UiController uiController, View view) {
+				if (motionEvent == null) {
+					throw new AssertionError("Only one view can be held at a time");
+				}
+				MotionEvents.sendUp(uiController, motionEvent);
+			}
 		}
 	}
 }

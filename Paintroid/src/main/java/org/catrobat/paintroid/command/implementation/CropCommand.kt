@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ *  Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -56,23 +56,11 @@ class CropCommand(
         val iterator = layerModel.listIterator(0)
         while (iterator.hasNext()) {
             val currentLayer = iterator.next()
-            if (currentLayer.isVisible) {
-                val currentBitmap = currentLayer.bitmap ?: Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-                val resizedBitmap = Bitmap.createBitmap(width, height, currentBitmap.config)
-                val resizedTransparentBitmap = Bitmap.createBitmap(width, height, currentBitmap.config)
-                val resizedCanvas = Canvas(resizedBitmap)
-                resizedCanvas.drawBitmap(currentBitmap, -resizeCoordinateXLeft.toFloat(), -resizeCoordinateYTop.toFloat(), null)
-                currentLayer.bitmap = resizedBitmap
-                currentLayer.transparentBitmap = resizedTransparentBitmap
-            } else {
-                val currentBitmap = currentLayer.transparentBitmap ?: Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-                val resizedBitmap = Bitmap.createBitmap(width, height, currentBitmap.config)
-                val resizedTransparentBitmap = Bitmap.createBitmap(width, height, currentBitmap.config)
-                val resizedCanvas = Canvas(resizedTransparentBitmap)
-                resizedCanvas.drawBitmap(currentBitmap, -resizeCoordinateXLeft.toFloat(), -resizeCoordinateYTop.toFloat(), null)
-                currentLayer.bitmap = resizedBitmap
-                currentLayer.transparentBitmap = resizedTransparentBitmap
-            }
+            val currentBitmap = currentLayer.bitmap ?: Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+            val resizedBitmap = Bitmap.createBitmap(width, height, currentBitmap.config)
+            val resizedCanvas = Canvas(resizedBitmap)
+            resizedCanvas.drawBitmap(currentBitmap, -resizeCoordinateXLeft.toFloat(), -resizeCoordinateYTop.toFloat(), null)
+            currentLayer.bitmap = resizedBitmap
         }
         layerModel.height = height
         layerModel.width = width

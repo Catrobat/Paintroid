@@ -37,9 +37,12 @@ import androidx.fragment.app.Fragment
 import org.catrobat.paintroid.FileIO
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.R
+import org.catrobat.paintroid.UserPreferences
 import org.catrobat.paintroid.WelcomeActivity
 import org.catrobat.paintroid.colorpicker.ColorPickerDialog
 import org.catrobat.paintroid.colorpicker.OnColorPickedListener
+import org.catrobat.paintroid.command.CommandFactory
+import org.catrobat.paintroid.command.implementation.DefaultCommandFactory
 import org.catrobat.paintroid.common.ABOUT_DIALOG_FRAGMENT_TAG
 import org.catrobat.paintroid.common.ADVANCED_SETTINGS_DIALOG_FRAGMENT_TAG
 import org.catrobat.paintroid.common.CATROBAT_INFORMATION_DIALOG_TAG
@@ -62,6 +65,7 @@ import org.catrobat.paintroid.common.SAVE_DIALOG_FRAGMENT_TAG
 import org.catrobat.paintroid.common.SAVE_INFORMATION_DIALOG_TAG
 import org.catrobat.paintroid.common.SAVE_QUESTION_FRAGMENT_TAG
 import org.catrobat.paintroid.common.SCALE_IMAGE_FRAGMENT_TAG
+import org.catrobat.paintroid.common.ZOOM_WINDOW_SETTINGS_DIALOG_FRAGMENT_TAG
 import org.catrobat.paintroid.contract.MainActivityContracts
 import org.catrobat.paintroid.dialog.AboutDialog
 import org.catrobat.paintroid.dialog.AdvancedSettingsDialog
@@ -84,7 +88,9 @@ import org.catrobat.paintroid.dialog.SaveBeforeLoadImageDialog
 import org.catrobat.paintroid.dialog.SaveBeforeNewImageDialog
 import org.catrobat.paintroid.dialog.SaveInformationDialog
 import org.catrobat.paintroid.dialog.ScaleImageOnLoadDialog
+import org.catrobat.paintroid.dialog.ZoomWindowSettingsDialog
 import org.catrobat.paintroid.tools.ToolReference
+import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.ui.fragments.CatroidMediaGalleryFragment
 import org.catrobat.paintroid.ui.fragments.CatroidMediaGalleryFragment.MediaGalleryListener
 
@@ -92,11 +98,14 @@ class MainActivityNavigator(
     private val mainActivity: MainActivity,
     private val toolReference: ToolReference
 ) : MainActivityContracts.Navigator {
-
     override val isSdkAboveOrEqualM: Boolean
+        @SuppressLint("AnnotateVersionCheck")
         get() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
     override val isSdkAboveOrEqualQ: Boolean
+        @SuppressLint("AnnotateVersionCheck")
         get() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
+
+    private var commandFactory: CommandFactory = DefaultCommandFactory()
 
     private fun showFragment(
         fragment: Fragment,
@@ -128,10 +137,17 @@ class MainActivityNavigator(
     private fun setupColorPickerDialogListeners(dialog: ColorPickerDialog) {
         dialog.addOnColorPickedListener(object : OnColorPickedListener {
             override fun colorChanged(color: Int) {
-                toolReference.tool?.changePaintColor(color)
-                mainActivity.presenter.setBottomNavigationColor(color)
+                val command = commandFactory.createColorChangedCommand(toolReference, mainActivity, color)
+                mainActivity.model.colorHistory.addColor(color)
+
+                if (toolReference.tool?.toolType != ToolType.CLIP) {
+                    mainActivity.commandManager.addCommand(command)
+                } else {
+                    mainActivity.commandManager.addCommandWithoutUndo(command)
+                }
             }
         })
+
         mainActivity.presenter.bitmap?.let { dialog.setBitmap(it) }
     }
 
@@ -158,13 +174,10 @@ class MainActivityNavigator(
         try {
             mainActivity.startActivity(openPlayStore)
         } catch (e: ActivityNotFoundException) {
-            val uriNoPlayStore =
-                Uri.parse("http://play.google.com/store/apps/details?id=$applicationId")
+            val uriNoPlayStore = Uri.parse("http://play.google.com/store/apps/details?id=$applicationId")
             val noPlayStoreInstalled = Intent(Intent.ACTION_VIEW, uriNoPlayStore)
-            val activityInfo = noPlayStoreInstalled.resolveActivityInfo(
-                mainActivity.packageManager, noPlayStoreInstalled.flags
-            )
-            if (activityInfo.exported) {
+
+            runCatching {
                 mainActivity.startActivity(noPlayStoreInstalled)
             }
         }
@@ -197,7 +210,8 @@ class MainActivityNavigator(
                 val dialog = ColorPickerDialog.newInstance(
                     it.drawPaint.color,
                     mainActivity.model.isOpenedFromCatroid,
-                    mainActivity.model.isOpenedFromFormulaEditorInCatroid
+                    mainActivity.model.isOpenedFromFormulaEditorInCatroid,
+                    mainActivity.model.colorHistory
                 )
                 setupColorPickerDialogListeners(dialog)
                 showDialogFragmentSafely(dialog, COLOR_PICKER_DIALOG_TAG)
@@ -288,6 +302,14 @@ class MainActivityNavigator(
         )
     }
 
+    override fun showZoomWindowSettingsDialog(sharedPreferences: UserPreferences) {
+        val zoomWindowSettingsDialog = ZoomWindowSettingsDialog(sharedPreferences)
+        zoomWindowSettingsDialog.show(
+            mainActivity.supportFragmentManager,
+            ZOOM_WINDOW_SETTINGS_DIALOG_FRAGMENT_TAG
+        )
+    }
+
     override fun showAdvancedSettingsDialog() {
         val advancedSettingsDialog = AdvancedSettingsDialog()
         advancedSettingsDialog.show(
@@ -297,11 +319,13 @@ class MainActivityNavigator(
     }
 
     override fun showOverwriteDialog(permissionCode: Int, isExport: Boolean) {
+        mainActivity.idlingResource.increment()
         val overwriteDialog = OverwriteDialog.newInstance(permissionCode, isExport)
         overwriteDialog.show(
             mainActivity.supportFragmentManager,
             OVERWRITE_INFORMATION_DIALOG_TAG
         )
+        mainActivity.idlingResource.decrement()
     }
 
     override fun showPngInformationDialog() {
@@ -466,7 +490,6 @@ class MainActivityNavigator(
             }
             FileIO.filename = "image$imageNumber"
             FileIO.catroidFlag = true
-            FileIO.isCatrobatImage = false
             mainActivity.presenter.switchBetweenVersions(permissionCode, isExport)
             return
         }

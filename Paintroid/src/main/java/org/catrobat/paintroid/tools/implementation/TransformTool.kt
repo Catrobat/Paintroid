@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ *  Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,9 +24,7 @@ import android.graphics.Paint
 import android.graphics.PointF
 import android.graphics.RectF
 import androidx.annotation.VisibleForTesting
-import kotlin.math.floor
-import kotlin.math.max
-import kotlin.math.min
+import androidx.test.espresso.idling.CountingIdlingResource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -47,6 +45,9 @@ import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController
 import org.catrobat.paintroid.tools.options.TransformToolOptionsView
 import org.catrobat.paintroid.ui.tools.NumberRangeFilter
+import kotlin.math.floor
+import kotlin.math.max
+import kotlin.math.min
 
 @VisibleForTesting
 const val MAXIMUM_BITMAP_SIZE_FACTOR = 4.0f
@@ -70,6 +71,7 @@ class TransformTool(
     toolOptionsViewController: ToolOptionsViewController,
     toolPaint: ToolPaint,
     workspace: Workspace,
+    idlingResource: CountingIdlingResource,
     commandManager: CommandManager,
     override var drawTime: Long
 ) : BaseToolWithRectangleShape(
@@ -77,6 +79,7 @@ class TransformTool(
     toolOptionsViewController,
     toolPaint,
     workspace,
+    idlingResource,
     commandManager
 ) {
     @VisibleForTesting
@@ -95,6 +98,8 @@ class TransformTool(
     @JvmField
     var resizeBoundHeightYBottom = 0f
 
+    var checkMarkClicked = false
+
     private var cropRunFinished = false
     private var maxImageResolutionInformationAlreadyShown = false
     private var zeroSizeBitmap = false
@@ -106,6 +111,8 @@ class TransformTool(
 
     override val toolType: ToolType
         get() = ToolType.TRANSFORM
+
+    override fun toolPositionCoordinates(coordinate: PointF): PointF = coordinate
 
     init {
         rotationEnabled = ROTATION_ENABLED
@@ -281,11 +288,19 @@ class TransformTool(
         resizeBoundHeightYBottom = 0f
         resizeBoundWidthXLeft = workspace.width.toFloat()
         resizeBoundHeightYTop = workspace.height.toFloat()
-        resetScaleAndTranslation()
-        resizeBoundWidthXRight = workspace.width - 1f
-        resizeBoundHeightYBottom = workspace.height - 1f
-        resizeBoundWidthXLeft = 0f
-        resizeBoundHeightYTop = 0f
+        if (!checkMarkClicked) {
+            resetScaleAndTranslation()
+            resizeBoundWidthXRight = workspace.width - 1f
+            resizeBoundHeightYBottom = workspace.height - 1f
+            resizeBoundWidthXLeft = 0f
+            resizeBoundHeightYTop = 0f
+        } else {
+            resizeBoundWidthXRight = toolPosition.x + workspace.width / 2 + 1
+            resizeBoundWidthXLeft = toolPosition.x - workspace.width / 2 + 1
+            resizeBoundHeightYBottom = toolPosition.y + workspace.height / 2 + 1
+            resizeBoundHeightYTop = toolPosition.y - workspace.height / 2 + 1
+        }
+
         setRectangle(
             RectF(
                 resizeBoundWidthXLeft,
@@ -294,6 +309,14 @@ class TransformTool(
                 resizeBoundHeightYBottom
             )
         )
+        if (checkMarkClicked) {
+            workspace.perspective.surfaceTranslationX += resizeBoundWidthXLeft
+            workspace.perspective.surfaceTranslationY += resizeBoundHeightYTop
+            workspace.perspective.setBitmapDimensions(boxWidth.toInt(), boxHeight.toInt())
+            toolPosition.x -= resizeBoundWidthXLeft
+            toolPosition.y -= resizeBoundHeightYTop
+            checkMarkClicked = false
+        }
         cropRunFinished = true
         updateToolOptions()
     }
@@ -385,6 +408,7 @@ class TransformTool(
 
     private fun autoCrop() {
         CoroutineScope(Dispatchers.Default).launch {
+            idlingResource.increment()
             val shapeBounds = cropAlgorithm.crop(workspace.bitmapOfAllLayers)
             if (shapeBounds != null) {
                 boxWidth = shapeBounds.width() + 1f
@@ -397,6 +421,7 @@ class TransformTool(
                 workspace.invalidate()
                 toolOptionsViewController.hide()
             }
+            idlingResource.decrement()
         }
     }
 
@@ -526,10 +551,15 @@ class TransformTool(
     }
 
     private fun setRectangle(rectangle: RectF) {
-        boxWidth = rectangle.right - rectangle.left + 1f
-        boxHeight = rectangle.bottom - rectangle.top + 1f
-        toolPosition.x = rectangle.left + boxWidth / 2f
-        toolPosition.y = rectangle.top + boxHeight / 2f
+        if (!checkMarkClicked) {
+            boxWidth = rectangle.right - rectangle.left + 1f
+            boxHeight = rectangle.bottom - rectangle.top + 1f
+            toolPosition.x = rectangle.left + boxWidth / 2f
+            toolPosition.y = rectangle.top + boxHeight / 2f
+        } else {
+            boxWidth = rectangle.right - rectangle.left
+            boxHeight = rectangle.bottom - rectangle.top
+        }
     }
 
     private fun initResizeBounds() {

@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ *  Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -50,8 +50,8 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isChecked;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.isSelected;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
@@ -111,10 +111,10 @@ public class BrushPickerIntegrationTest {
 				.check(matches(withText(Integer.toString(DEFAULT_STROKE_WIDTH))));
 		onView(withId(R.id.pocketpaint_stroke_ibtn_rect))
 				.check(matches(isDisplayed()))
-				.check(matches(not(isSelected())));
+				.check(matches(not(isChecked())));
 		onView(withId(R.id.pocketpaint_stroke_ibtn_circle))
 				.check(matches(isDisplayed()))
-				.check(matches(isSelected()));
+				.check(matches(isChecked()));
 
 		setStrokeWidth(MIN_STROKE_WIDTH);
 		setStrokeWidth(MIDDLE_STROKE_WIDTH);
@@ -124,9 +124,9 @@ public class BrushPickerIntegrationTest {
 
 		onView(withId(R.id.pocketpaint_stroke_ibtn_rect))
 				.perform(click())
-				.check(matches(isSelected()));
+				.check(matches(isChecked()));
 		onView(withId(R.id.pocketpaint_stroke_ibtn_circle))
-				.check(matches(not(isSelected())));
+				.check(matches(not(isChecked())));
 
 		assertStrokePaint(getCurrentToolCanvasPaint(), MAX_STROKE_WIDTH, Cap.SQUARE);
 
@@ -248,16 +248,16 @@ public class BrushPickerIntegrationTest {
 	@Test
 	public void brushPickerDialogRadioButtonsBehaviour() {
 		onView(withId(R.id.pocketpaint_stroke_ibtn_rect))
-				.check(matches(not(isSelected())));
+				.check(matches(not(isChecked())));
 		onView(withId(R.id.pocketpaint_stroke_ibtn_circle))
-				.check(matches(isSelected()));
+				.check(matches(isChecked()));
 
 		onView(withId(R.id.pocketpaint_stroke_ibtn_rect))
 				.perform(click())
-				.check(matches(isSelected()));
+				.check(matches(isChecked()));
 
 		onView(withId(R.id.pocketpaint_stroke_ibtn_circle))
-				.check(matches(not(isSelected())));
+				.check(matches(not(isChecked())));
 
 		onToolBarView()
 				.performCloseToolOptionsView();
@@ -269,10 +269,10 @@ public class BrushPickerIntegrationTest {
 
 		onView(withId(R.id.pocketpaint_stroke_ibtn_circle))
 				.perform(click())
-				.check(matches(isSelected()));
+				.check(matches(isChecked()));
 
 		onView(withId(R.id.pocketpaint_stroke_ibtn_rect))
-				.check(matches(not(isSelected())));
+				.check(matches(not(isChecked())));
 
 		assertStrokePaint(getCurrentToolCanvasPaint(), DEFAULT_STROKE_WIDTH, Cap.ROUND);
 

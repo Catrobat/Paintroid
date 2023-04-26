@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ *  Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,6 +18,7 @@
  */
 package org.catrobat.paintroid.command.implementation
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Paint
 import android.graphics.Point
@@ -30,6 +31,8 @@ import org.catrobat.paintroid.command.implementation.RotateCommand.RotateDirecti
 import org.catrobat.paintroid.command.serialization.SerializablePath
 import org.catrobat.paintroid.command.serialization.SerializableTypeface
 import org.catrobat.paintroid.common.CommonFactory
+import org.catrobat.paintroid.tools.ToolReference
+import org.catrobat.paintroid.contract.LayerContracts
 import org.catrobat.paintroid.tools.drawable.ShapeDrawable
 import org.catrobat.paintroid.tools.helper.JavaFillAlgorithmFactory
 import org.catrobat.paintroid.tools.helper.toPoint
@@ -38,29 +41,32 @@ class DefaultCommandFactory : CommandFactory {
     private val commonFactory = CommonFactory()
     override fun createInitCommand(width: Int, height: Int): Command = CompositeCommand().apply {
         addCommand(SetDimensionCommand(width, height))
-        addCommand(AddLayerCommand(commonFactory))
+        addCommand(AddEmptyLayerCommand(commonFactory))
     }
 
     override fun createInitCommand(bitmap: Bitmap): Command = CompositeCommand().apply {
         addCommand(SetDimensionCommand(bitmap.width, bitmap.height))
-        addCommand(LoadCommand(bitmap.copy(Bitmap.Config.ARGB_8888, false)))
+        addCommand(LoadCommand(bitmap))
     }
 
-    override fun createInitCommand(bitmapList: List<Bitmap?>): Command = CompositeCommand().apply {
-        bitmapList[0]?.let {
-            addCommand(SetDimensionCommand(it.width, it.height))
+    override fun createInitCommand(layers: List<LayerContracts.Layer>): Command = CompositeCommand().apply {
+        layers[0].let {
+            val bitmap = it.bitmap
+            addCommand(SetDimensionCommand(bitmap.width, bitmap.height))
         }
-        addCommand(LoadBitmapListCommand(bitmapList))
+        addCommand(LoadLayerListCommand(layers))
     }
 
     override fun createResetCommand(): Command = CompositeCommand().apply {
         addCommand(ResetCommand())
-        addCommand(AddLayerCommand(commonFactory))
+        addCommand(AddEmptyLayerCommand(commonFactory))
     }
 
-    override fun createAddLayerCommand(): Command = AddLayerCommand(commonFactory)
+    override fun createAddEmptyLayerCommand(): Command = AddEmptyLayerCommand(commonFactory)
 
     override fun createSelectLayerCommand(position: Int): Command = SelectLayerCommand(position)
+
+    override fun createLayerOpacityCommand(position: Int, opacityPercentage: Int): Command = LayerOpacityCommand(position, opacityPercentage)
 
     override fun createRemoveLayerCommand(index: Int): Command = RemoveLayerCommand(index)
 
@@ -126,7 +132,13 @@ class DefaultCommandFactory : CommandFactory {
         commonFactory.createSerializablePath(path)
     )
 
-    override fun createSmudgePathCommand(bitmap: Bitmap, pointPath: MutableList<PointF>, maxPressure: Float, maxSize: Float, minSize: Float): Command {
+    override fun createSmudgePathCommand(
+        bitmap: Bitmap,
+        pointPath: MutableList<PointF>,
+        maxPressure: Float,
+        maxSize: Float,
+        minSize: Float
+    ): Command {
         val copy = mutableListOf<PointF>()
 
         pointPath.forEach {
@@ -154,19 +166,25 @@ class DefaultCommandFactory : CommandFactory {
     override fun createResizeCommand(newWidth: Int, newHeight: Int): Command =
         ResizeCommand(newWidth, newHeight)
 
-    override fun createStampCommand(
+    override fun createClipboardCommand(
         bitmap: Bitmap,
         toolPosition: PointF,
         boxWidth: Float,
         boxHeight: Float,
         boxRotation: Float
-    ): Command = StampCommand(
+    ): Command = ClipboardCommand(
         bitmap,
         toPoint(toolPosition),
         boxWidth,
         boxHeight,
         boxRotation
     )
+
+    override fun createClippingCommand(bitmap: Bitmap, pathBitmap: Bitmap): Command =
+        ClippingCommand(
+            bitmap,
+            pathBitmap
+        )
 
     override fun createSprayCommand(sprayedPoints: FloatArray, paint: Paint): Command =
         SprayCommand(sprayedPoints, paint)
@@ -177,4 +195,11 @@ class DefaultCommandFactory : CommandFactory {
         boxHeight: Float,
         boxRotation: Float
     ): Command = CutCommand(toPoint(toolPosition), boxWidth, boxHeight, boxRotation)
+
+    override fun createColorChangedCommand(
+        toolReference: ToolReference,
+        context: Context,
+        color: Int
+    ): Command =
+        ColorChangedCommand(toolReference, context, color)
 }

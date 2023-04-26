@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ *  Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,6 +26,7 @@ import android.graphics.PointF
 import android.os.Bundle
 import android.util.DisplayMetrics
 import androidx.annotation.VisibleForTesting
+import androidx.test.espresso.idling.CountingIdlingResource
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.tools.ContextCallback
@@ -43,18 +44,20 @@ abstract class BaseToolWithShape @SuppressLint("VisibleForTests") constructor(
     toolOptionsViewController: ToolOptionsViewController,
     toolPaint: ToolPaint,
     workspace: Workspace,
+    idlingResource: CountingIdlingResource,
     commandManager: CommandManager
 ) : BaseTool(
     contextCallback,
     toolOptionsViewController,
     toolPaint,
     workspace,
+    idlingResource,
     commandManager
 ) {
 
     @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
     @JvmField
-    val toolPosition: PointF
+    var toolPosition: PointF
 
     @JvmField
     var primaryShapeColor: Int =
@@ -81,6 +84,7 @@ abstract class BaseToolWithShape @SuppressLint("VisibleForTests") constructor(
         }
         linePaint = Paint()
         linePaint.color = primaryShapeColor
+        linePaint.pathEffect = null
     }
 
     abstract fun drawShape(canvas: Canvas)

@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,6 +25,7 @@ import android.graphics.Paint.Cap
 import android.graphics.PointF
 import android.graphics.RectF
 import androidx.annotation.VisibleForTesting
+import androidx.test.espresso.idling.CountingIdlingResource
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.command.serialization.SerializablePath
@@ -57,6 +58,7 @@ open class CursorTool(
     toolOptionsViewController: ToolOptionsViewController,
     toolPaint: ToolPaint,
     workspace: Workspace,
+    idlingResource: CountingIdlingResource,
     commandManager: CommandManager,
     override var drawTime: Long
 ) : BaseToolWithShape(
@@ -64,6 +66,7 @@ open class CursorTool(
     toolOptionsViewController,
     toolPaint,
     workspace,
+    idlingResource,
     commandManager
 ) {
     @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
@@ -98,6 +101,7 @@ open class CursorTool(
             setBrushPreviewListener(CommonBrushPreviewListener(toolPaint, toolType))
             setCurrentPaint(toolPaint.paint)
         }
+        brushToolOptionsView.setStrokeCapButtonChecked(toolPaint.strokeCap)
     }
 
     override fun changePaintColor(color: Int) {
@@ -108,7 +112,29 @@ open class CursorTool(
         brushToolOptionsView.invalidate()
     }
 
+    private fun hideToolOptions() {
+        toolOptionsViewController.slideUp(
+            brushToolOptionsView.getTopToolOptions(), true
+        )
+
+        toolOptionsViewController.slideDown(
+            brushToolOptionsView.getBottomToolOptions(), true
+        )
+    }
+
+    private fun showToolOptions() {
+        toolOptionsViewController.slideDown(
+            brushToolOptionsView.getTopToolOptions(), false
+        )
+
+        toolOptionsViewController.slideUp(
+            brushToolOptionsView.getBottomToolOptions(), false
+        )
+    }
+
     override fun handleDown(coordinate: PointF?): Boolean {
+        hideToolOptions()
+        super.handleDown(coordinate)
         pathToDraw.moveTo(toolPosition.x, toolPosition.y)
         coordinate?.let {
             previousEventCoordinate?.set(it)
@@ -162,6 +188,9 @@ open class CursorTool(
         point.x >= 0 && point.y >= 0 && point.x < width && point.y < height
 
     override fun handleUp(coordinate: PointF?): Boolean {
+        showToolOptions()
+        super.handleUp(coordinate)
+
         if (!pointInsideBitmap && workspace.contains(toolPosition)) {
             pointInsideBitmap = true
         }
@@ -377,5 +406,15 @@ open class CursorTool(
         }
 
         pointArray.clear()
+    }
+
+    override fun toolPositionCoordinates(coordinate: PointF): PointF {
+        var finalCoordinates: PointF = PointF(0f, 0f)
+        previousEventCoordinate?.let {
+            val deltaX = coordinate.x - it.x
+            val deltaY = coordinate.y - it.y
+            finalCoordinates = calculateNewClampedToolPosition(deltaX, deltaY)
+        }
+        return finalCoordinates
     }
 }

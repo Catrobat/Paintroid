@@ -1,6 +1,6 @@
 /*
  * Catroid: An on-device visual programming system for Android devices
- * Copyright (C) 2010-2021 The Catrobat Team
+ *  Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,8 +22,6 @@
  */
 package org.catrobat.paintroid.ui.dragndrop
 
-import android.view.View
-
 interface DragAndDropPresenter {
     fun swapItemsVisually(position: Int, swapWith: Int): Int
 
@@ -32,6 +30,4 @@ interface DragAndDropPresenter {
     fun reorderItems(position: Int, swapWith: Int)
 
     fun markMergeable(position: Int, mergeWith: Int)
-
-    fun onClickLayerAtPosition(position: Int, view: View)
 }

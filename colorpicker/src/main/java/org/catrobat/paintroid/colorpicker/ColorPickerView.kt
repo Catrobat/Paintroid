@@ -44,7 +44,7 @@ class ColorPickerView : LinearLayoutCompat {
     private var selectedColor = Color.BLACK
     var initialColor = 0
     var isOpenedFromFormulaEditorInCatroid = false
-    private var listener: OnColorChangedListener? = null
+    private var colorChangedListener: OnColorChangedListener? = null
 
     constructor(context: Context) : super(context)
 
@@ -139,17 +139,17 @@ class ColorPickerView : LinearLayoutCompat {
             context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.toggleSoftInputFromWindow(
             rootView.applicationWindowToken,
-            InputMethodManager.SHOW_FORCED,
+            InputMethodManager.SHOW_IMPLICIT,
             0
         )
     }
 
     private fun onColorChanged() {
-        listener?.colorChanged(selectedColor)
+        colorChangedListener?.colorChanged(selectedColor)
     }
 
     fun setOnColorChangedListener(listener: OnColorChangedListener?) {
-        this.listener = listener
+        this.colorChangedListener = listener
     }
 
     override fun onSaveInstanceState(): Parcelable {

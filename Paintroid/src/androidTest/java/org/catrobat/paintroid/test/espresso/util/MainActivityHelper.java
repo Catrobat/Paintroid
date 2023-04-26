@@ -21,8 +21,14 @@ package org.catrobat.paintroid.test.espresso.util;
 
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.graphics.Insets;
 import android.graphics.Point;
+import android.graphics.Rect;
+import android.os.Build;
 import android.view.View;
+import android.view.WindowInsets;
+import android.view.WindowManager;
+import android.view.WindowMetrics;
 
 import org.catrobat.paintroid.MainActivity;
 
@@ -35,7 +41,22 @@ public class MainActivityHelper {
 
 	public Point getDisplaySize() {
 		Point displaySize = new Point();
-		activity.getWindowManager().getDefaultDisplay().getSize(displaySize);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+			WindowManager windowManager = activity.getWindowManager();
+			WindowMetrics windowMetrics = windowManager.getCurrentWindowMetrics();
+			Insets windowInsets = windowMetrics.getWindowInsets().getInsetsIgnoringVisibility(
+					WindowInsets.Type.navigationBars() | WindowInsets.Type.displayCutout()
+			);
+			float insetsWidth = windowInsets.right + windowInsets.left;
+			float insetsHeight = windowInsets.top + windowInsets.bottom;
+			Rect b = windowMetrics.getBounds();
+			float width = b.width() - insetsWidth;
+			float height = b.height() - insetsHeight;
+			displaySize.x = (int) width;
+			displaySize.y = (int) height;
+		} else {
+			activity.getWindowManager().getDefaultDisplay().getSize(displaySize);
+		}
 		return displaySize;
 	}
 

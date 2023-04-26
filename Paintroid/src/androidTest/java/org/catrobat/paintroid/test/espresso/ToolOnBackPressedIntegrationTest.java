@@ -1,6 +1,6 @@
 /*
  *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
+ *  Copyright (C) 2010-2022 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -97,7 +97,7 @@ public class ToolOnBackPressedIntegrationTest {
 	public ScreenshotOnFailRule screenshotOnFailRule = new ScreenshotOnFailRule();
 
 	@ClassRule
-	public static GrantPermissionRule grantPermissionRule = EspressoUtils.grantPermissionRulesVersionCheck();
+	public static GrantPermissionRule grantPermissionRule = EspressoUtils.INSTANCE.grantPermissionRulesVersionCheck();
 
 	private File saveFile = null;
 	private ToolReference toolReference;
@@ -117,6 +117,14 @@ public class ToolOnBackPressedIntegrationTest {
 		if (saveFile != null && saveFile.exists()) {
 			saveFile.delete();
 			saveFile = null;
+		}
+
+		String imagesDirectory = String.valueOf(
+				Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES));
+		String pathToFile = imagesDirectory + File.separator + defaultPictureName + FILE_ENDING;
+		File imageFile = new File(pathToFile);
+		if (imageFile.exists()) {
+			imageFile.delete();
 		}
 	}
 
@@ -152,7 +160,7 @@ public class ToolOnBackPressedIntegrationTest {
 	}
 
 	@Test
-	public void testBrushToolBackPressedWithSaveAndOverride() throws IOException {
+	public void testBrushToolBackPressedWithSaveAndOverride() throws IOException, InterruptedException {
 		TopBarViewInteraction.onTopBarView()
 				.performOpenMoreOptions();
 		onView(withText(R.string.menu_save_image))
@@ -172,7 +180,7 @@ public class ToolOnBackPressedIntegrationTest {
 		onView(withText(R.string.save_button_text))
 				.perform(click());
 
-		onView(isRoot()).perform(waitFor(200));
+		onView(isRoot()).perform(waitFor(3000));
 
 		String filename = defaultPictureName + FILE_ENDING;
 		ContentResolver resolver = launchActivityRule.getActivity().getContentResolver();
@@ -181,6 +189,8 @@ public class ToolOnBackPressedIntegrationTest {
 		assertNotNull(uri);
 		InputStream inputStream = resolver.openInputStream(uri);
 		Bitmap oldBitmap = BitmapFactory.decodeStream(inputStream, null, options);
+
+		onView(isRoot()).perform(waitFor(2000));
 
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
@@ -204,10 +214,12 @@ public class ToolOnBackPressedIntegrationTest {
 		onView(withText(R.string.save_button_text))
 				.perform(click());
 
-		onView(isRoot()).perform(waitFor(200));
 		onView(withText(R.string.overwrite_button_text))
 				.perform(click());
-		onView(isRoot()).perform(waitFor(200));
+
+		while (!launchActivityRule.getActivity().isFinishing()) {
+			Thread.sleep(1000);
+		}
 
 		uri = FileIO.INSTANCE.getUriForFilenameInPicturesFolder(filename, resolver);
 		assertNotNull(uri);
@@ -242,7 +254,7 @@ public class ToolOnBackPressedIntegrationTest {
 	}
 
 	@Test
-	public void testBrushToolBackPressedFromCatroidAndUsePicture() throws SecurityException, IllegalArgumentException {
+	public void testBrushToolBackPressedFromCatroidAndUsePicture() throws SecurityException, IllegalArgumentException, InterruptedException {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
@@ -258,7 +270,9 @@ public class ToolOnBackPressedIntegrationTest {
 
 		Espresso.pressBackUnconditionally();
 
-		onView(isRoot()).perform(waitFor(2000));
+		while (!launchActivityRule.getActivity().isFinishing()) {
+			Thread.sleep(1000);
+		}
 
 		assertTrue(launchActivityRule.getActivity().isFinishing());
 		assertTrue(saveFile.exists());

@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ *  Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,8 +20,11 @@ package org.catrobat.paintroid.ui
 
 import android.content.Context
 import android.net.Uri
+import androidx.test.espresso.idling.CountingIdlingResource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import org.catrobat.paintroid.command.serialization.CommandSerializer
+import org.catrobat.paintroid.contract.LayerContracts
 import org.catrobat.paintroid.contract.MainActivityContracts.Interactor
 import org.catrobat.paintroid.iotasks.CreateFile
 import org.catrobat.paintroid.iotasks.CreateFile.CreateFileCallback
@@ -29,18 +32,19 @@ import org.catrobat.paintroid.iotasks.LoadImage
 import org.catrobat.paintroid.iotasks.LoadImage.LoadImageCallback
 import org.catrobat.paintroid.iotasks.SaveImage
 import org.catrobat.paintroid.iotasks.SaveImage.SaveImageCallback
-import org.catrobat.paintroid.tools.Workspace
 
-class MainActivityInteractor : Interactor {
+class MainActivityInteractor(private val idlingResource: CountingIdlingResource) : Interactor {
     private val scopeIO = CoroutineScope(Dispatchers.IO)
 
     override fun saveCopy(
         callback: SaveImageCallback,
         requestCode: Int,
-        workspace: Workspace,
+        layerModel: LayerContracts.Model,
+        commandSerializer: CommandSerializer,
+        uri: Uri?,
         context: Context
     ) {
-        SaveImage(callback, requestCode, workspace, null, true, context, scopeIO).execute()
+        SaveImage(callback, requestCode, layerModel, commandSerializer, uri, true, context, scopeIO, idlingResource).execute()
     }
 
     override fun createFile(callback: CreateFileCallback, requestCode: Int, filename: String) {
@@ -50,11 +54,12 @@ class MainActivityInteractor : Interactor {
     override fun saveImage(
         callback: SaveImageCallback,
         requestCode: Int,
-        workspace: Workspace,
+        layerModel: LayerContracts.Model,
+        commandSerializer: CommandSerializer,
         uri: Uri?,
         context: Context
     ) {
-        SaveImage(callback, requestCode, workspace, uri, false, context, scopeIO).execute()
+        SaveImage(callback, requestCode, layerModel, commandSerializer, uri, false, context, scopeIO, idlingResource).execute()
     }
 
     override fun loadFile(
@@ -63,8 +68,8 @@ class MainActivityInteractor : Interactor {
         uri: Uri?,
         context: Context,
         scaling: Boolean,
-        workspace: Workspace
+        commandSerializer: CommandSerializer,
     ) {
-        LoadImage(callback, requestCode, uri, context, scaling, workspace, scopeIO).execute()
+        LoadImage(callback, requestCode, uri, context, scaling, commandSerializer, scopeIO, idlingResource).execute()
     }
 }

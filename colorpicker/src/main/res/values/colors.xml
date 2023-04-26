@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
  *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
+ *  Copyright (C) 2010-2022 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -18,11 +18,10 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
-    <color name="pocketpaint_color_picker_rgb_red">#FFEB4618</color>
-    <color name="pocketpaint_color_picker_rgb_green">#FF078707</color>
-    <color name="pocketpaint_color_picker_rgb_blue">#FF0284e7</color>
-    <color name="pocketpaint_color_picker_rgb_alpha">#FFCCCCCC</color>
-
+    <color name="pocketpaint_color_picker_rgb_red">#DA3D0E</color>
+    <color name="pocketpaint_color_picker_rgb_green">#138913</color>
+    <color name="pocketpaint_color_picker_rgb_blue">#0C78CB</color>
+    <color name="pocketpaint_color_picker_rgb_alpha">#787676</color>
     <color name="pocketpaint_color_picker_blue1">#FF0074CD</color>
     <color name="pocketpaint_color_picker_blue2">#FF00B4F1</color>
     <color name="pocketpaint_color_picker_green1">#FF078707</color>

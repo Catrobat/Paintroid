@@ -185,7 +185,6 @@ class RgbSelectorView : LinearLayoutCompat {
         super.onAttachedToWindow()
         val seekBarListener: OnSeekBarChangeListener = object : OnSeekBarChangeListener {
             override fun onStopTrackingTouch(seekBar: SeekBar) = Unit
-
             override fun onStartTrackingTouch(seekBar: SeekBar) = Unit
 
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
