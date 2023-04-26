@@ -26,7 +26,7 @@
     <string name="button_undo">Болдырмау</string>
     <string name="button_redo">Көруде</string>
     <string name="button_info">Ақпарат</string>
-    <string name="button_clipboard">Clipboard</string>
+    <string name="button_clipboard">Алмасу буфері</string>
     <string name="button_import_image">Кескінді импорттау</string>
     <string name="button_eraser">Ошіргіш</string>
     <string name="button_transform">Трансформация</string>
@@ -43,10 +43,10 @@
     <string name="button_checkmark">Құсбелгі</string>
     <string name="done">Дайын</string>
     <string name="gallery">Галерея</string>
-    <string name="no_connection_sticker">Stickers not available, check your internet connection.</string>
-    <string name="clipboard_tool_paste">Paste</string>
+    <string name="no_connection_sticker">Стикерлер қолжетімді емес, интернет байланысын тексеріңіз.</string>
+    <string name="clipboard_tool_paste">Қою</string>
     <string name="clipboard_tool_copy">Көшіру</string>
-    <string name="clipboard_tool_cut">Cut</string>
+    <string name="clipboard_tool_cut">Кесу</string>
     <string name="stickers">Стикерлер</string>
     <string name="dialog_tools_title">Құралдар</string>
     <string name="dialog_error_save_title">Файылды жүктеу/сақтау қатесі</string>
@@ -63,7 +63,7 @@
     <string name="help_content_fill">Таңдалған түспен аумақты толтыру үшін суретті түртіңіз.</string>
     <string name="help_content_cursor">Курсорды сурет салғыңыз келетін жерге қойыңыз. Курсорды белсендіру үшін түртіңіз. Сурет салу үшін саусағыңызды жылжытыңыз. Өшіру үшін қайта түртіңіз.</string>
     <string name="help_content_transform">Кескінді түрлендіру үшін пайдаланыңыз.</string>
-    <string name="help_content_clipboard">Move and resize the rectangle to cover the area you want to stamp. Tap on copy or cut to select the area. Move it, then tap on paste to stamp.</string>
+    <string name="help_content_clipboard">Тіктөртбұрышты жылжытып, өлшемін өзгерткіңіз келетін аумақты жабу үшін. Аймақты таңдау үшін көшіру немесе кесу түймесін түртіңіз. Оны жылжытыңыз, содан кейін мөр қою үшін қою түймесін түртіңіз.</string>
     <string name="help_content_import_png">Галереядан штамп құралына кескінді импорттаңыз.</string>
     <string name="help_content_line">Түзу сызық сызыңыз.</string>
     <string name="help_content_text">Write text and format it. Resize the text box afterwards. Tap to insert the text on the image.</string>
@@ -201,5 +201,5 @@
     <string name="pocketpaint_tool_icon_description">Ағымдағы құрал белгішесі</string>
     <string name="dialog_scale_title">Кескін жүктеу үшін тым үлкен</string>
     <string name="dialog_scale_message">Кескін жүктеу үшін тым үлкен. Кескінді автоматты түрде кішірейту үшін OK түймесін түртіңіз.</string>
-    <string name="zoom_window_description">Used to display a zoomed in part of the drawing surface</string>
+    <string name="zoom_window_description">Сызба бетінің бір бөлігінде үлкейтілген кескінді көрсету үшін қолданылады</string>
 </resources>

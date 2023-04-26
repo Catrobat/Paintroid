@@ -85,7 +85,7 @@
     <string name="menu_add_to_current_layer">Додати до поточного шару</string>
     <string name="menu_save_image">Зберегти зображення</string>
     <string name="menu_save_copy">Зберегти копію</string>
-    <string name="menu_hide_menu">На весь екран</string>
+    <string name="menu_hide_menu">Приховати кнопки</string>
     <string name="share_image_menu">Поділитись</string>
     <string name="share_image_via_text">Надіслати зображення через</string>
     <string name="menu_rate_us">Оцініть нас!</string>

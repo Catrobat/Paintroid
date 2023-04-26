@@ -85,14 +85,14 @@
     <string name="menu_add_to_current_layer">Добавить на текущий слой</string>
     <string name="menu_save_image">Сохранить изображение</string>
     <string name="menu_save_copy">Сохранить копию</string>
-    <string name="menu_hide_menu">Полноэкранный режим</string>
+    <string name="menu_hide_menu">Скрыть кнопки</string>
     <string name="share_image_menu">Поделиться изображением</string>
     <string name="share_image_via_text">Отправить изображение через</string>
     <string name="menu_rate_us">Оцените нас!</string>
     <string name="menu_export">Экспорт</string>
     <string name="menu_feedback">Оставить отзыв</string>
     <string name="menu_advanced">Другие настройки</string>
-    <string name="menu_zoom_settings">Zoom window settings</string>
+    <string name="menu_zoom_settings">Приближение окна настроек</string>
     <string name="saved_to">Изображение сохранено в\n</string>
     <string name="saved">Изображение сохранено</string>
     <string name="copy_to">Копия сохранена в\n</string>
@@ -134,7 +134,7 @@
     <string name="transform_auto_crop_text">Авто</string>
     <string name="transform_set_center_text">Установить центр</string>
     <string name="pixel">пиксель</string>
-    <string name="clipboard_tool_copy_hint">Зажмите, чтобы скопировать часть содержимого</string>
+    <string name="clipboard_tool_copy_hint">Нажмите на значок копирования, чтобы скопировать содержимое</string>
     <string name="layers_title">Слои</string>
     <string name="layer_new">Новый слой</string>
     <string name="layer_delete">Удалить слой</string>
@@ -149,7 +149,7 @@
     <string name="dialog_save_image_format">Формат изображения</string>
     <string name="dialog_antialiasing">Смягчение</string>
     <string name="dialog_smoothing">Сглаживание</string>
-    <string name="dialog_zoom_window_enabled">Enabled</string>
+    <string name="dialog_zoom_window_enabled">Включено</string>
     <string name="dialog_save_jpg_option_quality">Качество:</string>
     <string name="pocketpaint_jpg_message_dialog">Занимает <b>минимального пространства для хранения</b>. <b>Прозрачности</b> не запоминается.</string>
     <string name="pocketpaint_png_message_dialog">Сжатие без потерь. Прозрачность сохраняется.</string>
