@@ -112,7 +112,7 @@ pipeline {
                             ./gradlew publishToMavenLocal --rerun-tasks
                     '''
                 }
-                archiveArtifacts artifacts: '**/*-release.aar'
+                archiveArtifacts artifacts: 'app/build/outputs/aar/*.aar'
             }
         }
     }
