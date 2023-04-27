@@ -108,11 +108,11 @@ pipeline {
                 script {
                     sh '''
                             set +x
-                            ./gradlew clean
-                            ./gradlew publishToMavenLocal --rerun-tasks
+                            ./gradlew publishToMavenLocal
                     '''
                 }
-                archiveArtifacts artifacts: 'app/build/outputs/aar/*.aar'
+                archiveArtifacts artifacts: 'Paintroid/build/outputs/aar/Paintroid-signedRelease.aar'
+                archiveArtifacts artifacts: 'colorpicker/build/outputs/aar/colorpicker-signedRelease.aar'
             }
         }
     }
