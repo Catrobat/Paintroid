@@ -108,7 +108,8 @@ pipeline {
                 script {
                     sh '''
                             set +x
-                            ./gradlew publishToMavenLocal
+                            ./gradlew clean
+                            ./gradlew publishToMavenLocal --rerun-tasks
                     '''
                 }
                 archiveArtifacts artifacts: '**/*-release.aar'
