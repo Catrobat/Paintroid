@@ -245,7 +245,9 @@ open class CommandSerializer(private val activityContext: Context, private val c
                     registerClasses()
                 }
                 commandModel = kryo.readObject(input, CommandManagerModel::class.java)
-                colorHistory = kryo.readObject(input, ColorHistory::class.java)
+                if (input.canReadInt()) {
+                    colorHistory = kryo.readObject(input, ColorHistory::class.java)
+                }
             }
         } catch (ex: KryoException) {
             Log.d(TAG, "KryoException while reading autosave: " + ex.message)
