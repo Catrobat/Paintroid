@@ -70,17 +70,22 @@ open class LayerModel : LayerContracts.Model {
         val bitmap = Bitmap.createBitmap(referenceBitmap.width, referenceBitmap.height, Bitmap.Config.ARGB_8888)
         val canvas = bitmap?.let { Canvas(it) }
 
-        layers.asReversed().forEach { layer ->
-            if (layer.isVisible) {
-                val alphaPaint = Paint().apply {
-                    alpha = layer.getValueForOpacityPercentage()
-                }
-                canvas?.drawBitmap(layer.bitmap, 0f, 0f, alphaPaint)
-            }
-        }
+        drawLayersOntoCanvas(canvas)
 
         return bitmap
     }
 
     override fun getBitmapListOfAllLayers(): List<Bitmap?> = layers.map { it.bitmap }
+
+    fun drawLayersOntoCanvas(canvas: Canvas?) {
+        layers.asReversed().forEach { layer ->
+            if (layer.isVisible) {
+                val alphaPaint = Paint().apply {
+                    isFilterBitmap = false
+                    alpha = layer.getValueForOpacityPercentage()
+                }
+                canvas?.drawBitmap(layer.bitmap, 0f, 0f, alphaPaint)
+            }
+        }
+    }
 }
