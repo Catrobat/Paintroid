@@ -44,6 +44,7 @@ import org.catrobat.paintroid.UserPreferences
 import org.catrobat.paintroid.contract.LayerContracts
 import org.catrobat.paintroid.listener.DrawingSurfaceListener
 import org.catrobat.paintroid.listener.DrawingSurfaceListener.DrawingSurfaceListenerCallback
+import org.catrobat.paintroid.model.LayerModel
 import org.catrobat.paintroid.tools.Tool
 import org.catrobat.paintroid.tools.ToolReference
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
@@ -158,14 +159,7 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
                 surfaceViewCanvas.drawRect(canvasRect, checkeredPattern)
                 surfaceViewCanvas.drawRect(canvasRect, framePaint)
 
-                layerModel.layers.asReversed().forEach { layer ->
-                    if (layer.isVisible) {
-                        val alphaPaint = Paint().apply {
-                            alpha = layer.getValueForOpacityPercentage()
-                        }
-                        surfaceViewCanvas.drawBitmap(layer.bitmap, 0f, 0f, alphaPaint)
-                    }
-                }
+                (layerModel as LayerModel).drawLayersOntoCanvas(surfaceViewCanvas)
 
                 val tool = toolReference.tool
                 when (zoomController.checkIfToolCompatibleWithZoomWindow(tool)) {
