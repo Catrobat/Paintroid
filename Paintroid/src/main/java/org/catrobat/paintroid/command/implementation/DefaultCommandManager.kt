@@ -105,12 +105,14 @@ class DefaultCommandManager(
     }
 
     override fun undo() {
-        val command = undoCommandList.pop()
-        redoCommandList.addFirst(command)
+        if (isUndoAvailable) {
+            val command = undoCommandList.pop()
+            redoCommandList.addFirst(command)
 
-        handleUndo(command)
+            handleUndo(command)
 
-        notifyCommandExecuted()
+            notifyCommandExecuted()
+        }
     }
 
     private fun handleUndo(command: Command, ignoreColorCommand: Boolean = false) {
@@ -189,17 +191,19 @@ class DefaultCommandManager(
     }
 
     override fun redo() {
-        val command = redoCommandList.pop()
-        undoCommandList.addFirst(command)
+        if (isRedoAvailable) {
+            val command = redoCommandList.pop()
+            undoCommandList.addFirst(command)
 
-        val currentLayer = layerModel.currentLayer
-        val canvas = commonFactory.createCanvas()
-        currentLayer?.let {
-            canvas.setBitmap(it.bitmap)
+            val currentLayer = layerModel.currentLayer
+            val canvas = commonFactory.createCanvas()
+            currentLayer?.let {
+                canvas.setBitmap(it.bitmap)
+            }
+
+            command.run(canvas, layerModel)
+            notifyCommandExecuted()
         }
-
-        command.run(canvas, layerModel)
-        notifyCommandExecuted()
     }
 
     override fun reset() {
