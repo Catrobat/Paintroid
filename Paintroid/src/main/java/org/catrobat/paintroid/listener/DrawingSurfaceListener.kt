@@ -218,7 +218,6 @@ open class DrawingSurfaceListener(
                 currentTool?.handleDownAnimations(canvasTouchPoint);
                 currentTool?.handleUpAnimations(canvasTouchPoint);
                 drawingSurface.refreshDrawingSurface()
-          //      callback.convertToCanvasFromSurface(canvasTouchPoint)
                 return false;
             }
         }
