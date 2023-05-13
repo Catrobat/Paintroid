@@ -119,12 +119,12 @@ class TextTool(
         get() = ToolType.TEXT
 
     override fun handleUpAnimations(coordinate: PointF?) {
-        showTextToolLayout();
-        toolOptionsViewController.animateBottomAndTopNavigation(false);
+        showTextToolLayout()
+        toolOptionsViewController.animateBottomAndTopNavigation(false)
     }
 
     override fun handleDownAnimations(coordinate: PointF?) {
-        hideTextToolLayout();
+        hideTextToolLayout()
     }
 
     override fun toolPositionCoordinates(coordinate: PointF): PointF = coordinate

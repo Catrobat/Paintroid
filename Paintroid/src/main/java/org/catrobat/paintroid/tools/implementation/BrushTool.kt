@@ -150,7 +150,7 @@ open class BrushTool(
     }
 
     override fun handleUpAnimations(coordinate: PointF?) {
-        showBrushSpecificLayoutOnHandleUp();
+        showBrushSpecificLayoutOnHandleUp()
         super.handleUp(coordinate)
     }
 

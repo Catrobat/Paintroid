@@ -433,10 +433,12 @@ class BaseToolWithRectangleShapeToolTest {
             get() = 0
             set(drawTime) {}
 
-        override fun handleUpAnimations() {
+        override fun handleUpAnimations(coordinate: PointF?) {
+            super.handleUp(coordinate)
         }
 
-        override fun handleDownAnimations() {
+        override fun handleDownAnimations(coordinate: PointF?) {
+            super.handleUp(coordinate)
         }
 
         override fun toolPositionCoordinates(coordinate: PointF) = coordinate

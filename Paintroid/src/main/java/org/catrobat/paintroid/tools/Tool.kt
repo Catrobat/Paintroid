@@ -57,8 +57,8 @@ interface Tool {
         screenHeight: Int
     ): Point
 
-    fun handleUpAnimations(coordinate: PointF?);
-    fun handleDownAnimations(coordinate: PointF?);
+    fun handleUpAnimations(coordinate: PointF?)
+    fun handleDownAnimations(coordinate: PointF?)
     fun onSaveInstanceState(bundle: Bundle?)
 
     fun onRestoreInstanceState(bundle: Bundle?)

@@ -72,7 +72,7 @@ class SprayTool(
     override var toolType: ToolType = ToolType.SPRAY
     override fun handleUpAnimations(coordinate: PointF?) {
         showToolOptions()
-        toolOptionsViewController.animateBottomAndTopNavigation(false);
+        toolOptionsViewController.animateBottomAndTopNavigation(false)
     }
 
     override fun handleDownAnimations(coordinate: PointF?) {

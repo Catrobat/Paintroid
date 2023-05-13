@@ -68,9 +68,13 @@ class ShapeTool(
     override val toolType: ToolType
         get() = ToolType.SHAPE
 
-    override fun handleUpAnimations(coordinate: PointF?) {}
+    override fun handleUpAnimations(coordinate: PointF?) {
+        super.handleUp(coordinate)
+    }
 
-    override fun handleDownAnimations(coordinate: PointF?) {}
+    override fun handleDownAnimations(coordinate: PointF?) {
+        super.handleDown(coordinate)
+    }
 
     override fun toolPositionCoordinates(coordinate: PointF): PointF = coordinate
 

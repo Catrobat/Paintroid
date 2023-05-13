@@ -62,11 +62,11 @@ class ClipboardTool(
         get() = ToolType.CLIPBOARD
 
     override fun handleUpAnimations(coordinate: PointF?) {
-        TODO("Not yet implemented")
+        super.handleUp(coordinate)
     }
 
     override fun handleDownAnimations(coordinate: PointF?) {
-        TODO("Not yet implemented")
+        super.handleDown(coordinate)
     }
 
     override fun toolPositionCoordinates(coordinate: PointF): PointF = coordinate

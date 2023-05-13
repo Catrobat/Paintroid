@@ -54,9 +54,13 @@ class LineTool(
     commandManager
 ) {
     override var toolType: ToolType = ToolType.LINE
-    override fun handleUpAnimations(coordinate: PointF?) {}
+    override fun handleUpAnimations(coordinate: PointF?) {
+        super.handleUp(coordinate)
+    }
 
-    override fun handleDownAnimations(coordinate: PointF?) {}
+    override fun handleDownAnimations(coordinate: PointF?) {
+        super.handleDown(coordinate)
+    }
 
     var lineFinalized: Boolean = false
     var endpointSet: Boolean = false

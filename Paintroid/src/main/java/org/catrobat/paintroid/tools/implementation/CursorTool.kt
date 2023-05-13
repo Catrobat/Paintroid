@@ -92,9 +92,11 @@ open class CursorTool(
         get() = ToolType.CURSOR
 
     override fun handleUpAnimations(coordinate: PointF?) {
+        super.handleUp(coordinate)
     }
 
     override fun handleDownAnimations(coordinate: PointF?) {
+        super.handleDown(coordinate)
     }
 
     init {

@@ -46,11 +46,11 @@ class PipetteTool(
 
     override var drawTime: Long = 0
     override fun handleUpAnimations(coordinate: PointF?) {
-        TODO("Not yet implemented")
+      super.handleUp(coordinate)
     }
 
     override fun handleDownAnimations(coordinate: PointF?) {
-        TODO("Not yet implemented")
+        super.handleDown(coordinate)
     }
 
     init {
