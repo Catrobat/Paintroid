@@ -56,6 +56,7 @@ class LineToolTest {
     private var screenWidth = 1920
     private var screenHeight = 1080
     private lateinit var idlingResource: CountingIdlingResource
+    private val viewMock: View = Mockito.mock(View::class.java)
 
     @get:Rule
     var launchActivityRule = ActivityTestRule(MainActivity::class.java)
@@ -97,6 +98,9 @@ class LineToolTest {
             commandManager,
             0
         )
+
+        Mockito.`when`(brushToolOptions!!.getTopToolOptions()).thenReturn(viewMock)
+        Mockito.`when`(brushToolOptions.getBottomToolOptions()).thenReturn(viewMock)
     }
     @After
     fun tearDown() {
@@ -185,19 +189,35 @@ class LineToolTest {
     @Test
     fun testShouldCallHideWhenDrawing() {
         val tap1 = PointF(7f, 7f)
-        tool.handleDown(tap1)
+        Mockito.`when`(toolOptionsViewController.isVisible).thenReturn(true)
+        Mockito.`when`(viewMock.visibility).thenReturn(View.VISIBLE)
+        tool.handleMove(tap1)
 
-        Mockito.verify(toolOptionsViewController).slideUp(brushToolOptions.getTopToolOptions(), true)
-        Mockito.verify(toolOptionsViewController).slideDown(brushToolOptions.getBottomToolOptions(), true)
+        Mockito.verify(toolOptionsViewController).slideUp(viewMock,
+                                                          willHide = true,
+                                                          showOptionsView = false
+        )
+        Mockito.verify(toolOptionsViewController).slideDown(viewMock,
+                                                            willHide = true,
+                                                            showOptionsView = false
+        )
     }
 
     @Test
     fun testShouldCallUnhideWhenDrawingFinish() {
         val tap1 = PointF(7f, 7f)
-        tool.handleDown(tap1)
+        Mockito.`when`(toolOptionsViewController.isVisible).thenReturn(false)
+        Mockito.`when`(viewMock.visibility).thenReturn(View.INVISIBLE)
+        tool.handleMove(tap1)
         tool.handleUp(tap1)
 
-        Mockito.verify(toolOptionsViewController).slideDown(brushToolOptions.getTopToolOptions(), false)
-        Mockito.verify(toolOptionsViewController).slideUp(brushToolOptions.getBottomToolOptions(), false)
+        Mockito.verify(toolOptionsViewController).slideDown(viewMock,
+                                                            willHide = false,
+                                                            showOptionsView = true
+        )
+        Mockito.verify(toolOptionsViewController).slideUp(viewMock,
+                                                          willHide = false,
+                                                          showOptionsView = true
+        )
     }
 }

@@ -47,6 +47,14 @@ class HandTool(
     override val toolType: ToolType
         get() = ToolType.HAND
 
+    override fun handleUpAnimations(coordinate: PointF?) {
+        super.handleUp(coordinate)
+    }
+
+    override fun handleDownAnimations(coordinate: PointF?) {
+        super.handleDown(coordinate)
+    }
+
     override fun draw(canvas: Canvas) = Unit
 
     override fun resetInternalState() = Unit

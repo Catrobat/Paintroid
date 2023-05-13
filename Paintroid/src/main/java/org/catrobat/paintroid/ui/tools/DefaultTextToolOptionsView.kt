@@ -177,9 +177,14 @@ class DefaultTextToolOptionsView(rootView: ViewGroup) : TextToolOptionsView {
         callback = listener
     }
 
-    private fun hideKeyboard() {
+    override fun hideKeyboard() {
         val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(textEditText.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+    }
+
+    override fun showKeyboard() {
+        val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.toggleSoftInputFromWindow(textEditText.windowToken, InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS)
     }
 
     override fun getTopLayout(): View = topLayout

@@ -54,6 +54,13 @@ class LineTool(
     commandManager
 ) {
     override var toolType: ToolType = ToolType.LINE
+    override fun handleUpAnimations(coordinate: PointF?) {
+        super.handleUp(coordinate)
+    }
+
+    override fun handleDownAnimations(coordinate: PointF?) {
+        super.handleDown(coordinate)
+    }
 
     var lineFinalized: Boolean = false
     var endpointSet: Boolean = false
@@ -183,22 +190,47 @@ class LineTool(
     }
 
     private fun hideToolOptions() {
-        toolOptionsViewController.slideUp(brushToolOptionsView.getTopToolOptions(), true)
+        if (toolOptionsViewController.isVisible) {
+            if (brushToolOptionsView.getTopToolOptions().visibility == View.VISIBLE) {
+                toolOptionsViewController.slideUp(
+                    brushToolOptionsView.getTopToolOptions(),
+                    willHide = true,
+                    showOptionsView = false
+                )
+            }
 
-        toolOptionsViewController.slideDown(
-            brushToolOptionsView.getBottomToolOptions(), true
-        )
+            if (brushToolOptionsView.getBottomToolOptions().visibility == View.VISIBLE) {
+                toolOptionsViewController.slideDown(
+                    brushToolOptionsView.getBottomToolOptions(),
+                    willHide = true,
+                    showOptionsView = false
+                )
+            }
+        }
     }
 
     private fun showToolOptions() {
-        toolOptionsViewController.slideDown(brushToolOptionsView.getTopToolOptions(), false)
+        if (!toolOptionsViewController.isVisible) {
+            if (brushToolOptionsView.getBottomToolOptions().visibility == View.INVISIBLE) {
+                toolOptionsViewController.slideDown(
+                    brushToolOptionsView.getTopToolOptions(),
+                    willHide = false,
+                    showOptionsView = true
+                )
+            }
 
-        toolOptionsViewController.slideUp(brushToolOptionsView.getBottomToolOptions(), false)
+            if (brushToolOptionsView.getBottomToolOptions().visibility == View.INVISIBLE) {
+                toolOptionsViewController.slideUp(
+                    brushToolOptionsView.getBottomToolOptions(),
+                    willHide = false,
+                    showOptionsView = true
+                )
+            }
+        }
     }
 
     override fun handleDown(coordinate: PointF?): Boolean {
         coordinate ?: return false
-        hideToolOptions()
         super.handleDown(coordinate)
         initialEventCoordinate = PointF(coordinate.x, coordinate.y)
         previousEventCoordinate = PointF(coordinate.x, coordinate.y)
@@ -207,6 +239,8 @@ class LineTool(
 
     override fun handleMove(coordinate: PointF?): Boolean {
         coordinate ?: return false
+        hideToolOptions()
+        super.handleMove(coordinate)
         changeInitialCoordinateForHandleNormalLine = true
         if (startpointSet) {
             initialEventCoordinate = startPointToDraw?.let { PointF(it.x, it.y) }
