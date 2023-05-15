@@ -237,7 +237,8 @@ class DefaultZoomWindowController
         } else if (
             tool?.toolType?.name.equals(ToolType.LINE.name) ||
             tool?.toolType?.name.equals(ToolType.CURSOR.name) ||
-            tool?.toolType?.name.equals(ToolType.WATERCOLOR.name)
+            tool?.toolType?.name.equals(ToolType.WATERCOLOR.name) ||
+            tool?.toolType?.name.equals(ToolType.SPRAY.name)
         ) {
             return Constants.COMPATIBLE_NEW
         } else {
