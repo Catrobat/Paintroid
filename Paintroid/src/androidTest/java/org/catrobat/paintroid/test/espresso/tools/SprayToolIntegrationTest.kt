@@ -18,6 +18,7 @@
  */
 package org.catrobat.paintroid.test.espresso.tools
 
+import android.graphics.Color
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.assertion.ViewAssertions.matches
@@ -27,8 +28,14 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.ActivityTestRule
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.R
+import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider
+import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider
+import org.catrobat.paintroid.test.espresso.util.UiInteractions
 import org.catrobat.paintroid.test.espresso.util.UiMatcher.withProgress
+import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView
 import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction
+import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView
+import org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction.onToolProperties
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.ui.tools.MIN_RADIUS
@@ -39,6 +46,7 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class SprayToolIntegrationTest {
+    private val transparentColor = Color.parseColor("#3B000000")
 
     @get:Rule
     var launchActivityRule = ActivityTestRule(MainActivity::class.java)
@@ -60,5 +68,51 @@ class SprayToolIntegrationTest {
 
         onView(withId(R.id.pocketpaint_spray_radius_seek_bar))
             .check(matches(withProgress(MIN_RADIUS)))
+    }
+
+    @Test
+    fun testSprayToolColor() {
+        onToolBarView()
+            .performSelectTool(ToolType.SPRAY)
+        onDrawingSurfaceView()
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
+        onDrawingSurfaceView()
+            .checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
+    }
+
+    @Test
+    fun testSprayToolTransparentColor() {
+        onToolBarView()
+            .performSelectTool(ToolType.SPRAY)
+        onToolProperties()
+            .setColor(transparentColor)
+        onDrawingSurfaceView()
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
+        onDrawingSurfaceView()
+            .checkPixelColor(transparentColor, BitmapLocationProvider.MIDDLE)
+    }
+
+    @Test
+    fun testSprayToolWithHandleMoveColor() {
+        onToolBarView()
+            .performSelectTool(ToolType.SPRAY)
+        onToolProperties()
+            .setColor(Color.BLACK)
+        onDrawingSurfaceView()
+            .perform(UiInteractions.swipe(DrawingSurfaceLocationProvider.MIDDLE, DrawingSurfaceLocationProvider.BOTTOM_MIDDLE))
+        onDrawingSurfaceView()
+            .checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
+    }
+
+    @Test
+    fun testSprayToolWithHandleMoveTransparentColor() {
+        onToolBarView()
+            .performSelectTool(ToolType.SPRAY)
+        onToolProperties()
+            .setColor(transparentColor)
+        onDrawingSurfaceView()
+            .perform(UiInteractions.swipe(DrawingSurfaceLocationProvider.MIDDLE, DrawingSurfaceLocationProvider.BOTTOM_MIDDLE))
+        onDrawingSurfaceView()
+            .checkPixelColor(transparentColor, BitmapLocationProvider.MIDDLE)
     }
 }
