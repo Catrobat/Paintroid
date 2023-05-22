@@ -27,11 +27,12 @@
     <string name="color_hex">HEX</string>
     <string name="color_picker_apply">Primijeni</string>
     <string name="color_picker_cancel">Odustani</string>
-    <string name="color_picker_current_color" tools:ignore="MissingTranslation">current</string>
-    <string name="color_picker_new_color" tools:ignore="MissingTranslation">new</string>
+    <string name="color_picker_current_color" tools:ignore="MissingTranslation">Trenutni</string>
+    <string name="color_picker_new_color" tools:ignore="MissingTranslation">novo</string>
     <string name="color_picker_pipette" tools:ignore="MissingTranslation">Pipeta</string>
     <string name="color_picker_save_dialog_title" tools:ignore="MissingTranslation">Spremi izmjene?</string>
     <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">Želite li sačuvati izmjene?</string>
-    <string name="color_picker_no" tools:ignore="MissingTranslation">no</string>
-    <string name="color_picker_yes" tools:ignore="MissingTranslation">yes</string>
+    <string name="color_picker_no" tools:ignore="MissingTranslation">ne</string>
+    <string name="color_picker_yes" tools:ignore="MissingTranslation">da</string>
+    <string name="color_picker_history_recently_used" tools:ignore="MissingTranslation">Nedavno korišteno</string>
 </resources>

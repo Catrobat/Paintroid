@@ -44,8 +44,7 @@
             android:id="@+id/pocketpaint_drawing_surface_view"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_above="@+id/pocketpaint_main_bottom_navigation"
-            android:layout_below="@+id/pocketpaint_layout_top_bar"
+            android:layout_below="@id/pocketpaint_drawer_layout"
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
             android:background="@color/pocketpaint_main_drawing_surface_active" />
@@ -102,6 +101,7 @@
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/pocketpaint_nav_view_layer"
         android:layout_width="200dp"
+        android:background="@drawable/layer_nav_view_background"
         android:layout_height="wrap_content"
         android:layout_gravity="end|center">
 

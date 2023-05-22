@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2022 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -31,6 +31,7 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.DisplayMetrics
+import android.view.View
 import androidx.annotation.ColorRes
 import androidx.annotation.VisibleForTesting
 import androidx.test.espresso.idling.CountingIdlingResource
@@ -248,8 +249,35 @@ abstract class BaseToolWithRectangleShape(
         workspace.invalidate()
     }
 
+    private fun hideToolSpecificLayout() {
+        if (this !is TextTool &&
+            toolOptionsViewController.isVisible &&
+            toolOptionsViewController.toolSpecificOptionsLayout.visibility == View.VISIBLE) {
+            toolOptionsViewController.slideDown(
+                toolOptionsViewController.toolSpecificOptionsLayout,
+                willHide = true,
+                showOptionsView = false
+            )
+        }
+        toolOptionsViewController.animateBottomAndTopNavigation(true)
+    }
+
+     private fun showToolSpecificLayout() {
+        if (this !is TextTool &&
+            !toolOptionsViewController.isVisible &&
+            toolOptionsViewController.toolSpecificOptionsLayout.visibility == View.INVISIBLE) {
+            toolOptionsViewController.slideUp(
+                toolOptionsViewController.toolSpecificOptionsLayout,
+                willHide = false,
+                showOptionsView = true
+            )
+        }
+        toolOptionsViewController.animateBottomAndTopNavigation(false)
+    }
+
     override fun handleDown(coordinate: PointF?): Boolean {
         movedDistance.set(0f, 0f)
+
         coordinate?.apply {
             previousEventCoordinate = PointF(x, y)
             currentAction = getAction(x, y)
@@ -263,6 +291,7 @@ abstract class BaseToolWithRectangleShape(
         if (previousEventCoordinate == null || currentAction == null) {
             return false
         }
+        hideToolSpecificLayout()
         ifNotNull(coordinate, previousEventCoordinate) { (coordinate, previousEventCoordinate) ->
             val delta = PointF(
                 coordinate.x - previousEventCoordinate.x,
@@ -284,6 +313,7 @@ abstract class BaseToolWithRectangleShape(
         if (previousEventCoordinate == null) {
             return false
         }
+        showToolSpecificLayout()
         ifNotNull(coordinate, previousEventCoordinate) { (coordinate, previousEventCoordinate) ->
             movedDistance.x += abs(coordinate.x - previousEventCoordinate.x)
             movedDistance.y += abs(coordinate.y - previousEventCoordinate.y)

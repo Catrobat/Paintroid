@@ -18,6 +18,7 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.R
+import org.catrobat.paintroid.UserPreferences
 import org.catrobat.paintroid.contract.LayerContracts
 import org.catrobat.paintroid.tools.Tool
 import org.catrobat.paintroid.tools.ToolReference
@@ -29,32 +30,30 @@ class DefaultZoomWindowController
     (val activity: MainActivity,
     val layerModel: LayerContracts.Model,
     val workspace: Workspace,
-    val toolReference: ToolReference) :
+    val toolReference: ToolReference,
+    val sharedPreferences: UserPreferences) :
     ZoomWindowController {
 
     private val canvasRect = Rect()
     private val checkeredPattern = Paint()
     private val framePaint = Paint()
 
-    private val windowHeight =
-        activity.resources.getDimensionPixelSize(R.dimen.pocketpaint_zoom_window_height)
-    private val windowWidth =
-        activity.resources.getDimensionPixelSize(R.dimen.pocketpaint_zoom_window_width)
+    private val zoomWindowDiameter = activity.resources.getDimensionPixelSize(R.dimen.pocketpaint_zoom_window_diameter)
 
     private val chequeredBackgroundBitmap =
         Bitmap.createBitmap(layerModel.width, layerModel.height, Bitmap.Config.ARGB_8888)
 
     private val greyBackgroundBitmap =
         Bitmap.createBitmap(
-            layerModel.width + windowWidth,
-            layerModel.height + windowHeight,
+            layerModel.width + zoomWindowDiameter,
+            layerModel.height + zoomWindowDiameter,
             Bitmap.Config.ARGB_8888
         )
 
     private val backgroundBitmap =
         Bitmap.createBitmap(
-            layerModel.width + windowWidth,
-            layerModel.height + windowHeight,
+            layerModel.width + zoomWindowDiameter,
+            layerModel.height + zoomWindowDiameter,
             Bitmap.Config.ARGB_8888
         )
 
@@ -84,7 +83,7 @@ class DefaultZoomWindowController
 
         canvasBackground.drawBitmap(greyBackgroundBitmap, Matrix(), null)
         canvasBackground.drawBitmap(
-            chequeredBackgroundBitmap, windowWidth / 2f, windowHeight / 2f, null)
+            chequeredBackgroundBitmap, zoomWindowDiameter / 2f, zoomWindowDiameter / 2f, null)
     }
 
     private val zoomWindow: RelativeLayout =
@@ -93,16 +92,12 @@ class DefaultZoomWindowController
         activity.findViewById(R.id.pocketpaint_zoom_window_image)
     private var coordinates: PointF? = null
 
-    override fun show(coordinates: PointF) {
+    override fun show(drawingSurfaceCoordinates: PointF, displayCoordinates: PointF) {
         if (checkIfToolCompatibleWithZoomWindow(toolReference.tool) != Constants.NOT_COMPATIBLE &&
-            isPointOnCanvas(coordinates.x, coordinates.y)) {
-            if (shouldBeInTheRight(coordinates = coordinates)) {
-                setLayoutAlignment(right = true)
-            } else {
-                setLayoutAlignment(right = false)
-            }
+            isPointOnCanvas(drawingSurfaceCoordinates.x, drawingSurfaceCoordinates.y)) {
+            setZoomWindowPosition(displayCoordinates)
             zoomWindow.visibility = View.VISIBLE
-            zoomWindowImage.setImageBitmap(cropBitmap(workspace.bitmapOfAllLayers, coordinates))
+            zoomWindowImage.setImageBitmap(cropBitmap(workspace.bitmapOfAllLayers, drawingSurfaceCoordinates))
         }
     }
 
@@ -114,19 +109,25 @@ class DefaultZoomWindowController
         zoomWindow.visibility = View.GONE
     }
 
-    override fun onMove(coordinates: PointF) {
-        if (shouldBeInTheRight(coordinates = coordinates)) {
+    override fun onMove(drawingSurfaceCoordinates: PointF, displayCoordinates: PointF) {
+        if (checkIfToolCompatibleWithZoomWindow(toolReference.tool) != Constants.NOT_COMPATIBLE) {
+            setZoomWindowPosition(displayCoordinates)
+            if (isPointOnCanvas(drawingSurfaceCoordinates.x, drawingSurfaceCoordinates.y)) {
+                if (zoomWindow.visibility == View.GONE) {
+                    zoomWindow.visibility = View.VISIBLE
+                }
+                this.coordinates = drawingSurfaceCoordinates
+            } else {
+                dismiss()
+            }
+        }
+    }
+
+    private fun setZoomWindowPosition(displayCoordinates: PointF) {
+        if (shouldBeInTheRight(coordinates = displayCoordinates)) {
             setLayoutAlignment(right = true)
         } else {
             setLayoutAlignment(right = false)
-        }
-        if (isPointOnCanvas(coordinates.x, coordinates.y)) {
-            if (zoomWindow.visibility == View.GONE) {
-                zoomWindow.visibility = View.VISIBLE
-            }
-            this.coordinates = coordinates
-        } else {
-            dismiss()
         }
     }
 
@@ -138,7 +139,8 @@ class DefaultZoomWindowController
         pointX > 0 && pointX < layerModel.width && pointY > 0 && pointY < layerModel.height
 
     private fun shouldBeInTheRight(coordinates: PointF): Boolean {
-        if (coordinates.x < layerModel.width / 2 && coordinates.y < layerModel.height / 2) {
+        if (coordinates.x < activity.resources.displayMetrics.widthPixels / 2 &&
+            coordinates.y < activity.resources.displayMetrics.heightPixels / 2) {
             return true
         }
         return false
@@ -161,18 +163,18 @@ class DefaultZoomWindowController
 
         val bitmapWithBackground: Bitmap? = mergeBackground(bitmap)
 
-        val startX: Int = coordinates.x.roundToInt()
-        val startY: Int = coordinates.y.roundToInt()
+        val startX: Int = coordinates.x.roundToInt() + zoomWindowDiameter / 2 - getSizeOfZoomWindow() / 2
+        val startY: Int = coordinates.y.roundToInt() + zoomWindowDiameter / 2 - getSizeOfZoomWindow() / 2
 
         val croppedBitmap: Bitmap? =
-            Bitmap.createBitmap(windowWidth, windowHeight, Bitmap.Config.ARGB_8888)
+            Bitmap.createBitmap(getSizeOfZoomWindow(), getSizeOfZoomWindow(), Bitmap.Config.ARGB_8888)
 
         val canvas: Canvas? = croppedBitmap?.let { Canvas(it) }
 
         val paint = Paint()
         paint.isAntiAlias = true
 
-        val rect = Rect(0, 0, windowWidth, windowHeight)
+        val rect = Rect(0, 0, getSizeOfZoomWindow(), getSizeOfZoomWindow())
         val rectF = RectF(rect)
 
         canvas?.drawOval(rectF, paint)
@@ -181,7 +183,7 @@ class DefaultZoomWindowController
 
         bitmapWithBackground?.let {
             canvas?.drawBitmap(it,
-                Rect(startX, startY, startX + windowWidth, startY + windowHeight),
+                Rect(startX, startY, startX + getSizeOfZoomWindow(), startY + getSizeOfZoomWindow()),
                 rect,
                 paint
             ) }
@@ -193,8 +195,8 @@ class DefaultZoomWindowController
 
         val bitmapOverlay =
             Bitmap.createBitmap(
-                layerModel.width + windowWidth,
-                layerModel.height + windowHeight,
+                layerModel.width + zoomWindowDiameter,
+                layerModel.height + zoomWindowDiameter,
                 Bitmap.Config.ARGB_8888
             )
         val canvas = Canvas(bitmapOverlay)
@@ -204,20 +206,25 @@ class DefaultZoomWindowController
         if (toolReference.tool?.toolType?.name.equals(ToolType.LINE.name) ||
             toolReference.tool?.toolType?.name.equals(ToolType.CURSOR.name)) {
             layerModel.currentLayer?.bitmap?.let {
-                canvas.drawBitmap(it, windowWidth / 2f, windowHeight / 2f, null)
+                canvas.drawBitmap(it, zoomWindowDiameter / 2f, zoomWindowDiameter / 2f, null)
             }
         }
 
-        bitmap?.let { canvas.drawBitmap(it, windowWidth / 2f, windowHeight / 2f, null) }
+        bitmap?.let { canvas.drawBitmap(it, zoomWindowDiameter / 2f, zoomWindowDiameter / 2f, null) }
 
         return bitmapOverlay
+    }
+
+    private fun getSizeOfZoomWindow(): Int {
+        val zoomIndex = (sharedPreferences.preferenceZoomWindowZoomPercentage - initialZoomValue) / zoomPercentStepValue
+        return zoomWindowDiameter - zoomIndex * zoomFactor
     }
 
     override fun checkIfToolCompatibleWithZoomWindow(tool: Tool?): Constants {
         if (
             tool?.toolType?.name.equals(ToolType.HAND.name) ||
             tool?.toolType?.name.equals(ToolType.FILL.name) ||
-            tool?.toolType?.name.equals(ToolType.STAMP.name) ||
+            tool?.toolType?.name.equals(ToolType.CLIPBOARD.name) ||
             tool?.toolType?.name.equals(ToolType.TRANSFORM.name)
         ) {
             return Constants.NOT_COMPATIBLE
@@ -229,7 +236,8 @@ class DefaultZoomWindowController
             return Constants.NOT_COMPATIBLE
         } else if (
             tool?.toolType?.name.equals(ToolType.LINE.name) ||
-            tool?.toolType?.name.equals(ToolType.CURSOR.name)
+            tool?.toolType?.name.equals(ToolType.CURSOR.name) ||
+            tool?.toolType?.name.equals(ToolType.WATERCOLOR.name)
         ) {
             return Constants.COMPATIBLE_NEW
         } else {
@@ -241,5 +249,11 @@ class DefaultZoomWindowController
         NOT_COMPATIBLE,
         COMPATIBLE_NEW,
         COMPATIBLE_ALL
+    }
+
+    companion object {
+        const val zoomFactor: Int = 25
+        const val initialZoomValue: Int = 100
+        const val zoomPercentStepValue = 50
     }
 }

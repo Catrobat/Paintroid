@@ -5,13 +5,13 @@ import android.graphics.PointF
 import org.catrobat.paintroid.tools.Tool
 
 interface ZoomWindowController {
-    fun show(coordinates: PointF)
+    fun show(drawingSurfaceCoordinates: PointF, displayCoordinates: PointF)
 
     fun dismiss()
 
     fun dismissOnPinch()
 
-    fun onMove(coordinates: PointF)
+    fun onMove(drawingSurfaceCoordinates: PointF, displayCoordinates: PointF)
 
     fun getBitmap(bitmap: Bitmap?)
 

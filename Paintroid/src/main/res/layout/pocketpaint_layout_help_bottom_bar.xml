@@ -178,12 +178,12 @@
             style="@style/PocketPaintToolSelectionButton">
             <ImageView
                 style="@style/PocketPaintToolSelectionButtonImageView"
-                android:src="@drawable/ic_pocketpaint_tool_stamp"
-                android:contentDescription="@string/button_stamp"
+                android:src="@drawable/ic_pocketpaint_tool_clipboard"
+                android:contentDescription="@string/button_clipboard"
                 app:tint="@color/pocketpaint_color_picker_white"/>
             <TextView
                 style="@style/PocketPaintToolSelectionButtonTextView"
-                android:text="@string/button_stamp"
+                android:text="@string/button_clipboard"
                 android:textColor="@color/pocketpaint_color_picker_white"/>
         </LinearLayout>
 
@@ -273,10 +273,12 @@
             <ImageView
                 style="@style/PocketPaintToolSelectionButtonImageView"
                 android:src="@drawable/ic_pocketpaint_tool_clipping"
-                android:contentDescription="@string/button_clip"/>
+                android:contentDescription="@string/button_clip"
+                app:tint="@color/pocketpaint_color_picker_white"/>
             <TextView
                 style="@style/PocketPaintToolSelectionButtonTextView"
-                android:text="@string/button_clip"/>
+                android:text="@string/button_clip"
+                android:textColor="@color/pocketpaint_color_picker_white"/>
         </LinearLayout>
     </TableRow>
 </TableLayout>

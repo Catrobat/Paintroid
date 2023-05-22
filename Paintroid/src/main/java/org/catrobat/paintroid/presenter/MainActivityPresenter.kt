@@ -98,7 +98,6 @@ import org.catrobat.paintroid.tools.implementation.ClippingTool
 import org.catrobat.paintroid.tools.implementation.LineTool
 import org.catrobat.paintroid.tools.implementation.DefaultToolPaint
 import org.catrobat.paintroid.ui.LayerAdapter
-import org.catrobat.paintroid.ui.Perspective
 import java.io.File
 
 @SuppressWarnings("LongParameterList", "LargeClass", "ThrowingExceptionsWithoutMessageOrCause")
@@ -115,7 +114,6 @@ open class MainActivityPresenter(
     private val bottomNavigationViewHolder: MainActivityContracts.BottomNavigationViewHolder,
     private val commandFactory: CommandFactory,
     private val commandManager: CommandManager,
-    private val perspective: Perspective,
     private val toolController: ToolController,
     private val sharedPreferences: UserPreferences,
     private val idlingResource: CountingIdlingResource,
@@ -263,14 +261,14 @@ open class MainActivityPresenter(
         sharedPreferences.preferenceImageNumber = imageNumber
     }
 
-    override fun enterFullscreenClicked() {
+    override fun enterHideButtonsClicked() {
         model.isFullscreen = true
-        enterFullscreen()
+        enterHideButtons()
     }
 
-    override fun exitFullscreenClicked() {
+    override fun exitHideButtonsClicked() {
         model.isFullscreen = false
-        exitFullscreen()
+        exitHideButtons()
     }
 
     override fun backToPocketCodeClicked() {
@@ -283,6 +281,10 @@ open class MainActivityPresenter(
 
     override fun showAboutClicked() {
         navigator.showAboutDialog()
+    }
+
+    override fun showZoomWindowSettingsClicked(sharedPreferences: UserPreferences) {
+        navigator.showZoomWindowSettingsDialog(sharedPreferences)
     }
 
     override fun showAdvancedSettingsClicked() {
@@ -545,7 +547,7 @@ open class MainActivityPresenter(
         } else if (drawerLayoutViewHolder.isDrawerOpen(GravityCompat.END)) {
             drawerLayoutViewHolder.closeDrawer(Gravity.END, true)
         } else if (model.isFullscreen) {
-            exitFullscreenClicked()
+            exitHideButtonsClicked()
         } else if (!toolController.isDefaultTool) {
             if (toolController.currentTool?.toolType == ToolType.CLIP) toolController.adjustClippingToolOnBackPressed(true)
             switchTool(ToolType.BRUSH)
@@ -695,9 +697,9 @@ open class MainActivityPresenter(
         toolController.toolColor?.let { bottomNavigationViewHolder.setColorButtonColor(it) }
         bottomNavigationViewHolder.showCurrentTool(toolController.toolType)
         if (model.isFullscreen) {
-            enterFullscreen()
+            enterHideButtons()
         } else {
-            exitFullscreen()
+            exitHideButtons()
         }
         view.initializeActionBar(model.isOpenedFromCatroid)
         if (commandManager.isBusy) {
@@ -714,29 +716,29 @@ open class MainActivityPresenter(
         }
     }
 
-    private fun exitFullscreen() {
-        view.exitFullscreen()
+    private fun exitHideButtons() {
+        view.exitHideButtons()
         topBarViewHolder.show()
         bottomNavigationViewHolder.show()
         toolController.enableToolOptionsView()
-        perspective.exitFullscreen()
+        toolController.enableHideOption()
         if (toolOptionsViewWasShown) {
             toolController.showToolOptionsView()
             toolOptionsViewWasShown = false
         }
     }
 
-    private fun enterFullscreen() {
+    private fun enterHideButtons() {
         if (toolController.toolOptionsViewVisible()) {
             toolOptionsViewWasShown = true
         }
         view.hideKeyboard()
-        view.enterFullscreen()
+        view.enterHideButtons()
         topBarViewHolder.hide()
         bottomBarViewHolder.hide()
         bottomNavigationViewHolder.hide()
         toolController.disableToolOptionsView()
-        perspective.enterFullscreen()
+        toolController.disableHideOption()
     }
 
     override fun restoreState(
@@ -1128,6 +1130,12 @@ open class MainActivityPresenter(
                 (toolController.currentTool as ClippingTool).wasRecentlyApplied = true
                 clippingTool.resetInternalState(Tool.StateChange.NEW_IMAGE_LOADED)
             }
+        }
+    }
+
+    fun hideBottomBarViewHolder() {
+        if (bottomBarViewHolder.isVisible) {
+            bottomBarViewHolder.hide()
         }
     }
 

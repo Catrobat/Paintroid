@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2022 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -89,6 +89,17 @@ abstract class BaseTool(
         toolPaint.strokeCap = cap
     }
 
+    override fun handleDown(coordinate: PointF?): Boolean = true
+
+    override fun handleUp(coordinate: PointF?): Boolean {
+        toolOptionsViewController.animateBottomAndTopNavigation(false)
+        return true
+    }
+
+    override fun handleMove(coordinate: PointF?): Boolean {
+        toolOptionsViewController.animateBottomAndTopNavigation(true)
+        return true
+    }
     override val drawPaint
         get() = Paint(toolPaint.paint)
 

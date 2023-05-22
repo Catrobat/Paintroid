@@ -54,6 +54,13 @@ class LineTool(
     commandManager
 ) {
     override var toolType: ToolType = ToolType.LINE
+    override fun handleUpAnimations(coordinate: PointF?) {
+        super.handleUp(coordinate)
+    }
+
+    override fun handleDownAnimations(coordinate: PointF?) {
+        super.handleDown(coordinate)
+    }
 
     var lineFinalized: Boolean = false
     var endpointSet: Boolean = false
@@ -82,6 +89,7 @@ class LineTool(
             )
         )
         brushToolOptionsView.setCurrentPaint(toolPaint.paint)
+        brushToolOptionsView.setStrokeCapButtonChecked(toolPaint.strokeCap)
         if (topBarViewHolder != null && topBarViewHolder?.plusButton?.visibility == View.VISIBLE) {
             topBarViewHolder?.hidePlusButton()
         }
@@ -142,7 +150,7 @@ class LineTool(
             lineFinalized = false
             connectedLines = true
             undoRecentlyClicked = false
-            handleUp(newStartCoordinate)
+            handleAddedLine(newStartCoordinate)
         }
     }
 
@@ -181,8 +189,49 @@ class LineTool(
         }
     }
 
+    private fun hideToolOptions() {
+        if (toolOptionsViewController.isVisible) {
+            if (brushToolOptionsView.getTopToolOptions().visibility == View.VISIBLE) {
+                toolOptionsViewController.slideUp(
+                    brushToolOptionsView.getTopToolOptions(),
+                    willHide = true,
+                    showOptionsView = false
+                )
+            }
+
+            if (brushToolOptionsView.getBottomToolOptions().visibility == View.VISIBLE) {
+                toolOptionsViewController.slideDown(
+                    brushToolOptionsView.getBottomToolOptions(),
+                    willHide = true,
+                    showOptionsView = false
+                )
+            }
+        }
+    }
+
+    private fun showToolOptions() {
+        if (!toolOptionsViewController.isVisible) {
+            if (brushToolOptionsView.getBottomToolOptions().visibility == View.INVISIBLE) {
+                toolOptionsViewController.slideDown(
+                    brushToolOptionsView.getTopToolOptions(),
+                    willHide = false,
+                    showOptionsView = true
+                )
+            }
+
+            if (brushToolOptionsView.getBottomToolOptions().visibility == View.INVISIBLE) {
+                toolOptionsViewController.slideUp(
+                    brushToolOptionsView.getBottomToolOptions(),
+                    willHide = false,
+                    showOptionsView = true
+                )
+            }
+        }
+    }
+
     override fun handleDown(coordinate: PointF?): Boolean {
         coordinate ?: return false
+        super.handleDown(coordinate)
         initialEventCoordinate = PointF(coordinate.x, coordinate.y)
         previousEventCoordinate = PointF(coordinate.x, coordinate.y)
         return true
@@ -190,6 +239,8 @@ class LineTool(
 
     override fun handleMove(coordinate: PointF?): Boolean {
         coordinate ?: return false
+        hideToolOptions()
+        super.handleMove(coordinate)
         changeInitialCoordinateForHandleNormalLine = true
         if (startpointSet) {
             initialEventCoordinate = startPointToDraw?.let { PointF(it.x, it.y) }
@@ -297,6 +348,12 @@ class LineTool(
     }
 
     override fun handleUp(coordinate: PointF?): Boolean {
+        showToolOptions()
+        super.handleUp(coordinate)
+        return handleAddedLine(coordinate)
+    }
+
+    fun handleAddedLine(coordinate: PointF?): Boolean {
         undoPreviousLineForConnectedLines = true
         if (changeInitialCoordinateForHandleNormalLine && initialEventCoordinate == null) {
             initialEventCoordinate = startPointToDraw?.let { PointF(it.x, it.y) }
@@ -427,7 +484,6 @@ class LineTool(
             val endX = endPointToDraw?.x
             val endY = endPointToDraw?.y
             if (commandManager.isUndoAvailable) {
-                commandManager.undoIgnoringColorChanges()
                 val finalPath = SerializablePath().apply {
                     if (startX != null && startY != null && endX != null && endY != null) {
                         moveTo(startX, startY)

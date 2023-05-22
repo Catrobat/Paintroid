@@ -45,6 +45,13 @@ class PipetteTool(
         get() = ToolType.PIPETTE
 
     override var drawTime: Long = 0
+    override fun handleUpAnimations(coordinate: PointF?) {
+      super.handleUp(coordinate)
+    }
+
+    override fun handleDownAnimations(coordinate: PointF?) {
+        super.handleDown(coordinate)
+    }
 
     init {
         updateSurfaceBitmap()

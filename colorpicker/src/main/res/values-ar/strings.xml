@@ -34,4 +34,5 @@
     <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">هل تريد حفظ التغييرات؟</string>
     <string name="color_picker_no" tools:ignore="MissingTranslation">لا</string>
     <string name="color_picker_yes" tools:ignore="MissingTranslation">نعم</string>
+    <string name="color_picker_history_recently_used" tools:ignore="MissingTranslation">recently used</string>
 </resources>

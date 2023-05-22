@@ -105,15 +105,17 @@ class DefaultCommandManager(
     }
 
     override fun undo() {
-        val command = undoCommandList.pop()
-        redoCommandList.addFirst(command)
+        if (isUndoAvailable) {
+            val command = undoCommandList.pop()
+            redoCommandList.addFirst(command)
 
-        handleUndo(command)
+            handleUndo(command)
 
-        notifyCommandExecuted()
+            notifyCommandExecuted()
+        }
     }
 
-    private fun handleUndo(command: Command) {
+    private fun handleUndo(command: Command, ignoreColorCommand: Boolean = false) {
         var success = true
         var layerCount = layerModel.layerCount
         val currentCommandName = command.javaClass.simpleName
@@ -153,9 +155,13 @@ class DefaultCommandManager(
 
         val iterator = undoCommandList.descendingIterator()
         while (iterator.hasNext()) {
+            var nextCommand = iterator.next()
+            if (nextCommand is ColorChangedCommand && ignoreColorCommand) {
+                continue
+            }
             val currentLayer = layerModel.currentLayer
             canvas.setBitmap(currentLayer?.bitmap)
-            iterator.next().run(canvas, layerModel)
+            nextCommand.run(canvas, layerModel)
         }
 
         if (!currentCommandName.matches(mergeLayerCommandRegex)) {
@@ -185,17 +191,19 @@ class DefaultCommandManager(
     }
 
     override fun redo() {
-        val command = redoCommandList.pop()
-        undoCommandList.addFirst(command)
+        if (isRedoAvailable) {
+            val command = redoCommandList.pop()
+            undoCommandList.addFirst(command)
 
-        val currentLayer = layerModel.currentLayer
-        val canvas = commonFactory.createCanvas()
-        currentLayer?.let {
-            canvas.setBitmap(it.bitmap)
+            val currentLayer = layerModel.currentLayer
+            val canvas = commonFactory.createCanvas()
+            currentLayer?.let {
+                canvas.setBitmap(it.bitmap)
+            }
+
+            command.run(canvas, layerModel)
+            notifyCommandExecuted()
         }
-
-        command.run(canvas, layerModel)
-        notifyCommandExecuted()
     }
 
     override fun reset() {
@@ -231,7 +239,7 @@ class DefaultCommandManager(
         if (undoCommandList.isNotEmpty() && undoCommandList.first != null) {
             val command = undoCommandList.pop()
             redoCommandList.addFirst(command)
-            handleUndo(command)
+            handleUndo(command, true)
         }
         return colorCommandList
     }
@@ -331,6 +339,9 @@ class DefaultCommandManager(
     }
 
     override fun adjustUndoListForClippingTool() {
+        if (undoCommandList.first.toString().split(".", "@").size < FIVE) {
+            return
+        }
         val commandName = undoCommandList.first.toString().split(".", "@")[FIVE]
         if (commandName == ClippingCommand::class.java.simpleName) {
             val clippingCommand = undoCommandList.pop()

@@ -24,6 +24,7 @@ import android.graphics.PointF
 import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.annotation.VisibleForTesting
 import androidx.test.espresso.idling.CountingIdlingResource
 import org.catrobat.paintroid.R
@@ -38,6 +39,7 @@ import org.catrobat.paintroid.tools.Workspace
 import org.catrobat.paintroid.tools.options.TextToolOptionsView
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 import kotlin.Exception
+import kotlin.math.abs
 
 @VisibleForTesting
 const val TEXT_SIZE_MAGNIFICATION_FACTOR = 3f
@@ -46,7 +48,7 @@ const val TEXT_SIZE_MAGNIFICATION_FACTOR = 3f
 const val BOX_OFFSET = 20
 
 @VisibleForTesting
-const val MARGIN_TOP = 50.0f
+const val MARGIN_TOP = 200f
 
 private const val ROTATION_ENABLED = true
 private const val RESIZE_POINTS_VISIBLE = true
@@ -115,6 +117,15 @@ class TextTool(
 
     override val toolType: ToolType
         get() = ToolType.TEXT
+
+    override fun handleUpAnimations(coordinate: PointF?) {
+        showTextToolLayout()
+        toolOptionsViewController.animateBottomAndTopNavigation(false)
+    }
+
+    override fun handleDownAnimations(coordinate: PointF?) {
+        hideTextToolLayout()
+    }
 
     override fun toolPositionCoordinates(coordinate: PointF): PointF = coordinate
 
@@ -202,6 +213,69 @@ class TextTool(
         textPaint.isUnderlineText = underlined
         textPaint.isFakeBoldText = bold
         updateTypeface()
+    }
+
+    fun hideTextToolLayout() {
+        if (textToolOptionsView.getTopLayout().visibility == View.VISIBLE) {
+            toolOptionsViewController.slideUp(
+                textToolOptionsView.getTopLayout(),
+                willHide = true,
+                showOptionsView = false
+            )
+        }
+
+        if (textToolOptionsView.getBottomLayout().visibility == View.VISIBLE) {
+            toolOptionsViewController.slideDown(
+                textToolOptionsView.getBottomLayout(),
+                willHide = true,
+                showOptionsView = false
+            )
+        }
+    }
+
+     fun showTextToolLayout() {
+         if (textToolOptionsView.getTopLayout().visibility == View.INVISIBLE) {
+             if (!toolOptionsViewController.isVisible) {
+                 toolOptionsViewController.show()
+             }
+             toolOptionsViewController.slideDown(
+                 textToolOptionsView.getTopLayout(),
+                 willHide = false,
+                 showOptionsView = true
+             )
+         }
+
+         if (textToolOptionsView.getBottomLayout().visibility == View.INVISIBLE) {
+             if (!toolOptionsViewController.isVisible) {
+                 toolOptionsViewController.show()
+             }
+             toolOptionsViewController.slideUp(
+                 textToolOptionsView.getBottomLayout(),
+                 willHide = false,
+                 showOptionsView = true
+             )
+         }
+    }
+
+    override fun handleMove(coordinate: PointF?): Boolean {
+        textToolOptionsView.hideKeyboard()
+        hideTextToolLayout()
+        return super.handleMove(coordinate)
+    }
+
+    override fun handleUp(coordinate: PointF?): Boolean {
+        coordinate?.let {
+            if (abs(toolPosition.x - it.x) <= boxWidth / 2 && abs(toolPosition.y - it.y) <= boxHeight / 2) {
+                showTextToolLayout()
+                super.handleUp(coordinate)
+                textToolOptionsView.showKeyboard()
+            } else {
+                textToolOptionsView.hideKeyboard()
+                hideTextToolLayout()
+                super.handleUp(coordinate)
+            }
+        }
+        return true
     }
 
     override fun drawBitmap(canvas: Canvas, boxWidth: Float, boxHeight: Float) {

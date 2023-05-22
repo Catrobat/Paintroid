@@ -37,6 +37,7 @@ import org.catrobat.paintroid.tools.implementation.ClippingTool
 import org.catrobat.paintroid.tools.implementation.ImportTool
 import org.catrobat.paintroid.tools.implementation.LineTool
 import org.catrobat.paintroid.tools.implementation.SprayTool
+import org.catrobat.paintroid.tools.implementation.TextTool
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 
 class DefaultToolController(
@@ -104,10 +105,16 @@ class DefaultToolController(
 
     override fun hideToolOptionsView() {
         toolOptionsViewController.hide()
+        if (toolReference.tool?.toolType == ToolType.TEXT) {
+            (toolReference.tool as TextTool).hideTextToolLayout()
+        }
     }
 
     override fun showToolOptionsView() {
         toolOptionsViewController.show()
+        if (toolReference.tool?.toolType == ToolType.TEXT) {
+            (toolReference.tool as TextTool).showTextToolLayout()
+        }
     }
 
     override fun toolOptionsViewVisible(): Boolean = toolOptionsViewController.isVisible
@@ -162,6 +169,14 @@ class DefaultToolController(
 
     override fun enableToolOptionsView() {
         toolOptionsViewController.enable()
+    }
+
+    override fun enableHideOption() {
+        toolOptionsViewController.enableHide()
+    }
+
+    override fun disableHideOption() {
+        toolOptionsViewController.disableHide()
     }
 
     override fun createTool() {

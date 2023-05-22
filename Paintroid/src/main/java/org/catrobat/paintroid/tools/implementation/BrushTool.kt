@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2022 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,6 +21,7 @@ package org.catrobat.paintroid.tools.implementation
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.PointF
+import android.view.View
 import androidx.test.espresso.idling.CountingIdlingResource
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.command.serialization.SerializablePath
@@ -79,6 +80,7 @@ open class BrushTool(
             )
         )
         brushToolOptionsView.setCurrentPaint(toolPaint.paint)
+        brushToolOptionsView.setStrokeCapButtonChecked(toolPaint.strokeCap)
     }
 
     override fun draw(canvas: Canvas) {
@@ -90,8 +92,49 @@ open class BrushTool(
         }
     }
 
+    private fun hideBrushSpecificLayoutOnHandleDown() {
+        if (toolOptionsViewController.isVisible) {
+            if (brushToolOptionsView.getTopToolOptions().visibility == View.VISIBLE) {
+                toolOptionsViewController.slideUp(
+                    brushToolOptionsView.getTopToolOptions(),
+                    willHide = true,
+                    showOptionsView = false
+                )
+            }
+
+            if (brushToolOptionsView.getBottomToolOptions().visibility == View.VISIBLE) {
+                toolOptionsViewController.slideDown(
+                    brushToolOptionsView.getBottomToolOptions(),
+                    willHide = true,
+                    showOptionsView = false
+                )
+            }
+        }
+    }
+
+    private fun showBrushSpecificLayoutOnHandleUp() {
+        if (!toolOptionsViewController.isVisible) {
+            if (brushToolOptionsView.getBottomToolOptions().visibility == View.INVISIBLE) {
+                toolOptionsViewController.slideDown(
+                    brushToolOptionsView.getTopToolOptions(),
+                    willHide = false,
+                    showOptionsView = true
+                )
+            }
+
+            if (brushToolOptionsView.getBottomToolOptions().visibility == View.INVISIBLE) {
+                toolOptionsViewController.slideUp(
+                    brushToolOptionsView.getBottomToolOptions(),
+                    willHide = false,
+                    showOptionsView = true
+                )
+            }
+        }
+    }
+
     override fun handleDown(coordinate: PointF?): Boolean {
         coordinate ?: return false
+        super.handleDown(coordinate)
         initialEventCoordinate = PointF(coordinate.x, coordinate.y)
         previousEventCoordinate = PointF(coordinate.x, coordinate.y)
         pathToDraw.moveTo(coordinate.x, coordinate.y)
@@ -101,10 +144,22 @@ open class BrushTool(
         return true
     }
 
+    override fun handleDownAnimations(coordinate: PointF?) {
+
+        hideBrushSpecificLayoutOnHandleDown()
+    }
+
+    override fun handleUpAnimations(coordinate: PointF?) {
+        showBrushSpecificLayoutOnHandleUp()
+        super.handleUp(coordinate)
+    }
+
     override fun handleMove(coordinate: PointF?): Boolean {
         if (eventCoordinatesAreNull() || coordinate == null) {
             return false
         }
+        super.handleMove(coordinate)
+        hideBrushSpecificLayoutOnHandleDown()
         previousEventCoordinate?.let {
             pathToDraw.quadTo(it.x, it.y, coordinate.x, coordinate.y)
             pathToDraw.incReserve(1)
@@ -125,6 +180,8 @@ open class BrushTool(
         if (eventCoordinatesAreNull() || coordinate == null) {
             return false
         }
+        showBrushSpecificLayoutOnHandleUp()
+        super.handleUp(coordinate)
 
         if (!pathInsideBitmap && workspace.contains(coordinate)) {
             pathInsideBitmap = true

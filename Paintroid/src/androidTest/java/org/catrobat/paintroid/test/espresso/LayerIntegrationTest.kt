@@ -446,6 +446,7 @@ class LayerIntegrationTest {
             .checkLayerWidthMatches(26)
         LayerMenuViewInteraction.onLayerMenuView()
             .performOpen()
+            .performScrollToPositionInLayerNavigation(3)
             .performSelectLayer(3)
             .performClose()
         TransformToolOptionsViewInteraction.onTransformToolOptionsView()
@@ -495,6 +496,7 @@ class LayerIntegrationTest {
             .checkLayerWidthMatches(bitmapHeight)
         LayerMenuViewInteraction.onLayerMenuView()
             .performOpen()
+            .performScrollToPositionInLayerNavigation(3)
             .performSelectLayer(3)
             .performClose()
         TransformToolOptionsViewInteraction.onTransformToolOptionsView()
@@ -590,12 +592,14 @@ class LayerIntegrationTest {
     }
 
     @Test
-    fun testOpacityAndVisiblityIconDisabled() {
+    fun testOpacityAndVisibilityIconDisabled() {
         LayerMenuViewInteraction.onLayerMenuView()
             .performOpen()
 
-        onView(withId(R.id.pocketpaint_layer_side_nav_button_visibility)).check(ViewAssertions.matches(Matchers.not(isClickable())))
-        onView(withId(R.id.pocketpaint_layer_side_nav_button_opacity)).check(ViewAssertions.matches(Matchers.not(isClickable())))
+        onView(withId(R.id.pocketpaint_layer_side_nav_button_visibility))
+                .check(matches(Matchers.not(isEnabled())))
+        onView(withId(R.id.pocketpaint_layer_side_nav_button_opacity))
+                .check(matches(Matchers.not(isEnabled())))
     }
 
     @Test

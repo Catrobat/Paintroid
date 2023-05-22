@@ -1,3 +1,21 @@
+/*
+ * Paintroid: An image manipulation application for Android.
+ * Copyright (C) 2010-2022 The Catrobat Team
+ * (<http://developer.catrobat.org/credits>)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.catrobat.paintroid.tools.implementation
 
 import android.graphics.Bitmap
@@ -42,6 +60,14 @@ class SmudgeTool(
 ) : BaseTool(contextCallback, toolOptionsViewController, toolPaint, workspace, idlingResource, commandManager) {
 
     override var drawTime: Long = 0
+    override fun handleUpAnimations(coordinate: PointF?) {
+        super.handleUp(coordinate)
+    }
+
+    override fun handleDownAnimations(coordinate: PointF?) {
+        super.handleDown(coordinate)
+    }
+
     private var currentBitmap: Bitmap? = null
     private var prevPoint: PointF? = null
     private var numOfPointsOnPath = -1
@@ -73,7 +99,7 @@ class SmudgeTool(
             )
         )
         smudgeToolOptionsView.setCurrentPaint(toolPaint.paint)
-
+        smudgeToolOptionsView.setStrokeCapButtonChecked(toolPaint.strokeCap)
         smudgeToolOptionsView.setCallback(object : SmudgeToolOptionsView.Callback {
             override fun onPressureChanged(pressure: Int) {
                 updatePressure(pressure)
@@ -101,6 +127,7 @@ class SmudgeTool(
 
     override fun handleDown(coordinate: PointF?): Boolean {
         coordinate ?: return false
+
         if (maxSmudgeSize != toolPaint.strokeWidth) {
             val ratio = minSmudgeSize / maxSmudgeSize
             maxSmudgeSize = toolPaint.strokeWidth
@@ -204,6 +231,7 @@ class SmudgeTool(
 
     override fun handleUp(coordinate: PointF?): Boolean {
         coordinate ?: return false
+
         if (pointArray.isNotEmpty() && currentBitmap != null) {
             currentBitmap?.let {
                 val command = commandFactory.createSmudgePathCommand(

@@ -18,6 +18,7 @@
  */
 package org.catrobat.paintroid.tools.options
 
+import android.view.View
 import org.catrobat.paintroid.tools.FontType
 
 interface TextToolOptionsView {
@@ -31,6 +32,14 @@ interface TextToolOptionsView {
     )
 
     fun setCallback(listener: Callback)
+
+    fun hideKeyboard()
+
+    fun showKeyboard()
+
+    fun getTopLayout(): View
+
+    fun getBottomLayout(): View
 
     interface Callback {
         fun setText(text: String)
