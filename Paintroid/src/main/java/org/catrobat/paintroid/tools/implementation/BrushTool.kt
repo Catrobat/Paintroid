@@ -22,6 +22,7 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.PointF
 import android.view.View
+import android.view.MotionEvent
 import androidx.test.espresso.idling.CountingIdlingResource
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.command.serialization.SerializablePath
@@ -36,6 +37,8 @@ import org.catrobat.paintroid.tools.common.MOVE_TOLERANCE
 import org.catrobat.paintroid.tools.helper.AdvancedSettingsAlgorithms
 import org.catrobat.paintroid.tools.helper.AdvancedSettingsAlgorithms.smoothing
 import org.catrobat.paintroid.tools.helper.AdvancedSettingsAlgorithms.threshold
+import org.catrobat.paintroid.tools.helper.AdvancedSettingsAlgorithms.useEventSize
+import org.catrobat.paintroid.tools.helper.PathContainer
 import org.catrobat.paintroid.tools.options.BrushToolOptionsView
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 import kotlin.math.abs
@@ -69,6 +72,8 @@ open class BrushTool(
 
     val pointArray = mutableListOf<PointF>()
 
+    private var currentPath: PathContainer = PathContainer()
+
     init {
         toolOptionsViewController.enable()
         pathToDraw.incReserve(1)
@@ -87,7 +92,15 @@ open class BrushTool(
         canvas.run {
             save()
             clipRect(0, 0, workspace.width, workspace.height)
-            drawPath(pathToDraw, previewPaint)
+            if (useEventDependentStrokeWidth) {
+                previewPaint.style = Paint.Style.FILL
+                bitmapPaint.style = Paint.Style.FILL
+                drawPath(currentPath.getClosedPathFromPoints(), previewPaint)
+            } else {
+                previewPaint.style = Paint.Style.STROKE
+                bitmapPaint.style = Paint.Style.STROKE
+                drawPath(pathToDraw, previewPaint)
+            }
             restore()
         }
     }
@@ -135,12 +148,20 @@ open class BrushTool(
     override fun handleDown(coordinate: PointF?): Boolean {
         coordinate ?: return false
         super.handleDown(coordinate)
-        initialEventCoordinate = PointF(coordinate.x, coordinate.y)
-        previousEventCoordinate = PointF(coordinate.x, coordinate.y)
-        pathToDraw.moveTo(coordinate.x, coordinate.y)
-        drawToolMovedDistance.set(0f, 0f)
-        pointArray.add(PointF(coordinate.x, coordinate.y))
-        pathInsideBitmap = workspace.contains(coordinate)
+        if (useEventDependentStrokeWidth) {
+            initialEventCoordinate = PointF(coordinate.x, coordinate.y)
+            previousEventCoordinate = PointF(coordinate.x, coordinate.y)
+
+            currentPath = PathContainer()
+            currentPath.addStartPoint(coordinate)
+        } else {
+            initialEventCoordinate = PointF(coordinate.x, coordinate.y)
+            previousEventCoordinate = PointF(coordinate.x, coordinate.y)
+            pathToDraw.moveTo(coordinate.x, coordinate.y)
+            drawToolMovedDistance.set(0f, 0f)
+            pointArray.add(PointF(coordinate.x, coordinate.y))
+            pathInsideBitmap = workspace.contains(coordinate)
+        }
         return true
     }
 
@@ -176,6 +197,13 @@ open class BrushTool(
         return true
     }
 
+    override fun handleMove(coordinate: PointF?, event: MotionEvent): Boolean {
+        if (coordinate == null) return false
+        val shiftBy = getNextStrokeWidth(event)
+        currentPath.addNewPoint(coordinate, shiftBy)
+        return true
+    }
+
     override fun handleUp(coordinate: PointF?): Boolean {
         if (eventCoordinatesAreNull() || coordinate == null) {
             return false
@@ -187,26 +215,37 @@ open class BrushTool(
             pathInsideBitmap = true
         }
 
-        previousEventCoordinate?.let {
-            drawToolMovedDistance.set(
-                drawToolMovedDistance.x + abs(coordinate.x - it.x),
-                drawToolMovedDistance.y + abs(coordinate.y - it.y)
-            )
-        }
+        if (useEventDependentStrokeWidth) {
+            currentPath.addEndPoint(coordinate)
+            val path = currentPath.getClosedPathFromPoints()
 
-        return if (MOVE_TOLERANCE < max(drawToolMovedDistance.x, drawToolMovedDistance.y)) {
-            addPathCommand(coordinate)
+            bitmapPaint.style = Paint.Style.FILL
+            val command = commandFactory.createPathCommand(bitmapPaint, path)
+            commandManager.addCommand(command)
+            return true
         } else {
-            initialEventCoordinate?.let {
-                return addPointCommand(it)
+            previousEventCoordinate?.let {
+                drawToolMovedDistance.set(
+                    drawToolMovedDistance.x + abs(coordinate.x - it.x),
+                    drawToolMovedDistance.y + abs(coordinate.y - it.y)
+                )
             }
-            false
+
+            return if (MOVE_TOLERANCE < max(drawToolMovedDistance.x, drawToolMovedDistance.y)) {
+                addPathCommand(coordinate)
+            } else {
+                initialEventCoordinate?.let {
+                    return addPointCommand(it)
+                }
+                false
+            }
         }
     }
 
     override fun toolPositionCoordinates(coordinate: PointF): PointF = coordinate
 
     override fun resetInternalState() {
+        currentPath = PathContainer()
         pathToDraw.rewind()
         pointArray.clear()
         initialEventCoordinate = null
@@ -259,5 +298,15 @@ open class BrushTool(
         val command = commandFactory.createPointCommand(bitmapPaint, coordinate)
         commandManager.addCommand(command)
         return true
+    }
+
+    private fun getNextStrokeWidth(event: MotionEvent): Float {
+        val newWidth = if (useEventSize) {
+            event.size * bitmapPaint.strokeWidth * 5
+        } else {
+            event.pressure * bitmapPaint.strokeWidth * 8
+        }
+
+        return newWidth
     }
 }

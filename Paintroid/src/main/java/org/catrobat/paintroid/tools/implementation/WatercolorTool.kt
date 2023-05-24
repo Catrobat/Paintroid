@@ -55,6 +55,8 @@ class WatercolorTool(
         get() = ToolType.WATERCOLOR
 
     init {
+        useEventDependentStrokeWidth = true
+
         bitmapPaint.maskFilter = BlurMaskFilter(calcRange(bitmapPaint.alpha), BlurMaskFilter.Blur.INNER)
         previewPaint.maskFilter = BlurMaskFilter(calcRange(previewPaint.alpha), BlurMaskFilter.Blur.INNER)
     }

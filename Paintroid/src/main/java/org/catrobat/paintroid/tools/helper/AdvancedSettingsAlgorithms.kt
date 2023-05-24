@@ -4,11 +4,13 @@ import android.graphics.PointF
 import org.catrobat.paintroid.command.serialization.SerializablePath
 
 object AdvancedSettingsAlgorithms {
-    @kotlin.jvm.JvmField
+    @JvmField
     var smoothing = true
 
     const val threshold = 0.2
     const val divider = 3
+
+    var useEventSize = false
 
     @JvmStatic
     fun smoothingAlgorithm(pointArray: List<PointF>): SerializablePath {

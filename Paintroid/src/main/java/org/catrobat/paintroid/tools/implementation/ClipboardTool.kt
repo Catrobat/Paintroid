@@ -147,6 +147,7 @@ class ClipboardTool(
     }
 
     override fun resetInternalState() = Unit
+
     override fun onSaveInstanceState(bundle: Bundle?) {
         super.onSaveInstanceState(bundle)
         bundle?.putParcelable(BUNDLE_TOOL_DRAWING_BITMAP, drawingBitmap)
