@@ -24,11 +24,12 @@ import android.content.Context
 import android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
 import android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 import android.graphics.Color
+import android.view.View
 import androidx.annotation.ArrayRes
 import androidx.annotation.ColorInt
+import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.pressBack
-import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.scrollTo
 import androidx.test.espresso.assertion.ViewAssertions.matches
@@ -54,6 +55,7 @@ import org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule
 import org.catrobat.paintroid.tools.Tool
 import org.catrobat.paintroid.tools.ToolType
+import org.catrobat.paintroid.tools.implementation.FillTool
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.`is`
@@ -84,11 +86,11 @@ class LandscapeIntegrationTest {
     fun setUp() {
         mainActivity = activityTestRule.activity
         idlingResource = mainActivity?.idlingResource
-        IdlingRegistry.getInstance().register(idlingResource)
+        Espresso.registerIdlingResources(idlingResource)
     }
 
     @After
-    fun tearDown() { IdlingRegistry.getInstance().unregister(idlingResource) }
+    fun tearDown() { Espresso.registerIdlingResources(idlingResource) }
 
     @Test
     fun testLandscapeMode() {
@@ -408,6 +410,7 @@ class LandscapeIntegrationTest {
     @Test
     fun testIfCurrentToolIsShownInBottomNavigation() {
         setOrientation(SCREEN_ORIENTATION_LANDSCAPE)
+       // toolOptionsViewController!!.animateBottomAndTopNavigation(false)
         for (toolType in ToolType.values()) {
             val tools = toolType == ToolType.IMPORTPNG ||
                 toolType == ToolType.COLORCHOOSER ||
@@ -418,6 +421,15 @@ class LandscapeIntegrationTest {
             if (tools) { continue }
             onToolBarView()
                 .performSelectTool(toolType)
+            Thread.sleep(1000)
+            currentTool
+            if(currentTool!!.toolType == ToolType.FILL)
+            {
+            // var curTool =  currentTool as FillToo
+
+
+             //   textToolOptionsView.getTopLayout().visibility == View.VISIBLE)
+            }
             onBottomNavigationView()
                 .checkShowsCurrentTool(toolType)
         }
