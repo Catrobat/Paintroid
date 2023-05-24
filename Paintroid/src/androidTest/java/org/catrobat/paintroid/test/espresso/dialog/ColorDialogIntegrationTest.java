@@ -28,6 +28,7 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.net.Uri;
+import android.os.Environment;
 import android.view.View;
 
 import org.catrobat.paintroid.MainActivity;
@@ -42,14 +43,13 @@ import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule;
 import org.catrobat.paintroid.tools.ToolReference;
 import org.catrobat.paintroid.ui.Perspective;
 import org.hamcrest.core.AllOf;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 import androidx.test.espresso.IdlingRegistry;
@@ -81,7 +81,6 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
 
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
@@ -129,11 +128,19 @@ public class ColorDialogIntegrationTest {
 
 	private ToolReference toolReference;
 
-	private List<File> deletionFileList = new ArrayList<>();
-
 	@Before
 	public void setUp() {
 		toolReference = launchActivityRule.getActivity().toolReference;
+	}
+
+	@After
+	public void tearDown() {
+		String imagesDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
+		String pathToFile = imagesDirectory + File.separator + IMAGE_NAME + "." + CATROBAT_IMAGE_ENDING;
+		File imageFile = new File(pathToFile);
+		if (imageFile.exists()) {
+			imageFile.delete();
+		}
 	}
 
 	private int getColorById(int colorId) {
@@ -397,7 +404,7 @@ public class ColorDialogIntegrationTest {
 		onView(withId(R.id.color_picker_color_rgb_textview_green)).check(matches(allOf(isDisplayed(), withText(R.string.color_green), withTextColor(getColorById(R.color.pocketpaint_color_picker_rgb_green)))));
 		onView(withId(R.id.color_picker_color_rgb_textview_blue)).check(matches(allOf(isDisplayed(), withText(R.string.color_blue), withTextColor(getColorById(R.color.pocketpaint_color_picker_rgb_blue)))));
 		onView(withId(R.id.color_picker_color_rgb_textview_alpha)).perform(scrollTo());
-		onView(withId(R.id.color_picker_color_rgb_textview_alpha)).check(matches(allOf(isDisplayed(), withText(R.string.color_alpha), withTextColor(getColorById(R.color.pocketpaint_color_picker_rgb_alpha)))));
+		onView(withId(R.id.color_picker_color_rgb_textview_alpha)).check(matches(allOf(isDisplayed(), withText(R.string.color_alpha), withTextColor(getColorById(R.color.pocketpaint_color_picker_hex_black)))));
 
 		onView(withId(R.id.color_picker_color_rgb_textview_red)).perform(scrollTo());
 		onView(withId(R.id.color_picker_color_rgb_seekbar_red)).check(matches(isDisplayed()));
@@ -1004,9 +1011,6 @@ public class ColorDialogIntegrationTest {
 				.performOpenColorPicker();
 		onColorPickerView().checkHistoryColor(3, presetColors.getColor(0, Color.BLACK));
 		presetColors.recycle();
-		if (!deletionFileList.isEmpty() && deletionFileList.get(0) != null && deletionFileList.get(0).exists()) {
-			assertTrue(deletionFileList.get(0).delete());
-		}
 	}
 
 	private void saveCatrobatImage() {
