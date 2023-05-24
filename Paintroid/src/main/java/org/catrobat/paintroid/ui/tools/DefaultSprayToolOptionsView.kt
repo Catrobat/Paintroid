@@ -31,6 +31,7 @@ import com.google.android.material.textfield.TextInputEditText
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.tools.helper.DefaultNumberRangeFilter
 import org.catrobat.paintroid.tools.options.SprayToolOptionsView
+import java.util.Locale
 
 const val MIN_RADIUS = 1
 private const val DEFAULT_RADIUS = 5
@@ -107,9 +108,17 @@ class DefaultSprayToolOptionsView(rootView: ViewGroup) : SprayToolOptionsView {
 
     override fun setRadius(radius: Int) {
         radiusSeekBar.progress = radius
+        radiusText.setText(
+            String.format(
+                Locale.getDefault(), "%d",
+                radius
+            )
+        )
     }
 
     override fun setCurrentPaint(paint: Paint) {
         setRadius(paint.strokeWidth.toInt())
     }
+
+    override fun getRadius(): Float = radiusSeekBar.progress.toFloat()
 }

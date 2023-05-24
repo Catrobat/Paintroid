@@ -36,6 +36,7 @@ import org.catrobat.paintroid.tools.Workspace
 import org.catrobat.paintroid.tools.implementation.ClippingTool
 import org.catrobat.paintroid.tools.implementation.ImportTool
 import org.catrobat.paintroid.tools.implementation.LineTool
+import org.catrobat.paintroid.tools.implementation.SprayTool
 import org.catrobat.paintroid.tools.implementation.TextTool
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 
@@ -73,6 +74,9 @@ class DefaultToolController(
             toolOptionsViewController.showCheckmark()
         } else {
             toolOptionsViewController.hideCheckmark()
+        }
+        if (toolReference.tool?.toolType == ToolType.SPRAY) {
+            (currentTool as SprayTool).resetRadiusToStrokeWidth()
         }
         val tool: Tool = toolFactory.createTool(
             toolType,
