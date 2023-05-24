@@ -39,7 +39,7 @@ interface Tool {
 
     fun handleMove(coordinate: PointF?): Boolean
 
-    fun handleMove(coordinate: PointF?, event: MotionEvent) : Boolean
+    fun handleMove(coordinate: PointF?, event: MotionEvent): Boolean
 
     fun handleUp(coordinate: PointF?): Boolean
 

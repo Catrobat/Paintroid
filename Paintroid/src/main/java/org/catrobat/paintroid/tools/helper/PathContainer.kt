@@ -46,11 +46,13 @@ class PathContainer {
         moveRight[moveRight.size - 1] = moveLeft.last()
 
         moveRight.forEachIndexed { index, move ->
-            if (moveRight.size < index + 2 || move == moveRight.last())
+            if (moveRight.size < index + 2 || move == moveRight.last()) {
                 return
+            }
 
-            if (index == 0)
+            if (index == 0) {
                 return@forEachIndexed
+            }
 
             val beforeIndex = index - 1
             val afterIndex = index + 1
@@ -98,7 +100,7 @@ class PathContainer {
     private fun getNormalizedOrthogonalVector(vector: PointF): PointF {
         val orth = PointF(vector.y, -vector.x)
         val length = sqrt(orth.x * orth.x + orth.y * orth.y)
-        return if(length == 0f) PointF(0.0f, 0.0f) else PointF(orth.x / length, orth.y / length)
+        return if (length == 0f) PointF(0.0f, 0.0f) else PointF(orth.x / length, orth.y / length)
     }
 
     private fun getPointShiftedByDistanceRight(point: PointF, orth: PointF, shiftBy: Float): PointF = PointF(point.x + shiftBy * orth.x, point.y + shiftBy * orth.y)
