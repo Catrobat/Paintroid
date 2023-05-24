@@ -98,15 +98,13 @@ abstract class BaseTool(
         return true
     }
 
-<<<<<<< HEAD
     override fun handleMove(coordinate: PointF?): Boolean {
         toolOptionsViewController.animateBottomAndTopNavigation(true)
         return true
     }
-=======
+
     override fun handleMove(coordinate: PointF?, event: MotionEvent): Boolean = true
 
->>>>>>> PAINTROID-367 watercolor tool uses event data for stroke width
     override val drawPaint
         get() = Paint(toolPaint.paint)
 
