@@ -26,9 +26,9 @@ import android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 import android.graphics.Color
 import androidx.annotation.ArrayRes
 import androidx.annotation.ColorInt
+import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.pressBack
-import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.scrollTo
 import androidx.test.espresso.assertion.ViewAssertions.matches
@@ -84,11 +84,11 @@ class LandscapeIntegrationTest {
     fun setUp() {
         mainActivity = activityTestRule.activity
         idlingResource = mainActivity?.idlingResource
-        IdlingRegistry.getInstance().register(idlingResource)
+        Espresso.registerIdlingResources(idlingResource)
     }
 
     @After
-    fun tearDown() { IdlingRegistry.getInstance().unregister(idlingResource) }
+    fun tearDown() {  Espresso.registerIdlingResources(idlingResource) }
 
     @Test
     fun testLandscapeMode() {
@@ -418,6 +418,7 @@ class LandscapeIntegrationTest {
             if (tools) { continue }
             onToolBarView()
                 .performSelectTool(toolType)
+            Thread.sleep(1000)
             onBottomNavigationView()
                 .checkShowsCurrentTool(toolType)
         }
