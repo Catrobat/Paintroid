@@ -459,14 +459,13 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         )
         perspective = Perspective(layerModel.width, layerModel.height)
         val listener = DefaultWorkspace.Listener { drawingSurface.refreshDrawingSurface() }
-        model = MainActivityModel()
         workspace = DefaultWorkspace(
             layerModel,
             perspective,
             listener,
         )
-        commandSerializer = CommandSerializer(this, commandManager, model)
         model = MainActivityModel()
+        commandSerializer = CommandSerializer(this, commandManager, model)
         zoomWindowController = DefaultZoomWindowController(
             this,
             layerModel,
@@ -474,7 +473,6 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             toolReference,
             UserPreferences(getPreferences(MODE_PRIVATE))
         )
-        model = MainActivityModel()
         defaultToolController = DefaultToolController(
             toolReference,
             toolOptionsViewController,

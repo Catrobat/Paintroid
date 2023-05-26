@@ -162,5 +162,36 @@ class SprayToolIntegrationTest {
         val selectedColor = toolReference?.tool?.drawPaint!!.color
         onDrawingSurfaceView()
             .checkPixelColor(selectedColor, BitmapLocationProvider.MIDDLE)
+
+    fun testSprayRadiusToStrokeWidthStaysConsistent() {
+        ToolBarViewInteraction.onToolBarView().performSelectTool(ToolType.BRUSH)
+
+        var radius = "30"
+        onView(withId(R.id.pocketpaint_stroke_width_width_text))
+            .perform(replaceText(radius))
+            .check(matches(withText(radius)))
+        onView(withId(R.id.pocketpaint_stroke_width_seek_bar))
+            .check(matches(withProgress(radius.toInt())))
+
+        ToolBarViewInteraction.onToolBarView().performSelectTool(ToolType.SPRAY)
+        onView(withId(R.id.pocketpaint_radius_text))
+            .perform(replaceText(radius))
+            .check(matches(withText(radius)))
+        onView(withId(R.id.pocketpaint_spray_radius_seek_bar))
+            .check(matches(withProgress(radius.toInt())))
+
+        radius = "20"
+        onView(withId(R.id.pocketpaint_radius_text))
+            .perform(replaceText(radius))
+            .check(matches(withText(radius)))
+        onView(withId(R.id.pocketpaint_spray_radius_seek_bar))
+            .check(matches(withProgress(radius.toInt())))
+
+        ToolBarViewInteraction.onToolBarView().performSelectTool(ToolType.BRUSH)
+        onView(withId(R.id.pocketpaint_stroke_width_width_text))
+            .perform(replaceText(radius))
+            .check(matches(withText(radius)))
+        onView(withId(R.id.pocketpaint_stroke_width_seek_bar))
+            .check(matches(withProgress(radius.toInt())))
     }
 }

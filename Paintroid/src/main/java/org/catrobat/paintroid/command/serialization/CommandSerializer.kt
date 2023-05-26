@@ -32,9 +32,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
-import android.util.Log
 import com.esotericsoftware.kryo.Kryo
-import com.esotericsoftware.kryo.KryoException
 import com.esotericsoftware.kryo.io.Input
 import com.esotericsoftware.kryo.io.Output
 import org.catrobat.paintroid.colorpicker.ColorHistory
@@ -76,7 +74,6 @@ import org.catrobat.paintroid.tools.drawable.OvalDrawable
 import org.catrobat.paintroid.tools.drawable.RectangleDrawable
 import org.catrobat.paintroid.tools.drawable.ShapeDrawable
 import org.catrobat.paintroid.tools.drawable.StarDrawable
-import org.catrobat.paintroid.ui.DrawingSurfaceThread
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -87,7 +84,6 @@ open class CommandSerializer(private val activityContext: Context, private val c
     companion object {
         const val CURRENT_IMAGE_VERSION = 2
         const val MAGIC_VALUE = "CATROBAT"
-        private val TAG = DrawingSurfaceThread::class.java.simpleName
     }
 
     val kryo = Kryo()
@@ -234,21 +230,19 @@ open class CommandSerializer(private val activityContext: Context, private val c
         var commandModel: CommandManagerModel? = null
         var colorHistory: ColorHistory? = null
 
-        try {
-            Input(stream).use { input ->
-                if (!input.readString().equals(MAGIC_VALUE)) {
-                    throw NotCatrobatImageException("Magic Value doesn't exist.")
-                }
-                val imageVersion = input.readInt()
-                if (CURRENT_IMAGE_VERSION != imageVersion) {
-                    setRegisterMapVersion(imageVersion)
-                    registerClasses()
-                }
-                commandModel = kryo.readObject(input, CommandManagerModel::class.java)
+        Input(stream).use { input ->
+            if (!input.readString().equals(MAGIC_VALUE)) {
+                throw NotCatrobatImageException("Magic Value doesn't exist.")
+            }
+            val imageVersion = input.readInt()
+            if (CURRENT_IMAGE_VERSION != imageVersion) {
+                setRegisterMapVersion(imageVersion)
+                registerClasses()
+            }
+            commandModel = kryo.readObject(input, CommandManagerModel::class.java)
+            if (input.available() != 0) {
                 colorHistory = kryo.readObject(input, ColorHistory::class.java)
             }
-        } catch (ex: KryoException) {
-            Log.d(TAG, "KryoException while reading autosave: " + ex.message)
         }
 
         commandModel?.commands?.reverse()
