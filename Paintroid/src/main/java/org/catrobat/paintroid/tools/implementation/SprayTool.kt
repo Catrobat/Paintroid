@@ -234,6 +234,7 @@ class SprayTool(
         pointM.x = currentCoordinate!!.x
         pointM.y = currentCoordinate!!.y
         return pointM
+    }
 
     fun resetRadiusToStrokeWidth() {
         toolPaint.strokeWidth = sprayToolOptionsView.getRadius()

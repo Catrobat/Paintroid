@@ -157,11 +157,17 @@ class SprayToolIntegrationTest {
             .onPositiveButton()
             .perform(click())
         onDrawingSurfaceView()
-            .perform(UiInteractions.swipe(DrawingSurfaceLocationProvider.MIDDLE, DrawingSurfaceLocationProvider.BOTTOM_MIDDLE))
+            .perform(
+                UiInteractions.swipe(
+                    DrawingSurfaceLocationProvider.MIDDLE,
+                    DrawingSurfaceLocationProvider.BOTTOM_MIDDLE
+                )
+            )
 
         val selectedColor = toolReference?.tool?.drawPaint!!.color
         onDrawingSurfaceView()
             .checkPixelColor(selectedColor, BitmapLocationProvider.MIDDLE)
+    }
 
     fun testSprayRadiusToStrokeWidthStaysConsistent() {
         ToolBarViewInteraction.onToolBarView().performSelectTool(ToolType.BRUSH)
