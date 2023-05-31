@@ -231,8 +231,8 @@ class SprayTool(
     private fun createMidPoint(): PointF {
         val pointM = PointF()
 
-        pointM.x = currentCoordinate!!.x
-        pointM.y = currentCoordinate!!.y
+        pointM.x = currentCoordinate?.x ?: 0f
+        pointM.y = currentCoordinate?.y ?: 0f
         return pointM
     }
 
