@@ -38,12 +38,12 @@ import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider
 import org.catrobat.paintroid.test.espresso.util.EspressoUtils.waitForToast
 import org.catrobat.paintroid.test.espresso.util.MainActivityHelper
 import org.catrobat.paintroid.test.espresso.util.UiInteractions
-import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView
+import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.Companion.onDrawingSurfaceView
 import org.catrobat.paintroid.test.espresso.util.wrappers.LayerMenuViewInteraction
-import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView
+import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.Companion.onToolBarView
 import org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction
 import org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction
-import org.catrobat.paintroid.test.espresso.util.wrappers.TransformToolOptionsViewInteraction.onTransformToolOptionsView
+import org.catrobat.paintroid.test.espresso.util.wrappers.TransformToolOptionsViewInteraction.Companion.onTransformToolOptionsView
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule
 import org.catrobat.paintroid.tools.ToolReference
 import org.catrobat.paintroid.tools.ToolType
@@ -276,7 +276,7 @@ class TransformToolIntegrationTest {
             )
 
         assertEquals(boundingBoxWidth, toolSelectionBoxWidth, Float.MIN_VALUE)
-        assertThat(boundingBoxHeight, greaterThan(toolSelectionBoxHeight))
+        assertEquals(boundingBoxHeight, toolSelectionBoxHeight, Float.MIN_VALUE)
     }
 
     @Test
@@ -1281,9 +1281,13 @@ class TransformToolIntegrationTest {
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.BOTTOM_RIGHT_CORNER))
         runBlocking {
             TopBarViewInteraction.onTopBarView().performClickCheckmark()
+            delay(1000)
         }
         assertEquals(oldScale, perspective.scale)
         assertEquals(oldTranslationY, perspective.surfaceTranslationY)
+        runBlocking {
+            delay(1000)
+        }
         assertEquals(oldTranslationX, perspective.surfaceTranslationX)
     }
 

@@ -63,7 +63,7 @@ class SmudgeToolIntegrationTest {
     fun testSmudgeToolOptionsDialog() {
         val smudgeTool = toolReference.tool as SmudgeTool
         ToolBarViewInteraction.onToolBarView()
-            .performClickSelectedToolButton()
+                .performSelectTool(ToolType.SMUDGE)
 
         val pressureInput = onView(withId(R.id.pocketpaint_smudge_tool_dialog_pressure_input))
         val pressureSeekBar = onView(withId(R.id.pocketpaint_pressure_seek_bar))

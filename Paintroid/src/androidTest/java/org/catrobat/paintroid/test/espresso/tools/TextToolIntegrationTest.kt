@@ -49,10 +49,10 @@ import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider
 import org.catrobat.paintroid.test.espresso.util.MainActivityHelper
 import org.catrobat.paintroid.test.espresso.util.UiInteractions
 import org.catrobat.paintroid.test.espresso.util.UiMatcher
-import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView
-import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView
-import org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction.onToolProperties
-import org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView
+import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.Companion.onDrawingSurfaceView
+import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.Companion.onToolBarView
+import org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction.Companion.onToolProperties
+import org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.Companion.onTopBarView
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule
 import org.catrobat.paintroid.tools.FontType
 import org.catrobat.paintroid.tools.ToolReference
@@ -93,7 +93,7 @@ class TextToolIntegrationTest {
     private var boldToggleButton: MaterialButton? = null
     private var textSize: EditText? = null
     private var layerModel: LayerContracts.Model? = null
-    private var activity: MainActivity? = null
+    private lateinit var activity: MainActivity
     private var toolReference: ToolReference? = null
 
     private val surfaceBitmapHeight = layerModel?.height
@@ -105,7 +105,7 @@ class TextToolIntegrationTest {
     fun setUp() {
         activity = launchActivityRule.activity
         activityHelper = MainActivityHelper(activity)
-        layerModel = activity?.layerModel
+        layerModel = activity.layerModel
         toolReference = activity?.toolReference
 
         onToolBarView().performSelectTool(ToolType.TEXT)
