@@ -111,7 +111,7 @@ class SaveCompressImageIntegrationTest {
         Espresso.onData(
             AllOf.allOf(
                 Matchers.`is`(Matchers.instanceOf<Any>(String::class.java)),
-                Matchers.`is`<String>("jpg")
+                Matchers.`is`("jpg")
             )
         ).inRoot(RootMatchers.isPlatformPopup()).perform(ViewActions.click())
         onView(ViewMatchers.withText(R.string.save_button_text)).perform(ViewActions.click())
@@ -129,7 +129,8 @@ class SaveCompressImageIntegrationTest {
         val testBitmap = getBitmapFromFile(testImageFile)
 
         Assert.assertThat(compressedBitmap?.bitmap?.width, Matchers.`is`(Matchers.lessThanOrEqualTo(testBitmap!!.width)))
-        Assert.assertThat(compressedBitmap?.bitmap?.height, Matchers.`is`(Matchers.lessThanOrEqualTo(testBitmap!!.height)))
+        Assert.assertThat(compressedBitmap?.bitmap?.height, Matchers.`is`(Matchers.lessThanOrEqualTo(
+            testBitmap.height)))
     }
 
     private fun createTestBitmap(): Bitmap {

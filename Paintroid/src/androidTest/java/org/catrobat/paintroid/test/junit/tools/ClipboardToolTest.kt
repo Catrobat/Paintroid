@@ -23,6 +23,7 @@ import android.graphics.PointF
 import android.os.Looper
 import android.util.DisplayMetrics
 import android.view.ViewConfiguration
+import android.view.ViewGroup
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.idling.CountingIdlingResource
 import androidx.test.platform.app.InstrumentationRegistry
@@ -73,6 +74,7 @@ class ClipboardToolTest {
     private var tool: ClipboardTool? = null
     private var idlingResource: CountingIdlingResource? = null
 
+    private val viewMock = Mockito.mock(ViewGroup::class.java)
     @Rule
     @JvmField
     var launchActivityRule = ActivityTestRule(MainActivity::class.java)
@@ -100,6 +102,8 @@ class ClipboardToolTest {
             commandManager!!,
             0
         )
+        Mockito.`when`(toolOptionsViewController.toolSpecificOptionsLayout).thenReturn(viewMock)
+        Mockito.`when`(toolOptionsViewController.toolSpecificOptionsLayout).thenReturn(viewMock)
     }
 
     @After

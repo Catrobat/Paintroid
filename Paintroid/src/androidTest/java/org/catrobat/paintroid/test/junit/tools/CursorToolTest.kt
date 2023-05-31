@@ -21,6 +21,7 @@ package org.catrobat.paintroid.test.junit.tools
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PointF
+import android.view.View
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.idling.CountingIdlingResource
 import androidx.test.rule.ActivityTestRule
@@ -100,6 +101,11 @@ class CursorToolTest {
 
     @Test
     fun testShouldActivateCursorOnTapEvent() {
+        val viewMock = Mockito.mock(View::class.java)
+        Mockito.`when`(viewMock.visibility).thenReturn(View.VISIBLE)
+        Mockito.`when`(brushToolOptionsView!!.getTopToolOptions()).thenReturn(viewMock)
+        Mockito.`when`(brushToolOptionsView.getBottomToolOptions()).thenReturn(viewMock)
+
         val point = PointF(5f, 5f)
         Mockito.`when`(workspace!!.contains(any<PointF>())).thenReturn(true)
         Assert.assertTrue(toolToTest!!.handleDown(point))
@@ -110,6 +116,10 @@ class CursorToolTest {
 
     @Test
     fun testShouldActivateCursorOnTapEventOutsideDrawingSurface() {
+        val viewMock = Mockito.mock(View::class.java)
+        Mockito.`when`(viewMock.visibility).thenReturn(View.VISIBLE)
+        Mockito.`when`(brushToolOptionsView!!.getTopToolOptions()).thenReturn(viewMock)
+        Mockito.`when`(brushToolOptionsView.getBottomToolOptions()).thenReturn(viewMock)
         Mockito.`when`(workspace!!.contains(toolToTest!!.toolPosition)).thenReturn(true)
         val point = PointF(-5f, -5f)
         Assert.assertTrue(toolToTest!!.handleDown(point))
@@ -120,6 +130,11 @@ class CursorToolTest {
 
     @Test
     fun testShouldNotActivateCursorOnTapEvent() {
+        val viewMock = Mockito.mock(View::class.java)
+        Mockito.`when`(viewMock.visibility).thenReturn(View.VISIBLE)
+        Mockito.`when`(brushToolOptionsView!!.getTopToolOptions()).thenReturn(viewMock)
+        Mockito.`when`(brushToolOptionsView.getBottomToolOptions()).thenReturn(viewMock)
+
         val pointDown = PointF(0f, 0f)
         val pointUp = PointF(pointDown.x + MOVE_TOLERANCE + 1, pointDown.y + MOVE_TOLERANCE + 1)
 
@@ -153,6 +168,11 @@ class CursorToolTest {
 
     @Test
     fun testShouldMovePathOnUpEvent() {
+        val viewMock = Mockito.mock(View::class.java)
+        Mockito.`when`(viewMock.visibility).thenReturn(View.VISIBLE)
+        Mockito.`when`(brushToolOptionsView!!.getTopToolOptions()).thenReturn(viewMock)
+        Mockito.`when`(brushToolOptionsView.getBottomToolOptions()).thenReturn(viewMock)
+
         Mockito.`when`(workspace!!.surfaceHeight).thenReturn(1920)
         Mockito.`when`(workspace.surfaceWidth).thenReturn(1080)
         Mockito.`when`(workspace.getSurfacePointFromCanvasPoint(any<PointF>())).thenAnswer { invocation -> copyPointF(invocation.getArgument<Any>(0) as PointF) }
@@ -199,6 +219,11 @@ class CursorToolTest {
 
     @Test
     fun testShouldCheckIfColorChangesIfToolIsActive() {
+        val viewMock = Mockito.mock(View::class.java)
+        Mockito.`when`(viewMock.visibility).thenReturn(View.VISIBLE)
+        Mockito.`when`(brushToolOptionsView!!.getTopToolOptions()).thenReturn(viewMock)
+        Mockito.`when`(brushToolOptionsView.getBottomToolOptions()).thenReturn(viewMock)
+
         Mockito.`when`(workspace!!.contains(toolToTest!!.toolPosition)).thenReturn(true)
         Mockito.`when`(toolPaint!!.color).thenReturn(Color.RED)
         Assert.assertFalse(toolToTest!!.toolInDrawMode)

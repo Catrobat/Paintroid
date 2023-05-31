@@ -85,14 +85,14 @@ class FillToolIntegrationTest {
 
     @Test
     fun testFloodFillIfImageLoaded() {
-        mainActivity!!.model.savedPictureUri = Uri.fromFile(File("dummy"))
+        mainActivity.model.savedPictureUri = Uri.fromFile(File("dummy"))
         onToolProperties()
                 .checkMatchesColor(Color.BLACK)
         onDrawingSurfaceView()
                 .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
         onDrawingSurfaceView()
                 .checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
-        mainActivity!!.model.savedPictureUri = null
+        mainActivity.model.savedPictureUri = null
     }
 
     @Test
@@ -151,7 +151,9 @@ class FillToolIntegrationTest {
         val colorToleranceInput = Espresso.onView(withId(R.id.pocketpaint_fill_tool_dialog_color_tolerance_input))
         val colorToleranceSeekBar = Espresso.onView(withId(R.id.pocketpaint_color_tolerance_seek_bar))
         val testToleranceText = "100"
-        colorToleranceInput.check(ViewAssertions.matches(ViewMatchers.withText(Integer.toString(DEFAULT_TOLERANCE_IN_PERCENT))))
+        colorToleranceInput.check(ViewAssertions.matches(ViewMatchers.withText(
+            DEFAULT_TOLERANCE_IN_PERCENT.toString()
+        )))
         colorToleranceInput.perform(ViewActions.replaceText(testToleranceText), ViewActions.closeSoftKeyboard())
         colorToleranceInput.check(ViewAssertions.matches(ViewMatchers.withText(testToleranceText)))
         colorToleranceSeekBar.check(ViewAssertions.matches(UiMatcher.withProgress(testToleranceText.toInt())))
@@ -180,7 +182,9 @@ class FillToolIntegrationTest {
                 .performSelectTool(ToolType.BRUSH)
         onToolBarView()
                 .performSelectTool(ToolType.FILL)
-        colorToleranceInput.check(ViewAssertions.matches(ViewMatchers.withText(Integer.toString(DEFAULT_TOLERANCE_IN_PERCENT))))
+        colorToleranceInput.check(ViewAssertions.matches(ViewMatchers.withText(
+            DEFAULT_TOLERANCE_IN_PERCENT.toString()
+        )))
         colorToleranceSeekBar.check(ViewAssertions.matches(UiMatcher.withProgress(DEFAULT_TOLERANCE_IN_PERCENT)))
     }
 

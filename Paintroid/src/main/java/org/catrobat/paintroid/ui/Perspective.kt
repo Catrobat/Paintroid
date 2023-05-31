@@ -104,7 +104,7 @@ open class Perspective(private var bitmapWidth: Int, private var bitmapHeight: I
             surfaceWidth = right
             surfaceCenterX = exactCenterX()
             surfaceHeight = bottom
-            surfaceCenterY = exactCenterY()
+            surfaceCenterY = getExactCenterYIgnoreWindowResize(surfaceFrame.exactCenterY())
         }
     }
 
@@ -210,5 +210,14 @@ open class Perspective(private var bitmapWidth: Int, private var bitmapHeight: I
     fun applyToCanvas(canvas: Canvas) {
         canvas.scale(surfaceScale, surfaceScale, surfaceCenterX, surfaceCenterY)
         canvas.translate(surfaceTranslationX, surfaceTranslationY)
+    }
+
+    private fun getExactCenterYIgnoreWindowResize(actualExactCenterY: Float): Float {
+        var exactCenterYIgnoreWindowResize = if (surfaceCenterY != 0.0f && surfaceCenterY > actualExactCenterY) {
+            surfaceCenterY
+        } else {
+            actualExactCenterY
+        }
+        return exactCenterYIgnoreWindowResize
     }
 }

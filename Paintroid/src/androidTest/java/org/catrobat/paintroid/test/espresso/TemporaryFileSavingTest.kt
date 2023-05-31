@@ -86,6 +86,16 @@ class TemporaryFileSavingTest {
     }
 
     @Test
+    fun testNoWaitingTime() {
+        onDrawingSurfaceView()
+                .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
+        launchActivityRule.finishActivity()
+        launchActivityRule.launchActivity(intent)
+        onDrawingSurfaceView()
+                .checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
+    }
+
+    @Test
     fun testTooShortWaitingTime() {
         onDrawingSurfaceView()
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
@@ -93,7 +103,7 @@ class TemporaryFileSavingTest {
         launchActivityRule.finishActivity()
         launchActivityRule.launchActivity(intent)
         onDrawingSurfaceView()
-            .checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE)
+            .checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
     }
 
     @Test
@@ -117,7 +127,7 @@ class TemporaryFileSavingTest {
         onDrawingSurfaceView()
             .checkPixelColor(Color.BLACK, BitmapLocationProvider.HALFWAY_BOTTOM_RIGHT)
         onDrawingSurfaceView()
-            .checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.HALFWAY_BOTTOM_LEFT)
+            .checkPixelColor(Color.BLACK, BitmapLocationProvider.HALFWAY_BOTTOM_LEFT)
     }
 
     @Test

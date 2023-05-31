@@ -55,7 +55,6 @@ import org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule
 import org.catrobat.paintroid.tools.ToolReference
 import org.hamcrest.Matchers
-import org.hamcrest.core.AllOf
 import org.hamcrest.core.AllOf.allOf
 import org.junit.Assert
 import org.junit.Before
@@ -512,21 +511,21 @@ class ColorDialogIntegrationTest {
         Espresso.onView(withId(R.id.color_picker_rgb_red_value)).check(
             ViewAssertions.matches(
                 withText(
-                    Integer.toString(Color.red(currentSelectedColor))
+                    Color.red(currentSelectedColor).toString()
                 )
             )
         )
         Espresso.onView(withId(R.id.color_picker_rgb_green_value)).check(
             ViewAssertions.matches(
                 withText(
-                    Integer.toString(Color.green(currentSelectedColor))
+                    Color.green(currentSelectedColor).toString()
                 )
             )
         )
         Espresso.onView(withId(R.id.color_picker_rgb_blue_value)).check(
             ViewAssertions.matches(
                 withText(
-                    Integer.toString(Color.blue(currentSelectedColor))
+                    Color.blue(currentSelectedColor).toString()
                 )
             )
         )
@@ -534,7 +533,7 @@ class ColorDialogIntegrationTest {
         Espresso.onView(withId(R.id.color_picker_rgb_alpha_value)).check(
             ViewAssertions.matches(
                 withText(
-                    Integer.toString((Color.alpha(currentSelectedColor) / 2.55f).toInt())
+                    (Color.alpha(currentSelectedColor) / 2.55f).toInt().toString()
                 )
             )
         )
@@ -984,28 +983,28 @@ class ColorDialogIntegrationTest {
         Espresso.onView(withId(R.id.color_picker_rgb_red_value)).check(
             ViewAssertions.matches(
                 withText(
-                    Integer.toString(Color.red(Color.TRANSPARENT))
+                    Color.red(Color.TRANSPARENT).toString()
                 )
             )
         )
         Espresso.onView(withId(R.id.color_picker_rgb_green_value)).check(
             ViewAssertions.matches(
                 withText(
-                    Integer.toString(Color.green(Color.TRANSPARENT))
+                    Color.green(Color.TRANSPARENT).toString()
                 )
             )
         )
         Espresso.onView(withId(R.id.color_picker_rgb_blue_value)).check(
             ViewAssertions.matches(
                 withText(
-                    Integer.toString(Color.blue(Color.TRANSPARENT))
+                    Color.blue(Color.TRANSPARENT).toString()
                 )
             )
         )
         Espresso.onView(withId(R.id.color_picker_rgb_alpha_value)).check(
             ViewAssertions.matches(
                 withText(
-                    Integer.toString((Color.alpha(Color.TRANSPARENT) / 2.55f).toInt())
+                    (Color.alpha(Color.TRANSPARENT) / 2.55f).toInt().toString()
                 )
             )
         )
@@ -1355,7 +1354,7 @@ class ColorDialogIntegrationTest {
         ColorPickerViewInteraction.onColorPickerView()
             .checkHistoryColor(3, presetColors.getColor(0, Color.BLACK))
         presetColors.recycle()
-        if (!deletionFileList.isEmpty() && deletionFileList[0] != null && deletionFileList[0]!!
+        if (deletionFileList.isNotEmpty() && deletionFileList[0] != null && deletionFileList[0]!!
                 .exists()
         ) {
             Assert.assertTrue(deletionFileList[0]!!.delete())
@@ -1370,13 +1369,13 @@ class ColorDialogIntegrationTest {
         Espresso.onView(withId(R.id.pocketpaint_save_dialog_spinner))
             .perform(ViewActions.click())
         Espresso.onData(
-            AllOf.allOf<String>(
+            allOf(
                 Matchers.`is`(
                     Matchers.instanceOf<Any>(
                         String::class.java
                     )
                 ),
-                Matchers.`is`<String>(CATROBAT_IMAGE_ENDING)
+                Matchers.`is`(CATROBAT_IMAGE_ENDING)
             )
         ).inRoot(RootMatchers.isPlatformPopup()).perform(ViewActions.click())
         Espresso.onView(withId(R.id.pocketpaint_image_name_save_text))

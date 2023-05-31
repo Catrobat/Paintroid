@@ -90,7 +90,7 @@ class ShapeToolOrientationIntegrationTest {
         onToolBarView().performCloseToolOptionsView()
         onDrawingSurfaceView()
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION))
-        val expectedBitmap = workspace?.bitmapOfCurrentLayer
+        val expectedBitmap = workspace.bitmapOfCurrentLayer
         onTopBarView().performUndo()
         activityTestRule.activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
         Espresso.onView(ViewMatchers.withId(shapeId))
@@ -98,7 +98,7 @@ class ShapeToolOrientationIntegrationTest {
         onToolBarView().performCloseToolOptionsView()
         onDrawingSurfaceView()
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION))
-        expectedBitmap?.sameAs(workspace?.bitmapOfCurrentLayer)?.let { Assert.assertTrue(it) }
+        expectedBitmap?.sameAs(workspace.bitmapOfCurrentLayer)?.let { Assert.assertTrue(it) }
     }
 
     @Test
@@ -114,7 +114,7 @@ class ShapeToolOrientationIntegrationTest {
             .performCloseToolOptionsView()
         onDrawingSurfaceView()
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION))
-        val expectedBitmap = workspace?.bitmapOfCurrentLayer
+        val expectedBitmap = workspace.bitmapOfCurrentLayer
         onTopBarView()
             .performUndo()
         activityTestRule.activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
@@ -127,7 +127,7 @@ class ShapeToolOrientationIntegrationTest {
         onDrawingSurfaceView()
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION))
         if (expectedBitmap != null) {
-            Assert.assertTrue(expectedBitmap.sameAs(workspace?.bitmapOfCurrentLayer))
+            Assert.assertTrue(expectedBitmap.sameAs(workspace.bitmapOfCurrentLayer))
         }
     }
 }

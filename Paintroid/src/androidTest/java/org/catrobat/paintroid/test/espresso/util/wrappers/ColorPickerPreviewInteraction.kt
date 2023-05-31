@@ -31,14 +31,14 @@ import org.catrobat.paintroid.test.espresso.util.UiMatcher
 class ColorPickerPreviewInteraction private constructor() :
         CustomViewInteraction(Espresso.onView(withId(R.id.previewSurface))) {
     fun onPositiveButton(): ViewInteraction {
-        return Espresso.onView(ViewMatchers.withId(android.R.id.button1)) // to avoid following exception when running on emulator:
+        return Espresso.onView(withId(android.R.id.button1)) // to avoid following exception when running on emulator:
                 // Caused by: java.lang.SecurityException:
                 // Injecting to another application requires INJECT_EVENTS permission
                 .perform(ViewActions.closeSoftKeyboard())
     }
 
     fun onNegativeButton(): ViewInteraction {
-        return Espresso.onView(ViewMatchers.withId(android.R.id.button2)) // to avoid following exception when running on emulator:
+        return Espresso.onView(withId(android.R.id.button2)) // to avoid following exception when running on emulator:
                 // Caused by: java.lang.SecurityException:
                 // Injecting to another application requires INJECT_EVENTS permission
                 .perform(ViewActions.closeSoftKeyboard())
@@ -78,9 +78,9 @@ class ColorPickerPreviewInteraction private constructor() :
         check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
         Espresso.onView(withId(R.id.backAction))
                 .perform(ViewActions.click())
-        Espresso.onView(ViewMatchers.withId(android.R.id.button1))
+        Espresso.onView(withId(android.R.id.button1))
                 .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-        Espresso.onView(ViewMatchers.withId(android.R.id.button2))
+        Espresso.onView(withId(android.R.id.button2))
                 .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
         Espresso.onView(withText(R.string.color_picker_save_dialog_title))
                 .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))

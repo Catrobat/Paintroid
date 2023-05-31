@@ -60,7 +60,7 @@ class OraFileIntentTest {
     @After
     fun tearDown() {
         for (file in deletionFileList!!) {
-            if (file != null && file.exists()) {
+            if (file.exists()) {
                 Assert.assertTrue(file.delete())
             }
         }
@@ -72,7 +72,7 @@ class OraFileIntentTest {
         val receivedUri = createTestImageFile()
         var receivedBitmap: Bitmap? = null
         try {
-            receivedBitmap = getBitmapFromUri(resolver!!, receivedUri!!, launchActivityRule.activity.baseContext)
+            receivedBitmap = getBitmapFromUri(resolver!!, receivedUri, launchActivityRule.activity.baseContext)
         } catch (e: Exception) {
             Log.e("Can't Read", "Can't get Bitmap from File")
         }
@@ -108,7 +108,7 @@ class OraFileIntentTest {
         Assert.assertEquals(receivedBitmap.height.toLong(), mainActivityIntentBitmap.height.toLong())
     }
 
-    private fun createTestImageFile(): Uri? {
+    private fun createTestImageFile(): Uri {
         val bitmap = Bitmap.createBitmap(400, 400, Bitmap.Config.ARGB_8888)
         val contentValues = ContentValues()
         contentValues.put(MediaStore.Images.Media.DISPLAY_NAME, "testfile.ora")
@@ -118,7 +118,7 @@ class OraFileIntentTest {
         }
         val imageUri = resolver!!.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
         try {
-            val fos = resolver!!.openOutputStream(Objects.requireNonNull(imageUri)!!)
+            val fos = Objects.requireNonNull(imageUri)?.let { resolver!!.openOutputStream(it) }
             Assert.assertTrue(bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos))
             assert(fos != null)
             fos!!.close()

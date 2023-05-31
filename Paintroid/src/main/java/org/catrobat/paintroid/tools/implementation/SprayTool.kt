@@ -23,6 +23,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.PointF
 import android.os.Bundle
+import android.view.View
 import androidx.annotation.VisibleForTesting
 import androidx.test.espresso.idling.CountingIdlingResource
 import kotlinx.coroutines.CoroutineScope
@@ -49,7 +50,7 @@ private const val STROKE_WIDTH = 5f
 private const val CONSTANT_1 = 0.5f
 
 class SprayTool(
-    var stampToolOptionsView: SprayToolOptionsView,
+    var sprayToolOptionsView: SprayToolOptionsView,
     override var contextCallback: ContextCallback,
     toolOptionsViewController: ToolOptionsViewController,
     toolPaint: ToolPaint,
@@ -69,6 +70,15 @@ class SprayTool(
     var sprayActive = false
 
     override var toolType: ToolType = ToolType.SPRAY
+    override fun handleUpAnimations(coordinate: PointF?) {
+        showToolOptions()
+        toolOptionsViewController.animateBottomAndTopNavigation(false)
+    }
+
+    override fun handleDownAnimations(coordinate: PointF?) {
+        hideToolOptions()
+    }
+
     private var currentCoordinate: PointF? = null
     private var sprayRadius = DEFAULT_RADIUS
     private var previewBitmap: Bitmap =
@@ -76,15 +86,14 @@ class SprayTool(
     private val previewCanvas = Canvas(previewBitmap)
 
     init {
-        toolPaint.strokeWidth = STROKE_WIDTH
-
-        stampToolOptionsView.setCallback(object : SprayToolOptionsView.Callback {
+        sprayToolOptionsView.setCallback(object : SprayToolOptionsView.Callback {
             override fun radiusChanged(radius: Int) {
                 sprayRadius = DEFAULT_RADIUS + radius * 2
             }
         })
 
-        stampToolOptionsView.setCurrentPaint(toolPaint.paint)
+        sprayToolOptionsView.setCurrentPaint(toolPaint.paint)
+        toolPaint.strokeWidth = STROKE_WIDTH
         toolOptionsViewController.showDelayed()
     }
 
@@ -97,15 +106,25 @@ class SprayTool(
     }
 
     private fun hideToolOptions() {
-        toolOptionsViewController.slideUp(
-            toolOptionsViewController.toolSpecificOptionsLayout, true
-        )
+        if (toolOptionsViewController.isVisible &&
+            toolOptionsViewController.toolSpecificOptionsLayout.visibility == View.VISIBLE) {
+            toolOptionsViewController.slideUp(
+                toolOptionsViewController.toolSpecificOptionsLayout,
+                willHide = true,
+                showOptionsView = false
+            )
+        }
     }
 
     private fun showToolOptions() {
-        toolOptionsViewController.slideDown(
-            toolOptionsViewController.toolSpecificOptionsLayout, false
-        )
+        if (!toolOptionsViewController.isVisible &&
+            toolOptionsViewController.toolSpecificOptionsLayout.visibility == View.INVISIBLE) {
+            toolOptionsViewController.slideDown(
+                toolOptionsViewController.toolSpecificOptionsLayout,
+                willHide = false,
+                showOptionsView = true
+            )
+        }
     }
 
     override fun handleUp(coordinate: PointF?): Boolean {
@@ -121,6 +140,8 @@ class SprayTool(
     override fun toolPositionCoordinates(coordinate: PointF): PointF = coordinate
 
     override fun handleMove(coordinate: PointF?): Boolean {
+        hideToolOptions()
+        super.handleMove(coordinate)
         currentCoordinate = coordinate
         return true
     }
@@ -129,7 +150,6 @@ class SprayTool(
         if (sprayActive || coordinate == null) {
             return false
         }
-        hideToolOptions()
         super.handleDown(coordinate)
         sprayActive = true
         currentCoordinate = coordinate
@@ -147,7 +167,7 @@ class SprayTool(
         super.onRestoreInstanceState(bundle)
         bundle?.getInt(BUNDLE_RADIUS)?.let { radius ->
             sprayRadius = radius
-            stampToolOptionsView.setRadius(radius)
+            sprayToolOptionsView.setRadius(radius)
         }
     }
 
@@ -199,5 +219,9 @@ class SprayTool(
         point.x = radius * cos(theta).toFloat() + (currentCoordinate?.x ?: 0f)
         point.y = radius * sin(theta).toFloat() + (currentCoordinate?.y ?: 0f)
         return point
+    }
+
+    fun resetRadiusToStrokeWidth() {
+        toolPaint.strokeWidth = sprayToolOptionsView.getRadius()
     }
 }

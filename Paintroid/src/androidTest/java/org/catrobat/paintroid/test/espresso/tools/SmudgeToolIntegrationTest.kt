@@ -68,7 +68,7 @@ class SmudgeToolIntegrationTest {
         val pressureInput = onView(withId(R.id.pocketpaint_smudge_tool_dialog_pressure_input))
         val pressureSeekBar = onView(withId(R.id.pocketpaint_pressure_seek_bar))
         val testPressureText = "100"
-        pressureInput.check(matches(withText(Integer.toString(DEFAULT_PRESSURE_IN_PERCENT))))
+        pressureInput.check(matches(withText(DEFAULT_PRESSURE_IN_PERCENT.toString())))
         pressureInput.perform(replaceText(testPressureText), ViewActions.closeSoftKeyboard())
         pressureInput.check(matches(withText(testPressureText)))
         pressureSeekBar.check(matches(withProgress(testPressureText.toInt())))
@@ -78,7 +78,7 @@ class SmudgeToolIntegrationTest {
         val dragInput = onView(withId(R.id.pocketpaint_smudge_tool_dialog_drag_input))
         val dragSeekBar = onView(withId(R.id.pocketpaint_drag_seek_bar))
         val testDragText = "100"
-        dragInput.check(matches(withText(Integer.toString(DEFAULT_DRAG_IN_PERCENT))))
+        dragInput.check(matches(withText(DEFAULT_DRAG_IN_PERCENT.toString())))
         dragInput.perform(replaceText(testDragText), ViewActions.closeSoftKeyboard())
         dragInput.check(matches(withText(testDragText)))
         dragSeekBar.check(matches(withProgress(testDragText.toInt())))

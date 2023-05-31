@@ -142,6 +142,12 @@ class PerspectiveTests {
         perspective?.scale?.let { Assert.assertEquals(maxScale, it, Float.MIN_VALUE) }
     }
 
+    @Test
+    fun testSurfaceCenterYNotChangedWhenSurfaceFrameCenterYIsLower() {
+        perspective?.setSurfaceFrame(Rect(0, 0, SURFACE_WIDTH, SURFACE_HEIGHT - 20))
+        Assert.assertEquals(50.0f, perspective?.surfaceCenterY)
+    }
+
     companion object {
         private const val SURFACE_WIDTH = 10
         private const val SURFACE_HEIGHT = 100

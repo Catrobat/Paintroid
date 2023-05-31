@@ -33,6 +33,10 @@ interface TextToolOptionsView {
 
     fun setCallback(listener: Callback)
 
+    fun hideKeyboard()
+
+    fun showKeyboard()
+
     fun getTopLayout(): View
 
     fun getBottomLayout(): View

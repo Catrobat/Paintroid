@@ -101,7 +101,7 @@ class CatrobatImageIOIntegrationTest {
         Espresso.onData(
             AllOf.allOf(
                 Matchers.`is`(Matchers.instanceOf<Any>(String::class.java)),
-                Matchers.`is`<String>(FileIO.FileType.CATROBAT.value)
+                Matchers.`is`(FileIO.FileType.CATROBAT.value)
             )
         ).inRoot(RootMatchers.isPlatformPopup()).perform(ViewActions.click())
         onView(withId(R.id.pocketpaint_image_name_save_text))

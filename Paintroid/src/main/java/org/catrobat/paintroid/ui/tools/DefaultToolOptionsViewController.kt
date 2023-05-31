@@ -140,14 +140,14 @@ class DefaultToolOptionsViewController(
         hideButtonsEnabled = false
     }
 
-    override fun slideUp(view: View, willHide: Boolean) {
+    override fun slideUp(view: View, willHide: Boolean, showOptionsView: Boolean) {
         if (!enabled || !hideButtonsEnabled) {
             return
         }
 
         if (!willHide) {
             view.visibility = View.VISIBLE
-            toolOptionsShown = true
+            toolOptionsShown = showOptionsView
         }
 
         val animation: TranslateAnimation = if (willHide) {
@@ -170,14 +170,14 @@ class DefaultToolOptionsViewController(
         view.startAnimation(animation)
         if (willHide) {
             view.visibility = View.INVISIBLE
-            toolOptionsShown = false
+            toolOptionsShown = showOptionsView
             notifyHide()
         } else {
             notifyShow()
         }
     }
 
-    override fun slideDown(view: View, willHide: Boolean) {
+    override fun slideDown(view: View, willHide: Boolean, showOptionsView: Boolean) {
         if (!enabled || !hideButtonsEnabled) {
             return
         }
@@ -202,26 +202,34 @@ class DefaultToolOptionsViewController(
         view.startAnimation(animation)
         if (willHide) {
             view.visibility = View.INVISIBLE
-            toolOptionsShown = false
+            toolOptionsShown = showOptionsView
             notifyHide()
         } else {
             view.visibility = View.VISIBLE
-            toolOptionsShown = true
+            toolOptionsShown = showOptionsView
             notifyShow()
         }
     }
 
     override fun animateBottomAndTopNavigation(hide: Boolean) {
-        var mainActivityPresenter = (activity as MainActivity).presenter as MainActivityPresenter
+        val mainActivityPresenter = (activity as MainActivity).presenter as MainActivityPresenter
         mainActivityPresenter.hideBottomBarViewHolder()
         when (hide) {
             true -> {
-                slideUp(topBar, true)
-                slideDown(bottomNavigation, true)
+                if (topBar.visibility == View.VISIBLE) {
+                    slideUp(topBar, willHide = true, showOptionsView = toolOptionsShown)
+                }
+                if (bottomNavigation.visibility == View.VISIBLE) {
+                    slideDown(bottomNavigation, willHide = true, showOptionsView = toolOptionsShown)
+                }
             }
             false -> {
-                slideUp(bottomNavigation, false)
-                slideDown(topBar, false)
+                if (topBar.visibility == View.INVISIBLE) {
+                    slideDown(topBar, willHide = false, showOptionsView = toolOptionsShown)
+                }
+                if (bottomNavigation.visibility == View.INVISIBLE) {
+                    slideUp(bottomNavigation, willHide = false, showOptionsView = toolOptionsShown)
+                }
             }
         }
     }

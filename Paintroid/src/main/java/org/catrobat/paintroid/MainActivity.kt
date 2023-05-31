@@ -271,7 +271,8 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
     private fun validateIntent(receivedIntent: Intent): Boolean {
         val receivedAction = receivedIntent.action
         val receivedType = receivedIntent.type
-        return receivedAction != null && receivedType != null && (receivedAction == Intent.ACTION_SEND || receivedAction == Intent.ACTION_EDIT || receivedAction == Intent.ACTION_VIEW) && (
+
+        return receivedAction == Intent.ACTION_EDIT || receivedAction != null && receivedType != null && (receivedAction == Intent.ACTION_SEND || receivedAction == Intent.ACTION_VIEW) && (
             receivedType.startsWith(
                 "image/"
             ) || receivedType.startsWith("application/")
@@ -355,6 +356,11 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
+        if (!hasFocus) {
+            presenterMain.saveNewTemporaryImage()
+            minuteTemporaryCopiesCounter = 0
+            userInteraction = false
+        }
         this.window.decorView.apply {
             systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE or View.SYSTEM_UI_FLAG_FULLSCREEN
         }
@@ -453,14 +459,13 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         )
         perspective = Perspective(layerModel.width, layerModel.height)
         val listener = DefaultWorkspace.Listener { drawingSurface.refreshDrawingSurface() }
-        model = MainActivityModel()
         workspace = DefaultWorkspace(
             layerModel,
             perspective,
             listener,
         )
-        commandSerializer = CommandSerializer(this, commandManager, model)
         model = MainActivityModel()
+        commandSerializer = CommandSerializer(this, commandManager, model)
         zoomWindowController = DefaultZoomWindowController(
             this,
             layerModel,
@@ -468,7 +473,6 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             toolReference,
             UserPreferences(getPreferences(MODE_PRIVATE))
         )
-        model = MainActivityModel()
         defaultToolController = DefaultToolController(
             toolReference,
             toolOptionsViewController,
@@ -634,6 +638,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
 
     override fun onDestroy() {
         commandManager.removeCommandListener(this)
+        presenterMain.saveNewTemporaryImage()
         if (finishing) {
             commandManager.shutdown()
             appFragment.currentTool = null

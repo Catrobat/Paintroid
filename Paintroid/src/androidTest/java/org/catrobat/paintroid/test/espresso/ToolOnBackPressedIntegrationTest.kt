@@ -70,7 +70,7 @@ class ToolOnBackPressedIntegrationTest {
     var screenshotOnFailRule = ScreenshotOnFailRule()
     private var saveFile: File? = null
     private var toolReference: ToolReference? = null
-    val defaultPictureName = "catroidTemp"
+    private val defaultPictureName = "catroidTemp"
     @Before
     fun setUp() {
         val activity = launchActivityRule.activity
@@ -131,7 +131,7 @@ class ToolOnBackPressedIntegrationTest {
         Espresso.onView(withId(R.id.pocketpaint_save_dialog_spinner))
                 .perform(ViewActions.click())
         Espresso.onData(AllOf.allOf(Matchers.`is`(Matchers.instanceOf<Any>(String::class.java)),
-                Matchers.`is`<String>("png"))).inRoot(RootMatchers.isPlatformPopup()).perform(ViewActions.click())
+                Matchers.`is`("png"))).inRoot(RootMatchers.isPlatformPopup()).perform(ViewActions.click())
         Espresso.onView(withId(R.id.pocketpaint_image_name_save_text))
                 .perform(ViewActions.replaceText(defaultPictureName))
         Espresso.onView(withText(R.string.save_button_text))
@@ -156,7 +156,7 @@ class ToolOnBackPressedIntegrationTest {
         Espresso.onView(withId(R.id.pocketpaint_save_dialog_spinner))
                 .perform(ViewActions.click())
         Espresso.onData(AllOf.allOf(Matchers.`is`(Matchers.instanceOf<Any>(String::class.java)),
-                Matchers.`is`<String>("png"))).inRoot(RootMatchers.isPlatformPopup()).perform(ViewActions.click())
+                Matchers.`is`("png"))).inRoot(RootMatchers.isPlatformPopup()).perform(ViewActions.click())
         Espresso.onView(withId(R.id.pocketpaint_image_name_save_text))
                 .perform(ViewActions.replaceText(defaultPictureName))
         Espresso.onView(withText(R.string.save_button_text))

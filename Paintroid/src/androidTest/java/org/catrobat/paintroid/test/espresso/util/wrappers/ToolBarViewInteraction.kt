@@ -32,7 +32,7 @@ import org.hamcrest.Matchers
 
 class ToolBarViewInteraction :
     CustomViewInteraction(Espresso.onView(withId(R.id.pocketpaint_toolbar))) {
-    fun onSelectedToolButton(): ViewInteraction = Espresso.onView(ViewMatchers.withId(currentToolType.toolButtonID))
+    fun onSelectedToolButton(): ViewInteraction = Espresso.onView(withId(currentToolType.toolButtonID))
 
     fun onToolOptionsView(): ViewInteraction = Espresso.onView(withId(R.id.pocketpaint_layout_tool_specific_options))
 
@@ -54,7 +54,7 @@ class ToolBarViewInteraction :
         if (currentToolType !== toolType) {
             onBottomNavigationView()
                 .onToolsClicked()
-            Espresso.onView(ViewMatchers.withId(toolType.toolButtonID))
+            Espresso.onView(withId(toolType.toolButtonID))
                 .perform(ViewActions.click())
         }
         return this
