@@ -42,6 +42,9 @@
         </provider>
 
         <activity
+            android:name=".LandingPageActivity"
+            android:theme="@style/PocketPaintTheme"/>
+        <activity
             android:exported="false"
             android:name=".WelcomeActivity"
             android:screenOrientation="portrait"
