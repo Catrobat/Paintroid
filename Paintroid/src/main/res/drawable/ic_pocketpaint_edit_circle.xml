@@ -1,0 +1,44 @@
+<!--
+ *  Paintroid: An image manipulation application for Android.
+ *  Copyright (C) 2010-2022 The Catrobat Team
+ *  (<http://developer.catrobat.org/credits>)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="136dp"
+    android:height="136dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:pathData="M12,2C6.48,2 2,6.48 2,12c0,5.52 4.48,10 10,10c5.52,0 10,-4.48 10,-10C22,6.48 17.52,2 12,2zM12,20c-4.41,0 -8,-3.59 -8,-8c0,-0.292 0.018,-0.579 0.048,-0.863C4.48,7.131 7.882,4 12,4c3.578,0 6.615,2.363 7.635,5.61C19.871,10.365 20,11.168 20,12C20,16.41 16.41,20 12,20z"
+        android:strokeAlpha="0.9"
+        android:fillColor="#ffffff"
+        android:fillAlpha="0.9"/>
+    <path
+        android:pathData="M12,4.014C7.589,4.014 4.014,7.59 4.014,12S7.589,19.986 12,19.986c4.41,0 7.986,-3.576 7.986,-7.986S16.41,4.014 12,4.014zM9.341,16.561h-1.9v-1.9l5.604,-5.602l1.899,1.899L9.341,16.561zM16.411,9.488l-0.925,0.928l-1.901,-1.9l0.927,-0.928c0.2,-0.197 0.517,-0.197 0.715,0l1.185,1.186C16.609,8.972 16.609,9.291 16.411,9.488z"
+        android:strokeAlpha="0.9"
+        android:fillColor="#000000"
+        android:fillAlpha="0.27"/>
+    <path
+        android:pathData="M7.44,14.66l0,1.901l1.901,0l5.602,-5.603l-1.899,-1.9z"
+        android:strokeAlpha="0.9"
+        android:fillColor="#ffffff"
+        android:fillAlpha="0.9"/>
+    <path
+        android:pathData="M15.227,7.588c-0.198,-0.197 -0.515,-0.197 -0.715,0l-0.927,0.928l1.901,1.9l0.925,-0.927c0.198,-0.197 0.198,-0.517 0,-0.715L15.227,7.588z"
+        android:strokeAlpha="0.9"
+        android:fillColor="#ffffff"
+        android:fillAlpha="0.9"/>
+</vector>
