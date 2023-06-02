@@ -141,8 +141,11 @@ class DefaultCommandManager(
                     layerModel.addLayerAt(0, this)
                 }
             }
-            val commandToRestore = redoCommandList.pop()
-            undoCommandList.addFirst(commandToRestore)
+
+            if (isRedoAvailable) {
+                val commandToRestore = redoCommandList.pop()
+                undoCommandList.addFirst(commandToRestore)
+            }
 
             return
         }
@@ -303,26 +306,29 @@ class DefaultCommandManager(
     }
 
     override fun redoInConnectedLinesMode() {
-        val command = redoCommandList.pop()
-        if (command is ColorChangedCommand) {
-            val colorCommandList = removeColorCommands()
-            if (undoCommandList.isNotEmpty()) {
-                val firstNonColorCommand = undoCommandList.first
-                val color = command.color
+        if (isRedoAvailable) {
+            val command = redoCommandList.pop()
 
-                if (firstNonColorCommand is PathCommand) {
-                    firstNonColorCommand.paint.color = color
-                } else if (firstNonColorCommand is PointCommand) {
-                    firstNonColorCommand.paint.color = color
+            if (command is ColorChangedCommand) {
+                val colorCommandList = removeColorCommands()
+                if (undoCommandList.isNotEmpty()) {
+                    val firstNonColorCommand = undoCommandList.first
+                    val color = command.color
+
+                    if (firstNonColorCommand is PathCommand) {
+                        firstNonColorCommand.paint.color = color
+                    } else if (firstNonColorCommand is PointCommand) {
+                        firstNonColorCommand.paint.color = color
+                    }
+                    executeAllCommands()
                 }
-                executeAllCommands()
+                addAndExecuteCommands(colorCommandList)
             }
-            addAndExecuteCommands(colorCommandList)
-        }
-        undoCommandList.addFirst(command)
+            undoCommandList.addFirst(command)
 
-        executeCommand(command)
-        notifyCommandExecuted()
+            executeCommand(command)
+            notifyCommandExecuted()
+        }
     }
 
     override fun getCommandManagerModelForCatrobatImage(): CommandManagerModel? {
@@ -339,29 +345,37 @@ class DefaultCommandManager(
     }
 
     override fun adjustUndoListForClippingTool() {
-        if (undoCommandList.first.toString().split(".", "@").size < FIVE) {
-            return
-        }
-        val commandName = undoCommandList.first.toString().split(".", "@")[FIVE]
-        if (commandName == ClippingCommand::class.java.simpleName) {
-            val clippingCommand = undoCommandList.pop()
-            undoCommandList.pop()
-            undoCommandList.addFirst(clippingCommand)
+        if (isUndoAvailable) {
+            if (undoCommandList.first.toString().split(".", "@").size < FIVE) {
+                return
+            }
+            val commandName = undoCommandList.first.toString().split(".", "@")[FIVE]
+            if (commandName == ClippingCommand::class.java.simpleName) {
+                val clippingCommand = undoCommandList.pop()
+                undoCommandList.pop()
+                undoCommandList.addFirst(clippingCommand)
+            }
         }
     }
 
     override fun undoInClippingTool() {
-        val command = undoCommandList.pop()
-        handleUndo(command)
-        notifyCommandExecuted()
+        if (isUndoAvailable) {
+            val command = undoCommandList.pop()
+            handleUndo(command)
+            notifyCommandExecuted()
+        }
     }
 
     override fun popFirstCommandInUndo() {
-        undoCommandList.pop()
+        if (isUndoAvailable) {
+            undoCommandList.pop()
+        }
     }
 
     override fun popFirstCommandInRedo() {
-        redoCommandList.pop()
+        if (isRedoAvailable) {
+            redoCommandList.pop()
+        }
     }
 
     override fun setInitialStateCommand(command: Command) {
