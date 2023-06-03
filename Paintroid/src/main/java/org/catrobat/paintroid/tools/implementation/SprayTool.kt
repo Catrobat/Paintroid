@@ -51,13 +51,13 @@ private const val CONSTANT_1 = 0.5f
 
 class SprayTool(
     var sprayToolOptionsView: SprayToolOptionsView,
-    override var contextCallback: ContextCallback,
+    contextCallback: ContextCallback,
     toolOptionsViewController: ToolOptionsViewController,
     toolPaint: ToolPaint,
     workspace: Workspace,
     idlingResource: CountingIdlingResource,
     commandManager: CommandManager,
-    override var drawTime: Long
+    override var drawTime: Long,
 ) : BaseTool(contextCallback, toolOptionsViewController, toolPaint, workspace, idlingResource, commandManager) {
 
     @VisibleForTesting

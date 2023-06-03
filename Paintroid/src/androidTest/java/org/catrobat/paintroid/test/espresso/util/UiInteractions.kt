@@ -141,6 +141,7 @@ object UiInteractions {
                         (r.right + 50).toFloat(),
                         r.centerY().toFloat()
                     )
+                    else -> {}
                 }
                 null
             }, Press.FINGER, 0, 1)

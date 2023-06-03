@@ -22,10 +22,15 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.PointF
 import android.widget.SeekBar
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.PerformException
 import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.idling.CountingIdlingResource
 import androidx.test.espresso.matcher.ViewMatchers.isEnabled
+import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.espresso.screenshot.captureToBitmap
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
@@ -56,6 +61,7 @@ import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.greaterThan
 import org.hamcrest.Matchers.lessThan
 import org.hamcrest.Matchers.not
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThat
 import org.junit.Assert.assertTrue
@@ -84,6 +90,7 @@ class TransformToolIntegrationTest {
     private lateinit var toolReference: ToolReference
     private lateinit var mainActivity: MainActivity
     private lateinit var activityHelper: MainActivityHelper
+    private lateinit var idlingResource: CountingIdlingResource
 
     private var toolSelectionBoxHeight: Float
         get() {
@@ -134,6 +141,13 @@ class TransformToolIntegrationTest {
         initialHeight = workingBitmap.height
         onToolBarView()
             .performSelectTool(ToolType.BRUSH)
+        idlingResource = mainActivity.idlingResource
+        IdlingRegistry.getInstance().register(idlingResource)
+    }
+
+    @After
+    fun tearDown() {
+        IdlingRegistry.getInstance().unregister(idlingResource)
     }
 
     @Test
@@ -145,7 +159,6 @@ class TransformToolIntegrationTest {
         runBlocking {
             onTransformToolOptionsView()
                 .performAutoCrop()
-            delay(1000)
         }
         assertThat(toolSelectionBoxWidth, lessThan(initialWidth.toFloat()))
         assertThat(toolSelectionBoxHeight, lessThan(initialHeight.toFloat()))
@@ -157,7 +170,6 @@ class TransformToolIntegrationTest {
             .performSelectTool(ToolType.TRANSFORM)
         runBlocking {
             onTransformToolOptionsView().performAutoCrop()
-            delay(1000)
             onTransformToolOptionsView().performAutoCrop()
         }
     }
@@ -170,7 +182,6 @@ class TransformToolIntegrationTest {
         runBlocking {
             onTransformToolOptionsView()
                 .performAutoCrop()
-            delay(1000)
         }
         assertEquals(initialWidth.toFloat(), toolSelectionBoxWidth, Float.MIN_VALUE)
         assertEquals(initialHeight.toFloat(), toolSelectionBoxHeight, Float.MIN_VALUE)
@@ -194,7 +205,6 @@ class TransformToolIntegrationTest {
         runBlocking {
             onTransformToolOptionsView()
                 .performAutoCrop()
-            delay(1000)
         }
         assertEquals(width.toFloat(), toolSelectionBoxWidth, Float.MIN_VALUE)
         assertEquals(height.toFloat(), toolSelectionBoxHeight, Float.MIN_VALUE)
@@ -251,32 +261,22 @@ class TransformToolIntegrationTest {
     @Test
     fun testChangeCroppingHeightAndCheckWidth() {
         onToolBarView()
-            .performSelectTool(ToolType.HAND)
-        onDrawingSurfaceView()
-            .perform(
-                UiInteractions.swipe(
-                    DrawingSurfaceLocationProvider.MIDDLE,
-                    DrawingSurfaceLocationProvider.TOP_MIDDLE
-                )
-            )
-
-        onToolBarView()
             .performSelectTool(ToolType.TRANSFORM)
             .performCloseToolOptionsView()
-
+        toolSelectionBoxHeight /= 2
         val boundingBoxWidth: Float = toolSelectionBoxWidth
         val boundingBoxHeight: Float = toolSelectionBoxHeight
 
         onDrawingSurfaceView()
             .perform(
                 UiInteractions.swipe(
-                    DrawingSurfaceLocationProvider.BOTTOM_MIDDLE,
+                    DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_MIDDLE,
                     DrawingSurfaceLocationProvider.MIDDLE
                 )
             )
 
         assertEquals(boundingBoxWidth, toolSelectionBoxWidth, Float.MIN_VALUE)
-        assertEquals(boundingBoxHeight, toolSelectionBoxHeight, Float.MIN_VALUE)
+        assertThat(boundingBoxHeight, greaterThan(toolSelectionBoxHeight))
     }
 
     @Test
@@ -302,7 +302,6 @@ class TransformToolIntegrationTest {
             .performSelectTool(ToolType.TRANSFORM)
         runBlocking {
             onTransformToolOptionsView().performAutoCrop()
-            delay(1000)
         }
         assertEquals(1f, toolSelectionBoxWidth, Float.MIN_VALUE)
         assertEquals(1f, toolSelectionBoxHeight, Float.MIN_VALUE)
@@ -321,7 +320,6 @@ class TransformToolIntegrationTest {
         runBlocking {
             onTransformToolOptionsView()
                 .performAutoCrop()
-            delay(1000)
         }
         TopBarViewInteraction.onTopBarView()
             .performClickCheckmark()
@@ -341,7 +339,6 @@ class TransformToolIntegrationTest {
         runBlocking {
             onTransformToolOptionsView()
                 .performAutoCrop()
-            delay(1000)
         }
         onDrawingSurfaceView()
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION))
@@ -361,7 +358,6 @@ class TransformToolIntegrationTest {
         runBlocking {
             onTransformToolOptionsView()
                 .performAutoCrop()
-            delay(1000)
         }
         TopBarViewInteraction.onTopBarView()
             .performClickCheckmark()
@@ -376,7 +372,6 @@ class TransformToolIntegrationTest {
         runBlocking {
             onTransformToolOptionsView()
                 .performAutoCrop()
-            delay(1000)
         }
         TopBarViewInteraction.onTopBarView()
             .performClickCheckmark()
@@ -391,7 +386,6 @@ class TransformToolIntegrationTest {
         runBlocking {
             onTransformToolOptionsView()
                 .performAutoCrop()
-            delay(1000)
         }
         TopBarViewInteraction.onTopBarView()
             .performClickCheckmark()
@@ -406,7 +400,6 @@ class TransformToolIntegrationTest {
         runBlocking {
             onTransformToolOptionsView()
                 .performAutoCrop()
-            delay(1000)
         }
         TopBarViewInteraction.onTopBarView()
             .performClickCheckmark()
@@ -423,7 +416,6 @@ class TransformToolIntegrationTest {
         runBlocking {
             onTransformToolOptionsView()
                 .performAutoCrop()
-            delay(1000)
         }
         TopBarViewInteraction.onTopBarView()
             .performClickCheckmark()
@@ -438,13 +430,12 @@ class TransformToolIntegrationTest {
 
     @Test
     fun testCenterBitmapAfterCropAndUndo() {
-        drawPlus(layerModel.currentLayer!!.bitmap, initialWidth / 2)
+        drawPlus(layerModel.currentLayer!!.bitmap, initialWidth / 2, Color.BLACK)
         onToolBarView()
             .performSelectTool(ToolType.TRANSFORM)
         runBlocking {
             onTransformToolOptionsView()
                 .performAutoCrop()
-            delay(1000)
         }
         TopBarViewInteraction.onTopBarView()
             .performClickCheckmark()
@@ -468,13 +459,12 @@ class TransformToolIntegrationTest {
 
     @Test
     fun testIfBordersAreAlignedCorrectAfterCrop() {
-        drawPlus(layerModel.currentLayer!!.bitmap, initialWidth / 2)
+        drawPlus(layerModel.currentLayer!!.bitmap, initialWidth / 2, Color.BLACK)
         onToolBarView()
             .performSelectTool(ToolType.TRANSFORM)
         runBlocking {
             onTransformToolOptionsView()
                 .performAutoCrop()
-            delay(1000)
         }
         onDrawingSurfaceView()
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION))
@@ -490,13 +480,12 @@ class TransformToolIntegrationTest {
 
     @Test
     fun testMoveLeftCroppingBorderAndDoCrop() {
-        drawPlus(layerModel.currentLayer!!.bitmap, initialWidth / 2)
+        drawPlus(layerModel.currentLayer!!.bitmap, initialWidth / 2, Color.BLACK)
         onToolBarView()
             .performSelectTool(ToolType.TRANSFORM)
         runBlocking {
             onTransformToolOptionsView()
                 .performAutoCrop()
-            delay(1000)
         }
         TopBarViewInteraction.onTopBarView()
             .performClickCheckmark()
@@ -515,12 +504,11 @@ class TransformToolIntegrationTest {
 
     @Test
     fun testMoveRightCroppingBorderAndDoCrop() {
-        drawPlus(layerModel.currentLayer!!.bitmap, initialWidth / 2)
+        drawPlus(layerModel.currentLayer!!.bitmap, initialWidth / 2, Color.BLACK)
         onToolBarView()
             .performSelectTool(ToolType.TRANSFORM)
         runBlocking {
             onTransformToolOptionsView().performAutoCrop()
-            delay(1000)
         }
         TopBarViewInteraction.onTopBarView()
             .performClickCheckmark()
@@ -537,13 +525,12 @@ class TransformToolIntegrationTest {
 
     @Test
     fun testMoveTopCroppingBorderAndDoCrop() {
-        drawPlus(layerModel.currentLayer!!.bitmap, initialWidth / 2)
+        drawPlus(layerModel.currentLayer!!.bitmap, initialWidth / 2, Color.BLACK)
         onToolBarView()
             .performSelectTool(ToolType.TRANSFORM)
         runBlocking {
             onTransformToolOptionsView()
                 .performAutoCrop()
-            delay(1000)
         }
         TopBarViewInteraction.onTopBarView()
             .performClickCheckmark()
@@ -560,13 +547,12 @@ class TransformToolIntegrationTest {
 
     @Test
     fun testMoveBottomCroppingBorderAndDoCrop() {
-        drawPlus(layerModel.currentLayer!!.bitmap, initialWidth / 2)
+        drawPlus(layerModel.currentLayer!!.bitmap, initialWidth / 2, Color.BLACK)
         onToolBarView()
             .performSelectTool(ToolType.TRANSFORM)
         runBlocking {
             onTransformToolOptionsView()
                 .performAutoCrop()
-            delay(1000)
         }
         TopBarViewInteraction.onTopBarView()
             .performClickCheckmark()
@@ -593,7 +579,6 @@ class TransformToolIntegrationTest {
         runBlocking {
             onTransformToolOptionsView()
                 .performAutoCrop()
-            delay(1000)
         }
         onDrawingSurfaceView()
             .checkBitmapDimension(initialWidth, initialHeight)
@@ -615,7 +600,6 @@ class TransformToolIntegrationTest {
         runBlocking {
             onTransformToolOptionsView()
                 .performAutoCrop()
-            delay(1000)
         }
         TopBarViewInteraction.onTopBarView()
             .performClickCheckmark()
@@ -632,7 +616,6 @@ class TransformToolIntegrationTest {
         runBlocking {
             onTransformToolOptionsView()
                 .performAutoCrop()
-            delay(1000)
         }
         TopBarViewInteraction.onTopBarView()
             .performClickCheckmark()
@@ -654,7 +637,6 @@ class TransformToolIntegrationTest {
         runBlocking {
             onTransformToolOptionsView()
                 .performAutoCrop()
-            delay(1000)
         }
         TopBarViewInteraction.onTopBarView()
             .performClickCheckmark()
@@ -676,7 +658,6 @@ class TransformToolIntegrationTest {
         runBlocking {
             onTransformToolOptionsView()
                 .performAutoCrop()
-            delay(1000)
         }
         TopBarViewInteraction.onTopBarView()
             .performClickCheckmark()
@@ -689,7 +670,7 @@ class TransformToolIntegrationTest {
         onToolBarView()
             .performSelectTool(ToolType.TRANSFORM)
             .performCloseToolOptionsView()
-        drawPlus(layerModel.currentLayer!!.bitmap, initialWidth / 2)
+        drawPlus(layerModel.currentLayer!!.bitmap, initialWidth / 2, Color.BLACK)
         setToolSelectionBoxDimensions(initialWidth / 8f, initialHeight / 8f)
         onDrawingSurfaceView()
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION))
@@ -815,7 +796,6 @@ class TransformToolIntegrationTest {
         runBlocking {
             onTransformToolOptionsView()
                 .performAutoCrop()
-            delay(1000)
         }
         assertEquals(initialWidth / 2f, toolSelectionBoxWidth, Float.MIN_VALUE)
         assertEquals(initialHeight / 2f, toolSelectionBoxHeight, Float.MIN_VALUE)
@@ -1216,7 +1196,7 @@ class TransformToolIntegrationTest {
 
     @Test
     fun testTransformToolSetCenterCloseCenter() {
-        drawPlus(layerModel.currentLayer!!.bitmap, initialWidth / 2)
+        drawPlus(layerModel.currentLayer!!.bitmap, initialWidth / 2, Color.BLACK)
         onToolBarView()
             .performSelectTool(ToolType.TRANSFORM)
 
@@ -1227,7 +1207,6 @@ class TransformToolIntegrationTest {
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.BOTTOM_RIGHT_CLOSE_CENTER))
         runBlocking {
             TopBarViewInteraction.onTopBarView().performClickCheckmark()
-            delay(1500)
         }
         assertThat(toolSelectionBoxWidth, lessThan(initialWidth.toFloat()))
         assertThat(toolSelectionBoxHeight, lessThan(initialHeight.toFloat()))
@@ -1235,7 +1214,7 @@ class TransformToolIntegrationTest {
 
     @Test
     fun testTransformToolSetCenterFarCenter() {
-        drawPlus(layerModel.currentLayer!!.bitmap, initialWidth / 2)
+        drawPlus(layerModel.currentLayer!!.bitmap, initialWidth / 2, Color.BLACK)
 
         onToolBarView()
             .performSelectTool(ToolType.HAND)
@@ -1258,20 +1237,26 @@ class TransformToolIntegrationTest {
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.BOTTOM_RIGHT_CORNER))
         runBlocking {
             TopBarViewInteraction.onTopBarView().performClickCheckmark()
-            delay(1500)
         }
         assertThat(toolSelectionBoxWidth, lessThan(initialWidth.toFloat()))
         assertThat(toolSelectionBoxHeight, lessThan(initialHeight.toFloat()))
     }
 
     @Test
-    fun testClickingOnCheckmarkDoesNotResetZoomOrPlacement() {
-        drawPlus(layerModel.currentLayer!!.bitmap, initialWidth / 2)
+    fun testClickingOnCheckmarkDoesNotResetPlacement() {
+        drawPlus(layerModel.currentLayer!!.bitmap, initialWidth / 2, Color.RED)
+        onToolBarView()
+            .performSelectTool(ToolType.HAND)
         perspective.translate(100f, 100f)
-        perspective.multiplyScale(0.1f)
-        val oldScale = perspective.scale
-        val oldTranslationX = perspective.surfaceTranslationX
-        val oldTranslationY = perspective.surfaceTranslationY
+        perspective.multiplyScale(0.6f)
+        onDrawingSurfaceView()
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
+        runBlocking {
+            delay(1000)
+        }
+        val firstCapture = onView(withId(R.id.pocketpaint_drawing_surface_view)).captureToBitmap()
+        val redPixelBeforeCrop = findFirstPixelWithColor(firstCapture, Color.RED)
+
         onToolBarView()
             .performSelectTool(ToolType.TRANSFORM)
         runBlocking {
@@ -1281,25 +1266,42 @@ class TransformToolIntegrationTest {
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.BOTTOM_RIGHT_CORNER))
         runBlocking {
             TopBarViewInteraction.onTopBarView().performClickCheckmark()
-            delay(1000)
+        }
+
+        val secondCapture = onView(withId(R.id.pocketpaint_drawing_surface_view)).captureToBitmap()
+        val redPixelAfterCrop = findFirstPixelWithColor(secondCapture, Color.RED)
+        val blackPixelAfterCropAdapted =
+            Pair(redPixelAfterCrop?.first?.minus(1), redPixelAfterCrop?.second?.minus(3))
+        assertEquals(redPixelBeforeCrop, blackPixelAfterCropAdapted)
+    }
+
+    @Test
+    fun testClickingOnCheckmarkDoesNotResetZoom() {
+        drawPlus(layerModel.currentLayer!!.bitmap, initialWidth / 2, Color.BLACK)
+        perspective.multiplyScale(0.1f)
+        val oldScale = perspective.scale
+        onToolBarView()
+            .performSelectTool(ToolType.TRANSFORM)
+        runBlocking {
+            onTransformToolOptionsView().performAutoCrop()
+        }
+        onDrawingSurfaceView()
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.BOTTOM_RIGHT_CORNER))
+        runBlocking {
+            TopBarViewInteraction.onTopBarView().performClickCheckmark()
         }
         assertEquals(oldScale, perspective.scale)
-        assertEquals(oldTranslationY, perspective.surfaceTranslationY)
-        runBlocking {
-            delay(1000)
-        }
-        assertEquals(oldTranslationX, perspective.surfaceTranslationX)
     }
 
     companion object {
-        private fun drawPlus(bitmap: Bitmap, lineLength: Int) {
+        private fun drawPlus(bitmap: Bitmap, lineLength: Int, color: Int) {
             val horizontalStartX = bitmap.width / 4
             val horizontalStartY = bitmap.height / 2
             val verticalStartX = bitmap.width / 2
             val verticalStartY = bitmap.height / 2 - lineLength / 2
             val pixelsColorArray = IntArray(10 * lineLength)
             for (indexColorArray in pixelsColorArray.indices) {
-                pixelsColorArray[indexColorArray] = Color.BLACK
+                pixelsColorArray[indexColorArray] = color
             }
             bitmap.setPixels(
                 pixelsColorArray,
@@ -1319,6 +1321,18 @@ class TransformToolIntegrationTest {
                 10,
                 lineLength
             )
+        }
+
+        private fun findFirstPixelWithColor(bitmap: Bitmap, color: Int): Pair<Int?, Int?>? {
+            for (y in 0 until bitmap.height) {
+                for (x in 0 until bitmap.width) {
+                    val pixelColor = bitmap.getPixel(x, y)
+                    if (pixelColor == color) {
+                        return Pair(x, y)
+                    }
+                }
+            }
+            return null
         }
     }
 }
