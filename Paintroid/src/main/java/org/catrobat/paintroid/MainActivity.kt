@@ -54,6 +54,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.catrobat.paintroid.LandingPageActivity.Companion.FAB_ACTION
 import org.catrobat.paintroid.colorpicker.ColorHistory
 import org.catrobat.paintroid.command.CommandFactory
 import org.catrobat.paintroid.command.CommandManager
@@ -309,21 +310,26 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
                 presenterMain.initializeFromCleanState(null, null)
             }
             savedInstanceState == null -> {
-                val intent = intent
-                val picturePath = intent.getStringExtra(PAINTROID_PICTURE_PATH)
-                val pictureName = intent.getStringExtra(PAINTROID_PICTURE_NAME)
-                presenterMain.initializeFromCleanState(picturePath, pictureName)
-
-                if (!model.isOpenedFromCatroid && presenterMain.checkForTemporaryFile() && (!isRunningEspressoTests || isTemporaryFileSavingTest)) {
-                    val workspaceReturnValue = presenterMain.openTemporaryFile()
-                    commandManager.loadCommandsCatrobatImage(workspaceReturnValue?.commandManagerModel)
-                    model.colorHistory = workspaceReturnValue?.colorHistory ?: ColorHistory()
-                    model.colorHistory.colors.lastOrNull()?.let {
-                        toolReference.tool?.changePaintColor(it)
-                        presenterMain.setBottomNavigationColor(it)
+                when (receivedIntent.getStringExtra(FAB_ACTION)) {
+                    "new_image" -> presenterMain.onNewImage()
+                    "load_image" -> presenterMain.replaceImageClicked()
+                    else -> {
+                    val intent = intent
+                    val picturePath = intent.getStringExtra(PAINTROID_PICTURE_PATH)
+                    val pictureName = intent.getStringExtra(PAINTROID_PICTURE_NAME)
+                    presenterMain.initializeFromCleanState(picturePath, pictureName)
+                        if (!model.isOpenedFromCatroid && presenterMain.checkForTemporaryFile() && (!isRunningEspressoTests || isTemporaryFileSavingTest)) {
+                            val workspaceReturnValue = presenterMain.openTemporaryFile()
+                            commandManager.loadCommandsCatrobatImage(workspaceReturnValue?.commandManagerModel)
+                            model.colorHistory = workspaceReturnValue?.colorHistory ?: ColorHistory()
+                            model.colorHistory.colors.lastOrNull()?.let {
+                                toolReference.tool?.changePaintColor(it)
+                                presenterMain.setBottomNavigationColor(it)
+                            }
+                        }
+                        workspace.perspective.setBitmapDimensions(layerModel.width, layerModel.height)
                     }
                 }
-                workspace.perspective.setBitmapDimensions(layerModel.width, layerModel.height)
             }
             else -> {
                 val isFullscreen = savedInstanceState.getBoolean(IS_FULLSCREEN_KEY, false)

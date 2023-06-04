@@ -9,6 +9,7 @@
         layout="@layout/pocketpaint_layout_landing_page_top_bar"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/pocketpaint_constraint_Layout_image_preview"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -38,5 +39,50 @@
             app:layout_constraintTop_toTopOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/pocketpaint_textview_my_projects"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="My Projects"
+        android:textColor="@color/pocketpaint_color_picker_white"
+        android:textSize="22sp"
+        android:layout_marginLeft="18dp"
+        android:layout_marginTop="14dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pocketpaint_constraint_Layout_image_preview" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/pocketpaint_fab_load_image"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        app:fabCustomSize="60dp"
+        android:layout_margin="15dp"
+        android:backgroundTint="@color/pocketpaint_color_picker_orange3"
+        android:elevation="5dp"
+        android:src="@drawable/ic_pocketpaint_download"
+        app:layout_constraintBottom_toTopOf="@+id/pocketpaint_fab_new_image"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/pocketpaint_fab_new_image"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        app:fabCustomSize="60dp"
+        android:backgroundTint="@color/pocketpaint_color_picker_orange3"
+        android:elevation="5dp"
+        android:layout_margin="15dp"
+        android:src="@drawable/ic_pocketpaint_plus_enabled"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/pocketpaint_projects_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pocketpaint_textview_my_projects" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

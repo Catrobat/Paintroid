@@ -5,12 +5,14 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.catrobat.paintroid.data.local.database.ProjectDatabase
 import org.catrobat.paintroid.data.local.database.ProjectDatabaseProvider
 
 class LandingPageActivity: AppCompatActivity() {
     companion object {
         lateinit var projectDB: ProjectDatabase
+        val FAB_ACTION = ""
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,5 +31,19 @@ class LandingPageActivity: AppCompatActivity() {
 
         imagePreview.setOnClickListener(imagePreviewClickListener)
         editCircleIcon.setOnClickListener(imagePreviewClickListener)
+
+        val mainActivityIntent = Intent(this, MainActivity::class.java)
+
+        val newImage = findViewById<FloatingActionButton>(R.id.pocketpaint_fab_new_image)
+        newImage.setOnClickListener {
+            mainActivityIntent.putExtra(FAB_ACTION, "new_image")
+            startActivity(mainActivityIntent)
+        }
+
+        val loadImage = findViewById<FloatingActionButton>(R.id.pocketpaint_fab_load_image)
+        loadImage.setOnClickListener {
+            mainActivityIntent.putExtra(FAB_ACTION, "load_image")
+            startActivity(mainActivityIntent)
+        }
     }
 }
