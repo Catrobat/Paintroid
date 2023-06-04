@@ -59,6 +59,14 @@ import org.hamcrest.TypeSafeMatcher
 import org.junit.Assert
 
 object UiMatcher {
+
+    private fun vectorToBitmap(vectorDrawable: VectorDrawable): Bitmap {
+        return Bitmap.createBitmap(
+            vectorDrawable.intrinsicWidth,
+            vectorDrawable.intrinsicHeight, Bitmap.Config.ARGB_8888
+        )
+    }
+
     fun atPosition(position: Int, itemMatcher: Matcher<View>): BoundedMatcher<View?, RecyclerView> {
         Preconditions.checkNotNull(itemMatcher)
         return object : BoundedMatcher<View?, RecyclerView>(RecyclerView::class.java) {
@@ -249,13 +257,22 @@ object UiMatcher {
                 if (expectedDrawable == null || targetDrawable == null) {
                     return false
                 }
-                val expectedBitmap: Bitmap = (expectedDrawable as BitmapDrawable).bitmap
+                if (expectedDrawable::class != targetDrawable::class) {
+                    return false
+                }
+
                 if (targetDrawable is BitmapDrawable) {
-                    val bitmap: Bitmap = targetDrawable.bitmap
-                    return bitmap.sameAs(expectedBitmap)
+                    val targetBitmap: Bitmap = targetDrawable.bitmap
+                    val expectedBitmap = (expectedDrawable as BitmapDrawable).bitmap
+                    return targetBitmap.sameAs(expectedBitmap)
+                } else if (targetDrawable is VectorDrawable) {
+                    val targetBitmap: Bitmap = vectorToBitmap(targetDrawable)
+                    val expectedBitmap = vectorToBitmap(expectedDrawable as VectorDrawable)
+                    return targetBitmap.sameAs(expectedBitmap)
                 } else if (targetDrawable is StateListDrawable) {
-                    val bitmap: Bitmap = (targetDrawable.getCurrent() as BitmapDrawable).bitmap
-                    return bitmap.sameAs(expectedBitmap)
+                    val targetBitmap: Bitmap = (targetDrawable.getCurrent() as BitmapDrawable).bitmap
+                    val expectedBitmap = (expectedDrawable as BitmapDrawable).bitmap
+                    return targetBitmap.sameAs(expectedBitmap)
                 }
                 return false
             }
@@ -373,12 +390,12 @@ object UiMatcher {
                     expectedBitmap = (expectedDrawable as BitmapDrawable).bitmap
                     return targetBitmap.sameAs(expectedBitmap)
                 } else if (targetDrawable is VectorDrawable || targetDrawable is VectorDrawableCompat) {
-                    val targetBitmap: Bitmap = vectorToBitmap(expectedDrawable as VectorDrawable)
-                    expectedBitmap = vectorToBitmap(expectedDrawable)
+                    val targetBitmap: Bitmap = vectorToBitmap(targetDrawable as VectorDrawable)
+                    expectedBitmap = vectorToBitmap(expectedDrawable as VectorDrawable)
                     return targetBitmap.sameAs(expectedBitmap)
                 } else if (targetDrawable is StateListDrawable) {
-                    val targetBitmap: Bitmap = vectorToBitmap(expectedDrawable as VectorDrawable)
-                    expectedBitmap = vectorToBitmap(expectedDrawable)
+                    val targetBitmap: Bitmap = vectorToBitmap(targetDrawable.getCurrent() as VectorDrawable)
+                    expectedBitmap = vectorToBitmap(expectedDrawable as VectorDrawable)
                     return targetBitmap.sameAs(expectedBitmap)
                 }
                 return false
@@ -392,13 +409,6 @@ object UiMatcher {
                     description.appendText(resourceName)
                     description.appendText("]")
                 }
-            }
-
-            private fun vectorToBitmap(vectorDrawable: VectorDrawable): Bitmap {
-                return Bitmap.createBitmap(
-                    vectorDrawable.intrinsicWidth,
-                    vectorDrawable.intrinsicHeight, Bitmap.Config.ARGB_8888
-                )
             }
         }
     }
