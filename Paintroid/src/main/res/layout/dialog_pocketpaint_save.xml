@@ -84,6 +84,7 @@
             android:src="@drawable/ic_pocketpaint_save_info" />
 
         <View
+            android:id="@+id/pocketpaint_view_save_divider"
             android:layout_width="151dp"
             android:layout_height="1dp"
             android:layout_below="@+id/pocketpaint_save_dialog_spinner"

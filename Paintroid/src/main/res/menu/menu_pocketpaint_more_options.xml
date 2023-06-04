@@ -6,6 +6,9 @@
         android:id="@+id/pocketpaint_options_export"
         android:title="@string/menu_export" />
     <item
+        android:id="@+id/pocketpaint_options_save_project"
+        android:title="@string/menu_save_project" />
+    <item
         android:id="@+id/pocketpaint_options_save_duplicate"
         android:title="@string/menu_save_copy" />
     <item
