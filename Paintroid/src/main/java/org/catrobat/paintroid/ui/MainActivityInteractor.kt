@@ -44,7 +44,12 @@ class MainActivityInteractor(private val idlingResource: CountingIdlingResource)
         uri: Uri?,
         context: Context
     ) {
-        SaveImage(callback, requestCode, layerModel, commandSerializer, uri, true, context, scopeIO, idlingResource).execute()
+        SaveImage(callback, requestCode, layerModel, commandSerializer, uri, null, true,
+            saveProject = false,
+            context = context,
+            scopeIO = scopeIO,
+            idlingResource = idlingResource
+        ).execute()
     }
 
     override fun createFile(callback: CreateFileCallback, requestCode: Int, filename: String) {
@@ -59,7 +64,25 @@ class MainActivityInteractor(private val idlingResource: CountingIdlingResource)
         uri: Uri?,
         context: Context
     ) {
-        SaveImage(callback, requestCode, layerModel, commandSerializer, uri, false, context, scopeIO, idlingResource).execute()
+        SaveImage(callback, requestCode, layerModel, commandSerializer, uri, null,
+            saveAsCopy = false,
+            saveProject = false,
+            context = context,
+            scopeIO = scopeIO,
+            idlingResource = idlingResource
+        ).execute()
+    }
+
+    override fun saveProject(
+        callback: SaveImageCallback,
+        requestCode: Int,
+        layerModel: LayerContracts.Model,
+        commandSerializer: CommandSerializer,
+        uri: Uri?,
+        imagePreviewUri: Uri?,
+        context: Context
+    ) {
+        SaveImage(callback, requestCode, layerModel, commandSerializer, uri, imagePreviewUri, false, true, context, scopeIO, idlingResource).execute()
     }
 
     override fun loadFile(

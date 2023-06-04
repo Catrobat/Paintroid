@@ -92,6 +92,7 @@ object FileIO {
 
     @JvmField
     var storeImageUri: Uri? = null
+    var storeImagePreviewUri: Uri? = null
 
     var temporaryFilePath: String? = null
 
