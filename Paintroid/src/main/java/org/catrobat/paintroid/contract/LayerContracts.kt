@@ -20,6 +20,7 @@ package org.catrobat.paintroid.contract
 
 import android.graphics.Bitmap
 import android.view.View
+import android.widget.LinearLayout
 import androidx.annotation.StringRes
 import org.catrobat.paintroid.controller.DefaultToolController
 import org.catrobat.paintroid.ui.DrawingSurface
@@ -93,6 +94,8 @@ interface LayerContracts {
         fun setMergable()
 
         fun isSelected(): Boolean
+
+        fun getViewLayout(): LinearLayout
 
         fun bindView()
 

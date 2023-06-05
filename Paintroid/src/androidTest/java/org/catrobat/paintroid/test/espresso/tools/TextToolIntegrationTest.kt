@@ -33,11 +33,10 @@ import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.pressBack
 import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.matcher.ViewMatchers.withHint
-import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.ActivityTestRule
 import com.google.android.material.button.MaterialButton
@@ -70,6 +69,11 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import kotlin.math.roundToInt
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withHint
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import org.hamcrest.CoreMatchers.not
 
 @RunWith(AndroidJUnit4::class)
 @Suppress("LargeClass")
@@ -118,13 +122,12 @@ class TextToolIntegrationTest {
     }
 
     @Test
-    fun testTextToolStillEditableAfterClosingTextTool() {
+    fun testTextToolStillEditableAfterClickingInsideTheCanvasTextToolOptionsVisible() {
         selectFormatting(FormattingOptions.ITALIC)
         selectFormatting(FormattingOptions.BOLD)
         selectFormatting(FormattingOptions.UNDERLINE)
         enterTestText()
-        onDrawingSurfaceView()
-            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
+        onView(withId(R.id.pocketpaint_text_tool_dialog_input_text)).perform(click())
         onView(withId(R.id.pocketpaint_text_tool_dialog_input_text)).perform(
             ViewActions.replaceText(
                 TEST_TEXT_ADVANCED
@@ -134,6 +137,39 @@ class TextToolIntegrationTest {
         boldToggleButton?.let { Assert.assertTrue(it.isChecked) }
         underlinedToggleButton?.let { Assert.assertTrue(it.isChecked) }
         Assert.assertEquals(TEST_TEXT_ADVANCED, textEditText?.text?.toString())
+        onView(withId(R.id.pocketpaint_text_tool_dialog_input_text)).check(matches(isDisplayed()))
+        onView(withId(R.id.pocketpaint_text_tool_dialog_list_font)).check(matches(isDisplayed()))
+        onView(withId(R.id.pocketpaint_text_tool_dialog_toggle_underlined)).check(matches(isDisplayed()))
+        onView(withId(R.id.pocketpaint_text_tool_dialog_toggle_italic)).check(matches(isDisplayed()))
+        onView(withId(R.id.pocketpaint_text_tool_dialog_toggle_bold)).check(matches(isDisplayed()))
+        onView(withId(R.id.pocketpaint_font_size_text)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun testTextToolNotEditableAfterClickingOutsideTheCanvasTextToolOptionsHidden() {
+        selectFormatting(FormattingOptions.ITALIC)
+        selectFormatting(FormattingOptions.BOLD)
+        selectFormatting(FormattingOptions.UNDERLINE)
+        enterTestText()
+        onDrawingSurfaceView()
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
+
+        italicToggleButton?.let { Assert.assertTrue(it.isChecked) }
+        boldToggleButton?.let { Assert.assertTrue(it.isChecked) }
+        underlinedToggleButton?.let { Assert.assertTrue(it.isChecked) }
+        Assert.assertEquals(TEST_TEXT, textEditText?.text?.toString())
+        onView(withId(R.id.pocketpaint_text_tool_dialog_input_text))
+            .check(matches(not(isDisplayed())))
+        onView(withId(R.id.pocketpaint_text_tool_dialog_list_font))
+            .check(matches(not(isDisplayed())))
+        onView(withId(R.id.pocketpaint_text_tool_dialog_toggle_underlined))
+            .check(matches(not(isDisplayed())))
+        onView(withId(R.id.pocketpaint_text_tool_dialog_toggle_italic))
+            .check(matches(not(isDisplayed())))
+        onView(withId(R.id.pocketpaint_text_tool_dialog_toggle_bold))
+            .check(matches(not(isDisplayed())))
+        onView(withId(R.id.pocketpaint_font_size_text))
+            .check(matches(not(isDisplayed())))
     }
 
     @Ignore("Fix bug in own ticket , focus is not correctly implemented in google play either")

@@ -21,6 +21,8 @@ package org.catrobat.paintroid.test.junit.tools
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PointF
+import android.view.View
+import android.view.ViewGroup
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.idling.CountingIdlingResource
 import androidx.test.rule.ActivityTestRule
@@ -58,6 +60,7 @@ class SprayToolTest {
     private lateinit var tool: SprayTool
     private lateinit var idlingResource: CountingIdlingResource
 
+    private val viewMock = Mockito.mock(ViewGroup::class.java)
     @get:Rule
     var launchActivityRule = ActivityTestRule(MainActivity::class.java)
 
@@ -83,6 +86,9 @@ class SprayToolTest {
             commandManager,
             0
         )
+
+        Mockito.`when`(toolOptionsViewController.toolSpecificOptionsLayout).thenReturn(viewMock)
+        Mockito.`when`(toolOptionsViewController.toolSpecificOptionsLayout).thenReturn(viewMock)
     }
 
     @After
@@ -160,16 +166,26 @@ class SprayToolTest {
     @Test
     fun testShouldCallHideWhenDrawing() {
         val tap1 = PointF(7f, 7f)
-        tool.handleDown(tap1)
+        Mockito.`when`(toolOptionsViewController.isVisible).thenReturn(true)
+        Mockito.`when`(viewMock.visibility).thenReturn(View.VISIBLE)
+        tool.handleMove(tap1)
 
-        Mockito.verify(toolOptionsViewController).slideDown(toolOptionsViewController.toolSpecificOptionsLayout, true)
+        Mockito.verify(toolOptionsViewController).slideUp(viewMock,
+                                                            willHide = true,
+                                                            showOptionsView = false
+        )
     }
 
     @Test
     fun testShouldCallUnhideWhenDrawingFinish() {
         val tap1 = PointF(7f, 7f)
-
+        Mockito.`when`(toolOptionsViewController.isVisible).thenReturn(false)
+        Mockito.`when`(viewMock.visibility).thenReturn(View.INVISIBLE)
         tool.handleUp(tap1)
-        Mockito.verify(toolOptionsViewController).slideUp(toolOptionsViewController.toolSpecificOptionsLayout, false)
+
+        Mockito.verify(toolOptionsViewController).slideDown(viewMock,
+                                                          willHide = false,
+                                                          showOptionsView = true
+        )
     }
 }

@@ -92,6 +92,13 @@ class FillTool(
     public override fun resetInternalState() = Unit
 
     override val toolType: ToolType = ToolType.FILL
+    override fun handleUpAnimations(coordinate: PointF?) {
+        super.handleUp(coordinate)
+    }
+
+    override fun handleDownAnimations(coordinate: PointF?) {
+        super.handleDown(coordinate)
+    }
 
     override fun draw(canvas: Canvas) = Unit
 }

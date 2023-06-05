@@ -27,6 +27,8 @@ interface SprayToolOptionsView {
 
     fun setCurrentPaint(paint: Paint)
 
+    fun getRadius(): Float
+
     interface Callback {
         fun radiusChanged(radius: Int)
     }
