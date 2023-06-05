@@ -84,6 +84,12 @@ android {
             signingConfig signingConfigs.signedRelease
         }
     }
+
+    publishing {
+        singleVariant('release') {
+            withSourcesJar()
+        }
+    }
 }
 
 tasks.withType(Detekt).configureEach {
