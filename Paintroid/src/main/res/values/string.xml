@@ -185,7 +185,9 @@
     <string name="pocketpaint_ora_message_dialog">This format remembers <b>layers</b>. <b>It can be opened by apps that support the Openraster format.</b></string>
     <string name="pocketpaint_catrobat_title_dialog" translatable="false">catrobat-image</string>
     <string name="pocketpaint_catrobat_message_dialog">Pocket Paint\'s native image format. This format remembers commands and layers.</string>
-
+    <string name="pocketpaint_project_details_dialog">Resolution: %s&lt;br /&gt;Last modified: %s&lt;br /&gt;Creation date: %s&lt;br /&gt;Format: %s&lt;br /&gt;Size: %s</string>
+    <string name="pocketpaint_project_delete_title_dialog" translatable="false">Delete %s</string>
+    <string name="pocketpaint_project_delete_message_dialog" translatable="false">Do you really want to delete your Project?</string>
 
     <string name="permission_info_external_storage_text">This app needs the requested permission to function properly. In order to save images to the local memory, the app needs read and write access to it.</string>
     <string name="permission_info_permanent_denial_text">This app needs the requested permission to function properly. In order to save images to the local memory, the app needs read and write access to it.
