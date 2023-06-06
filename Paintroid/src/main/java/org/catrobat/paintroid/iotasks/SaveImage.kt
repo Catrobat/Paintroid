@@ -30,6 +30,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.catrobat.paintroid.FileIO
+import org.catrobat.paintroid.LandingPageActivity.Companion.projectAdapter
 import org.catrobat.paintroid.LandingPageActivity.Companion.projectDB
 import org.catrobat.paintroid.command.serialization.CommandSerializer
 import org.catrobat.paintroid.contract.LayerContracts
@@ -80,7 +81,7 @@ class SaveImage(
             val imageUri = FileIO.saveBitmapToFile(imagePreviewFilename, bitmap, callback.contentResolver, context)
             imageUri
         } else {
-            uri?.let { FileIO.saveBitmapToUri(it, bitmap, context) }
+            imagePreviewUri?.let { FileIO.saveBitmapToUri(it, bitmap, context) }
         }
     }
 
@@ -149,23 +150,24 @@ class SaveImage(
                     val date = Calendar.getInstance().timeInMillis
                     if(uri != null){
                         uri?.let {
-                            projectDB.dao.updateProjectUri(filename, imagePreviewPath.toString(), currentUri.toString(), date)
+                            projectDB.dao.updateProject(filename, imagePreviewPath.toString(), currentUri.toString(), date)
+                            projectAdapter.updateProject(filename, imagePreviewPath.toString(), currentUri.toString(), date)
                         }
                     } else {
                         val dimensions = getImageDimensions(imagePreviewPath)
                         val size = getImageSize(imagePreviewPath)
-                        projectDB.dao.insertProject(
-                            Project(
-                                filename,
-                                currentUri.toString(),
-                                date,
-                                date,
-                                "${dimensions?.first} x ${dimensions?.second}",
-                                FileIO.fileType.toString(),
-                                size,
-                                imagePreviewPath.toString()
-                            )
+                        val project = Project(
+                            filename,
+                            currentUri.toString(),
+                            date,
+                            date,
+                            "${dimensions?.first} x ${dimensions?.second}",
+                            FileIO.fileType.toString(),
+                            size,
+                            imagePreviewPath.toString()
                         )
+                        projectDB.dao.insertProject(project)
+                        projectAdapter.insertProject(project)
                     }
                 } else {
                     currentUri = if (FileIO.fileType == FileIO.FileType.ORA) {

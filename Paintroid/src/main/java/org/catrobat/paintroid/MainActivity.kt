@@ -43,6 +43,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.appcompat.widget.TooltipCompat
+import androidx.core.net.toUri
 import androidx.core.widget.ContentLoadingProgressBar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -64,9 +65,7 @@ import org.catrobat.paintroid.command.implementation.DefaultCommandFactory
 import org.catrobat.paintroid.command.implementation.DefaultCommandManager
 import org.catrobat.paintroid.command.implementation.LayerOpacityCommand
 import org.catrobat.paintroid.command.serialization.CommandSerializer
-import org.catrobat.paintroid.common.CommonFactory
-import org.catrobat.paintroid.common.PAINTROID_PICTURE_NAME
-import org.catrobat.paintroid.common.PAINTROID_PICTURE_PATH
+import org.catrobat.paintroid.common.*
 import org.catrobat.paintroid.contract.LayerContracts
 import org.catrobat.paintroid.contract.MainActivityContracts
 import org.catrobat.paintroid.contract.MainActivityContracts.MainView
@@ -165,6 +164,10 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
     @Volatile
     private var userInteraction = false
     private var isTemporaryFileSavingTest = false
+
+    var projectName: String? = null
+    var projectUri: String? = null
+    var projectImagePreviewUri: String? = null
 
     private val isRunningEspressoTests: Boolean by lazy {
         try {
@@ -313,6 +316,12 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
                 when (receivedIntent.getStringExtra(FAB_ACTION)) {
                     "new_image" -> presenterMain.onNewImage()
                     "load_image" -> presenterMain.replaceImageClicked()
+                    "load_project" -> {
+                        projectName = receivedIntent.getStringExtra("PROJECT_NAME")
+                        projectUri = receivedIntent.getStringExtra("PROJECT_URI")
+                        projectImagePreviewUri = receivedIntent.getStringExtra("PROJECT_IMAGE_PREVIEW_URI")
+                        presenterMain.loadScaledImage(projectUri?.toUri(), REQUEST_CODE_LOAD_PICTURE)
+                    }
                     else -> {
                     val intent = intent
                     val picturePath = intent.getStringExtra(PAINTROID_PICTURE_PATH)
@@ -406,7 +415,19 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
                     UserPreferences(getPreferences(MODE_PRIVATE))
                 )
             R.id.pocketpaint_advanced_settings -> presenterMain.showAdvancedSettingsClicked()
-            android.R.id.home -> presenterMain.backToPocketCodeClicked()
+            android.R.id.home ->
+                if(projectName?.let {
+                        FileIO.checkFileExists(FileIO.FileType.CATROBAT,
+                            it, this.contentResolver)
+                    } == true){
+                    FileIO.storeImageUri = Uri.parse(projectUri)
+                    FileIO.storeImagePreviewUri = Uri.parse(projectImagePreviewUri)
+                    presenterMain.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_PROJECT, false)
+                    presenterMain.finishActivity()
+                }
+                else {
+                    presenterMain.backToPocketCodeClicked()
+                }
             else -> return false
         }
         return true
