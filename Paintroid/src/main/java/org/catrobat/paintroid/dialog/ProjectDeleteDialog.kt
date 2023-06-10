@@ -9,7 +9,7 @@ import org.catrobat.paintroid.LandingPageActivity.Companion.projectAdapter
 import org.catrobat.paintroid.LandingPageActivity.Companion.projectDB
 import org.catrobat.paintroid.R
 
-class ProjectDeleteDialog(private val projectId: Int, private val name: String) : AppCompatDialogFragment() {
+class ProjectDeleteDialog(private val projectId: Int, private val name: String, private val position: Int) : AppCompatDialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val message = getString(R.string.pocketpaint_project_delete_title_dialog, name)
 
@@ -18,7 +18,7 @@ class ProjectDeleteDialog(private val projectId: Int, private val name: String) 
             .setMessage(R.string.pocketpaint_project_delete_message_dialog)
             .setPositiveButton(R.string.pocketpaint_ok) { _, _ ->
                 projectDB.dao.deleteProject(projectId)
-                projectAdapter.removeProject(projectId)
+                projectAdapter.removeProject(projectId, position)
                 projectAdapter.notifyDataSetChanged()
             }
             .setNegativeButton(R.string.pocketpaint_cancel) { _, _ -> dismiss() }

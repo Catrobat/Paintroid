@@ -53,12 +53,33 @@ import org.catrobat.paintroid.colorpicker.ColorHistory
 import org.catrobat.paintroid.command.CommandFactory
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.command.serialization.CommandSerializer
-import org.catrobat.paintroid.common.*
 import org.catrobat.paintroid.common.MainActivityConstants.ActivityRequestCode
 import org.catrobat.paintroid.common.MainActivityConstants.CreateFileRequestCode
 import org.catrobat.paintroid.common.MainActivityConstants.LoadImageRequestCode
 import org.catrobat.paintroid.common.MainActivityConstants.PermissionRequestCode
 import org.catrobat.paintroid.common.MainActivityConstants.SaveImageRequestCode
+import org.catrobat.paintroid.common.PERMISSION_REQUEST_CODE_REPLACE_PICTURE
+import org.catrobat.paintroid.common.PERMISSION_REQUEST_CODE_IMPORT_PICTURE
+import org.catrobat.paintroid.common.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW
+import org.catrobat.paintroid.common.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY
+import org.catrobat.paintroid.common.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH
+import org.catrobat.paintroid.common.PERMISSION_EXTERNAL_STORAGE_SAVE_COPY
+import org.catrobat.paintroid.common.PERMISSION_EXTERNAL_STORAGE_SAVE
+import org.catrobat.paintroid.common.PERMISSION_EXTERNAL_STORAGE_SAVE_PROJECT
+import org.catrobat.paintroid.common.REQUEST_CODE_LOAD_PICTURE
+import org.catrobat.paintroid.common.REQUEST_CODE_INTRO
+import org.catrobat.paintroid.common.REQUEST_CODE_IMPORT_PNG
+import org.catrobat.paintroid.common.LOAD_IMAGE_IMPORT_PNG
+import org.catrobat.paintroid.common.LOAD_IMAGE_DEFAULT
+import org.catrobat.paintroid.common.RESULT_INTRO_MW_NOT_SUPPORTED
+import org.catrobat.paintroid.common.SAVE_IMAGE_DEFAULT
+import org.catrobat.paintroid.common.SAVE_IMAGE_FINISH
+import org.catrobat.paintroid.common.SAVE_IMAGE_LOAD_NEW
+import org.catrobat.paintroid.common.SAVE_IMAGE_NEW_EMPTY
+import org.catrobat.paintroid.common.SAVE_PROJECT_DEFAULT
+import org.catrobat.paintroid.common.LOAD_IMAGE_CATROID
+import org.catrobat.paintroid.common.CREATE_FILE_DEFAULT
+import org.catrobat.paintroid.common.TEMP_PICTURE_NAME
 import org.catrobat.paintroid.contract.MainActivityContracts
 import org.catrobat.paintroid.contract.MainActivityContracts.Interactor
 import org.catrobat.paintroid.contract.MainActivityContracts.MainView
@@ -494,13 +515,12 @@ open class MainActivityPresenter(
                         )
                         checkForDefaultFilename()
                     }
-                    PERMISSION_EXTERNAL_STORAGE_SAVE_PROJECT -> {
+                    PERMISSION_EXTERNAL_STORAGE_SAVE_PROJECT ->
                         saveProjectConfirmClicked(
                             SAVE_PROJECT_DEFAULT,
                             FileIO.storeImageUri,
                             FileIO.storeImagePreviewUri,
                         )
-                    }
                     PERMISSION_EXTERNAL_STORAGE_SAVE_COPY -> {
                         saveCopyConfirmClicked(
                             SAVE_IMAGE_DEFAULT,

@@ -32,6 +32,7 @@ import org.catrobat.paintroid.iotasks.LoadImage
 import org.catrobat.paintroid.iotasks.LoadImage.LoadImageCallback
 import org.catrobat.paintroid.iotasks.SaveImage
 import org.catrobat.paintroid.iotasks.SaveImage.SaveImageCallback
+import org.catrobat.paintroid.model.SaveImageOptions
 
 class MainActivityInteractor(private val idlingResource: CountingIdlingResource) : Interactor {
     private val scopeIO = CoroutineScope(Dispatchers.IO)
@@ -44,11 +45,17 @@ class MainActivityInteractor(private val idlingResource: CountingIdlingResource)
         uri: Uri?,
         context: Context
     ) {
-        SaveImage(callback, requestCode, layerModel, commandSerializer, uri, null, true,
-            saveProject = false,
-            context = context,
-            scopeIO = scopeIO,
-            idlingResource = idlingResource
+        val saveImageOptions = SaveImageOptions(null, saveAsCopy = true, saveProject = false)
+        SaveImage(
+            callback,
+            requestCode,
+            layerModel,
+            commandSerializer,
+            uri,
+            saveImageOptions,
+            context,
+            scopeIO,
+            idlingResource
         ).execute()
     }
 
@@ -64,12 +71,17 @@ class MainActivityInteractor(private val idlingResource: CountingIdlingResource)
         uri: Uri?,
         context: Context
     ) {
-        SaveImage(callback, requestCode, layerModel, commandSerializer, uri, null,
-            saveAsCopy = false,
-            saveProject = false,
-            context = context,
-            scopeIO = scopeIO,
-            idlingResource = idlingResource
+        val saveImageOptions = SaveImageOptions(null, saveAsCopy = false, saveProject = false)
+        SaveImage(
+            callback,
+            requestCode,
+            layerModel,
+            commandSerializer,
+            uri,
+            saveImageOptions,
+            context,
+            scopeIO,
+            idlingResource
         ).execute()
     }
 
@@ -82,7 +94,18 @@ class MainActivityInteractor(private val idlingResource: CountingIdlingResource)
         imagePreviewUri: Uri?,
         context: Context
     ) {
-        SaveImage(callback, requestCode, layerModel, commandSerializer, uri, imagePreviewUri, false, true, context, scopeIO, idlingResource).execute()
+        val saveImageOptions = SaveImageOptions(imagePreviewUri, saveAsCopy = false, saveProject = true)
+        SaveImage(
+            callback,
+            requestCode,
+            layerModel,
+            commandSerializer,
+            uri,
+            saveImageOptions,
+            context,
+            scopeIO,
+            idlingResource
+        ).execute()
     }
 
     override fun loadFile(

@@ -3,7 +3,6 @@ package org.catrobat.paintroid.adapter
 import android.content.Context
 import android.net.Uri
 import android.os.Build
-import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
@@ -18,26 +17,31 @@ import androidx.recyclerview.widget.RecyclerView
 import org.catrobat.paintroid.LandingPageActivity.Companion.imagePreview
 import org.catrobat.paintroid.LandingPageActivity.Companion.latestProject
 import org.catrobat.paintroid.R
-import org.catrobat.paintroid.common.CATROBAT_IMAGE_ENDING
-import org.catrobat.paintroid.common.PNG_IMAGE_ENDING
 import org.catrobat.paintroid.common.PROJECT_DELETE_DIALOG_FRAGMENT_TAG
 import org.catrobat.paintroid.common.PROJECT_DETAILS_DIALOG_FRAGMENT_TAG
 import org.catrobat.paintroid.dialog.ProjectDeleteDialog
 import org.catrobat.paintroid.dialog.ProjectDetailsDialog
 import org.catrobat.paintroid.model.Project
 import java.io.File
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class ProjectAdapter(val context: Context, var projectList: ArrayList<Project>, val supportFragmentManager: FragmentManager): RecyclerView.Adapter<ProjectAdapter.ItemViewHolder>() {
+class ProjectAdapter(val context: Context, var projectList: ArrayList<Project>, private val supportFragmentManager: FragmentManager) : RecyclerView.Adapter<ProjectAdapter.ItemViewHolder>() {
     private var itemClickListener: OnItemClickListener? = null
 
-    class ItemViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
+    companion object {
+        private val TAG = ProjectAdapter::class.java.simpleName
+        private const val MEGABYTE = 1.0
+        private const val KILOBYTE = 1024
+    }
+
+    class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val itemImageView: ImageView = itemView.findViewById(R.id.iv_pocket_paint_project_thumbnail_image)
         val itemNameText: TextView = itemView.findViewById(R.id.tv_pocket_paint_project_name)
         val itemLastModifiedText: TextView = itemView.findViewById(R.id.tv_pocket_paint_project_lastmodified)
-        val itemMoreOption : ImageView = itemView.findViewById(R.id.iv_pocket_paint_project_more)
+        val itemMoreOption: ImageView = itemView.findViewById(R.id.iv_pocket_paint_project_more)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
@@ -61,22 +65,22 @@ class ProjectAdapter(val context: Context, var projectList: ArrayList<Project>, 
         val formattedLastModified = dateTimeFormat.format(Date(lastModifiedDate))
         val formattedCreationDate = dateTimeFormat.format(Date(creationDate))
 
-        val formattedSize = if (size >= 1.0) {
+        val formattedSize = if (size >= MEGABYTE) {
             val formattedValue = String.format("%.2f", size)
             "${formattedValue}MB"
         } else {
-            val formattedValue = String.format("%.1f", size * 1024)
+            val formattedValue = String.format("%.1f", size * KILOBYTE)
             "${formattedValue}KB"
         }
 
         val imageFile = getFileFromUri(Uri.parse(item.imagePreviewPath), context)
-        val imageUri: Uri? = if(imageFile?.exists() == true) {
+        val imageUri: Uri? = if (imageFile?.exists() == true) {
             Uri.fromFile(imageFile)
         } else {
             null
         }
 
-        if(imageUri != null) {
+        if (imageUri != null) {
             holder.itemImageView.setImageURI(Uri.parse(item.imagePreviewPath))
         } else {
             holder.itemImageView.setImageResource(R.drawable.pocketpaint_logo_small)
@@ -89,14 +93,14 @@ class ProjectAdapter(val context: Context, var projectList: ArrayList<Project>, 
             val popupMenu = PopupMenu(view.context, view)
             popupMenu.inflate(R.menu.menu_pocketpaint_project_details)
             popupMenu.setOnMenuItemClickListener { menuItem ->
-                when(menuItem.itemId){
+                when (menuItem.itemId) {
                     R.id.project_details -> {
                         val projectDetails = ProjectDetailsDialog(name, resolution, formattedLastModified, formattedCreationDate, format, formattedSize)
                         projectDetails.show(supportFragmentManager, PROJECT_DETAILS_DIALOG_FRAGMENT_TAG)
                         true
                     }
                     R.id.project_delete -> {
-                        val projectDelete = ProjectDeleteDialog(id, name)
+                        val projectDelete = ProjectDeleteDialog(id, name, position)
                         projectDelete.show(supportFragmentManager, PROJECT_DELETE_DIALOG_FRAGMENT_TAG)
                         true
                     }
@@ -133,8 +137,8 @@ class ProjectAdapter(val context: Context, var projectList: ArrayList<Project>, 
         try {
             file = File(uri.path)
             return file
-        } catch (e: Exception) {
-            e.printStackTrace()
+        } catch (e: IOException) {
+            Log.e(TAG, "Error occurred while accessing the file: ${e.message}")
         }
         return null
     }
@@ -158,7 +162,8 @@ class ProjectAdapter(val context: Context, var projectList: ArrayList<Project>, 
         }
     }
 
-    fun removeProject(projectId: Int) {
+    fun removeProject(projectId: Int, position: Int) {
+        projectList.removeAt(position)
         val iterator = projectList.iterator()
         while (iterator.hasNext()) {
             val project = iterator.next()
@@ -175,15 +180,13 @@ class ProjectAdapter(val context: Context, var projectList: ArrayList<Project>, 
         }
     }
 
-    override fun getItemCount(): Int {
-        return projectList.size
-    }
+    override fun getItemCount(): Int = projectList.size
 
-    interface OnItemClickListener{
+    interface OnItemClickListener {
         fun onItemClick(position: Int, projectUri: String, projectName: String, projectImagePreviewUri: String)
     }
 
-    fun setOnItemClickListener(listener: OnItemClickListener){
+    fun setOnItemClickListener(listener: OnItemClickListener) {
         itemClickListener = listener
     }
 }

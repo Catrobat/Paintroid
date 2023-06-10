@@ -65,7 +65,11 @@ import org.catrobat.paintroid.command.implementation.DefaultCommandFactory
 import org.catrobat.paintroid.command.implementation.DefaultCommandManager
 import org.catrobat.paintroid.command.implementation.LayerOpacityCommand
 import org.catrobat.paintroid.command.serialization.CommandSerializer
-import org.catrobat.paintroid.common.*
+import org.catrobat.paintroid.common.PAINTROID_PICTURE_NAME
+import org.catrobat.paintroid.common.PAINTROID_PICTURE_PATH
+import org.catrobat.paintroid.common.REQUEST_CODE_LOAD_PICTURE
+import org.catrobat.paintroid.common.PERMISSION_EXTERNAL_STORAGE_SAVE_PROJECT
+import org.catrobat.paintroid.common.CommonFactory
 import org.catrobat.paintroid.contract.LayerContracts
 import org.catrobat.paintroid.contract.MainActivityContracts
 import org.catrobat.paintroid.contract.MainActivityContracts.MainView
@@ -187,7 +191,6 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         private const val APP_FRAGMENT_KEY = "customActivityState"
         private const val SHARED_PREFS_NAME = "preferences"
         private const val FIRST_LAUNCH_AFTER_INSTALL = "firstLaunchAfterInstall"
-        private var toolbar: Toolbar? = null
         var projectName: String? = null
         var projectUri: String? = null
         var projectImagePreviewUri: String? = null
@@ -312,19 +315,12 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
                 workspace.resetPerspective()
                 presenterMain.initializeFromCleanState(null, null)
             }
-            savedInstanceState == null -> {
+            savedInstanceState == null ->
                 when (receivedIntent.getStringExtra(PROJECT_ACTION)) {
                     "new_project" -> presenterMain.onNewImage()
                     "new_image" -> presenterMain.onNewImage()
                     "load_image" -> presenterMain.replaceImageClicked()
-                    "load_project" -> {
-                        projectName = receivedIntent.getStringExtra("PROJECT_NAME")
-                        projectUri = receivedIntent.getStringExtra("PROJECT_URI")
-                        projectImagePreviewUri = receivedIntent.getStringExtra("PROJECT_IMAGE_PREVIEW_URI")
-                        val projectNameText = findViewById<Toolbar>(R.id.pocketpaint_toolbar)
-                        projectNameText.subtitle = projectName?.substringBefore(".catrobat-image")
-                        presenterMain.loadScaledImage(projectUri?.toUri(), REQUEST_CODE_LOAD_PICTURE)
-                    }
+                    "load_project" -> loadProject(receivedIntent)
                     else -> {
                     val intent = intent
                     val picturePath = intent.getStringExtra(PAINTROID_PICTURE_PATH)
@@ -342,7 +338,6 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
                         workspace.perspective.setBitmapDimensions(layerModel.width, layerModel.height)
                     }
                 }
-            }
             else -> {
                 val isFullscreen = savedInstanceState.getBoolean(IS_FULLSCREEN_KEY, false)
                 val isSaved = savedInstanceState.getBoolean(IS_SAVED_KEY, false)
@@ -374,6 +369,15 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
                 presenterMain.showHelpClicked()
             }
         }
+    }
+
+    private fun loadProject(receivedIntent: Intent) {
+        projectName = receivedIntent.getStringExtra("PROJECT_NAME")
+        projectUri = receivedIntent.getStringExtra("PROJECT_URI")
+        projectImagePreviewUri = receivedIntent.getStringExtra("PROJECT_IMAGE_PREVIEW_URI")
+        val projectNameText = findViewById<Toolbar>(R.id.pocketpaint_toolbar)
+        projectNameText.subtitle = projectName?.substringBefore(".catrobat-image")
+        presenterMain.loadScaledImage(projectUri?.toUri(), REQUEST_CODE_LOAD_PICTURE)
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -419,16 +423,15 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
                 )
             R.id.pocketpaint_advanced_settings -> presenterMain.showAdvancedSettingsClicked()
             android.R.id.home ->
-                if(projectName?.let {
+                if (projectName?.let {
                         FileIO.checkFileExists(FileIO.FileType.CATROBAT,
                             it, this.contentResolver)
-                    } == true){
+                    } == true) {
                     FileIO.storeImageUri = Uri.parse(projectUri)
                     FileIO.storeImagePreviewUri = Uri.parse(projectImagePreviewUri)
                     presenterMain.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_PROJECT, false)
                     presenterMain.finishActivity()
-                }
-                else {
+                } else {
                     presenterMain.backToPocketCodeClicked()
                 }
             else -> return false
@@ -714,10 +717,10 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
     override fun onBackPressed() {
         if (supportFragmentManager.isStateSaved) {
             super.onBackPressed()
-        }else if(projectName?.let {
+        } else if (projectName?.let {
                 FileIO.checkFileExists(FileIO.FileType.CATROBAT,
                     it, this.contentResolver)
-            } == true){
+            } == true) {
             FileIO.storeImageUri = Uri.parse(projectUri)
             FileIO.storeImagePreviewUri = Uri.parse(projectImagePreviewUri)
             presenterMain.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_PROJECT, false)
