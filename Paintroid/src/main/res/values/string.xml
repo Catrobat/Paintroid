@@ -93,6 +93,8 @@
     <string name="menu_save_image">Save image</string>
     <string name="menu_save_copy">Save copy</string>
     <string name="menu_save_project">Save project</string>
+    <string name="menu_project_detail_title">Details</string>
+    <string name="menu_project_delete_title">Delete</string>
     <string name="menu_hide_menu">Hide buttons</string>
     <string name="share_image_menu">Share image</string>
     <string name="share_image_via_text">Send image via</string>
