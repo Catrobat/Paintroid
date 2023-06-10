@@ -25,9 +25,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.ArrayAdapter
+import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
+import android.widget.ImageButton
+import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
+import android.widget.Spinner
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageButton
@@ -131,12 +136,11 @@ class SaveInformationDialog :
         spinner.visibility = View.VISIBLE
     }
 
-
     @SuppressLint("InflateParams")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         inflater = requireActivity().layoutInflater
         val customLayout = inflater.inflate(R.layout.dialog_pocketpaint_save, null)
-        val dialogTitle = if(permission == PERMISSION_EXTERNAL_STORAGE_SAVE_PROJECT){
+        val dialogTitle = if (permission == PERMISSION_EXTERNAL_STORAGE_SAVE_PROJECT) {
             R.string.dialog_save_project_title
         } else {
             R.string.dialog_save_image_title

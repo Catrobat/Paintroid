@@ -40,6 +40,7 @@ import org.catrobat.paintroid.command.serialization.CommandSerializer
 import org.catrobat.paintroid.common.PNG_IMAGE_ENDING
 import org.catrobat.paintroid.contract.LayerContracts
 import org.catrobat.paintroid.model.Project
+import org.catrobat.paintroid.model.SaveImageOptions
 import java.io.File
 import java.io.IOException
 import java.lang.ref.WeakReference
@@ -51,9 +52,7 @@ class SaveImage(
     private val layerModel: LayerContracts.Model,
     private val commandSerializer: CommandSerializer,
     private var uri: Uri?,
-    private var imagePreviewUri: Uri?,
-    private val saveAsCopy: Boolean,
-    private val saveProject: Boolean,
+    private val saveImageOptions: SaveImageOptions,
     private val context: Context,
     private val scopeIO: CoroutineScope,
     private val idlingResource: CountingIdlingResource
@@ -62,6 +61,8 @@ class SaveImage(
 
     companion object {
         private val TAG = SaveImage::class.java.simpleName
+        private const val KILOBYTE = 1024
+        var currentUri: Uri? = null
     }
 
     private fun getImageUri(
@@ -86,12 +87,12 @@ class SaveImage(
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString()
         val pathToFile = imagesDirectory + File.separator + filename + "." + PNG_IMAGE_ENDING
         val imageFile = File(pathToFile)
-        return if (imagePreviewUri == null || !imageFile.exists()) {
+        return if (saveImageOptions.imagePreviewUri == null || !imageFile.exists()) {
             val imagePreviewFilename = filename.replace(".catrobat-image", ".png")
             val imageUri = FileIO.saveBitmapToFile(imagePreviewFilename, bitmap, callback.contentResolver, context)
             imageUri
         } else {
-            imagePreviewUri?.let { FileIO.saveBitmapToUri(it, bitmap, context) }
+            saveImageOptions.imagePreviewUri?.let { FileIO.saveBitmapToUri(it, bitmap, context) }
         }
     }
 
@@ -140,48 +141,13 @@ class SaveImage(
             callback.onSaveImagePreExecute(requestCode)
         }
 
-        var currentUri: Uri? = null
-        var imagePreviewPath: Uri? = null
         scopeIO.launch {
             try {
                 idlingResource.increment()
                 val bitmap = layerModel.getBitmapOfAllLayers()
                 val filename = FileIO.defaultFileName
-                if (saveProject) {
-                    FileIO.fileType = FileIO.FileType.CATROBAT
-                    currentUri = if (uri != null) {
-                        uri?.let {
-                            commandSerializer.overWriteFile(filename, it, callback.contentResolver)
-                        }
-                    } else {
-                        commandSerializer.writeToFile(filename)
-                    }
-                    imagePreviewPath = getImagePreviewUri(callback, bitmap)
-                    val date = Calendar.getInstance().timeInMillis
-                    if(uri != null){
-                        uri?.let {
-                            projectDB.dao.updateProject(filename, imagePreviewPath.toString(), currentUri.toString(), date)
-                            projectAdapter.updateProject(filename, imagePreviewPath.toString(), currentUri.toString(), date)
-                        }
-                    } else {
-                        val dimensions = getImageDimensions(imagePreviewPath)
-                        val size = getImageSize(imagePreviewPath)
-                        val project = Project(
-                            filename,
-                            currentUri.toString(),
-                            date,
-                            date,
-                            "${dimensions?.first} x ${dimensions?.second}",
-                            FileIO.fileType.toString(),
-                            size,
-                            imagePreviewPath.toString()
-                        )
-                        projectDB.dao.insertProject(project)
-                        projectAdapter.insertProject(project)
-                        projectName = filename
-                        projectUri = currentUri.toString()
-                        projectImagePreviewUri = imagePreviewPath.toString()
-                    }
+                if (saveImageOptions.saveProject) {
+                    executeSaveProject(filename, bitmap, callback)
                 } else {
                     currentUri = if (FileIO.fileType == FileIO.FileType.ORA) {
                         val layers = layerModel.layers
@@ -197,11 +163,7 @@ class SaveImage(
                     } else if (FileIO.fileType == FileIO.FileType.CATROBAT) {
                         if (uri != null) {
                             uri?.let {
-                                commandSerializer.overWriteFile(
-                                    filename,
-                                    it,
-                                    callback.contentResolver
-                                )
+                                commandSerializer.overWriteFile(filename, it, callback.contentResolver)
                             }
                         } else {
                             commandSerializer.writeToFile(filename)
@@ -221,9 +183,46 @@ class SaveImage(
 
             withContext(Dispatchers.Main) {
                 if (!callback.isFinishing) {
-                    callback.onSaveImagePostExecute(requestCode, currentUri, saveAsCopy)
+                    callback.onSaveImagePostExecute(requestCode, currentUri, saveImageOptions.saveAsCopy)
                 }
             }
+        }
+    }
+
+    private fun executeSaveProject(filename: String, bitmap: Bitmap?, callback: SaveImageCallback) {
+        FileIO.fileType = FileIO.FileType.CATROBAT
+        currentUri = if (uri != null) {
+            uri?.let {
+                commandSerializer.overWriteFile(filename, it, callback.contentResolver)
+            }
+        } else {
+            commandSerializer.writeToFile(filename)
+        }
+        val imagePreviewPath = getImagePreviewUri(callback, bitmap)
+        val date = Calendar.getInstance().timeInMillis
+        if (uri != null) {
+            uri?.let {
+                projectDB.dao.updateProject(filename, imagePreviewPath.toString(), currentUri.toString(), date)
+                projectAdapter.updateProject(filename, imagePreviewPath.toString(), currentUri.toString(), date)
+            }
+        } else {
+            val dimensions = getImageDimensions(imagePreviewPath)
+            val size = getImageSize(imagePreviewPath)
+            val project = Project(
+                filename,
+                currentUri.toString(),
+                date,
+                date,
+                "${dimensions?.first} x ${dimensions?.second}",
+                FileIO.fileType.toString(),
+                size,
+                imagePreviewPath.toString()
+            )
+            projectDB.dao.insertProject(project)
+            projectAdapter.insertProject(project)
+            projectName = filename
+            projectUri = currentUri.toString()
+            projectImagePreviewUri = imagePreviewPath.toString()
         }
     }
 
@@ -246,10 +245,10 @@ class SaveImage(
         try {
             val inputStream = uri?.let { context.contentResolver.openInputStream(it) }
             val bytes = inputStream?.available()?.toLong() ?: 0
-            size = bytes.toDouble() / (1024 * 1024)
+            size = bytes.toDouble() / (KILOBYTE * KILOBYTE)
             inputStream?.close()
         } catch (e: IOException) {
-            e.printStackTrace()
+            Log.e(TAG, "Error occurred while getting the image size: ${e.message}")
         }
         return size
     }

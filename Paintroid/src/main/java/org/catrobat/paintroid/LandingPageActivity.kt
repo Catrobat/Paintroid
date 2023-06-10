@@ -14,7 +14,7 @@ import org.catrobat.paintroid.data.local.database.ProjectDatabase
 import org.catrobat.paintroid.data.local.database.ProjectDatabaseProvider
 import org.catrobat.paintroid.model.Project
 
-class LandingPageActivity: AppCompatActivity() {
+class LandingPageActivity : AppCompatActivity() {
     companion object {
         lateinit var projectDB: ProjectDatabase
         private lateinit var projectsRecyclerView: RecyclerView
@@ -46,7 +46,7 @@ class LandingPageActivity: AppCompatActivity() {
         val imagePreviewClickListener = View.OnClickListener {
             allProjects = projectDB.dao.getProjects()
             latestProject = allProjects.firstOrNull()
-            if (allProjects.isNotEmpty()){
+            if (allProjects.isNotEmpty()) {
                 val loadProjectIntent = Intent(applicationContext, MainActivity::class.java).apply {
                     putExtra(PROJECT_ACTION, "load_project")
                     putExtra("PROJECT_URI", latestProject?.path)
@@ -54,7 +54,7 @@ class LandingPageActivity: AppCompatActivity() {
                     putExtra("PROJECT_IMAGE_PREVIEW_URI", latestProject?.imagePreviewPath)
                 }
                 startActivity(loadProjectIntent)
-            }else {
+            } else {
                 val newProjectIntent = Intent(this, MainActivity::class.java).apply {
                     putExtra(PROJECT_ACTION, "new_project")
                 }
@@ -92,7 +92,7 @@ class LandingPageActivity: AppCompatActivity() {
         projectAdapter = ProjectAdapter(this, projectsList, supportFragmentManager)
         projectsRecyclerView.adapter = projectAdapter
 
-        projectAdapter.setOnItemClickListener(object: ProjectAdapter.OnItemClickListener{
+        projectAdapter.setOnItemClickListener(object : ProjectAdapter.OnItemClickListener {
             override fun onItemClick(
                 position: Int,
                 projectUri: String,

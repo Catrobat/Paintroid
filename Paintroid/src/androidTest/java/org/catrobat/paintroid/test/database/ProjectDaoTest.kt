@@ -3,7 +3,9 @@ package org.catrobat.paintroid.test.database
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import junit.framework.Assert.*
+import junit.framework.Assert.assertFalse
+import junit.framework.Assert.assertTrue
+import junit.framework.Assert.assertEquals
 import org.catrobat.paintroid.data.local.dao.ProjectDao
 import org.catrobat.paintroid.data.local.database.ProjectDatabase
 import org.catrobat.paintroid.model.Project
@@ -27,7 +29,7 @@ class ProjectDaoTest {
     }
 
     @After
-    fun teardown(){
+    fun teardown() {
         database.close()
     }
 
@@ -114,7 +116,7 @@ class ProjectDaoTest {
             "catrobat/upath",
             1)
         val allProjects = dao.getProjects()
-        val updatedProject = allProjects.find { it.name == "name"}
+        val updatedProject = allProjects.find { it.name == "name" }
         assertEquals("paintroid/upath", updatedProject?.imagePreviewPath)
         assertEquals("catrobat/upath", updatedProject?.path)
         assertEquals(1L, updatedProject?.lastModified)

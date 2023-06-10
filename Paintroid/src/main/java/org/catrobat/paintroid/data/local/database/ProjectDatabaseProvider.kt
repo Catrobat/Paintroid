@@ -6,13 +6,13 @@ import androidx.room.Room
 object ProjectDatabaseProvider {
     var projectDatabase: ProjectDatabase? = null
 
-    fun getDatabase(context: Context): ProjectDatabase{
-        return projectDatabase?: synchronized(this){
+    fun getDatabase(context: Context): ProjectDatabase {
+        return projectDatabase ?: synchronized(this) {
             projectDatabase ?: buildDatabase(context).also { projectDatabase = it }
         }
     }
 
-    fun buildDatabase(context: Context): ProjectDatabase{
+    fun buildDatabase(context: Context): ProjectDatabase {
         return Room.databaseBuilder(context, ProjectDatabase::class.java, "projects.db")
             .allowMainThreadQueries()
             .build()

@@ -19,17 +19,26 @@ import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.core.graphics.drawable.toBitmap
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.Room
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.pressBack
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
-import androidx.test.espresso.action.ViewActions.*
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.replaceText
+import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
+import androidx.test.espresso.action.ViewActions.scrollTo
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasAction
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.isRoot
+import androidx.test.espresso.matcher.ViewMatchers.hasDescendant
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.ActivityTestRule
@@ -38,10 +47,12 @@ import org.catrobat.paintroid.R
 import org.catrobat.paintroid.adapter.ProjectAdapter
 import org.catrobat.paintroid.common.CATROBAT_IMAGE_ENDING
 import org.catrobat.paintroid.common.PNG_IMAGE_ENDING
+import org.catrobat.paintroid.data.local.dao.ProjectDao
+import org.catrobat.paintroid.data.local.database.ProjectDatabase
 import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider
-import org.catrobat.paintroid.test.espresso.util.UiInteractions
 import org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt
+import org.catrobat.paintroid.test.espresso.util.UiInteractions.waitFor
 import org.catrobat.paintroid.test.espresso.util.UiMatcher.atPosition
 import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView
 import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction
@@ -53,7 +64,11 @@ import org.hamcrest.CoreMatchers.not
 import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.TypeSafeMatcher
-import org.junit.*
+import org.junit.Test
+import org.junit.Rule
+import org.junit.After
+import org.junit.Before
+import org.junit.Assert
 import org.junit.runner.RunWith
 import java.io.File
 import java.io.IOException
@@ -61,6 +76,9 @@ import kotlin.collections.ArrayList
 
 @RunWith(AndroidJUnit4::class)
 class LandingPageActivityIntegrationTest {
+
+    private lateinit var database: ProjectDatabase
+    private lateinit var dao: ProjectDao
 
     @get:Rule
     var launchActivityRule = ActivityTestRule(LandingPageActivity::class.java)
@@ -78,12 +96,20 @@ class LandingPageActivityIntegrationTest {
 
     @Before
     fun setUp() {
+        database = Room.databaseBuilder(InstrumentationRegistry.getInstrumentation().targetContext, ProjectDatabase::class.java, "projects.db")
+            .allowMainThreadQueries()
+            .build()
+        dao = database.dao
         deletionFileList = ArrayList()
         activity = launchActivityRule.activity
     }
 
     @After
     fun tearDown() {
+        database.dao.deleteAllProjects()
+        database.clearAllTables()
+        database.close()
+
         for (file in deletionFileList) {
             if (file != null && file.exists()) {
                 Assert.assertTrue(file.delete())
@@ -108,7 +134,7 @@ class LandingPageActivityIntegrationTest {
     }
 
     @Test
-    fun testTopAppBarDisplayed(){
+    fun testTopAppBarDisplayed() {
         onView(isAssignableFrom(Toolbar::class.java))
             .check(matches(isDisplayed()))
     }
@@ -120,7 +146,7 @@ class LandingPageActivityIntegrationTest {
     }
 
     @Test
-    fun testTwoFABDisplayed(){
+    fun testTwoFABDisplayed() {
         onView(withId(R.id.pocketpaint_fab_load_image))
             .check(matches(isDisplayed()))
         onView(withId(R.id.pocketpaint_fab_new_image))
@@ -128,7 +154,7 @@ class LandingPageActivityIntegrationTest {
     }
 
     @Test
-    fun testMyProjectsTextDisplayed(){
+    fun testMyProjectsTextDisplayed() {
         onView(withText("My Projects"))
             .check(matches(isDisplayed()))
     }
@@ -183,9 +209,8 @@ class LandingPageActivityIntegrationTest {
             .perform(replaceText(PROJECT_NAME))
         onView(withText(R.string.save_button_text))
             .perform(click())
-        onView(isRoot()).perform(UiInteractions.waitFor(300))
-        onView(withContentDescription(R.string.abc_action_bar_up_description))
-            .perform(click());
+        onView(isRoot()).perform(waitFor(300))
+        pressBack()
         onView(withId(R.id.pocketpaint_projects_list))
             .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(position))
         onView(withId(R.id.pocketpaint_projects_list)).check(
@@ -207,9 +232,8 @@ class LandingPageActivityIntegrationTest {
             .perform(replaceText(PROJECT_NAME))
         onView(withText(R.string.save_button_text))
             .perform(click())
-        onView(isRoot()).perform(UiInteractions.waitFor(300))
-        onView(withContentDescription(R.string.abc_action_bar_up_description))
-            .perform(click());
+        onView(isRoot()).perform(waitFor(300))
+        pressBack()
         onView(withId(R.id.pocketpaint_projects_list))
             .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(position))
         onView(withId(R.id.pocketpaint_projects_list))
@@ -233,9 +257,8 @@ class LandingPageActivityIntegrationTest {
             .perform(replaceText(PROJECT_NAME))
         onView(withText(R.string.save_button_text))
             .perform(click())
-        onView(isRoot()).perform(UiInteractions.waitFor(300))
-        onView(withContentDescription(R.string.abc_action_bar_up_description))
-            .perform(click());
+        onView(isRoot()).perform(waitFor(300))
+        pressBack()
         onView(withId(R.id.pocketpaint_projects_list))
             .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(position))
         val imagesDirectory =
@@ -266,42 +289,6 @@ class LandingPageActivityIntegrationTest {
     }
 
     @Test
-    fun testSavedProjectOpen() {
-        onView(withId(R.id.pocketpaint_fab_new_image))
-            .perform(click())
-        onDrawingSurfaceView()
-            .perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE))
-        TopBarViewInteraction.onTopBarView()
-            .performOpenMoreOptions()
-        onView(withText(R.string.menu_save_project))
-            .perform(click())
-        onView(withId(R.id.pocketpaint_image_name_save_text))
-            .perform(replaceText(PROJECT_NAME))
-        onView(withText(R.string.save_button_text))
-            .perform(click())
-        onView(isRoot()).perform(UiInteractions.waitFor(300))
-        onView(withContentDescription(R.string.abc_action_bar_up_description))
-            .perform(click());
-        onView(withId(R.id.pocketpaint_projects_list))
-            .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(position))
-        onView(withId(R.id.pocketpaint_projects_list))
-            .perform(actionOnItemAtPosition<ProjectAdapter.ItemViewHolder>(position, click()))
-        onView(
-            allOf(
-                withId(R.id.pocketpaint_toolbar),
-                hasDescendant(
-                    allOf(
-                        isAssignableFrom(TextView::class.java),
-                        withText(PROJECT_NAME)
-                    )
-                )
-            )
-        ).check(
-            matches(isDisplayed())
-        )
-    }
-
-    @Test
     fun testProjectOverFlowMenuDetailsDisplayed() {
         onView(withId(R.id.pocketpaint_fab_new_image))
             .perform(click())
@@ -315,9 +302,8 @@ class LandingPageActivityIntegrationTest {
             .perform(replaceText(PROJECT_NAME))
         onView(withText(R.string.save_button_text))
             .perform(click())
-        onView(isRoot()).perform(UiInteractions.waitFor(300))
-        onView(withContentDescription(R.string.abc_action_bar_up_description))
-            .perform(click());
+        onView(isRoot()).perform(waitFor(300))
+        pressBack()
         onView(withId(R.id.pocketpaint_projects_list))
             .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(position))
         onView(withId(R.id.pocketpaint_projects_list)).perform(
@@ -358,9 +344,8 @@ class LandingPageActivityIntegrationTest {
             .perform(replaceText(PROJECT_NAME))
         onView(withText(R.string.save_button_text))
             .perform(click())
-        onView(isRoot()).perform(UiInteractions.waitFor(300))
-        onView(withContentDescription(R.string.abc_action_bar_up_description))
-            .perform(click());
+        onView(isRoot()).perform(waitFor(300))
+        pressBack()
         onView(withId(R.id.pocketpaint_projects_list))
             .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(position))
         onView(withId(R.id.pocketpaint_projects_list)).perform(
@@ -385,7 +370,7 @@ class LandingPageActivityIntegrationTest {
         )
         onView(withText(R.string.menu_project_detail_title))
             .perform(click())
-        onView(isRoot()).perform(UiInteractions.waitFor(300))
+        onView(isRoot()).perform(waitFor(300))
         onView(withText(android.R.string.ok))
             .perform(click())
     }
@@ -404,9 +389,8 @@ class LandingPageActivityIntegrationTest {
             .perform(replaceText(PROJECT_NAME))
         onView(withText(R.string.save_button_text))
             .perform(click())
-        onView(isRoot()).perform(UiInteractions.waitFor(300))
-        onView(withContentDescription(R.string.abc_action_bar_up_description))
-            .perform(click());
+        onView(isRoot()).perform(waitFor(300))
+        pressBack()
         onView(withId(R.id.pocketpaint_projects_list))
             .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(position))
         onView(withId(R.id.pocketpaint_projects_list)).perform(
@@ -447,9 +431,8 @@ class LandingPageActivityIntegrationTest {
             .perform(replaceText(PROJECT_NAME))
         onView(withText(R.string.save_button_text))
             .perform(click())
-        onView(isRoot()).perform(UiInteractions.waitFor(300))
-        onView(withContentDescription(R.string.abc_action_bar_up_description))
-            .perform(click());
+        onView(isRoot()).perform(waitFor(300))
+        pressBack()
         onView(withId(R.id.pocketpaint_projects_list))
             .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(position))
         onView(withId(R.id.pocketpaint_projects_list)).perform(
@@ -500,13 +483,10 @@ class LandingPageActivityIntegrationTest {
             .perform(replaceText(PROJECT_NAME))
         onView(withText(R.string.save_button_text))
             .perform(click())
-        onView(isRoot()).perform(UiInteractions.waitFor(300))
-        onView(withContentDescription(R.string.abc_action_bar_up_description))
-            .perform(click());
-        onView(withId(R.id.pocketpaint_projects_list))
-            .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(position))
+        onView(isRoot()).perform(waitFor(300))
+        pressBack()
         onView(withId(R.id.pocketpaint_projects_list)).perform(
-            actionOnItemAtPosition<RecyclerView.ViewHolder>(
+            actionOnItemAtPosition<ProjectAdapter.ItemViewHolder>(
                 position,
                 object : ViewAction {
                     override fun getConstraints(): Matcher<View> {
@@ -527,17 +507,19 @@ class LandingPageActivityIntegrationTest {
         )
         onView(withText(R.string.menu_project_delete_title))
             .perform(click())
-        onView(isRoot()).perform(UiInteractions.waitFor(100))
+        onView(isRoot()).perform(waitFor(100))
         onView(withId(android.R.id.button1))
             .perform(closeSoftKeyboard())
             .perform(scrollTo())
             .perform(click())
+        onView(isRoot()).perform(waitFor(300))
         onView(withId(R.id.pocketpaint_projects_list))
-            .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(position))
+            .perform(RecyclerViewActions.scrollToPosition<ProjectAdapter.ItemViewHolder>(position))
+        onView(isRoot()).perform(waitFor(300))
         if (isRecyclerViewEmpty(recyclerViewMatcher)) {
             onView(withId(R.id.pocketpaint_projects_list))
                 .check(matches(not(hasDescendant(withId(R.id.iv_pocket_paint_project_thumbnail_image)))))
-        }else {
+        } else {
             onView(withId(R.id.pocketpaint_projects_list))
                 .check(
                     matches(
@@ -555,6 +537,38 @@ class LandingPageActivityIntegrationTest {
     }
 
     @Test
+    fun testSavedProjectOpen() {
+        onView(withId(R.id.pocketpaint_fab_new_image))
+            .perform(click())
+        onDrawingSurfaceView()
+            .perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE))
+        TopBarViewInteraction.onTopBarView()
+            .performOpenMoreOptions()
+        onView(withText(R.string.menu_save_project))
+            .perform(click())
+        onView(withId(R.id.pocketpaint_image_name_save_text))
+            .perform(replaceText(PROJECT_NAME))
+        onView(withText(R.string.save_button_text))
+            .perform(click())
+        onView(isRoot()).perform(waitFor(300))
+        pressBack()
+        onView(withId(R.id.pocketpaint_projects_list))
+            .perform(actionOnItemAtPosition<ProjectAdapter.ItemViewHolder>(position, click()))
+        onView(
+            allOf(
+                withId(R.id.pocketpaint_toolbar),
+                hasDescendant(
+                    allOf(
+                        isAssignableFrom(TextView::class.java),
+                        withText(PROJECT_NAME)
+                    )
+                )
+            )
+        ).check(
+            matches(isDisplayed())
+        )
+    }
+    @Test
     fun testImagePreviewAfterProjectInsert() {
         onView(withId(R.id.pocketpaint_fab_new_image))
             .perform(click())
@@ -570,9 +584,8 @@ class LandingPageActivityIntegrationTest {
             .perform(replaceText(PROJECT_NAME))
         onView(withText(R.string.save_button_text))
             .perform(click())
-        onView(isRoot()).perform(UiInteractions.waitFor(300))
-        onView(withContentDescription(R.string.abc_action_bar_up_description))
-            .perform(click());
+        onView(isRoot()).perform(waitFor(300))
+        pressBack()
         onView(withId(R.id.pocketpaint_projects_list))
             .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(position))
         val imagesDirectory =
@@ -634,5 +647,4 @@ class LandingPageActivityIntegrationTest {
         }
         return itemCount
     }
-
 }

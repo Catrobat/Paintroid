@@ -9,7 +9,7 @@ import org.catrobat.paintroid.model.Project
     entities = [Project::class],
     version = 1
 )
-abstract class ProjectDatabase: RoomDatabase() {
+abstract class ProjectDatabase : RoomDatabase() {
 
     abstract val dao: ProjectDao
 }
