@@ -56,6 +56,7 @@ const val MAX_LAYERS = 100
 const val MEGABYTE_IN_BYTE = 1_048_576L
 const val MINIMUM_HEAP_SPACE_FOR_NEW_LAYER = 40
 const val CATROBAT_IMAGE_ENDING = "catrobat-image"
+const val PNG_IMAGE_ENDING = "png"
 const val TEMP_IMAGE_DIRECTORY_NAME = "TemporaryImages"
 const val TEMP_IMAGE_NAME = "temporaryImage"
 const val ITALIC_FONT_BOX_ADJUSTMENT = 1.2f

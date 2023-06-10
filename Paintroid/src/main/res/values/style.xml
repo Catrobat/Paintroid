@@ -288,9 +288,12 @@
         <item name="strokeWidth">1dp</item>
     </style>
 
-
     <style name="ShapeAppearanceOverlay.MyApp.Button.Circle" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="SubtitleTextAppearance" parent="TextAppearance.AppCompat.Subhead">
+        <item name="android:textSize">10sp</item>
     </style>
 </resources>

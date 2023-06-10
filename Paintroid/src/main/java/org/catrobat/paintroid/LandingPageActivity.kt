@@ -22,7 +22,7 @@ class LandingPageActivity: AppCompatActivity() {
         lateinit var projectAdapter: ProjectAdapter
         var latestProject: Project? = null
         lateinit var imagePreview: ImageView
-        val FAB_ACTION = ""
+        const val PROJECT_ACTION = ""
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,7 +30,7 @@ class LandingPageActivity: AppCompatActivity() {
         setContentView(R.layout.activity_pocketpaint_landing_page)
 
         projectDB = ProjectDatabaseProvider.getDatabase(applicationContext)
-        val allProjects = projectDB.dao.getProjects()
+        var allProjects = projectDB.dao.getProjects()
         latestProject = allProjects.firstOrNull()
 
         init()
@@ -44,17 +44,21 @@ class LandingPageActivity: AppCompatActivity() {
         }
 
         val imagePreviewClickListener = View.OnClickListener {
+            allProjects = projectDB.dao.getProjects()
+            latestProject = allProjects.firstOrNull()
             if (allProjects.isNotEmpty()){
                 val loadProjectIntent = Intent(applicationContext, MainActivity::class.java).apply {
-                    putExtra(FAB_ACTION, "load_project")
+                    putExtra(PROJECT_ACTION, "load_project")
                     putExtra("PROJECT_URI", latestProject?.path)
                     putExtra("PROJECT_NAME", latestProject?.name)
                     putExtra("PROJECT_IMAGE_PREVIEW_URI", latestProject?.imagePreviewPath)
                 }
                 startActivity(loadProjectIntent)
             }else {
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
+                val newProjectIntent = Intent(this, MainActivity::class.java).apply {
+                    putExtra(PROJECT_ACTION, "new_project")
+                }
+                startActivity(newProjectIntent)
             }
         }
 
@@ -65,13 +69,13 @@ class LandingPageActivity: AppCompatActivity() {
 
         val newImage = findViewById<FloatingActionButton>(R.id.pocketpaint_fab_new_image)
         newImage.setOnClickListener {
-            mainActivityIntent.putExtra(FAB_ACTION, "new_image")
+            mainActivityIntent.putExtra(PROJECT_ACTION, "new_image")
             startActivity(mainActivityIntent)
         }
 
         val loadImage = findViewById<FloatingActionButton>(R.id.pocketpaint_fab_load_image)
         loadImage.setOnClickListener {
-            mainActivityIntent.putExtra(FAB_ACTION, "load_image")
+            mainActivityIntent.putExtra(PROJECT_ACTION, "load_image")
             startActivity(mainActivityIntent)
         }
     }
@@ -85,7 +89,7 @@ class LandingPageActivity: AppCompatActivity() {
             projectsList.add(it)
         }
 
-        projectAdapter = ProjectAdapter(projectsList, supportFragmentManager)
+        projectAdapter = ProjectAdapter(this, projectsList, supportFragmentManager)
         projectsRecyclerView.adapter = projectAdapter
 
         projectAdapter.setOnItemClickListener(object: ProjectAdapter.OnItemClickListener{
@@ -96,7 +100,7 @@ class LandingPageActivity: AppCompatActivity() {
                 projectImagePreviewUri: String
             ) {
                 val loadProjectIntent = Intent(applicationContext, MainActivity::class.java).apply {
-                    putExtra(FAB_ACTION, "load_project")
+                    putExtra(PROJECT_ACTION, "load_project")
                     putExtra("PROJECT_URI", projectUri)
                     putExtra("PROJECT_NAME", projectName)
                     putExtra("PROJECT_IMAGE_PREVIEW_URI", projectImagePreviewUri)

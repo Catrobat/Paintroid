@@ -55,7 +55,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.catrobat.paintroid.LandingPageActivity.Companion.FAB_ACTION
+import org.catrobat.paintroid.LandingPageActivity.Companion.PROJECT_ACTION
 import org.catrobat.paintroid.colorpicker.ColorHistory
 import org.catrobat.paintroid.command.CommandFactory
 import org.catrobat.paintroid.command.CommandManager
@@ -165,10 +165,6 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
     private var userInteraction = false
     private var isTemporaryFileSavingTest = false
 
-    var projectName: String? = null
-    var projectUri: String? = null
-    var projectImagePreviewUri: String? = null
-
     private val isRunningEspressoTests: Boolean by lazy {
         try {
             Class.forName("androidx.test.espresso.Espresso")
@@ -191,6 +187,10 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         private const val APP_FRAGMENT_KEY = "customActivityState"
         private const val SHARED_PREFS_NAME = "preferences"
         private const val FIRST_LAUNCH_AFTER_INSTALL = "firstLaunchAfterInstall"
+        private var toolbar: Toolbar? = null
+        var projectName: String? = null
+        var projectUri: String? = null
+        var projectImagePreviewUri: String? = null
     }
 
     override val presenter: MainActivityContracts.Presenter
@@ -313,13 +313,16 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
                 presenterMain.initializeFromCleanState(null, null)
             }
             savedInstanceState == null -> {
-                when (receivedIntent.getStringExtra(FAB_ACTION)) {
+                when (receivedIntent.getStringExtra(PROJECT_ACTION)) {
+                    "new_project" -> presenterMain.onNewImage()
                     "new_image" -> presenterMain.onNewImage()
                     "load_image" -> presenterMain.replaceImageClicked()
                     "load_project" -> {
                         projectName = receivedIntent.getStringExtra("PROJECT_NAME")
                         projectUri = receivedIntent.getStringExtra("PROJECT_URI")
                         projectImagePreviewUri = receivedIntent.getStringExtra("PROJECT_IMAGE_PREVIEW_URI")
+                        val projectNameText = findViewById<Toolbar>(R.id.pocketpaint_toolbar)
+                        projectNameText.subtitle = projectName?.substringBefore(".catrobat-image")
                         presenterMain.loadScaledImage(projectUri?.toUri(), REQUEST_CODE_LOAD_PICTURE)
                     }
                     else -> {
@@ -711,6 +714,14 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
     override fun onBackPressed() {
         if (supportFragmentManager.isStateSaved) {
             super.onBackPressed()
+        }else if(projectName?.let {
+                FileIO.checkFileExists(FileIO.FileType.CATROBAT,
+                    it, this.contentResolver)
+            } == true){
+            FileIO.storeImageUri = Uri.parse(projectUri)
+            FileIO.storeImagePreviewUri = Uri.parse(projectImagePreviewUri)
+            presenterMain.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_PROJECT, false)
+            presenterMain.finishActivity()
         } else if (!supportFragmentManager.popBackStackImmediate()) {
             presenterMain.onBackPressed()
         }

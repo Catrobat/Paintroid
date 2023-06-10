@@ -23,6 +23,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.os.Environment
 import android.util.Log
 import androidx.test.espresso.idling.CountingIdlingResource
 import kotlinx.coroutines.CoroutineScope
@@ -32,9 +33,14 @@ import kotlinx.coroutines.withContext
 import org.catrobat.paintroid.FileIO
 import org.catrobat.paintroid.LandingPageActivity.Companion.projectAdapter
 import org.catrobat.paintroid.LandingPageActivity.Companion.projectDB
+import org.catrobat.paintroid.MainActivity.Companion.projectImagePreviewUri
+import org.catrobat.paintroid.MainActivity.Companion.projectName
+import org.catrobat.paintroid.MainActivity.Companion.projectUri
 import org.catrobat.paintroid.command.serialization.CommandSerializer
+import org.catrobat.paintroid.common.PNG_IMAGE_ENDING
 import org.catrobat.paintroid.contract.LayerContracts
 import org.catrobat.paintroid.model.Project
+import java.io.File
 import java.io.IOException
 import java.lang.ref.WeakReference
 import java.util.*
@@ -76,7 +82,11 @@ class SaveImage(
         bitmap: Bitmap?
     ): Uri? {
         val filename = FileIO.defaultFileName
-        return if (imagePreviewUri == null) {
+        val imagesDirectory =
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString()
+        val pathToFile = imagesDirectory + File.separator + filename + "." + PNG_IMAGE_ENDING
+        val imageFile = File(pathToFile)
+        return if (imagePreviewUri == null || !imageFile.exists()) {
             val imagePreviewFilename = filename.replace(".catrobat-image", ".png")
             val imageUri = FileIO.saveBitmapToFile(imagePreviewFilename, bitmap, callback.contentResolver, context)
             imageUri
@@ -168,6 +178,9 @@ class SaveImage(
                         )
                         projectDB.dao.insertProject(project)
                         projectAdapter.insertProject(project)
+                        projectName = filename
+                        projectUri = currentUri.toString()
+                        projectImagePreviewUri = imagePreviewPath.toString()
                     }
                 } else {
                     currentUri = if (FileIO.fileType == FileIO.FileType.ORA) {
