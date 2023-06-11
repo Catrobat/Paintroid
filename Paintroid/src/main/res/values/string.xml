@@ -51,6 +51,14 @@
     <string name="clipboard_tool_copy">Copy</string>
     <string name="clipboard_tool_cut">Cut</string>
 
+    <string name="pocketpaint_landing_page_image_preview">Image Preview</string>
+    <string name="pocketpaint_landing_page_image_edit_circle">Edit Image</string>
+    <string name="pocketpaint_landing_page_fab_load_image">Load Image</string>
+    <string name="pocketpaint_landing_page_fab_new_image">New Image</string>
+    <string name="pocketpaint_landing_project_image_thumbnail">Project Thumbnail</string>
+    <string name="pocketpaint_landing_project_more_options">Project Options</string>
+    <string name="pocketpaint_landing_project_my_projects">My Projects</string>
+
     <string name="stickers">Stickers</string>
     <string name="dialog_import_image_title" translatable="false">@string/button_import_image</string>
     <string name="dialog_save_image_title" translatable="false">@string/menu_save_image</string>
@@ -190,6 +198,8 @@
     <string name="pocketpaint_project_details_dialog">Resolution: %s&lt;br /&gt;Last modified: %s&lt;br /&gt;Creation date: %s&lt;br /&gt;Format: %s&lt;br /&gt;Size: %s</string>
     <string name="pocketpaint_project_delete_title_dialog" translatable="false">Delete %s</string>
     <string name="pocketpaint_project_delete_message_dialog" translatable="false">Do you really want to delete your Project?</string>
+    <string name="pocketpaint_project_name">Project Name</string>
+    <string name="pocketpaint_project_last_modified">DD/MM/YYYY HH:MM</string>
 
     <string name="permission_info_external_storage_text">This app needs the requested permission to function properly. In order to save images to the local memory, the app needs read and write access to it.</string>
     <string name="permission_info_permanent_denial_text">This app needs the requested permission to function properly. In order to save images to the local memory, the app needs read and write access to it.

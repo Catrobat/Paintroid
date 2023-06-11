@@ -19,7 +19,7 @@ class ProjectDeleteDialog(private val projectId: Int, private val name: String, 
             .setPositiveButton(R.string.pocketpaint_ok) { _, _ ->
                 projectDB.dao.deleteProject(projectId)
                 projectAdapter.removeProject(projectId, position)
-                projectAdapter.notifyDataSetChanged()
+                projectAdapter.notifyItemRemoved(position)
             }
             .setNegativeButton(R.string.pocketpaint_cancel) { _, _ -> dismiss() }
             .create()
