@@ -54,7 +54,10 @@ abstract class BaseTool(
     protected val movedDistance: PointF
 
     @JvmField
-    protected var scrollBehavior: ScrollBehavior
+    protected var scrollTolerance: Int? = null
+
+    @JvmField
+    protected var scrollBehavior: ScrollBehavior? = null
 
     @JvmField
     var previousEventCoordinate: PointF?
@@ -63,8 +66,10 @@ abstract class BaseTool(
     protected var commandFactory: CommandFactory = DefaultCommandFactory()
 
     init {
-        val scrollTolerance = contextCallback.scrollTolerance
-        scrollBehavior = PointScrollBehavior(scrollTolerance)
+        contextCallback?.let { callback ->
+            scrollTolerance = callback.scrollTolerance
+        }
+        scrollBehavior = scrollTolerance?.let { PointScrollBehavior(it) }
         movedDistance = PointF(0f, 0f)
         previousEventCoordinate = PointF(0f, 0f)
         if (toolPaint != null && toolPaint.paint != null && toolPaint.paint.pathEffect != null) {
@@ -117,7 +122,7 @@ abstract class BaseTool(
         pointY: Float,
         screenWidth: Int,
         screenHeight: Int
-    ): Point = scrollBehavior.getScrollDirection(pointX, pointY, screenWidth, screenHeight)
+    ): Point? = scrollBehavior?.getScrollDirection(pointX, pointY, screenWidth, screenHeight)
 
     override fun handToolMode(): Boolean = false
 }
