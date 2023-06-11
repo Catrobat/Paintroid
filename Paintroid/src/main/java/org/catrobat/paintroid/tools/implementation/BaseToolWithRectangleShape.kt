@@ -740,7 +740,7 @@ abstract class BaseToolWithRectangleShape(
         pointY: Float,
         screenWidth: Int,
         screenHeight: Int
-    ): Point {
+    ): Point? {
         return if (currentAction == FloatingBoxAction.MOVE || currentAction == FloatingBoxAction.RESIZE) {
             super.getAutoScrollDirection(pointX, pointY, screenWidth, screenHeight)
         } else Point(0, 0)
