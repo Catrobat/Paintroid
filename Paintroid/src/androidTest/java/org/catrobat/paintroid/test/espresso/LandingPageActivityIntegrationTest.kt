@@ -26,18 +26,16 @@ import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.replaceText
-import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
-import androidx.test.espresso.action.ViewActions.scrollTo
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasAction
+import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.matcher.ViewMatchers.isRoot
 import androidx.test.espresso.matcher.ViewMatchers.hasDescendant
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
@@ -52,7 +50,6 @@ import org.catrobat.paintroid.data.local.database.ProjectDatabase
 import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider
 import org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt
-import org.catrobat.paintroid.test.espresso.util.UiInteractions.waitFor
 import org.catrobat.paintroid.test.espresso.util.UiMatcher.atPosition
 import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView
 import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction
@@ -73,6 +70,8 @@ import org.junit.runner.RunWith
 import java.io.File
 import java.io.IOException
 import kotlin.collections.ArrayList
+
+private const val THREAD_WAITING_TIME: Long = 300
 
 @RunWith(AndroidJUnit4::class)
 class LandingPageActivityIntegrationTest {
@@ -209,7 +208,7 @@ class LandingPageActivityIntegrationTest {
             .perform(replaceText(PROJECT_NAME))
         onView(withText(R.string.save_button_text))
             .perform(click())
-        onView(isRoot()).perform(waitFor(300))
+        Thread.sleep(THREAD_WAITING_TIME)
         pressBack()
         onView(withId(R.id.pocketpaint_projects_list))
             .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(position))
@@ -232,7 +231,7 @@ class LandingPageActivityIntegrationTest {
             .perform(replaceText(PROJECT_NAME))
         onView(withText(R.string.save_button_text))
             .perform(click())
-        onView(isRoot()).perform(waitFor(300))
+        Thread.sleep(THREAD_WAITING_TIME)
         pressBack()
         onView(withId(R.id.pocketpaint_projects_list))
             .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(position))
@@ -257,7 +256,7 @@ class LandingPageActivityIntegrationTest {
             .perform(replaceText(PROJECT_NAME))
         onView(withText(R.string.save_button_text))
             .perform(click())
-        onView(isRoot()).perform(waitFor(300))
+        Thread.sleep(THREAD_WAITING_TIME)
         pressBack()
         onView(withId(R.id.pocketpaint_projects_list))
             .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(position))
@@ -302,7 +301,7 @@ class LandingPageActivityIntegrationTest {
             .perform(replaceText(PROJECT_NAME))
         onView(withText(R.string.save_button_text))
             .perform(click())
-        onView(isRoot()).perform(waitFor(300))
+        Thread.sleep(THREAD_WAITING_TIME)
         pressBack()
         onView(withId(R.id.pocketpaint_projects_list))
             .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(position))
@@ -344,7 +343,7 @@ class LandingPageActivityIntegrationTest {
             .perform(replaceText(PROJECT_NAME))
         onView(withText(R.string.save_button_text))
             .perform(click())
-        onView(isRoot()).perform(waitFor(300))
+        Thread.sleep(THREAD_WAITING_TIME)
         pressBack()
         onView(withId(R.id.pocketpaint_projects_list))
             .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(position))
@@ -370,8 +369,9 @@ class LandingPageActivityIntegrationTest {
         )
         onView(withText(R.string.menu_project_detail_title))
             .perform(click())
-        onView(isRoot()).perform(waitFor(300))
+        Thread.sleep(THREAD_WAITING_TIME)
         onView(withText(android.R.string.ok))
+            .inRoot(RootMatchers.isDialog())
             .perform(click())
     }
 
@@ -389,7 +389,7 @@ class LandingPageActivityIntegrationTest {
             .perform(replaceText(PROJECT_NAME))
         onView(withText(R.string.save_button_text))
             .perform(click())
-        onView(isRoot()).perform(waitFor(300))
+        Thread.sleep(THREAD_WAITING_TIME)
         pressBack()
         onView(withId(R.id.pocketpaint_projects_list))
             .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(position))
@@ -431,7 +431,7 @@ class LandingPageActivityIntegrationTest {
             .perform(replaceText(PROJECT_NAME))
         onView(withText(R.string.save_button_text))
             .perform(click())
-        onView(isRoot()).perform(waitFor(300))
+        Thread.sleep(THREAD_WAITING_TIME)
         pressBack()
         onView(withId(R.id.pocketpaint_projects_list))
             .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(position))
@@ -457,7 +457,8 @@ class LandingPageActivityIntegrationTest {
         )
         onView(withText(R.string.menu_project_delete_title))
             .perform(click())
-        onView(withText(R.string.cancel_button_text))
+        onView(withId(android.R.id.button2))
+            .inRoot(RootMatchers.isDialog())
             .perform(click())
         onView(withId(R.id.pocketpaint_projects_list))
             .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(position))
@@ -483,7 +484,7 @@ class LandingPageActivityIntegrationTest {
             .perform(replaceText(PROJECT_NAME))
         onView(withText(R.string.save_button_text))
             .perform(click())
-        onView(isRoot()).perform(waitFor(300))
+        Thread.sleep(THREAD_WAITING_TIME)
         pressBack()
         onView(withId(R.id.pocketpaint_projects_list)).perform(
             actionOnItemAtPosition<ProjectAdapter.ItemViewHolder>(
@@ -507,15 +508,12 @@ class LandingPageActivityIntegrationTest {
         )
         onView(withText(R.string.menu_project_delete_title))
             .perform(click())
-        onView(isRoot()).perform(waitFor(100))
+        Thread.sleep(THREAD_WAITING_TIME)
         onView(withId(android.R.id.button1))
-            .perform(closeSoftKeyboard())
-            .perform(scrollTo())
+            .inRoot(RootMatchers.isDialog())
             .perform(click())
-        onView(isRoot()).perform(waitFor(300))
         onView(withId(R.id.pocketpaint_projects_list))
             .perform(RecyclerViewActions.scrollToPosition<ProjectAdapter.ItemViewHolder>(position))
-        onView(isRoot()).perform(waitFor(300))
         if (isRecyclerViewEmpty(recyclerViewMatcher)) {
             onView(withId(R.id.pocketpaint_projects_list))
                 .check(matches(not(hasDescendant(withId(R.id.iv_pocket_paint_project_thumbnail_image)))))
@@ -550,7 +548,7 @@ class LandingPageActivityIntegrationTest {
             .perform(replaceText(PROJECT_NAME))
         onView(withText(R.string.save_button_text))
             .perform(click())
-        onView(isRoot()).perform(waitFor(300))
+        Thread.sleep(THREAD_WAITING_TIME)
         pressBack()
         onView(withId(R.id.pocketpaint_projects_list))
             .perform(actionOnItemAtPosition<ProjectAdapter.ItemViewHolder>(position, click()))
@@ -568,6 +566,7 @@ class LandingPageActivityIntegrationTest {
             matches(isDisplayed())
         )
     }
+
     @Test
     fun testImagePreviewAfterProjectInsert() {
         onView(withId(R.id.pocketpaint_fab_new_image))
@@ -584,7 +583,7 @@ class LandingPageActivityIntegrationTest {
             .perform(replaceText(PROJECT_NAME))
         onView(withText(R.string.save_button_text))
             .perform(click())
-        onView(isRoot()).perform(waitFor(300))
+        Thread.sleep(THREAD_WAITING_TIME)
         pressBack()
         onView(withId(R.id.pocketpaint_projects_list))
             .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(position))
