@@ -62,9 +62,9 @@ import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider.
 import org.catrobat.paintroid.test.espresso.util.EspressoUtils.grantPermissionRulesVersionCheck
 import org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt
 import org.catrobat.paintroid.test.espresso.util.UiInteractions.waitFor
-import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView
+import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.Companion.onDrawingSurfaceView
 import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction
-import org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView
+import org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.Companion.onTopBarView
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule
 import org.catrobat.paintroid.tools.ToolType
 import org.hamcrest.Matchers.`is`
@@ -381,7 +381,7 @@ class MenuFileActivityIntegrationTest {
         onView(withId(R.id.pocketpaint_image_name_save_text)).check(matches(isDisplayed()))
         onView(withId(R.id.pocketpaint_save_dialog_spinner)).check(matches(isDisplayed()))
         onView(withId(R.id.pocketpaint_save_dialog_spinner)).perform(click())
-        onData(allOf(`is`(instanceOf<Any>(String::class.java)), `is`<String>("png")))
+        onData(allOf(`is`(instanceOf<Any>(String::class.java)), `is`("png")))
             .inRoot(RootMatchers.isPlatformPopup()).perform(click())
         onView(withId(R.id.pocketpaint_image_name_save_text))
             .perform(replaceText(defaultFileName))
@@ -393,7 +393,7 @@ class MenuFileActivityIntegrationTest {
         onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_save_image)).perform(click())
         onView(withId(R.id.pocketpaint_save_dialog_spinner)).perform(click())
-        onData(allOf(`is`(instanceOf<Any>(String::class.java)), `is`<String>("jpg")))
+        onData(allOf(`is`(instanceOf<Any>(String::class.java)), `is`("jpg")))
             .inRoot(RootMatchers.isPlatformPopup()).perform(click())
         onView(withId(R.id.pocketpaint_image_name_save_text))
             .perform(replaceText(defaultFileName))
@@ -447,7 +447,7 @@ class MenuFileActivityIntegrationTest {
         val imageName = "test12345"
         onView(withId(R.id.pocketpaint_image_name_save_text)).perform(replaceText(imageName))
         onView(withId(R.id.pocketpaint_save_dialog_spinner)).perform(click())
-        onData(allOf(`is`(instanceOf<Any>(String::class.java)), `is`<String>("png")))
+        onData(allOf(`is`(instanceOf<Any>(String::class.java)), `is`("png")))
             .inRoot(RootMatchers.isPlatformPopup()).perform(click())
         onView(withText(R.string.save_button_text)).perform(click())
         onView(isRoot()).perform(waitFor(100))
@@ -468,7 +468,7 @@ class MenuFileActivityIntegrationTest {
         onView(withText("png")).check(matches(isDisplayed()))
         onView(withText("image$imageNumber")).check(matches(isDisplayed()))
         onView(withId(R.id.pocketpaint_save_dialog_spinner)).perform(click())
-        onData(allOf(`is`(instanceOf<Any>(String::class.java)), `is`<String>("png")))
+        onData(allOf(`is`(instanceOf<Any>(String::class.java)), `is`("png")))
             .inRoot(RootMatchers.isPlatformPopup()).perform(click())
         onView(withText(R.string.save_button_text)).perform(click())
         onView(isRoot()).perform(waitFor(100))

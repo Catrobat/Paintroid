@@ -38,12 +38,12 @@ import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider
 import org.catrobat.paintroid.test.espresso.util.EspressoUtils.waitForToast
 import org.catrobat.paintroid.test.espresso.util.MainActivityHelper
 import org.catrobat.paintroid.test.espresso.util.UiInteractions
-import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView
+import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.Companion.onDrawingSurfaceView
 import org.catrobat.paintroid.test.espresso.util.wrappers.LayerMenuViewInteraction
-import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView
+import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.Companion.onToolBarView
 import org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction
 import org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction
-import org.catrobat.paintroid.test.espresso.util.wrappers.TransformToolOptionsViewInteraction.onTransformToolOptionsView
+import org.catrobat.paintroid.test.espresso.util.wrappers.TransformToolOptionsViewInteraction.Companion.onTransformToolOptionsView
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule
 import org.catrobat.paintroid.tools.ToolReference
 import org.catrobat.paintroid.tools.ToolType
@@ -129,7 +129,7 @@ class TransformToolIntegrationTest {
         displayWidth = activityHelper.displayWidth
         displayHeight = activityHelper.displayHeight
         maxBitmapSize = displayHeight * displayWidth * MAXIMUM_BITMAP_SIZE_FACTOR.toInt()
-        val workingBitmap = layerModel.currentLayer!!.bitmap!!
+        val workingBitmap = layerModel.currentLayer!!.bitmap
         initialWidth = workingBitmap.width
         initialHeight = workingBitmap.height
         onToolBarView()
@@ -188,8 +188,8 @@ class TransformToolIntegrationTest {
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
         onToolBarView()
             .performSelectTool(ToolType.TRANSFORM)
-        val width = layerModel.currentLayer!!.bitmap!!.width
-        val height = layerModel.currentLayer!!.bitmap!!.height
+        val width = layerModel.currentLayer!!.bitmap.width
+        val height = layerModel.currentLayer!!.bitmap.height
         val position = newPointF(toolPosition)
         runBlocking {
             onTransformToolOptionsView()
@@ -276,7 +276,7 @@ class TransformToolIntegrationTest {
             )
 
         assertEquals(boundingBoxWidth, toolSelectionBoxWidth, Float.MIN_VALUE)
-        assertThat(boundingBoxHeight, greaterThan(toolSelectionBoxHeight))
+        assertEquals(boundingBoxHeight, toolSelectionBoxHeight, Float.MIN_VALUE)
     }
 
     @Test
@@ -296,7 +296,7 @@ class TransformToolIntegrationTest {
 
     @Test
     fun testIfOnePixelIsFound() {
-        val workingBitmap = layerModel.currentLayer!!.bitmap!!
+        val workingBitmap = layerModel.currentLayer!!.bitmap
         workingBitmap.setPixel(initialWidth / 2, initialHeight / 2, Color.BLACK)
         onToolBarView()
             .performSelectTool(ToolType.TRANSFORM)
@@ -313,7 +313,7 @@ class TransformToolIntegrationTest {
 
     @Test
     fun testIfMultiplePixelAreFound() {
-        val workingBitmap = layerModel.currentLayer!!.bitmap!!
+        val workingBitmap = layerModel.currentLayer!!.bitmap
         workingBitmap.setPixel(1, 1, Color.BLACK)
         workingBitmap.setPixel(initialWidth - 1, initialHeight - 1, Color.BLACK)
         onToolBarView()
@@ -331,7 +331,7 @@ class TransformToolIntegrationTest {
 
     @Test
     fun testIfDrawingSurfaceBoundsAreFoundAndNotCropped() {
-        val workingBitmap = layerModel.currentLayer!!.bitmap!!
+        val workingBitmap = layerModel.currentLayer!!.bitmap
         workingBitmap.setPixel(initialWidth / 2, 0, Color.BLACK)
         workingBitmap.setPixel(0, initialHeight / 2, Color.BLACK)
         workingBitmap.setPixel(initialWidth - 1, initialHeight / 2, Color.BLACK)
@@ -353,7 +353,7 @@ class TransformToolIntegrationTest {
     fun testIfClickOnCanvasCrops() {
         onToolBarView()
             .performSelectTool(ToolType.TRANSFORM)
-        var workingBitmap = layerModel.currentLayer!!.bitmap!!
+        var workingBitmap = layerModel.currentLayer!!.bitmap
         workingBitmap.eraseColor(Color.BLACK)
         for (indexWidth in 0 until initialWidth) {
             workingBitmap.setPixel(indexWidth, 0, Color.TRANSPARENT)
@@ -367,7 +367,7 @@ class TransformToolIntegrationTest {
             .performClickCheckmark()
         onDrawingSurfaceView()
             .checkBitmapDimension(initialWidth, --initialHeight)
-        workingBitmap = layerModel.currentLayer!!.bitmap!!
+        workingBitmap = layerModel.currentLayer!!.bitmap
         for (indexWidth in 0 until initialWidth) {
             workingBitmap.setPixel(indexWidth, initialHeight - 1, Color.TRANSPARENT)
         }
@@ -382,7 +382,7 @@ class TransformToolIntegrationTest {
             .performClickCheckmark()
         onDrawingSurfaceView()
             .checkBitmapDimension(initialWidth, --initialHeight)
-        workingBitmap = layerModel.currentLayer!!.bitmap!!
+        workingBitmap = layerModel.currentLayer!!.bitmap
         for (indexHeight in 0 until initialHeight) {
             workingBitmap.setPixel(0, indexHeight, Color.TRANSPARENT)
         }
@@ -397,7 +397,7 @@ class TransformToolIntegrationTest {
             .performClickCheckmark()
         onDrawingSurfaceView()
             .checkBitmapDimension(--initialWidth, initialHeight)
-        workingBitmap = layerModel.currentLayer!!.bitmap!!
+        workingBitmap = layerModel.currentLayer!!.bitmap
         for (indexHeight in 0 until initialHeight) {
             workingBitmap.setPixel(initialWidth - 1, indexHeight, Color.TRANSPARENT)
         }
@@ -416,7 +416,7 @@ class TransformToolIntegrationTest {
 
     @Test
     fun testSmallBitmapResizing() {
-        val workingBitmap = layerModel.currentLayer!!.bitmap!!
+        val workingBitmap = layerModel.currentLayer!!.bitmap
         workingBitmap.setPixel(initialWidth / 2, initialHeight / 2, Color.BLACK)
         onToolBarView()
             .performSelectTool(ToolType.TRANSFORM)
@@ -438,7 +438,7 @@ class TransformToolIntegrationTest {
 
     @Test
     fun testCenterBitmapAfterCropAndUndo() {
-        drawPlus(layerModel.currentLayer!!.bitmap!!, initialWidth / 2)
+        drawPlus(layerModel.currentLayer!!.bitmap, initialWidth / 2)
         onToolBarView()
             .performSelectTool(ToolType.TRANSFORM)
         runBlocking {
@@ -448,12 +448,12 @@ class TransformToolIntegrationTest {
         }
         TopBarViewInteraction.onTopBarView()
             .performClickCheckmark()
-        val croppedBitmap = layerModel.currentLayer!!.bitmap!!
+        val croppedBitmap = layerModel.currentLayer!!.bitmap
         assertThat(initialHeight, greaterThan(croppedBitmap.height))
         assertThat(initialWidth, greaterThan(croppedBitmap.width))
         TopBarViewInteraction.onTopBarView()
             .performUndo()
-        val undoBitmap = layerModel.currentLayer!!.bitmap!!
+        val undoBitmap = layerModel.currentLayer!!.bitmap
         assertEquals(
             "undoBitmap.getHeight should be initialHeight",
             undoBitmap.height.toLong(),
@@ -468,7 +468,7 @@ class TransformToolIntegrationTest {
 
     @Test
     fun testIfBordersAreAlignedCorrectAfterCrop() {
-        drawPlus(layerModel.currentLayer!!.bitmap!!, initialWidth / 2)
+        drawPlus(layerModel.currentLayer!!.bitmap, initialWidth / 2)
         onToolBarView()
             .performSelectTool(ToolType.TRANSFORM)
         runBlocking {
@@ -478,7 +478,7 @@ class TransformToolIntegrationTest {
         }
         onDrawingSurfaceView()
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION))
-        val croppedBitmap = layerModel.currentLayer!!.bitmap!!
+        val croppedBitmap = layerModel.currentLayer!!.bitmap
         val width = croppedBitmap.width
         val height = croppedBitmap.height
         val tool = toolReference.tool as TransformTool
@@ -490,7 +490,7 @@ class TransformToolIntegrationTest {
 
     @Test
     fun testMoveLeftCroppingBorderAndDoCrop() {
-        drawPlus(layerModel.currentLayer!!.bitmap!!, initialWidth / 2)
+        drawPlus(layerModel.currentLayer!!.bitmap, initialWidth / 2)
         onToolBarView()
             .performSelectTool(ToolType.TRANSFORM)
         runBlocking {
@@ -500,7 +500,7 @@ class TransformToolIntegrationTest {
         }
         TopBarViewInteraction.onTopBarView()
             .performClickCheckmark()
-        val height = layerModel.currentLayer!!.bitmap!!.height
+        val height = layerModel.currentLayer!!.bitmap.height
         val toolPosition = toolPosition
         val newSelectionBoxWidth: Float = toolSelectionBoxWidth / 2
         toolSelectionBoxWidth = newSelectionBoxWidth
@@ -515,7 +515,7 @@ class TransformToolIntegrationTest {
 
     @Test
     fun testMoveRightCroppingBorderAndDoCrop() {
-        drawPlus(layerModel.currentLayer!!.bitmap!!, initialWidth / 2)
+        drawPlus(layerModel.currentLayer!!.bitmap, initialWidth / 2)
         onToolBarView()
             .performSelectTool(ToolType.TRANSFORM)
         runBlocking {
@@ -524,7 +524,7 @@ class TransformToolIntegrationTest {
         }
         TopBarViewInteraction.onTopBarView()
             .performClickCheckmark()
-        val height = layerModel.currentLayer!!.bitmap!!.height
+        val height = layerModel.currentLayer!!.bitmap.height
         val toolPosition = toolPosition
         val newSelectionBoxWidth: Float = toolSelectionBoxWidth / 2
         toolSelectionBoxWidth = newSelectionBoxWidth
@@ -537,7 +537,7 @@ class TransformToolIntegrationTest {
 
     @Test
     fun testMoveTopCroppingBorderAndDoCrop() {
-        drawPlus(layerModel.currentLayer!!.bitmap!!, initialWidth / 2)
+        drawPlus(layerModel.currentLayer!!.bitmap, initialWidth / 2)
         onToolBarView()
             .performSelectTool(ToolType.TRANSFORM)
         runBlocking {
@@ -547,7 +547,7 @@ class TransformToolIntegrationTest {
         }
         TopBarViewInteraction.onTopBarView()
             .performClickCheckmark()
-        val width = layerModel.currentLayer!!.bitmap!!.width
+        val width = layerModel.currentLayer!!.bitmap.width
         val toolPosition = toolPosition
         val newSelectionBoxHeight: Float = toolSelectionBoxHeight / 2
         toolSelectionBoxHeight = newSelectionBoxHeight
@@ -560,7 +560,7 @@ class TransformToolIntegrationTest {
 
     @Test
     fun testMoveBottomCroppingBorderAndDoCrop() {
-        drawPlus(layerModel.currentLayer!!.bitmap!!, initialWidth / 2)
+        drawPlus(layerModel.currentLayer!!.bitmap, initialWidth / 2)
         onToolBarView()
             .performSelectTool(ToolType.TRANSFORM)
         runBlocking {
@@ -570,7 +570,7 @@ class TransformToolIntegrationTest {
         }
         TopBarViewInteraction.onTopBarView()
             .performClickCheckmark()
-        val width = layerModel.currentLayer!!.bitmap!!.width
+        val width = layerModel.currentLayer!!.bitmap.width
         val toolPosition = toolPosition
         val newSelectionBoxHeight: Float = toolSelectionBoxHeight / 2
         toolSelectionBoxHeight = newSelectionBoxHeight
@@ -601,7 +601,7 @@ class TransformToolIntegrationTest {
         var height = initialHeight
         var cropSize = initialWidth / 8
         width -= cropSize
-        layerModel.currentLayer!!.bitmap!!.setPixels(
+        layerModel.currentLayer!!.bitmap.setPixels(
             IntArray(cropSize * height),
             0,
             cropSize,
@@ -623,7 +623,7 @@ class TransformToolIntegrationTest {
             .checkBitmapDimension(width, height)
         cropSize = initialHeight / 8
         height -= cropSize
-        layerModel.currentLayer!!.bitmap!!.setPixels(
+        layerModel.currentLayer!!.bitmap.setPixels(
             IntArray(cropSize * width),
             0, width, 0, 0, width, cropSize
         )
@@ -640,7 +640,7 @@ class TransformToolIntegrationTest {
             .checkBitmapDimension(width, height)
         cropSize = initialWidth / 8
         width -= cropSize
-        layerModel.currentLayer!!.bitmap!!.setPixels(
+        layerModel.currentLayer!!.bitmap.setPixels(
             IntArray(cropSize * height),
             0,
             cropSize,
@@ -662,7 +662,7 @@ class TransformToolIntegrationTest {
             .checkBitmapDimension(width, height)
         cropSize = initialHeight / 8
         height -= cropSize
-        layerModel.currentLayer!!.bitmap!!.setPixels(
+        layerModel.currentLayer!!.bitmap.setPixels(
             IntArray(cropSize * width),
             0,
             width,
@@ -689,11 +689,11 @@ class TransformToolIntegrationTest {
         onToolBarView()
             .performSelectTool(ToolType.TRANSFORM)
             .performCloseToolOptionsView()
-        drawPlus(layerModel.currentLayer!!.bitmap!!, initialWidth / 2)
+        drawPlus(layerModel.currentLayer!!.bitmap, initialWidth / 2)
         setToolSelectionBoxDimensions(initialWidth / 8f, initialHeight / 8f)
         onDrawingSurfaceView()
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION))
-        val croppedBitmap = layerModel.currentLayer!!.bitmap!!
+        val croppedBitmap = layerModel.currentLayer!!.bitmap
         val height = croppedBitmap.height
         val width = croppedBitmap.width
         val tool = toolReference.tool as TransformTool
@@ -718,7 +718,7 @@ class TransformToolIntegrationTest {
         onDrawingSurfaceView()
             .perform(UiInteractions.swipe(dragFrom, dragTo))
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION))
-        val enlargedBitmap = layerModel.currentLayer!!.bitmap!!
+        val enlargedBitmap = layerModel.currentLayer!!.bitmap
         val bitmapSize = enlargedBitmap.height + enlargedBitmap.width
         assertTrue(bitmapSize < maxBitmapSize)
     }
@@ -759,38 +759,38 @@ class TransformToolIntegrationTest {
         setToolPosition(toolPosition.x - 1, toolPosition.y)
         TopBarViewInteraction.onTopBarView()
             .performClickCheckmark()
-        var height: Int = layerModel.currentLayer!!.bitmap!!.height
+        var height: Int = layerModel.currentLayer!!.bitmap.height
         pixels = IntArray(height)
-        layerModel.currentLayer!!.bitmap!!.getPixels(pixels, 0, 1, 0, 0, 1, height)
+        layerModel.currentLayer!!.bitmap.getPixels(pixels, 0, 1, 0, 0, 1, height)
         for (pixel in pixels) {
             assertEquals(Color.TRANSPARENT.toLong(), pixel.toLong())
         }
         setToolPosition(toolPosition.x + 1, toolPosition.y)
         TopBarViewInteraction.onTopBarView()
             .performClickCheckmark()
-        var width: Int = layerModel.currentLayer!!.bitmap!!.width
-        height = layerModel.currentLayer!!.bitmap!!.height
+        var width: Int = layerModel.currentLayer!!.bitmap.width
+        height = layerModel.currentLayer!!.bitmap.height
         pixels = IntArray(height)
-        layerModel.currentLayer!!.bitmap!!.getPixels(pixels, 0, 1, width - 1, 0, 1, height)
+        layerModel.currentLayer!!.bitmap.getPixels(pixels, 0, 1, width - 1, 0, 1, height)
         for (pixel in pixels) {
             assertEquals(Color.TRANSPARENT.toLong(), pixel.toLong())
         }
         setToolPosition(toolPosition.x, toolPosition.y - 1)
         TopBarViewInteraction.onTopBarView()
             .performClickCheckmark()
-        width = layerModel.currentLayer!!.bitmap!!.width
+        width = layerModel.currentLayer!!.bitmap.width
         pixels = IntArray(width)
-        layerModel.currentLayer!!.bitmap!!.getPixels(pixels, 0, width, 0, 0, width, 1)
+        layerModel.currentLayer!!.bitmap.getPixels(pixels, 0, width, 0, 0, width, 1)
         for (pixel in pixels) {
             assertEquals(Color.TRANSPARENT.toLong(), pixel.toLong())
         }
         setToolPosition(toolPosition.x, toolPosition.y + 1)
         TopBarViewInteraction.onTopBarView()
             .performClickCheckmark()
-        width = layerModel.currentLayer!!.bitmap!!.width
-        height = layerModel.currentLayer!!.bitmap!!.height
+        width = layerModel.currentLayer!!.bitmap.width
+        height = layerModel.currentLayer!!.bitmap.height
         pixels = IntArray(width)
-        layerModel.currentLayer!!.bitmap!!.getPixels(pixels, 0, width, 0, height - 1, width, 1)
+        layerModel.currentLayer!!.bitmap.getPixels(pixels, 0, width, 0, height - 1, width, 1)
         for (pixel in pixels) {
             assertEquals(Color.TRANSPARENT.toLong(), pixel.toLong())
         }
@@ -1216,7 +1216,7 @@ class TransformToolIntegrationTest {
 
     @Test
     fun testTransformToolSetCenterCloseCenter() {
-        drawPlus(layerModel.currentLayer!!.bitmap!!, initialWidth / 2)
+        drawPlus(layerModel.currentLayer!!.bitmap, initialWidth / 2)
         onToolBarView()
             .performSelectTool(ToolType.TRANSFORM)
 
@@ -1235,7 +1235,7 @@ class TransformToolIntegrationTest {
 
     @Test
     fun testTransformToolSetCenterFarCenter() {
-        drawPlus(layerModel.currentLayer!!.bitmap!!, initialWidth / 2)
+        drawPlus(layerModel.currentLayer!!.bitmap, initialWidth / 2)
 
         onToolBarView()
             .performSelectTool(ToolType.HAND)
@@ -1266,7 +1266,7 @@ class TransformToolIntegrationTest {
 
     @Test
     fun testClickingOnCheckmarkDoesNotResetZoomOrPlacement() {
-        drawPlus(layerModel.currentLayer!!.bitmap!!, initialWidth / 2)
+        drawPlus(layerModel.currentLayer!!.bitmap, initialWidth / 2)
         perspective.translate(100f, 100f)
         perspective.multiplyScale(0.1f)
         val oldScale = perspective.scale
@@ -1281,9 +1281,13 @@ class TransformToolIntegrationTest {
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.BOTTOM_RIGHT_CORNER))
         runBlocking {
             TopBarViewInteraction.onTopBarView().performClickCheckmark()
+            delay(1000)
         }
         assertEquals(oldScale, perspective.scale)
         assertEquals(oldTranslationY, perspective.surfaceTranslationY)
+        runBlocking {
+            delay(1000)
+        }
         assertEquals(oldTranslationX, perspective.surfaceTranslationX)
     }
 

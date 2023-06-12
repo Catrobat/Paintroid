@@ -84,7 +84,7 @@ object EspressoUtils {
     @SuppressWarnings("SwallowedException")
     fun waitForToast(viewMatcher: Matcher<View?>?, duration: Int) {
         val waitTime = System.currentTimeMillis() + duration
-        val viewInteraction = Espresso.onView(viewMatcher).inRoot(UiMatcher.isToast())
+        val viewInteraction = Espresso.onView(viewMatcher).inRoot(UiMatcher.isToast)
         while (System.currentTimeMillis() < waitTime) {
             try {
                 viewInteraction.check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
