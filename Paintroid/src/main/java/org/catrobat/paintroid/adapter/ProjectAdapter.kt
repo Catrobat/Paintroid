@@ -28,7 +28,11 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class ProjectAdapter(val context: Context, var projectList: ArrayList<Project>, private val supportFragmentManager: FragmentManager) : RecyclerView.Adapter<ProjectAdapter.ItemViewHolder>() {
+class ProjectAdapter(
+    val context: Context,
+    var projectList: ArrayList<Project>,
+    private val supportFragmentManager: FragmentManager
+) : RecyclerView.Adapter<ProjectAdapter.ItemViewHolder>() {
     private var itemClickListener: OnItemClickListener? = null
 
     companion object {
@@ -163,7 +167,9 @@ class ProjectAdapter(val context: Context, var projectList: ArrayList<Project>, 
     }
 
     fun removeProject(projectId: Int, position: Int) {
-        projectList.removeAt(position)
+        if (projectList.isNotEmpty()) {
+            projectList.removeAt(position)
+        }
         val iterator = projectList.iterator()
         while (iterator.hasNext()) {
             val project = iterator.next()
