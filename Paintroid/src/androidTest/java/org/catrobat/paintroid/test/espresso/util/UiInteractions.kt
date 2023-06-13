@@ -141,6 +141,7 @@ object UiInteractions {
                         (r.right + 50).toFloat(),
                         r.centerY().toFloat()
                     )
+                    else -> return@CoordinatesProvider null
                 }
                 null
             }, Press.FINGER, 0, 1)

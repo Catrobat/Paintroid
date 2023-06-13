@@ -59,7 +59,7 @@ import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider
 import org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt
 import org.catrobat.paintroid.test.espresso.util.UiInteractions.waitFor
 import org.catrobat.paintroid.test.espresso.util.UiMatcher.atPosition
-import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView
+import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction
 import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction
 import org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule
@@ -188,7 +188,7 @@ class LandingPageActivityIntegrationTest {
         val resultOK = Instrumentation.ActivityResult(Activity.RESULT_OK, intent)
         Intents.intending(hasAction(Intent.ACTION_GET_CONTENT)).respondWith(resultOK)
         onView(withId(R.id.pocketpaint_fab_load_image)).perform(click())
-        onDrawingSurfaceView()
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
             .checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
         Intents.release()
     }
@@ -203,7 +203,7 @@ class LandingPageActivityIntegrationTest {
     fun testProjectInsertedWithProjectName() {
         onView(withId(R.id.pocketpaint_fab_new_image))
             .perform(click())
-        onDrawingSurfaceView()
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
             .perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE))
         TopBarViewInteraction.onTopBarView()
             .performOpenMoreOptions()
@@ -231,7 +231,7 @@ class LandingPageActivityIntegrationTest {
         val testName = UUID.randomUUID().toString()
         onView(withId(R.id.pocketpaint_fab_new_image))
             .perform(click())
-        onDrawingSurfaceView()
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
             .perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE))
         TopBarViewInteraction.onTopBarView()
             .performOpenMoreOptions()
@@ -454,7 +454,7 @@ class LandingPageActivityIntegrationTest {
     fun testSavedProjectOpen() {
         onView(withId(R.id.pocketpaint_fab_new_image))
             .perform(click())
-        onDrawingSurfaceView()
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
             .perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE))
         TopBarViewInteraction.onTopBarView()
             .performOpenMoreOptions()
@@ -492,7 +492,7 @@ class LandingPageActivityIntegrationTest {
             .perform(click())
         ToolBarViewInteraction.onToolBarView()
             .performSelectTool(ToolType.FILL)
-        onDrawingSurfaceView()
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
             .perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE))
         TopBarViewInteraction.onTopBarView()
             .performOpenMoreOptions()
