@@ -138,8 +138,9 @@ public final class UiInteractions {
 							return new float[]{r.left - 50, r.centerY()};
 						case RIGHT:
 							return new float[]{r.right + 50, r.centerY()};
+						default:
+							return null;
 					}
-					return null;
 				}, Press.FINGER, 0, 1)
 		);
 	}
