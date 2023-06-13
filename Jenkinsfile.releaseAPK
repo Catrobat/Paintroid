@@ -111,7 +111,8 @@ pipeline {
                             ./gradlew publishToMavenLocal
                     '''
                 }
-                archiveArtifacts artifacts: '**/*-release.aar'
+                archiveArtifacts artifacts: 'Paintroid/build/outputs/aar/Paintroid-signedRelease.aar'
+                archiveArtifacts artifacts: 'colorpicker/build/outputs/aar/colorpicker-signedRelease.aar'
             }
         }
     }

@@ -57,8 +57,8 @@ import org.catrobat.paintroid.test.espresso.util.UiMatcher
 import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction
 import org.catrobat.paintroid.test.espresso.util.wrappers.LayerMenuViewInteraction
 import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction
-import org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction
 import org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction
+import org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction
 import org.catrobat.paintroid.test.espresso.util.wrappers.TransformToolOptionsViewInteraction
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule
 import org.catrobat.paintroid.test.utils.ToastMatcher

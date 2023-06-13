@@ -34,7 +34,7 @@ import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider
 import org.catrobat.paintroid.test.espresso.util.UiInteractions
 import org.catrobat.paintroid.test.espresso.util.wrappers.BottomNavigationViewInteraction
-import org.catrobat.paintroid.test.espresso.util.wrappers.ColorPickerViewInteraction.onColorPickerView
+import org.catrobat.paintroid.test.espresso.util.wrappers.ColorPickerViewInteraction.Companion.onColorPickerView
 import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction
 import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule

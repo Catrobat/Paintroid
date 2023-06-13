@@ -44,9 +44,9 @@ import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider
 import org.catrobat.paintroid.test.espresso.util.EspressoUtils.grantPermissionRulesVersionCheck
 import org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt
 import org.catrobat.paintroid.test.espresso.util.UiInteractions.waitFor
-import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView
+import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.Companion.onDrawingSurfaceView
 import org.catrobat.paintroid.test.espresso.util.wrappers.LayerMenuViewInteraction
-import org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView
+import org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.Companion.onTopBarView
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule
 import org.hamcrest.Matchers.instanceOf
 import org.hamcrest.Matchers.`is`
@@ -98,7 +98,7 @@ class OraFileFormatIntegrationTest {
         onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_save_image)).perform(ViewActions.click())
         onView(withId(R.id.pocketpaint_save_dialog_spinner)).perform(ViewActions.click())
-        onData(AllOf.allOf(`is`(instanceOf<Any>(String::class.java)), `is`<String>("ora")))
+        onData(AllOf.allOf(`is`(instanceOf<Any>(String::class.java)), `is`("ora")))
             .inRoot(RootMatchers.isPlatformPopup()).perform(ViewActions.click())
         onView(withId(R.id.pocketpaint_image_name_save_text))
             .perform(ViewActions.replaceText("test1337"))
@@ -116,7 +116,7 @@ class OraFileFormatIntegrationTest {
         onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_save_image)).perform(ViewActions.click())
         onView(withId(R.id.pocketpaint_save_dialog_spinner)).perform(ViewActions.click())
-        onData(AllOf.allOf(`is`(instanceOf<Any>(String::class.java)), `is`<String>("ora")))
+        onData(AllOf.allOf(`is`(instanceOf<Any>(String::class.java)), `is`("ora")))
             .inRoot(RootMatchers.isPlatformPopup()).perform(ViewActions.click())
         onView(withId(R.id.pocketpaint_image_name_save_text))
             .perform(ViewActions.replaceText("OraOverride"))
@@ -160,7 +160,7 @@ class OraFileFormatIntegrationTest {
         onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_save_image)).perform(ViewActions.click())
         onView(withId(R.id.pocketpaint_save_dialog_spinner)).perform(ViewActions.click())
-        onData(AllOf.allOf(`is`(instanceOf<Any>(String::class.java)), `is`<String>("ora")))
+        onData(AllOf.allOf(`is`(instanceOf<Any>(String::class.java)), `is`("ora")))
             .inRoot(RootMatchers.isPlatformPopup()).perform(ViewActions.click())
         onView(withId(R.id.pocketpaint_image_name_save_text))
             .perform(ViewActions.replaceText("MoreLayersOraTest"))

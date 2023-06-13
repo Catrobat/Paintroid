@@ -110,7 +110,7 @@ class CreateMarketingScreenshots {
         Espresso.onData(
             AllOf.allOf(
                 Matchers.`is`(Matchers.instanceOf<Any>(String::class.java)),
-                Matchers.`is`<String>("png")
+                Matchers.`is`("png")
             )
         ).inRoot(RootMatchers.isPlatformPopup()).perform(click())
         onView(withText(R.string.cancel_button_text))
