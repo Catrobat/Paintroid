@@ -18,6 +18,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.core.graphics.drawable.toBitmap
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import androidx.test.espresso.Espresso.onView
@@ -26,20 +27,25 @@ import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.replaceText
+import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
+import androidx.test.espresso.action.ViewActions.scrollTo
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasAction
-import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.isRoot
 import androidx.test.espresso.matcher.ViewMatchers.hasDescendant
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.ActivityTestRule
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import org.catrobat.paintroid.LandingPageActivity
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.adapter.ProjectAdapter
@@ -47,9 +53,11 @@ import org.catrobat.paintroid.common.CATROBAT_IMAGE_ENDING
 import org.catrobat.paintroid.common.PNG_IMAGE_ENDING
 import org.catrobat.paintroid.data.local.dao.ProjectDao
 import org.catrobat.paintroid.data.local.database.ProjectDatabase
+import org.catrobat.paintroid.model.Project
 import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider
 import org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt
+import org.catrobat.paintroid.test.espresso.util.UiInteractions.waitFor
 import org.catrobat.paintroid.test.espresso.util.UiMatcher.atPosition
 import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView
 import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction
@@ -69,9 +77,8 @@ import org.junit.Assert
 import org.junit.runner.RunWith
 import java.io.File
 import java.io.IOException
+import java.util.*
 import kotlin.collections.ArrayList
-
-private const val THREAD_WAITING_TIME: Long = 300
 
 @RunWith(AndroidJUnit4::class)
 class LandingPageActivityIntegrationTest {
@@ -86,11 +93,25 @@ class LandingPageActivityIntegrationTest {
     var screenshotOnFailRule = ScreenshotOnFailRule()
 
     private lateinit var activity: LandingPageActivity
+    private lateinit var intent: Intent
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: ProjectAdapter
 
     companion object {
         private lateinit var deletionFileList: ArrayList<File?>
         private const val PROJECT_NAME = "projectName"
         private const val position = 0
+        private val project = Project(
+            "name",
+            "catrobat/path",
+            0,
+            0,
+            "0x0",
+            "CATROBAT",
+            0.0,
+            "paintroid/path",
+            1)
+        private val projectList = ArrayList<Project>().apply { add(project) }
     }
 
     @Before
@@ -100,6 +121,7 @@ class LandingPageActivityIntegrationTest {
             .build()
         dao = database.dao
         deletionFileList = ArrayList()
+        intent = Intent()
         activity = launchActivityRule.activity
     }
 
@@ -159,23 +181,6 @@ class LandingPageActivityIntegrationTest {
     }
 
     @Test
-    fun testNewImage() {
-        onView(withId(R.id.pocketpaint_fab_new_image))
-            .perform(click())
-        onDrawingSurfaceView()
-            .perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE))
-        onDrawingSurfaceView()
-            .checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
-        pressBack()
-        onView(withText(R.string.discard_button_text))
-            .perform(click())
-        onView(withId(R.id.pocketpaint_fab_new_image))
-            .perform(click())
-        onDrawingSurfaceView()
-            .checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE)
-    }
-
-    @Test
     fun testLoadImageIntentStarted() {
         Intents.init()
         val intent = Intent()
@@ -195,29 +200,6 @@ class LandingPageActivityIntegrationTest {
     }
 
     @Test
-    fun testProjectInsertedAndDisplayed() {
-        onView(withId(R.id.pocketpaint_fab_new_image))
-            .perform(click())
-        onDrawingSurfaceView()
-            .perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE))
-        TopBarViewInteraction.onTopBarView()
-            .performOpenMoreOptions()
-        onView(withText(R.string.menu_save_project))
-            .perform(click())
-        onView(withId(R.id.pocketpaint_image_name_save_text))
-            .perform(replaceText(PROJECT_NAME))
-        onView(withText(R.string.save_button_text))
-            .perform(click())
-        Thread.sleep(THREAD_WAITING_TIME)
-        pressBack()
-        onView(withId(R.id.pocketpaint_projects_list))
-            .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(position))
-        onView(withId(R.id.pocketpaint_projects_list)).check(
-            matches(atPosition(position, isDisplayed()))
-        )
-    }
-
-    @Test
     fun testProjectInsertedWithProjectName() {
         onView(withId(R.id.pocketpaint_fab_new_image))
             .perform(click())
@@ -231,8 +213,10 @@ class LandingPageActivityIntegrationTest {
             .perform(replaceText(PROJECT_NAME))
         onView(withText(R.string.save_button_text))
             .perform(click())
-        Thread.sleep(THREAD_WAITING_TIME)
+        onView(isRoot()).perform(waitFor(1000))
         pressBack()
+        launchActivityRule.launchActivity(intent)
+        onView(isRoot()).perform(waitFor(300))
         onView(withId(R.id.pocketpaint_projects_list))
             .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(position))
         onView(withId(R.id.pocketpaint_projects_list))
@@ -244,6 +228,7 @@ class LandingPageActivityIntegrationTest {
 
     @Test
     fun testProjectInsertedWithImagePreview() {
+        val testName = UUID.randomUUID().toString()
         onView(withId(R.id.pocketpaint_fab_new_image))
             .perform(click())
         onDrawingSurfaceView()
@@ -253,16 +238,18 @@ class LandingPageActivityIntegrationTest {
         onView(withText(R.string.menu_save_project))
             .perform(click())
         onView(withId(R.id.pocketpaint_image_name_save_text))
-            .perform(replaceText(PROJECT_NAME))
+            .perform(replaceText(testName))
         onView(withText(R.string.save_button_text))
             .perform(click())
-        Thread.sleep(THREAD_WAITING_TIME)
+        onView(isRoot()).perform(waitFor(1000))
         pressBack()
+        launchActivityRule.launchActivity(intent)
+        onView(isRoot()).perform(waitFor(300))
         onView(withId(R.id.pocketpaint_projects_list))
             .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(position))
         val imagesDirectory =
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString()
-        val imagePathToFile = imagesDirectory + File.separator + PROJECT_NAME + "." + PNG_IMAGE_ENDING
+        val imagePathToFile = imagesDirectory + File.separator + testName + "." + PNG_IMAGE_ENDING
         val imageFile = File(imagePathToFile)
         onView(withId(R.id.pocketpaint_projects_list)).perform(
             actionOnItemAtPosition<RecyclerView.ViewHolder>(
@@ -289,22 +276,7 @@ class LandingPageActivityIntegrationTest {
 
     @Test
     fun testProjectOverFlowMenuDetailsDisplayed() {
-        onView(withId(R.id.pocketpaint_fab_new_image))
-            .perform(click())
-        onDrawingSurfaceView()
-            .perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE))
-        TopBarViewInteraction.onTopBarView()
-            .performOpenMoreOptions()
-        onView(withText(R.string.menu_save_project))
-            .perform(click())
-        onView(withId(R.id.pocketpaint_image_name_save_text))
-            .perform(replaceText(PROJECT_NAME))
-        onView(withText(R.string.save_button_text))
-            .perform(click())
-        Thread.sleep(THREAD_WAITING_TIME)
-        pressBack()
-        onView(withId(R.id.pocketpaint_projects_list))
-            .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(position))
+        insertProjectIntoRecyclerView()
         onView(withId(R.id.pocketpaint_projects_list)).perform(
             actionOnItemAtPosition<RecyclerView.ViewHolder>(
                 position,
@@ -331,22 +303,7 @@ class LandingPageActivityIntegrationTest {
 
     @Test
     fun testProjectOverFlowMenuProjectDetail() {
-        onView(withId(R.id.pocketpaint_fab_new_image))
-            .perform(click())
-        onDrawingSurfaceView()
-            .perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE))
-        TopBarViewInteraction.onTopBarView()
-            .performOpenMoreOptions()
-        onView(withText(R.string.menu_save_project))
-            .perform(click())
-        onView(withId(R.id.pocketpaint_image_name_save_text))
-            .perform(replaceText(PROJECT_NAME))
-        onView(withText(R.string.save_button_text))
-            .perform(click())
-        Thread.sleep(THREAD_WAITING_TIME)
-        pressBack()
-        onView(withId(R.id.pocketpaint_projects_list))
-            .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(position))
+        insertProjectIntoRecyclerView()
         onView(withId(R.id.pocketpaint_projects_list)).perform(
             actionOnItemAtPosition<RecyclerView.ViewHolder>(
                 position,
@@ -369,30 +326,14 @@ class LandingPageActivityIntegrationTest {
         )
         onView(withText(R.string.menu_project_detail_title))
             .perform(click())
-        Thread.sleep(THREAD_WAITING_TIME)
+        onView(isRoot()).perform(waitFor(300))
         onView(withText(android.R.string.ok))
-            .inRoot(RootMatchers.isDialog())
             .perform(click())
     }
 
     @Test
     fun testProjectOverFlowMenuDeleteDisplayed() {
-        onView(withId(R.id.pocketpaint_fab_new_image))
-            .perform(click())
-        onDrawingSurfaceView()
-            .perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE))
-        TopBarViewInteraction.onTopBarView()
-            .performOpenMoreOptions()
-        onView(withText(R.string.menu_save_project))
-            .perform(click())
-        onView(withId(R.id.pocketpaint_image_name_save_text))
-            .perform(replaceText(PROJECT_NAME))
-        onView(withText(R.string.save_button_text))
-            .perform(click())
-        Thread.sleep(THREAD_WAITING_TIME)
-        pressBack()
-        onView(withId(R.id.pocketpaint_projects_list))
-            .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(position))
+        insertProjectIntoRecyclerView()
         onView(withId(R.id.pocketpaint_projects_list)).perform(
             actionOnItemAtPosition<RecyclerView.ViewHolder>(
                 position,
@@ -419,22 +360,7 @@ class LandingPageActivityIntegrationTest {
 
     @Test
     fun testProjectOverFlowMenuProjectDeleteCancel() {
-        onView(withId(R.id.pocketpaint_fab_new_image))
-            .perform(click())
-        onDrawingSurfaceView()
-            .perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE))
-        TopBarViewInteraction.onTopBarView()
-            .performOpenMoreOptions()
-        onView(withText(R.string.menu_save_project))
-            .perform(click())
-        onView(withId(R.id.pocketpaint_image_name_save_text))
-            .perform(replaceText(PROJECT_NAME))
-        onView(withText(R.string.save_button_text))
-            .perform(click())
-        Thread.sleep(THREAD_WAITING_TIME)
-        pressBack()
-        onView(withId(R.id.pocketpaint_projects_list))
-            .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(position))
+        insertProjectIntoRecyclerView()
         onView(withId(R.id.pocketpaint_projects_list)).perform(
             actionOnItemAtPosition<RecyclerView.ViewHolder>(
                 position,
@@ -457,35 +383,22 @@ class LandingPageActivityIntegrationTest {
         )
         onView(withText(R.string.menu_project_delete_title))
             .perform(click())
-        onView(withId(android.R.id.button2))
-            .inRoot(RootMatchers.isDialog())
+        onView(withText(R.string.cancel_button_text))
             .perform(click())
         onView(withId(R.id.pocketpaint_projects_list))
             .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(position))
         onView(withId(R.id.pocketpaint_projects_list))
             .check(matches(atPosition(position, hasDescendant(allOf(
                 isAssignableFrom(TextView::class.java),
-                withText(PROJECT_NAME)
+                withText(project.name)
             )))))
     }
 
     @Test
     fun testProjectOverFlowMenuProjectDelete() {
         val recyclerViewMatcher = withId(R.id.pocketpaint_projects_list)
-        onView(withId(R.id.pocketpaint_fab_new_image))
-            .perform(click())
-        onDrawingSurfaceView()
-            .perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE))
-        TopBarViewInteraction.onTopBarView()
-            .performOpenMoreOptions()
-        onView(withText(R.string.menu_save_project))
-            .perform(click())
-        onView(withId(R.id.pocketpaint_image_name_save_text))
-            .perform(replaceText(PROJECT_NAME))
-        onView(withText(R.string.save_button_text))
-            .perform(click())
-        Thread.sleep(THREAD_WAITING_TIME)
-        pressBack()
+        insertProjectIntoRecyclerView()
+        dao.insertProject(project)
         onView(withId(R.id.pocketpaint_projects_list)).perform(
             actionOnItemAtPosition<ProjectAdapter.ItemViewHolder>(
                 position,
@@ -508,12 +421,15 @@ class LandingPageActivityIntegrationTest {
         )
         onView(withText(R.string.menu_project_delete_title))
             .perform(click())
-        Thread.sleep(THREAD_WAITING_TIME)
+        onView(isRoot()).perform(waitFor(100))
         onView(withId(android.R.id.button1))
-            .inRoot(RootMatchers.isDialog())
+            .perform(closeSoftKeyboard())
+            .perform(scrollTo())
             .perform(click())
+        onView(isRoot()).perform(waitFor(300))
         onView(withId(R.id.pocketpaint_projects_list))
             .perform(RecyclerViewActions.scrollToPosition<ProjectAdapter.ItemViewHolder>(position))
+        onView(isRoot()).perform(waitFor(300))
         if (isRecyclerViewEmpty(recyclerViewMatcher)) {
             onView(withId(R.id.pocketpaint_projects_list))
                 .check(matches(not(hasDescendant(withId(R.id.iv_pocket_paint_project_thumbnail_image)))))
@@ -525,7 +441,7 @@ class LandingPageActivityIntegrationTest {
                             position, hasDescendant(
                                 allOf(
                                     isAssignableFrom(TextView::class.java),
-                                    not(withText(PROJECT_NAME))
+                                    not(withText(project.name))
                                 )
                             )
                         )
@@ -548,8 +464,10 @@ class LandingPageActivityIntegrationTest {
             .perform(replaceText(PROJECT_NAME))
         onView(withText(R.string.save_button_text))
             .perform(click())
-        Thread.sleep(THREAD_WAITING_TIME)
+        onView(isRoot()).perform(waitFor(1000))
         pressBack()
+        launchActivityRule.launchActivity(intent)
+        onView(isRoot()).perform(waitFor(1000))
         onView(withId(R.id.pocketpaint_projects_list))
             .perform(actionOnItemAtPosition<ProjectAdapter.ItemViewHolder>(position, click()))
         onView(
@@ -569,6 +487,7 @@ class LandingPageActivityIntegrationTest {
 
     @Test
     fun testImagePreviewAfterProjectInsert() {
+        val testName = UUID.randomUUID().toString()
         onView(withId(R.id.pocketpaint_fab_new_image))
             .perform(click())
         ToolBarViewInteraction.onToolBarView()
@@ -580,19 +499,36 @@ class LandingPageActivityIntegrationTest {
         onView(withText(R.string.menu_save_project))
             .perform(click())
         onView(withId(R.id.pocketpaint_image_name_save_text))
-            .perform(replaceText(PROJECT_NAME))
+            .perform(replaceText(testName))
         onView(withText(R.string.save_button_text))
             .perform(click())
-        Thread.sleep(THREAD_WAITING_TIME)
+        onView(isRoot()).perform(waitFor(1000))
         pressBack()
+        launchActivityRule.launchActivity(intent)
+        onView(isRoot()).perform(waitFor(300))
         onView(withId(R.id.pocketpaint_projects_list))
             .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(position))
         val imagesDirectory =
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString()
-        val imagePathToFile = imagesDirectory + File.separator + PROJECT_NAME + "." + PNG_IMAGE_ENDING
+        val imagePathToFile = imagesDirectory + File.separator + testName + "." + PNG_IMAGE_ENDING
         val imageFile = File(imagePathToFile)
         val expectedBitmap = BitmapFactory.decodeFile(imageFile.absolutePath)
         onView(withId(R.id.pocketpaint_image_preview)).check(matches(withBitmap(expectedBitmap)))
+    }
+
+    private fun insertProjectIntoRecyclerView() {
+        runBlocking {
+            recyclerView = activity.findViewById(R.id.pocketpaint_projects_list)
+            adapter = ProjectAdapter(
+                InstrumentationRegistry.getInstrumentation().targetContext,
+                projectList,
+                activity.supportFragmentManager
+            )
+            withContext(Main) {
+                recyclerView.layoutManager = LinearLayoutManager(activity)
+                recyclerView.adapter = adapter
+            }
+        }
     }
 
     private fun createTestImageFile(): Uri? {

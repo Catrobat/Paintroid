@@ -15,6 +15,7 @@ import org.catrobat.paintroid.data.local.database.ProjectDatabaseProvider
 import org.catrobat.paintroid.model.Project
 
 class LandingPageActivity : AppCompatActivity() {
+
     companion object {
         lateinit var projectDB: ProjectDatabase
         private lateinit var projectsRecyclerView: RecyclerView

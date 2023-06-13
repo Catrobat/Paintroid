@@ -725,9 +725,15 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             FileIO.storeImagePreviewUri = Uri.parse(projectImagePreviewUri)
             presenterMain.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_PROJECT, false)
             presenterMain.finishActivity()
+            launchLandingPageActivity()
         } else if (!supportFragmentManager.popBackStackImmediate()) {
             presenterMain.onBackPressed()
         }
+    }
+
+    private fun launchLandingPageActivity() {
+        val intent = Intent(this, LandingPageActivity::class.java)
+        startActivity(intent)
     }
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
