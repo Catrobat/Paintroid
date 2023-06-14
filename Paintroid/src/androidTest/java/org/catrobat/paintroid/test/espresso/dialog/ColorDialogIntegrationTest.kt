@@ -23,6 +23,7 @@ import android.app.Instrumentation.ActivityResult
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.graphics.Color
+import android.os.Environment
 import android.view.View
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.IdlingRegistry
@@ -57,6 +58,7 @@ import org.catrobat.paintroid.tools.ToolReference
 import org.hamcrest.Matchers
 import org.hamcrest.core.AllOf.allOf
 import org.junit.Assert
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -79,10 +81,21 @@ class ColorDialogIntegrationTest {
     @get:Rule
     var screenshotOnFailRule = ScreenshotOnFailRule()
     private var toolReference: ToolReference? = null
-    private val deletionFileList: List<File?> = ArrayList()
+
     @Before
     fun setUp() {
         toolReference = launchActivityRule.activity.toolReference
+    }
+
+    @After
+    fun tearDown() {
+        val imagesDirectory =
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString()
+        val pathToFile = imagesDirectory + File.separator + IMAGE_NAME + "." + CATROBAT_IMAGE_ENDING
+        val imageFile = File(pathToFile)
+        if (imageFile.exists()) {
+            imageFile.delete()
+        }
     }
 
     private fun getColorById(colorId: Int) =
@@ -471,7 +484,7 @@ class ColorDialogIntegrationTest {
                 allOf(
                     ViewMatchers.isDisplayed(),
                     withText(R.string.color_alpha),
-                    UiMatcher.withTextColor(getColorById(R.color.pocketpaint_color_picker_rgb_alpha))
+                    UiMatcher.withTextColor(getColorById(R.color.pocketpaint_color_picker_hex_black))
                 )
             )
         )
@@ -1078,7 +1091,7 @@ class ColorDialogIntegrationTest {
             .onPositiveButton()
             .perform(ViewActions.click())
         ToolPropertiesInteraction.onToolProperties()
-            .checkMatchesColor(Color.parseColor("#7F000000"))
+            .checkMatchesColor(Color.parseColor("#80000000"))
         IdlingRegistry.getInstance().unregister(idlingResource)
     }
 
@@ -1304,6 +1317,8 @@ class ColorDialogIntegrationTest {
 
     @Test
     fun testSaveColorHistoryInCatrobatFile() {
+        val idlingResource = launchActivityRule.activity.idlingResource
+        IdlingRegistry.getInstance().register(idlingResource)
         val activity = launchActivityRule.activity
         val resources = activity.resources
         val presetColors =
@@ -1354,11 +1369,7 @@ class ColorDialogIntegrationTest {
         ColorPickerViewInteraction.onColorPickerView()
             .checkHistoryColor(3, presetColors.getColor(0, Color.BLACK))
         presetColors.recycle()
-        if (deletionFileList.isNotEmpty() && deletionFileList[0] != null && deletionFileList[0]!!
-                .exists()
-        ) {
-            Assert.assertTrue(deletionFileList[0]!!.delete())
-        }
+        IdlingRegistry.getInstance().unregister(idlingResource)
     }
 
     private fun saveCatrobatImage() {
