@@ -54,18 +54,18 @@
                 android:text="@string/button_hand"/>
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/pocketpaint_tools_eraser"
-            tools:ignore="UseCompoundDrawables"
-            style="@style/PocketPaintToolSelectionButton">
-            <ImageView
-                style="@style/PocketPaintToolSelectionButtonImageView"
-                android:src="@drawable/ic_pocketpaint_tool_eraser"
-                android:contentDescription="@string/button_eraser"/>
-            <TextView
-                style="@style/PocketPaintToolSelectionButtonTextView"
-                android:text="@string/button_eraser"/>
-        </LinearLayout>
+<!--        <LinearLayout-->
+<!--            android:id="@+id/pocketpaint_tools_eraser"-->
+<!--            tools:ignore="UseCompoundDrawables"-->
+<!--            style="@style/PocketPaintToolSelectionButton">-->
+<!--            <ImageView-->
+<!--                style="@style/PocketPaintToolSelectionButtonImageView"-->
+<!--                android:src="@drawable/ic_pocketpaint_tool_eraser"-->
+<!--                android:contentDescription="@string/button_eraser"/>-->
+<!--            <TextView-->
+<!--                style="@style/PocketPaintToolSelectionButtonTextView"-->
+<!--                android:text="@string/button_eraser"/>-->
+<!--        </LinearLayout>-->
 
         <LinearLayout
             android:id="@+id/pocketpaint_tools_line"
@@ -78,6 +78,19 @@
             <TextView
                 style="@style/PocketPaintToolSelectionButtonTextView"
                 android:text="@string/button_line"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/pocketpaint_tools_dynamic_line"
+            tools:ignore="UseCompoundDrawables"
+            style="@style/PocketPaintToolSelectionButton">
+            <ImageView
+                style="@style/PocketPaintToolSelectionButtonImageView"
+                android:src="@drawable/ic_pocketpaint_tool_dynamic_line"
+                android:contentDescription="@string/button_dynamic_line"/>
+            <TextView
+                style="@style/PocketPaintToolSelectionButtonTextView"
+                android:text="@string/button_dynamic_line"/>
         </LinearLayout>
     </TableRow>
 

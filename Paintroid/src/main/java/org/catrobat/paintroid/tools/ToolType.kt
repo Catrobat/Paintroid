@@ -98,6 +98,15 @@ enum class ToolType(
         INVALID_RESOURCE_ID,
         true
     ),
+    DYNALINE(
+        R.string.button_dynamic_line,
+        R.string.help_content_dynamic_line,
+        R.drawable.ic_pocketpaint_tool_dynamic_line,
+        EnumSet.of(StateChange.ALL),
+        R.id.pocketpaint_tools_dynamic_line,
+        INVALID_RESOURCE_ID,
+        true
+    ),
     CURSOR(
         R.string.button_cursor,
         R.string.help_content_cursor,

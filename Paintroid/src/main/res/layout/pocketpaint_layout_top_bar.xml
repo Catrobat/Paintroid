@@ -66,7 +66,7 @@
                 android:contentDescription="@string/button_checkmark"
                 android:src="@drawable/ic_pocketpaint_plus_enabled"
                 android:tint="@android:color/white"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
             <ImageButton
                 android:id="@+id/pocketpaint_btn_top_checkmark"

@@ -63,6 +63,7 @@ import org.catrobat.paintroid.command.implementation.DefaultCommandFactory
 import org.catrobat.paintroid.command.implementation.DefaultCommandManager
 import org.catrobat.paintroid.command.implementation.LayerOpacityCommand
 import org.catrobat.paintroid.command.serialization.CommandSerializer
+import org.catrobat.paintroid.command.serialization.SerializablePath
 import org.catrobat.paintroid.common.CommonFactory
 import org.catrobat.paintroid.common.PAINTROID_PICTURE_NAME
 import org.catrobat.paintroid.common.PAINTROID_PICTURE_PATH
@@ -81,15 +82,7 @@ import org.catrobat.paintroid.tools.ToolPaint
 import org.catrobat.paintroid.tools.ToolReference
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.Workspace
-import org.catrobat.paintroid.tools.implementation.BaseToolWithShape
-import org.catrobat.paintroid.tools.implementation.ClippingTool
-import org.catrobat.paintroid.tools.implementation.DefaultContextCallback
-import org.catrobat.paintroid.tools.implementation.DefaultToolFactory
-import org.catrobat.paintroid.tools.implementation.DefaultToolPaint
-import org.catrobat.paintroid.tools.implementation.DefaultToolReference
-import org.catrobat.paintroid.tools.implementation.DefaultWorkspace
-import org.catrobat.paintroid.tools.implementation.LineTool
-import org.catrobat.paintroid.tools.implementation.TransformTool
+import org.catrobat.paintroid.tools.implementation.*
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 import org.catrobat.paintroid.ui.DrawingSurface
 import org.catrobat.paintroid.ui.KeyboardListener
@@ -608,6 +601,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             tool.onClickOnPlus()
         }
         LineTool.topBarViewHolder = topBar
+        DynamicLineTool.topBarViewHolder = topBar
     }
 
     private fun setBottomBarListeners(viewHolder: BottomBarViewHolder) {
