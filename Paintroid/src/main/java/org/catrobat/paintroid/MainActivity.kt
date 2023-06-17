@@ -185,8 +185,6 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         private const val SAVED_PICTURE_URI_KEY = "savedPictureUri"
         private const val CAMERA_IMAGE_URI_KEY = "cameraImageUri"
         private const val APP_FRAGMENT_KEY = "customActivityState"
-        private const val SHARED_PREFS_NAME = "preferences"
-        private const val FIRST_LAUNCH_AFTER_INSTALL = "firstLaunchAfterInstall"
     }
 
     override val presenter: MainActivityContracts.Presenter
@@ -347,15 +345,6 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             startAutoSaveCoroutine()
         }
         presenterMain.finishInitialize()
-
-        if (!BuildConfig.DEBUG) {
-            val prefs = getSharedPreferences(SHARED_PREFS_NAME, 0)
-
-            if (prefs.getBoolean(FIRST_LAUNCH_AFTER_INSTALL, true)) {
-                prefs.edit().putBoolean(FIRST_LAUNCH_AFTER_INSTALL, false).apply()
-                presenterMain.showHelpClicked()
-            }
-        }
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -389,11 +378,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
                 perspective.mainActivity = this
                 presenterMain.enterHideButtonsClicked()
             }
-            R.id.pocketpaint_options_rate_us -> presenterMain.rateUsClicked()
-            R.id.pocketpaint_options_help -> presenterMain.showHelpClicked()
-            R.id.pocketpaint_options_about -> presenterMain.showAboutClicked()
             R.id.pocketpaint_share_image_button -> presenterMain.shareImageClicked()
-            R.id.pocketpaint_options_feedback -> presenterMain.sendFeedback()
             R.id.pocketpaint_zoom_window_settings ->
                 presenterMain.showZoomWindowSettingsClicked(
                     UserPreferences(getPreferences(MODE_PRIVATE))
@@ -783,8 +768,4 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             }
         }
     }
-
-    fun getVersionCode(): String = runCatching {
-        packageManager.getPackageInfo(packageName, 0).versionName
-    }.getOrDefault("")
 }
