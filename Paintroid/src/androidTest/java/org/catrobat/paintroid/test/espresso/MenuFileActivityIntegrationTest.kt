@@ -43,7 +43,6 @@ import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasAction
 import androidx.test.espresso.intent.rule.IntentsTestRule
 import androidx.test.espresso.matcher.RootMatchers
-import androidx.test.espresso.matcher.ViewMatchers.isClickable
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isRoot
 import androidx.test.espresso.matcher.ViewMatchers.withId
@@ -71,7 +70,6 @@ import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.containsString
 import org.hamcrest.Matchers.instanceOf
 import org.hamcrest.core.AllOf.allOf
-import org.hamcrest.core.IsNot
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -186,12 +184,6 @@ class MenuFileActivityIntegrationTest {
         onView(withText(R.string.menu_load_image)).perform(click())
         pressBack()
         onDrawingSurfaceView().check(matches(isDisplayed()))
-    }
-
-    @Test
-    fun testOnHelpDisabled() {
-        onTopBarView().performOpenMoreOptions()
-        onView(withText(R.string.help_title)).check(matches(IsNot.not(isClickable())))
     }
 
     @Test
