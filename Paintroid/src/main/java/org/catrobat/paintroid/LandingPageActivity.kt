@@ -81,13 +81,14 @@ class LandingPageActivity : AppCompatActivity() {
     }
 
     private fun rateUsClicked() {
-        PlayStore().openPlayStore(this, this.packageName)
+        val applicationId = "org.catrobat.paintroid"
+        PlayStore().openPlayStore(this, applicationId)
     }
 
     private fun showHelpClicked() {
-            val intent = Intent(applicationContext, WelcomeActivity::class.java)
-            intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
-            startActivityForResult(intent, REQUEST_CODE_INTRO)
+        val intent = Intent(applicationContext, WelcomeActivity::class.java)
+        intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+        startActivityForResult(intent, REQUEST_CODE_INTRO)
     }
 
     private fun showAboutDialog() {
