@@ -53,7 +53,7 @@ import tools.fastlane.screengrab.Screengrab
 import tools.fastlane.screengrab.locale.LocaleTestRule
 
 @RunWith(AndroidJUnit4::class)
-class CreateMarketingScreenshots {
+class CreateMarketingScreenshotsTest {
 
     @Rule
     @JvmField

@@ -28,6 +28,7 @@ pipeline {
         string name: 'DEBUG_LABEL', defaultValue: '', description: 'For debugging when entered will be used as label to decide on which slaves the jobs will run.'
         booleanParam name: 'BUILD_WITH_CATROID', defaultValue: false, description: 'When checked then the current Paintroid build will be built with the current develop branch of Catroid'
         string name: 'CATROID_BRANCH', defaultValue: 'develop', description: 'The branch which to build catroid with, when BUILD_WITH_CATROID is checked.'
+        booleanParam name: 'MEDIA_GALLERY_TESTS', defaultValue: false, description: 'When checked, MediaGalleryTests will be executed.'
     }
 
     agent {
@@ -113,18 +114,42 @@ pipeline {
                     }
                 }
 
-                stage('Device Tests') {
+                stage('MediaGallery Tests') {
+                    when {
+                        expression { params.MEDIA_GALLERY_TESTS || env.BRANCH_NAME == 'develop' }
+                    }
                     steps {
-                        sh "echo no | avdmanager create avd --force --name android28 --package 'system-images;android-28;default;x86_64'"
-                        sh "/home/user/android/sdk/emulator/emulator -no-window -no-boot-anim -noaudio -avd android28 > /dev/null 2>&1 &"
-                        sh './gradlew -PenableCoverage -Pjenkins -Pemulator=android28 -Pci createDebugCoverageReport -i'
+                        catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+                            sh "echo no | avdmanager create avd --force --name android28 --package 'system-images;android-28;default;x86_64'"
+                            sh "/home/user/android/sdk/emulator/emulator -no-window -no-boot-anim -noaudio -avd android28 > /dev/null 2>&1 &"
+                            sh '''./gradlew -PenableCoverage -Pjenkins -Pemulator=android28 -Pci createDebugCoverageReport \
+                                  -Pandroid.testInstrumentationRunnerArguments.class=org.catrobat.paintroid.test.testsuites.MediaGalleryTestSuite -i'''
+                        }
                     }
                     post {
                         always {
-                            sh '/home/user/android/sdk/platform-tools/adb logcat -d > logcat.txt'
+                            sh '/home/user/android/sdk/platform-tools/adb logcat -d > logcat_media_gallery.txt'
+                            junitAndCoverage "$reports/coverage/debug/report.xml", 'mediaGallery', javaSrc
+                            archiveArtifacts 'logcat_media_gallery.txt'
+                        }
+                        failure {
+                            notifyChat(['#system-tests'])
+                        }
+                    }
+                }
+
+                stage('Device Tests') {
+                    steps {
+                        sh '''./gradlew -PenableCoverage -Pjenkins -Pemulator=android28 -Pci \
+                              createDebugCoverageReport \
+                              -Pandroid.testInstrumentationRunnerArguments.class=org.catrobat.paintroid.test.testsuites.LocalAndroidTests -i'''
+                    }
+                    post {
+                        always {
+                            sh '/home/user/android/sdk/platform-tools/adb logcat -d > logcat_device.txt'
                             sh './gradlew stopEmulator'
                             junitAndCoverage "$reports/coverage/debug/report.xml", 'device', javaSrc
-                            archiveArtifacts 'logcat.txt'
+                            archiveArtifacts 'logcat_device.txt'
                         }
                     }
                 }

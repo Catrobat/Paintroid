@@ -24,7 +24,7 @@ import java.io.File
 const val PAINTROID_PICTURE_PATH = "org.catrobat.extra.PAINTROID_PICTURE_PATH"
 const val PAINTROID_PICTURE_NAME = "org.catrobat.extra.PAINTROID_PICTURE_NAME"
 const val TEMP_PICTURE_NAME = "catroidTemp"
-const val MEDIA_GALLEY_URL = "https://share.catrob.at/pocketcode/media-library/looks"
+const val MEDIA_GALLERY_URL = "https://share.catrob.at/pocketcode/media-library/looks"
 const val ABOUT_DIALOG_FRAGMENT_TAG = "aboutdialogfragment"
 const val LIKE_US_DIALOG_FRAGMENT_TAG = "likeusdialogfragment"
 const val RATE_US_DIALOG_FRAGMENT_TAG = "rateusdialogfragment"
