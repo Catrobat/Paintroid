@@ -26,6 +26,7 @@ import android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 import android.graphics.Color
 import androidx.annotation.ArrayRes
 import androidx.annotation.ColorInt
+import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.pressBack
 import androidx.test.espresso.IdlingRegistry
@@ -39,6 +40,8 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.ActivityTestRule
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.colorpicker.HSVColorPickerView
@@ -84,11 +87,11 @@ class LandscapeIntegrationTest {
     fun setUp() {
         mainActivity = activityTestRule.activity
         idlingResource = mainActivity?.idlingResource
-        IdlingRegistry.getInstance().register(idlingResource)
+        Espresso.registerIdlingResources(idlingResource)
     }
 
     @After
-    fun tearDown() { IdlingRegistry.getInstance().unregister(idlingResource) }
+    fun tearDown() { Espresso.unregisterIdlingResources(idlingResource) }
 
     @Test
     fun testLandscapeMode() {
@@ -115,6 +118,7 @@ class LandscapeIntegrationTest {
             }
             onBottomNavigationView()
                 .onCurrentClicked()
+            runBlocking { delay(500) }
             onView(withId(R.id.pocketpaint_layout_tool_specific_options))
                 .check(matches(not(isDisplayed())))
         }
