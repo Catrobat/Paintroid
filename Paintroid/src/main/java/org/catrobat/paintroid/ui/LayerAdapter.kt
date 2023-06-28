@@ -97,6 +97,9 @@ class LayerAdapter(
 
         override fun bindView() {
             val layer = layerPresenter.getLayerItem(position)
+            if (layer == null) {
+                return
+            }
             val isSelected = layer === layerPresenter.getSelectedLayer()
             setSelected(isSelected)
             setLayerVisibilityCheckbox(layer.isVisible)
@@ -120,9 +123,9 @@ class LayerAdapter(
                 true
             }
 
-            opacitySeekBar.progress = layerPresenter.getLayerItem(position).opacityPercentage
+            opacitySeekBar.progress = layer.opacityPercentage
             opacityEditText.filters = arrayOf<InputFilter>(DefaultNumberRangeFilter(MIN_VAL, MAX_VAL))
-            opacityEditText.setText(layerPresenter.getLayerItem(position).opacityPercentage.toString())
+            opacityEditText.setText(layer.opacityPercentage.toString())
             opacityEditText.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
@@ -143,7 +146,7 @@ class LayerAdapter(
                         layerPresenter.changeLayerOpacity(position, opacityPercentage)
                     }
 
-                    layerPresenter.getLayerItem(position).opacityPercentage = opacityPercentage
+                    layer.opacityPercentage = opacityPercentage
                     layerPresenter.refreshDrawingSurface()
                 }
             })

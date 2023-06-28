@@ -160,7 +160,14 @@ class LayerPresenter(
 
     override fun isShown(): Boolean = layerMenuViewHolder.isShown()
 
-    override fun getLayerItem(position: Int): LayerContracts.Layer = layers[position]
+    override fun getLayerItem(position: Int): LayerContracts.Layer? {
+        if (isPositionValid(position)) {
+            return layers[position]
+        } else {
+            Log.w("LayerPresenter.kt", "LayerPresenter.getLayerItem(position) - tried to access position out of range of the layers array!")
+            return null
+        }
+    }
 
     override fun getLayerItemId(position: Int): Long = position.toLong()
 

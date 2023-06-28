@@ -615,11 +615,12 @@ open class MainActivityPresenter(
     override fun showLayerMenuClicked() {
         idlingResource.increment()
         layerAdapter?.apply {
-            for (i in 0 until itemCount) {
-                val currentHolder = getViewHolderAt(i)
+            for (position in 0 until itemCount) {
+                val currentHolder = getViewHolderAt(position)
                 currentHolder?.let {
-                    if (it.bitmap != null) {
-                        it.updateImageView(presenter.getLayerItem(i))
+                    val layer = presenter.getLayerItem(position)
+                    if (it.bitmap != null && layer != null) {
+                        it.updateImageView(layer)
                     }
                 }
             }
@@ -1019,7 +1020,8 @@ open class MainActivityPresenter(
         if (bottomBarViewHolder.isVisible) {
             bottomBarViewHolder.hide()
         } else {
-            if (layerAdapter?.presenter?.getLayerItem(workspace.currentLayerIndex)?.isVisible == false) {
+            val layer = layerAdapter?.presenter?.getLayerItem(workspace.currentLayerIndex)
+            if (layer != null && !layer.isVisible) {
                 navigator.showToast(R.string.no_tools_on_hidden_layer, Toast.LENGTH_SHORT)
                 return
             }
