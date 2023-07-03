@@ -51,6 +51,23 @@ class ProjectDaoTest {
     }
 
     @Test
+    fun getProject() {
+        val project = Project(
+            "name",
+            "catrobat/path",
+            0,
+            0,
+            "0x0",
+            "CATROBAT",
+            0.0,
+            "paintroid/path",
+            1)
+        dao.insertProject(project)
+        val insertedProject = dao.getProject(project.name)
+        assertTrue(insertedProject == project)
+    }
+
+    @Test
     fun deleteProject() {
         val project = Project(
             "name",

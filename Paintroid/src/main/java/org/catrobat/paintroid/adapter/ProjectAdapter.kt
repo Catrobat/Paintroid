@@ -1,5 +1,6 @@
 package org.catrobat.paintroid.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri
 import android.os.Build
@@ -14,9 +15,13 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import org.catrobat.paintroid.LandingPageActivity.Companion.imagePreview
 import org.catrobat.paintroid.LandingPageActivity.Companion.latestProject
 import org.catrobat.paintroid.R
+import org.catrobat.paintroid.common.CATROBAT_IMAGE_ENDING
 import org.catrobat.paintroid.common.PROJECT_DELETE_DIALOG_FRAGMENT_TAG
 import org.catrobat.paintroid.common.PROJECT_DETAILS_DIALOG_FRAGMENT_TAG
 import org.catrobat.paintroid.dialog.ProjectDeleteDialog
@@ -57,7 +62,7 @@ class ProjectAdapter(
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val item = projectList[position]
         val id = item.id
-        val name = item.name.substringBefore(".catrobat-image")
+        val name = item.name.substringBefore(".$CATROBAT_IMAGE_ENDING")
         val resolution = item.resolution
         val creationDate = item.creationDate
         val lastModifiedDate = item.lastModified
@@ -104,7 +109,7 @@ class ProjectAdapter(
                         true
                     }
                     R.id.project_delete -> {
-                        val projectDelete = ProjectDeleteDialog(id, name, position)
+                        val projectDelete = ProjectDeleteDialog(id, name, imageUri, position)
                         projectDelete.show(supportFragmentManager, PROJECT_DELETE_DIALOG_FRAGMENT_TAG)
                         true
                     }
@@ -133,13 +138,13 @@ class ProjectAdapter(
                 if (it.moveToFirst()) {
                     val columnIndex = it.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA)
                     filePath = it.getString(columnIndex)
-                    file = File(filePath)
+                    file = File(filePath.toString())
                     return file
                 }
             }
         }
         try {
-            file = File(uri.path)
+            file = File(uri.path.toString())
             return file
         } catch (e: IOException) {
             Log.e(TAG, "Error occurred while accessing the file: ${e.message}")
@@ -147,12 +152,19 @@ class ProjectAdapter(
         return null
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun insertProject(project: Project) {
         projectList.add(0, project)
-        imagePreview.setImageURI(Uri.parse(project?.imagePreviewPath))
-        notifyItemInserted(0)
+        runBlocking {
+            withContext(Main) {
+                notifyItemInserted(0)
+                notifyDataSetChanged()
+                imagePreview.setImageURI(Uri.parse(project.imagePreviewPath))
+            }
+        }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun updateProject(filename: String, imagePreviewPath: String, projectUri: String, lastModified: Long) {
         val index = projectList.indexOfFirst { it.name == filename }
         if (index != -1) {
@@ -161,11 +173,20 @@ class ProjectAdapter(
                 imagePreviewPath = imagePreviewPath,
                 lastModified = lastModified,
             )
-            projectList[index] = updatedProject
-            notifyItemChanged(index)
+            projectList.removeAt(index)
+            projectList.add(0, updatedProject)
+            runBlocking {
+                withContext(Main) {
+                    notifyItemChanged(index)
+                    notifyDataSetChanged()
+                    imagePreview.setImageDrawable(null)
+                    imagePreview.setImageURI(Uri.parse(imagePreviewPath))
+                }
+            }
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun removeProject(projectId: Int, position: Int) {
         if (projectList.isNotEmpty()) {
             projectList.removeAt(position)
@@ -178,6 +199,8 @@ class ProjectAdapter(
                 break
             }
         }
+        notifyItemRemoved(position)
+        notifyDataSetChanged()
         if (projectList.isNotEmpty()) {
             latestProject = projectList[0]
             imagePreview.setImageURI(Uri.parse(latestProject?.imagePreviewPath))
