@@ -17,6 +17,9 @@ interface ProjectDao {
     @Query("SELECT * FROM Project ORDER BY lastModified DESC")
     fun getProjects(): List<Project>
 
+    @Query("SELECT * FROM Project WHERE name= :name")
+    fun getProject(name: String): Project
+
     @Query("DELETE FROM Project WHERE id= :id")
     fun deleteProject(id: Int)
 

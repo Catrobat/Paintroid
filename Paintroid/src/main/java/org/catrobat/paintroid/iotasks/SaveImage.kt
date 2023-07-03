@@ -37,6 +37,7 @@ import org.catrobat.paintroid.MainActivity.Companion.projectImagePreviewUri
 import org.catrobat.paintroid.MainActivity.Companion.projectName
 import org.catrobat.paintroid.MainActivity.Companion.projectUri
 import org.catrobat.paintroid.command.serialization.CommandSerializer
+import org.catrobat.paintroid.common.CATROBAT_IMAGE_ENDING
 import org.catrobat.paintroid.common.PNG_IMAGE_ENDING
 import org.catrobat.paintroid.contract.LayerContracts
 import org.catrobat.paintroid.model.Project
@@ -83,16 +84,18 @@ class SaveImage(
         bitmap: Bitmap?
     ): Uri? {
         val filename = FileIO.defaultFileName
-        val imagesDirectory =
-            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString()
-        val pathToFile = imagesDirectory + File.separator + filename + "." + PNG_IMAGE_ENDING
+        val name = filename.removeSuffix(".$CATROBAT_IMAGE_ENDING")
+        val pngFileName = "$name.$PNG_IMAGE_ENDING"
+        val imagesDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString()
+        val pathToFile = imagesDirectory + File.separator + pngFileName
         val imageFile = File(pathToFile)
         return if (saveImageOptions.imagePreviewUri == null || !imageFile.exists()) {
-            val imagePreviewFilename = filename.replace(".catrobat-image", ".png")
-            val imageUri = FileIO.saveBitmapToFile(imagePreviewFilename, bitmap, callback.contentResolver, context)
+            val imageUri = FileIO.saveBitmapToFile(pngFileName, bitmap, callback.contentResolver, context)
             imageUri
         } else {
-            saveImageOptions.imagePreviewUri?.let { FileIO.saveBitmapToUri(it, bitmap, context) }
+            saveImageOptions.imagePreviewUri?.let {
+                FileIO.saveBitmapToUri(it, bitmap, context)
+            }
         }
     }
 
@@ -219,7 +222,8 @@ class SaveImage(
                 imagePreviewPath.toString()
             )
             projectDB.dao.insertProject(project)
-            projectAdapter.insertProject(project)
+            val insertedProject = projectDB.dao.getProject(filename)
+            projectAdapter.insertProject(insertedProject)
             projectName = filename
             projectUri = currentUri.toString()
             projectImagePreviewUri = imagePreviewPath.toString()
