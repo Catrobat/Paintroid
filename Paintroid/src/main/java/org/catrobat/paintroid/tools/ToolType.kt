@@ -98,7 +98,7 @@ enum class ToolType(
         INVALID_RESOURCE_ID,
         true
     ),
-    DYNALINE(
+    DYNAMICLINE(
         R.string.button_dynamic_line,
         R.string.help_content_dynamic_line,
         R.drawable.ic_pocketpaint_tool_dynamic_line,

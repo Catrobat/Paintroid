@@ -600,6 +600,11 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             val tool = toolReference.tool as LineTool
             tool.onClickOnPlus()
         }
+
+        topBar.plusButton.setOnClickListener {
+            val tool = toolReference.tool as DynamicLineTool
+            tool.onClickOnPlus()
+        }
         LineTool.topBarViewHolder = topBar
         DynamicLineTool.topBarViewHolder = topBar
     }

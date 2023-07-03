@@ -144,7 +144,7 @@ class DefaultToolFactory(mainActivity: MainActivity) : ToolFactory {
                 commandManager,
                 DRAW_TIME_INIT
             )
-            ToolType.DYNALINE -> DynamicLineTool(
+            ToolType.DYNAMICLINE -> DynamicLineTool(
                 DefaultBrushToolOptionsView(toolLayout),
                 contextCallback,
                 toolOptionsViewController,

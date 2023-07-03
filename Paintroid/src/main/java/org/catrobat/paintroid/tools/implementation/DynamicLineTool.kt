@@ -3,14 +3,17 @@ package org.catrobat.paintroid.tools.implementation
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.PointF
+import android.util.Log
 import android.view.View
 import androidx.test.espresso.idling.CountingIdlingResource
+import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.command.CommandManager
-import org.catrobat.paintroid.command.serialization.SerializablePath
 import org.catrobat.paintroid.tools.ContextCallback
 import org.catrobat.paintroid.tools.ToolPaint
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.Workspace
+import org.catrobat.paintroid.tools.common.CommonBrushChangedListener
+import org.catrobat.paintroid.tools.common.CommonBrushPreviewListener
 import org.catrobat.paintroid.tools.options.BrushToolOptionsView
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 import org.catrobat.paintroid.ui.viewholder.TopBarViewHolder
@@ -32,7 +35,24 @@ class DynamicLineTool (
     idlingResource,
     commandManager
 ) {
-    override var toolType: ToolType = ToolType.DYNALINE
+    override var toolType: ToolType = ToolType.DYNAMICLINE
+    var startCoordinate: PointF? = null
+    var endCoordinate: PointF? = null
+    var startCoordinateIsSet: Boolean = false
+
+    init {
+        brushToolOptionsView.setBrushChangedListener(CommonBrushChangedListener(this))
+        brushToolOptionsView.setBrushPreviewListener(
+                CommonBrushPreviewListener(
+                        toolPaint,
+                        toolType
+                )
+        )
+        brushToolOptionsView.setCurrentPaint(toolPaint.paint)
+        brushToolOptionsView.setStrokeCapButtonChecked(toolPaint.strokeCap)
+        topBarViewHolder?.hidePlusButton()
+
+    }
 
     override fun handleUpAnimations(coordinate: PointF?) {
         super.handleUp(coordinate)
@@ -45,6 +65,17 @@ class DynamicLineTool (
     override fun toolPositionCoordinates(coordinate: PointF): PointF = coordinate
 
     override fun draw(canvas: Canvas) {
+        Log.e(TAG, "drawing")
+        startCoordinate?.let { start ->
+            endCoordinate?.let { end ->
+                canvas.run {
+                    save()
+                    clipRect(0, 0, workspace.width, workspace.height)
+                    drawLine(start.x, start.y, end.x, end.y, toolPaint.previewPaint)
+                    restore()
+                }
+            }
+        }
     }
 
     override fun drawShape(canvas: Canvas) {
@@ -52,10 +83,12 @@ class DynamicLineTool (
     }
 
     override fun onClickOnButton() {
-        TODO("Not yet implemented")
+        Log.e(TAG, " ✓ clicked")
+        startCoordinateIsSet = false
     }
 
     fun onClickOnPlus() {
+        Log.e(TAG, "+ clicked")
 
     }
 
@@ -99,17 +132,25 @@ class DynamicLineTool (
         }
     }
 
+    override fun handleDown(coordinate: PointF?): Boolean {
+        coordinate ?: return false
+        topBarViewHolder?.showPlusButton()
+        startCoordinate = if (!startCoordinateIsSet) {
+            copyPointF(coordinate).also { startCoordinateIsSet = true }
+        } else {
+            startCoordinate
+        }
+        super.handleDown(coordinate)
+        return true
+    }
+
     override fun handleMove(coordinate: PointF?): Boolean {
         coordinate ?: return false
         hideToolOptions()
         super.handleMove(coordinate)
-        return true
-    }
 
-    override fun handleDown(coordinate: PointF?): Boolean {
-        coordinate ?: return false
-        topBarViewHolder?.showPlusButton()
-        super.handleDown(coordinate)
+        endCoordinate = copyPointF(coordinate)
+        Log.e(TAG, endCoordinate!!.x.toString() + " " + endCoordinate!!.y.toString())
         return true
     }
 
@@ -134,9 +175,12 @@ class DynamicLineTool (
         brushToolOptionsView.invalidate()
     }
 
-
+    private fun copyPointF(coordinate: PointF): PointF{
+        return PointF(coordinate.x, coordinate.y)
+    }
 
     companion object {
         var topBarViewHolder: TopBarViewHolder? = null
+        const val TAG = "DynamicLineTool"
     }
 }
