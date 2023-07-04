@@ -39,8 +39,7 @@ class DynamicLineToolIntegrationTest {
 
     @Test
     fun testIfCurrentToolIsShownInBottomNavigation() {
-        ToolBarViewInteraction.onToolBarView().performSelectTool(ToolType.DYNALINE)
-        BottomNavigationViewInteraction.onBottomNavigationView().checkShowsCurrentTool(ToolType.DYNALINE)
-
+        ToolBarViewInteraction.onToolBarView().performSelectTool(ToolType.DYNAMICLINE)
+        BottomNavigationViewInteraction.onBottomNavigationView().checkShowsCurrentTool(ToolType.DYNAMICLINE)
     }
 }

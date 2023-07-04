@@ -2,23 +2,28 @@ package org.catrobat.paintroid.tools.implementation
 
 import android.graphics.Canvas
 import android.graphics.Paint
+import android.graphics.Path
 import android.graphics.PointF
 import android.util.Log
 import android.view.View
 import androidx.test.espresso.idling.CountingIdlingResource
-import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.command.CommandManager
+import org.catrobat.paintroid.command.implementation.PathCommand
+import org.catrobat.paintroid.command.serialization.SerializablePath
 import org.catrobat.paintroid.tools.ContextCallback
 import org.catrobat.paintroid.tools.ToolPaint
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.Workspace
 import org.catrobat.paintroid.tools.common.CommonBrushChangedListener
 import org.catrobat.paintroid.tools.common.CommonBrushPreviewListener
+import org.catrobat.paintroid.tools.helper.DynamicLineToolVertex
 import org.catrobat.paintroid.tools.options.BrushToolOptionsView
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 import org.catrobat.paintroid.ui.viewholder.TopBarViewHolder
+import java.util.*
+import java.util.ArrayDeque
 
-class DynamicLineTool (
+class DynamicLineTool(
     private val brushToolOptionsView: BrushToolOptionsView,
     contextCallback: ContextCallback,
     toolOptionsViewController: ToolOptionsViewController,
@@ -36,9 +41,12 @@ class DynamicLineTool (
     commandManager
 ) {
     override var toolType: ToolType = ToolType.DYNAMICLINE
-    var startCoordinate: PointF? = null
-    var endCoordinate: PointF? = null
-    var startCoordinateIsSet: Boolean = false
+    private var startCoordinate: PointF? = null
+    private var endCoordinate: PointF? = null
+    private var startCoordinateIsSet: Boolean = false
+    private var vertexStack: Deque<DynamicLineToolVertex> = ArrayDeque()
+    private var lineIsFinal: Boolean = false
+    private var currentPathCommand: PathCommand? = null
 
     init {
         brushToolOptionsView.setBrushChangedListener(CommonBrushChangedListener(this))
@@ -51,7 +59,6 @@ class DynamicLineTool (
         brushToolOptionsView.setCurrentPaint(toolPaint.paint)
         brushToolOptionsView.setStrokeCapButtonChecked(toolPaint.strokeCap)
         topBarViewHolder?.hidePlusButton()
-
     }
 
     override fun handleUpAnimations(coordinate: PointF?) {
@@ -85,11 +92,15 @@ class DynamicLineTool (
     override fun onClickOnButton() {
         Log.e(TAG, " ✓ clicked")
         startCoordinateIsSet = false
+        lineIsFinal = true
+        currentPathCommand = null
     }
 
     fun onClickOnPlus() {
+        startCoordinate = endCoordinate?.let { copyPointF(it) }
+        lineIsFinal = true
+        currentPathCommand = null
         Log.e(TAG, "+ clicked")
-
     }
 
     private fun hideToolOptions() {
@@ -135,12 +146,12 @@ class DynamicLineTool (
     override fun handleDown(coordinate: PointF?): Boolean {
         coordinate ?: return false
         topBarViewHolder?.showPlusButton()
+        super.handleDown(coordinate)
         startCoordinate = if (!startCoordinateIsSet) {
             copyPointF(coordinate).also { startCoordinateIsSet = true }
         } else {
             startCoordinate
         }
-        super.handleDown(coordinate)
         return true
     }
 
@@ -148,15 +159,28 @@ class DynamicLineTool (
         coordinate ?: return false
         hideToolOptions()
         super.handleMove(coordinate)
-
         endCoordinate = copyPointF(coordinate)
-        Log.e(TAG, endCoordinate!!.x.toString() + " " + endCoordinate!!.y.toString())
+        Log.e(TAG, "Startcoordinate x: " + startCoordinate!!.x.toString() + " y: " + startCoordinate!!.y.toString())
+        Log.e(TAG, "Endcoordinate x: " + endCoordinate!!.x.toString() + " y: " + endCoordinate!!.y.toString())
         return true
     }
 
     override fun handleUp(coordinate: PointF?): Boolean {
+        coordinate ?: return false
         showToolOptions()
         super.handleUp(coordinate)
+
+        var currentlyDrawnPath = createPath(startCoordinate, coordinate)
+        // This would mean we are updating an existing path
+        if (currentPathCommand != null) {
+            // either update an existing command
+            (currentPathCommand as PathCommand).updatePath(currentlyDrawnPath)
+            commandManager.executeAllCommands()
+        } else {
+            // or create a new one
+            currentPathCommand = commandFactory.createPathCommand(toolPaint.paint, currentlyDrawnPath) as PathCommand
+            commandManager.addCommand(currentPathCommand)
+        }
         return true
     }
 
@@ -175,8 +199,15 @@ class DynamicLineTool (
         brushToolOptionsView.invalidate()
     }
 
-    private fun copyPointF(coordinate: PointF): PointF{
-        return PointF(coordinate.x, coordinate.y)
+    private fun copyPointF(coordinate: PointF): PointF = PointF(coordinate.x, coordinate.y)
+
+    private fun createPath(startCoordinate: PointF?, endCoordinate: PointF): SerializablePath {
+        return SerializablePath().apply {
+            if (startCoordinate != null && endCoordinate != null) {
+                moveTo(startCoordinate.x, startCoordinate.y)
+                lineTo(endCoordinate.x, endCoordinate.y)
+            }
+        }
     }
 
     companion object {

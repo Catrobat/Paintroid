@@ -82,7 +82,16 @@ import org.catrobat.paintroid.tools.ToolPaint
 import org.catrobat.paintroid.tools.ToolReference
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.Workspace
-import org.catrobat.paintroid.tools.implementation.*
+import org.catrobat.paintroid.tools.implementation.BaseToolWithShape
+import org.catrobat.paintroid.tools.implementation.ClippingTool
+import org.catrobat.paintroid.tools.implementation.DefaultContextCallback
+import org.catrobat.paintroid.tools.implementation.DefaultToolFactory
+import org.catrobat.paintroid.tools.implementation.DefaultToolPaint
+import org.catrobat.paintroid.tools.implementation.DefaultToolReference
+import org.catrobat.paintroid.tools.implementation.DefaultWorkspace
+import org.catrobat.paintroid.tools.implementation.LineTool
+import org.catrobat.paintroid.tools.implementation.TransformTool
+import org.catrobat.paintroid.tools.implementation.DynamicLineTool
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 import org.catrobat.paintroid.ui.DrawingSurface
 import org.catrobat.paintroid.ui.KeyboardListener
