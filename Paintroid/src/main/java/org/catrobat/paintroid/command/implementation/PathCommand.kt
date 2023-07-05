@@ -25,7 +25,7 @@ import android.graphics.Path
 import org.catrobat.paintroid.command.Command
 import org.catrobat.paintroid.contract.LayerContracts
 
-class PathCommand(val paint: Paint, path: Path) : Command {
+class PathCommand(var paint: Paint, path: Path) : Command {
 
     var path = path; private set
 
@@ -39,5 +39,9 @@ class PathCommand(val paint: Paint, path: Path) : Command {
 
     fun updatePath(newPath: Path) {
         this.path = newPath
+    }
+
+    fun updatePaint(newPaint: Paint) {
+        this.paint = newPaint
     }
 }
