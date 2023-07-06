@@ -1,4 +1,4 @@
-/**
+/*
  *  Paintroid: An image manipulation application for Android.
  *  Copyright (C) 2010-2022 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
@@ -16,16 +16,21 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package org.catrobat.paintroid.test.espresso.util
 
-package org.catrobat.paintroid.test.espresso.rtl.util;
+import android.view.View
+import androidx.test.espresso.action.CoordinatesProvider
 
-public final class RtlUiTestUtils {
-	private RtlUiTestUtils() {
-		throw new AssertionError();
-	}
+class OffsetLocationProvider(private val locationProvider: CoordinatesProvider, private val xOffset: Int, private val yOffset: Int) : CoordinatesProvider {
+    override fun calculateCoordinates(view: View): FloatArray {
+        val coordinates = locationProvider.calculateCoordinates(view)
+        coordinates[0] += xOffset.toFloat()
+        coordinates[1] += yOffset.toFloat()
+        return coordinates
+    }
 
-	public static boolean checkTextDirection(String string) {
-		return Character.getDirectionality(string.charAt(0)) == Character.DIRECTIONALITY_RIGHT_TO_LEFT
-				|| Character.getDirectionality(string.charAt(0)) == Character.DIRECTIONALITY_RIGHT_TO_LEFT_ARABIC;
-	}
+    companion object {
+        @JvmStatic
+        fun withOffset(locationProvider: CoordinatesProvider, xOffset: Int, yOffset: Int): CoordinatesProvider = OffsetLocationProvider(locationProvider, xOffset, yOffset)
+    }
 }
