@@ -47,14 +47,16 @@ class LoadImage(
     private val callbackRef: WeakReference<LoadImageCallback> = WeakReference(callback)
     private val context: WeakReference<Context> = WeakReference(context)
 
-    private fun getMimeType(uri: Uri, resolver: ContentResolver): String? =
+    private fun getMimeType(uri: Uri, resolver: ContentResolver): String? {
         if (uri.scheme == ContentResolver.SCHEME_CONTENT) {
-            resolver.getType(uri)
-        } else {
-            val fileExtension = MimeTypeMap.getFileExtensionFromUrl(uri.toString())
-            MimeTypeMap.getSingleton()
-                .getMimeTypeFromExtension(fileExtension.toLowerCase(Locale.US))
+            return resolver.getType(uri)
         }
+        val fileExtension = MimeTypeMap.getFileExtensionFromUrl(uri.toString())
+        if (fileExtension.equals("catrobat-image")) {
+            return "application/octet-stream"
+        }
+        return MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension.toLowerCase(Locale.US))
+    }
 
     private fun getBitmapReturnValue(
         uri: Uri,

@@ -243,6 +243,7 @@ open class BrushTool(
             val pathNew = AdvancedSettingsAlgorithms.smoothingAlgorithm(pointArray)
             val command = commandFactory.createPathCommand(bitmapPaint, pathNew)
             commandManager.addCommand(command)
+            commandManager.executeAllCommands()
         }
 
         pointArray.clear()

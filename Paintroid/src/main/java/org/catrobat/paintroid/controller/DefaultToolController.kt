@@ -34,6 +34,7 @@ import org.catrobat.paintroid.tools.ToolReference
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.Workspace
 import org.catrobat.paintroid.tools.implementation.ClippingTool
+import org.catrobat.paintroid.tools.implementation.EraserTool
 import org.catrobat.paintroid.tools.implementation.ImportTool
 import org.catrobat.paintroid.tools.implementation.LineTool
 import org.catrobat.paintroid.tools.implementation.SprayTool
@@ -130,6 +131,9 @@ class DefaultToolController(
     private fun switchTool(tool: Tool) {
         val currentTool = toolReference.tool
         val currentToolType = currentTool?.toolType
+        if (currentToolType == ToolType.ERASER) {
+            (currentTool as EraserTool).setSavedColor()
+        }
         currentToolType?.let { hidePlusIfShown(it) }
 
         if (currentToolType == tool.toolType) {
