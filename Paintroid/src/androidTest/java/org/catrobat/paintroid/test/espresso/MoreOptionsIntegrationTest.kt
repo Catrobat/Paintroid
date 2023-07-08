@@ -199,7 +199,7 @@ class MoreOptionsIntegrationTest {
                         String::class.java
                     )
                 ),
-                Matchers.`is`<String>("png")
+                Matchers.`is`("png")
             )
         ).inRoot(RootMatchers.isPlatformPopup()).perform(ViewActions.click())
         Espresso.onView(withId(R.id.pocketpaint_image_name_save_text))
@@ -210,9 +210,9 @@ class MoreOptionsIntegrationTest {
         TopBarViewInteraction.onTopBarView()
             .performOpenMoreOptions()
         Espresso.onView(withText(R.string.menu_save_image)).perform(ViewActions.click())
-        Espresso.onView(ViewMatchers.withText("png"))
+        Espresso.onView(withText("png"))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-        Espresso.onView(ViewMatchers.withText(defaultPictureName))
+        Espresso.onView(withText(defaultPictureName))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
     }
 

@@ -42,7 +42,7 @@ class JavaFillAlgorithm : FillAlgorithm {
     var targetColor = 0
 
     @VisibleForTesting
-    var replacementColor = 0
+    var colorToBeReplaced = 0
 
     @VisibleForTesting
     var colorToleranceThresholdSquared = 0
@@ -70,7 +70,7 @@ class JavaFillAlgorithm : FillAlgorithm {
         filledPixels = Array(bitmap.height) { BooleanArray(bitmap.width) }
         this.clickedPixel = clickedPixel
         this.targetColor = targetColor
-        this.replacementColor = replacementColor
+        this.colorToBeReplaced = replacementColor
         colorToleranceThresholdSquared = square(colorToleranceThreshold.toInt())
         considerTolerance = colorToleranceThreshold > 0
     }
@@ -97,9 +97,9 @@ class JavaFillAlgorithm : FillAlgorithm {
 
     private fun shouldCellBeFilled(row: Int, col: Int): Boolean =
         !filledPixels[row][col] && (
-            pixels[row][col] == replacementColor || considerTolerance && isPixelWithinColorTolerance(
+            pixels[row][col] == colorToBeReplaced || considerTolerance && isPixelWithinColorTolerance(
                 pixels[row][col],
-                replacementColor
+                    colorToBeReplaced
             )
             )
 

@@ -28,16 +28,18 @@ import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.Workspace
 import org.catrobat.paintroid.tools.options.BrushToolOptionsView
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
+import org.catrobat.paintroid.ui.viewholder.BottomNavigationViewHolder
 
 class EraserTool(
-    brushToolOptionsView: BrushToolOptionsView,
-    contextCallback: ContextCallback,
-    toolOptionsViewController: ToolOptionsViewController,
-    toolPaint: ToolPaint,
-    workspace: Workspace,
-    idlingResource: CountingIdlingResource,
-    commandManager: CommandManager,
-    drawTime: Long
+        brushToolOptionsView: BrushToolOptionsView,
+        contextCallback: ContextCallback,
+        toolOptionsViewController: ToolOptionsViewController,
+        toolPaint: ToolPaint,
+        workspace: Workspace,
+        idlingResource: CountingIdlingResource,
+        commandManager: CommandManager,
+        bottomNavigationViewHolder: BottomNavigationViewHolder,
+        drawTime: Long
 ) : BrushTool(
     brushToolOptionsView,
     contextCallback,
@@ -48,10 +50,22 @@ class EraserTool(
     commandManager,
     drawTime
 ) {
+
+    private var savedColor: Int
+    private var bottomNavigationViewHolder: BottomNavigationViewHolder
+
+    init {
+        this.bottomNavigationViewHolder = bottomNavigationViewHolder
+        bottomNavigationViewHolder.enableColorItemView(false)
+        bottomNavigationViewHolder.setColorButtonColor(Color.TRANSPARENT)
+        savedColor = toolPaint.color
+        toolPaint.color = Color.TRANSPARENT
+        brushToolOptionsView.setCurrentPaint(toolPaint.paint)
+    }
     override val previewPaint: Paint
         get() = Paint().apply {
             set(super.previewPaint)
-            color = Color.BLACK
+            color = Color.TRANSPARENT
             shader = toolPaint.checkeredShader
         }
 
@@ -64,4 +78,11 @@ class EraserTool(
 
     override val toolType: ToolType
         get() = ToolType.ERASER
+
+    fun setSavedColor() {
+        bottomNavigationViewHolder.enableColorItemView(true)
+        bottomNavigationViewHolder.setColorButtonColor(savedColor)
+        toolPaint.color = savedColor
+        brushToolOptionsView.setCurrentPaint(toolPaint.paint)
+    }
 }

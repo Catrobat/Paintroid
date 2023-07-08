@@ -34,7 +34,7 @@ import androidx.test.rule.ActivityTestRule
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.test.espresso.util.UiMatcher
-import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView
+import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.Companion.onToolBarView
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule
 import org.catrobat.paintroid.tools.ToolType
 import org.junit.Rule
@@ -110,7 +110,7 @@ class TextToolFontListTest {
                         3,
                         ViewMatchers.hasDescendant(
                             UiMatcher.hasTypeFace(
-                                dubaiFontFace
+                                dubaiFontFace!!
                             )
                         )
                     )
@@ -123,7 +123,7 @@ class TextToolFontListTest {
                     UiMatcher.atPosition(
                         4,
                         ViewMatchers.hasDescendant(
-                            UiMatcher.hasTypeFace(stcFontFace)
+                            UiMatcher.hasTypeFace(stcFontFace!!)
                         )
                     )
                 )

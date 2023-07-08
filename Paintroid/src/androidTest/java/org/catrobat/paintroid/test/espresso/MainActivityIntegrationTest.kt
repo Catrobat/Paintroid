@@ -43,7 +43,7 @@ import org.catrobat.paintroid.contract.MainActivityContracts.Interactor
 import org.catrobat.paintroid.contract.MainActivityContracts.MainView
 import org.catrobat.paintroid.controller.ToolController
 import org.catrobat.paintroid.presenter.MainActivityPresenter
-import org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView
+import org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.Companion.onTopBarView
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule
 import org.catrobat.paintroid.tools.Workspace
 import org.junit.Before

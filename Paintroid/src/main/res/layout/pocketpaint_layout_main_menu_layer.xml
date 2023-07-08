@@ -38,7 +38,7 @@
             android:contentDescription="@string/layer_new"
             android:id="@+id/pocketpaint_layer_side_nav_button_visibility"
             android:padding="5dp"
-            android:background="@drawable/rounded_corner_top_left"
+            android:background="@drawable/rounded_corner_top_ltr"
             android:scaleType="fitXY"
             android:src="@drawable/ic_pocketpaint_layers_visibility"
             android:theme="@style/PocketPaintHighlightColorTheme"

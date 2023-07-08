@@ -131,6 +131,7 @@ class DefaultToolFactory(mainActivity: MainActivity) : ToolFactory {
                 workspace,
                 idlingResource,
                 commandManager,
+                mainActivity.bottomNavigationViewHolder,
                 DRAW_TIME_INIT
             )
             ToolType.LINE -> LineTool(

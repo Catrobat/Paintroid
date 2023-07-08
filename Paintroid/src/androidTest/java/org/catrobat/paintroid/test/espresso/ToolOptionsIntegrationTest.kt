@@ -34,7 +34,7 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.rule.ActivityTestRule
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.test.espresso.util.wrappers.BrushToolOptionsViewInteraction.Companion.onBrushToolOptionsView
-import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView
+import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule
 import org.catrobat.paintroid.tools.ToolType
 import org.hamcrest.Matchers.not
@@ -52,10 +52,10 @@ import java.io.OutputStream
 
 @RunWith(value = Parameterized::class)
 class ToolOptionsIntegrationTest(
-    private var toolType: ToolType?,
-    private var toolOptionsShownInitially: Boolean,
-    private var hasToolOptionsView: Boolean,
-    private val hasStrokeCapOptions: Boolean
+        private var toolType: ToolType?,
+        private var toolOptionsShownInitially: Boolean,
+        private var hasToolOptionsView: Boolean,
+        private val hasStrokeCapOptions: Boolean
 ) {
     @get:Rule
     var activityTestRule: ActivityTestRule<MainActivity> = IntentsTestRule(MainActivity::class.java)
@@ -69,21 +69,21 @@ class ToolOptionsIntegrationTest(
         @Parameterized.Parameters(name = "{index}: ToolType={0}, ToolOptionsShownInitially={1}, HasToolOptionsView={2}, HasStrokeCapOptions{3}")
         fun data(): Iterable<Array<Any>> {
             return listOf(
-                arrayOf(ToolType.BRUSH, true, true, true),
-                arrayOf(ToolType.HAND, false, false, false),
-                arrayOf(ToolType.ERASER, true, true, true),
-                arrayOf(ToolType.LINE, true, true, true),
-                arrayOf(ToolType.SHAPE, true, true, false),
-                arrayOf(ToolType.FILL, true, true, false),
-                arrayOf(ToolType.SPRAY, true, true, false),
-                arrayOf(ToolType.CURSOR, true, true, true),
-                arrayOf(ToolType.TEXT, true, true, false),
-                arrayOf(ToolType.TRANSFORM, true, true, false),
-                arrayOf(ToolType.CLIPBOARD, true, true, false),
-                arrayOf(ToolType.PIPETTE, false, false, false),
-                arrayOf(ToolType.WATERCOLOR, true, true, true),
-                arrayOf(ToolType.SMUDGE, true, true, true),
-                arrayOf(ToolType.CLIP, true, true, false)
+                    arrayOf(ToolType.BRUSH, true, true, true),
+                    arrayOf(ToolType.HAND, false, false, false),
+                    arrayOf(ToolType.ERASER, true, true, true),
+                    arrayOf(ToolType.LINE, true, true, true),
+                    arrayOf(ToolType.SHAPE, true, true, false),
+                    arrayOf(ToolType.FILL, true, true, false),
+                    arrayOf(ToolType.SPRAY, true, true, false),
+                    arrayOf(ToolType.CURSOR, true, true, true),
+                    arrayOf(ToolType.TEXT, true, true, false),
+                    arrayOf(ToolType.TRANSFORM, true, true, false),
+                    arrayOf(ToolType.CLIPBOARD, true, true, false),
+                    arrayOf(ToolType.PIPETTE, false, false, false),
+                    arrayOf(ToolType.WATERCOLOR, true, true, true),
+                    arrayOf(ToolType.SMUDGE, true, true, true),
+                    arrayOf(ToolType.CLIP, true, true, false)
             )
         }
     }
@@ -108,20 +108,22 @@ class ToolOptionsIntegrationTest(
     @After
     fun tearDown() { testImageFile?.let { assertTrue(it.delete()) } }
 
+    fun onToolBarView(): ToolBarViewInteraction = ToolBarViewInteraction()
+
     @Test
     fun testToolOptions() {
         onToolBarView()
-            .performSelectTool(toolType)
+                .performSelectTool(toolType!!)
         if (!toolOptionsShownInitially) {
             onToolBarView()
-                .performOpenToolOptionsView()
+                    .performOpenToolOptionsView()
         }
         if (hasToolOptionsView) {
             onToolBarView().onToolOptionsView()
-                .check(matches(isDisplayed()))
+                    .check(matches(isDisplayed()))
         } else {
             onToolBarView().onToolOptionsView()
-                .check(matches(not(isDisplayed())))
+                    .check(matches(not(isDisplayed())))
         }
     }
 
@@ -129,10 +131,10 @@ class ToolOptionsIntegrationTest(
     fun testShouldNotUnselectAlreadySelectedStrokeTypeWhenSelectedAgain() {
         if (hasStrokeCapOptions) {
             onToolBarView()
-                .performSelectTool(toolType)
+                    .performSelectTool(toolType!!)
             if (!toolOptionsShownInitially) {
                 onToolBarView()
-                    .performOpenToolOptionsView()
+                        .performOpenToolOptionsView()
             }
 
             repeat(2) {

@@ -401,6 +401,8 @@ interface MainActivityContracts {
 
         fun showCurrentTool(toolType: ToolType?)
 
+        fun enableColorItemView(show: Boolean)
+
         fun setColorButtonColor(@ColorInt color: Int)
     }
 

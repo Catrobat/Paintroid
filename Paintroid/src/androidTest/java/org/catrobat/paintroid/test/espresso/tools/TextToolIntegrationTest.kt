@@ -34,9 +34,12 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.pressBack
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withHint
+import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.ActivityTestRule
 import com.google.android.material.button.MaterialButton
@@ -49,10 +52,10 @@ import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider
 import org.catrobat.paintroid.test.espresso.util.MainActivityHelper
 import org.catrobat.paintroid.test.espresso.util.UiInteractions
 import org.catrobat.paintroid.test.espresso.util.UiMatcher
-import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView
-import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView
-import org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction.onToolProperties
-import org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView
+import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.Companion.onDrawingSurfaceView
+import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.Companion.onToolBarView
+import org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction.Companion.onToolProperties
+import org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.Companion.onTopBarView
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule
 import org.catrobat.paintroid.tools.FontType
 import org.catrobat.paintroid.tools.ToolReference
@@ -62,6 +65,7 @@ import org.catrobat.paintroid.tools.implementation.MARGIN_TOP
 import org.catrobat.paintroid.tools.implementation.TEXT_SIZE_MAGNIFICATION_FACTOR
 import org.catrobat.paintroid.tools.implementation.TextTool
 import org.catrobat.paintroid.ui.tools.FontListAdapter
+import org.hamcrest.CoreMatchers.not
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Ignore
@@ -69,11 +73,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import kotlin.math.roundToInt
-import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.matcher.ViewMatchers.withHint
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import org.hamcrest.CoreMatchers.not
 
 @RunWith(AndroidJUnit4::class)
 @Suppress("LargeClass")
@@ -93,7 +92,7 @@ class TextToolIntegrationTest {
     private var boldToggleButton: MaterialButton? = null
     private var textSize: EditText? = null
     private var layerModel: LayerContracts.Model? = null
-    private var activity: MainActivity? = null
+    private lateinit var activity: MainActivity
     private var toolReference: ToolReference? = null
 
     private val surfaceBitmapHeight = layerModel?.height
@@ -105,19 +104,19 @@ class TextToolIntegrationTest {
     fun setUp() {
         activity = launchActivityRule.activity
         activityHelper = MainActivityHelper(activity)
-        layerModel = activity?.layerModel
-        toolReference = activity?.toolReference
+        layerModel = activity.layerModel
+        toolReference = activity.toolReference
 
         onToolBarView().performSelectTool(ToolType.TEXT)
 
         textTool = toolReference?.tool as TextTool
-        textEditText = activity?.findViewById(R.id.pocketpaint_text_tool_dialog_input_text)
-        fontList = activity?.findViewById(R.id.pocketpaint_text_tool_dialog_list_font)
+        textEditText = activity.findViewById(R.id.pocketpaint_text_tool_dialog_input_text)
+        fontList = activity.findViewById(R.id.pocketpaint_text_tool_dialog_list_font)
         underlinedToggleButton =
-            activity?.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_underlined)
-        italicToggleButton = activity?.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_italic)
-        boldToggleButton = activity?.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_bold)
-        textSize = activity?.findViewById(R.id.pocketpaint_font_size_text)
+            activity.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_underlined)
+        italicToggleButton = activity.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_italic)
+        boldToggleButton = activity.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_bold)
+        textSize = activity.findViewById(R.id.pocketpaint_font_size_text)
         textTool?.resetBoxPosition()
     }
 
@@ -176,7 +175,7 @@ class TextToolIntegrationTest {
     @Test
     fun testDialogKeyboardTextBoxAppearanceOnStartup() {
         onView(withId(R.id.pocketpaint_text_tool_dialog_input_text))
-            .check(ViewAssertions.matches(ViewMatchers.hasFocus()))
+            .check(matches(ViewMatchers.hasFocus()))
         checkTextBoxDimensionsAndDefaultPosition()
     }
 
@@ -184,12 +183,12 @@ class TextToolIntegrationTest {
     @Test
     fun testDialogDefaultValues() {
         onView(withId(R.id.pocketpaint_text_tool_dialog_input_text))
-            .check(ViewAssertions.matches(withHint(R.string.text_tool_dialog_input_hint)))
-            .check(ViewAssertions.matches(ViewMatchers.withText(textTool?.text)))
+            .check(matches(withHint(R.string.text_tool_dialog_input_hint)))
+            .check(matches(ViewMatchers.withText(textTool?.text)))
         onToolBarView().performSelectTool(ToolType.TEXT)
         onView(withId(R.id.pocketpaint_text_tool_dialog_list_font))
             .check(
-                ViewAssertions.matches(
+                matches(
                     UiMatcher.atPosition(
                         0,
                         ViewMatchers.hasDescendant(
@@ -200,7 +199,7 @@ class TextToolIntegrationTest {
             )
         onView(withId(R.id.pocketpaint_text_tool_dialog_list_font))
             .check(
-                ViewAssertions.matches(
+                matches(
                     UiMatcher.atPosition(
                         1,
                         ViewMatchers.hasDescendant(
@@ -212,7 +211,7 @@ class TextToolIntegrationTest {
         onView(withId(R.id.pocketpaint_text_tool_dialog_list_font))
             .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(2))
             .check(
-                ViewAssertions.matches(
+                matches(
                     UiMatcher.atPosition(
                         2,
                         ViewMatchers.hasDescendant(
@@ -224,7 +223,7 @@ class TextToolIntegrationTest {
         onView(withId(R.id.pocketpaint_text_tool_dialog_list_font))
             .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(3))
             .check(
-                ViewAssertions.matches(
+                matches(
                     UiMatcher.atPosition(
                         3,
                         ViewMatchers.hasDescendant(
@@ -236,7 +235,7 @@ class TextToolIntegrationTest {
         onView(withId(R.id.pocketpaint_text_tool_dialog_list_font))
             .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(4))
             .check(
-                ViewAssertions.matches(
+                matches(
                     UiMatcher.atPosition(
                         4,
                         ViewMatchers.hasDescendant(
@@ -338,7 +337,7 @@ class TextToolIntegrationTest {
         val oldBoxWidth = toolMemberBoxWidth
         val oldBoxHeight = toolMemberBoxHeight
 
-        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
 
         Assert.assertEquals(TEST_TEXT, textEditText?.text.toString())
         Assert.assertEquals(FontType.SANS_SERIF, (fontList?.adapter as FontListAdapter?)?.getSelectedItem())
@@ -695,17 +694,17 @@ class TextToolIntegrationTest {
         onToolBarView()
             .performSelectTool(ToolType.BRUSH)
         val scale = 2.0f
-        activity?.perspective?.scale = scale
-        activity?.perspective?.surfaceTranslationY = 200f
-        activity?.perspective?.surfaceTranslationX = 50f
-        activity?.refreshDrawingSurface()
+        activity.perspective.scale = scale
+        activity.perspective.surfaceTranslationY = 200f
+        activity.perspective.surfaceTranslationX = 50f
+        activity.refreshDrawingSurface()
         onToolBarView()
             .performSelectTool(ToolType.TEXT)
         runBlocking {
             delay(1500)
         }
         enterTestText()
-        activity?.perspective?.let { Assert.assertEquals(scale, it.scale, 0.0001f) }
+        activity.perspective.let { Assert.assertEquals(scale, it.scale, 0.0001f) }
     }
 
     @Test
@@ -717,10 +716,10 @@ class TextToolIntegrationTest {
         onToolBarView().performSelectTool(ToolType.BRUSH)
         val scale = 2.0f
 
-        activity?.perspective?.scale = scale
-        activity?.perspective?.surfaceTranslationY = 200f
-        activity?.perspective?.surfaceTranslationX = 50f
-        activity?.refreshDrawingSurface()
+        activity.perspective.scale = scale
+        activity.perspective.surfaceTranslationY = 200f
+        activity.perspective.surfaceTranslationX = 50f
+        activity.refreshDrawingSurface()
 
         onToolBarView().performSelectTool(ToolType.TEXT)
         runBlocking {
@@ -728,10 +727,10 @@ class TextToolIntegrationTest {
         }
         enterTestText()
 
-        textToolAfterZoom = activity?.toolReference?.tool as TextTool
+        textToolAfterZoom = activity.toolReference.tool as TextTool
 
         val positionAfterZoom = toolMemberBoxPosition
-        Assert.assertEquals(scale, activity!!.perspective.scale, 0.0001f)
+        Assert.assertEquals(scale, activity.perspective.scale, 0.0001f)
         onTopBarView().performClickCheckmark()
         Assert.assertNotEquals(initialPosition, positionAfterZoom)
     }
@@ -853,7 +852,7 @@ class TextToolIntegrationTest {
             .perform(ViewActions.replaceText(textToEnter))
         Espresso.closeSoftKeyboard()
         onView(withId(R.id.pocketpaint_text_tool_dialog_input_text))
-            .check(ViewAssertions.matches(ViewMatchers.withText(textToEnter)))
+            .check(matches(ViewMatchers.withText(textToEnter)))
     }
 
     private fun enterTestText() { enterTextInput(TEST_TEXT) }
@@ -861,7 +860,7 @@ class TextToolIntegrationTest {
     private fun enterMultilineTestText() { enterTextInput(TEST_TEXT_MULTILINE) }
 
     private fun selectFormatting(format: FormattingOptions) {
-        onView(ViewMatchers.withText(getFormattingOptionAsString(format))).perform(ViewActions.click())
+        onView(ViewMatchers.withText(getFormattingOptionAsString(format))).perform(click())
     }
 
     private fun selectFontType(fontType: FontType) {
@@ -874,27 +873,25 @@ class TextToolIntegrationTest {
                 )
             )
         onView(ViewMatchers.withText(getFontTypeAsString(fontType)))
-            .perform(ViewActions.click())
+            .perform(click())
     }
 
     private fun getFontTypeAsString(fontType: FontType): String? {
         return when (fontType) {
-            FontType.SANS_SERIF -> activity?.getString(R.string.text_tool_dialog_font_sans_serif)
-            FontType.SERIF -> activity?.getString(R.string.text_tool_dialog_font_serif)
-            FontType.MONOSPACE -> activity?.getString(R.string.text_tool_dialog_font_monospace)
-            FontType.STC -> activity?.getString(R.string.text_tool_dialog_font_arabic_stc)
-            FontType.DUBAI -> activity?.getString(R.string.text_tool_dialog_font_dubai)
+            FontType.SANS_SERIF -> activity.getString(R.string.text_tool_dialog_font_sans_serif)
+            FontType.SERIF -> activity.getString(R.string.text_tool_dialog_font_serif)
+            FontType.MONOSPACE -> activity.getString(R.string.text_tool_dialog_font_monospace)
+            FontType.STC -> activity.getString(R.string.text_tool_dialog_font_arabic_stc)
+            FontType.DUBAI -> activity.getString(R.string.text_tool_dialog_font_dubai)
             else -> null
         }
     }
 
     private fun getFormattingOptionAsString(format: FormattingOptions): String {
         return when (format) {
-            FormattingOptions.UNDERLINE -> activity?.getString(R.string.text_tool_dialog_underline_shortcut)
-                .toString()
-            FormattingOptions.ITALIC -> activity?.getString(R.string.text_tool_dialog_italic_shortcut)
-                .toString()
-            FormattingOptions.BOLD -> activity?.getString(R.string.text_tool_dialog_bold_shortcut).toString()
+            FormattingOptions.UNDERLINE -> activity.getString(R.string.text_tool_dialog_underline_shortcut)
+            FormattingOptions.ITALIC -> activity.getString(R.string.text_tool_dialog_italic_shortcut)
+            FormattingOptions.BOLD -> activity.getString(R.string.text_tool_dialog_bold_shortcut)
         }
     }
 

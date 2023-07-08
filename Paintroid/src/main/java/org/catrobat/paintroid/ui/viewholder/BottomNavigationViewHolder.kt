@@ -43,13 +43,14 @@ class BottomNavigationViewHolder(
         layout.findViewById(R.id.pocketpaint_bottom_navigation)
     private val bottomNavigation: BottomNavigationAppearance
     private val colorButton: ImageView
+    private val colorItemView: BottomNavigationItemView
 
     init {
         bottomNavigation = setAppearance(context)
         val bottomNavigationMenuView =
             bottomNavigationView.getChildAt(0) as BottomNavigationMenuView
-        val item = bottomNavigationMenuView.getChildAt(2) as BottomNavigationItemView
-        colorButton = item.findViewById(R.id.icon)
+        colorItemView = bottomNavigationMenuView.getChildAt(2) as BottomNavigationItemView
+        colorButton = colorItemView.findViewById(R.id.icon)
         initColorButton()
     }
 
@@ -63,6 +64,10 @@ class BottomNavigationViewHolder(
 
     override fun showCurrentTool(toolType: ToolType?) {
         toolType?.let { bottomNavigation.showCurrentTool(it) }
+    }
+
+    override fun enableColorItemView(show: Boolean) {
+        colorItemView.isClickable = show
     }
 
     override fun setColorButtonColor(color: Int) {
