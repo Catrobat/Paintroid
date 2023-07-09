@@ -61,9 +61,7 @@ interface CommandManager {
 
     fun undoInClippingTool()
 
-    fun undoInDynamicLineTool(): Command?
-
-    fun redoInDynamicLineTool(): Command?
+    fun getFirstUndoCommand(): Command?
 
     fun popFirstCommandInUndo()
 

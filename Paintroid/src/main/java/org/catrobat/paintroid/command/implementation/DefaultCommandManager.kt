@@ -115,6 +115,10 @@ class DefaultCommandManager(
         }
     }
 
+    override fun getFirstUndoCommand(): Command? {
+        return undoCommandList.elementAtOrNull(1)
+    }
+
     private fun handleUndo(command: Command, ignoreColorCommand: Boolean = false) {
         var success = true
         var layerCount = layerModel.layerCount
@@ -364,14 +368,6 @@ class DefaultCommandManager(
             handleUndo(command)
             notifyCommandExecuted()
         }
-    }
-
-    override fun undoInDynamicLineTool(): Command? {
-        return undoCommandList.firstOrNull()
-    }
-
-    override fun redoInDynamicLineTool(): Command? {
-        return redoCommandList.firstOrNull()
     }
 
     override fun popFirstCommandInUndo() {

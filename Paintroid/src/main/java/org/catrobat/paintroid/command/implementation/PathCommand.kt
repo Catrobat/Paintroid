@@ -31,6 +31,7 @@ class PathCommand(var paint: Paint, path: Path) : Command {
     var path = path; private set
     var startPoint: PointF? = null
     var endPoint: PointF? = null
+    var isDynamicLineToolPathCommand: Boolean = false
 
     override fun run(canvas: Canvas, layerModel: LayerContracts.Model) {
         canvas.drawPath(path, paint)

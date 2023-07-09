@@ -47,7 +47,7 @@ class DynamicLineTool(
     private var currentPathCommand: PathCommand? = null
     private var isFirstPath: Boolean = true
     private var createNewVertex: Boolean = true
-    private var undoWasClicked = false
+    private var pauseDrawing = true
 
     init {
         brushToolOptionsView.setBrushChangedListener(CommonBrushChangedListener(this))
@@ -89,6 +89,7 @@ class DynamicLineTool(
     override fun toolPositionCoordinates(coordinate: PointF): PointF = coordinate
 
     override fun draw(canvas: Canvas) {
+        if (pauseDrawing) return
         startPoint?.let { start ->
             endPoint?.let { end ->
                 Log.e(TAG, "drawing")
@@ -104,29 +105,22 @@ class DynamicLineTool(
     }
 
     fun undo() {
-        startPoint = null
-        endPoint = null
+        Log.e(TAG, "undo")
+        var lastCommand = commandManager.getFirstUndoCommand()
         commandManager.undo()
-//        currentPathCommand = commandManager.undoInDynamicLineTool() as PathCommand
-//        if (currentPathCommand != null) {
-//            this.startPoint = (currentPathCommand as PathCommand).startPoint
-//            this.endPoint = (currentPathCommand as PathCommand).endPoint
-//        }
-        // remove from vertex stack
-        var d = 3
-
+        if (lastCommand != null && lastCommand is PathCommand && lastCommand.isDynamicLineToolPathCommand) {
+            currentPathCommand = lastCommand
+            this.startPoint = (currentPathCommand as PathCommand).startPoint
+            this.endPoint = (currentPathCommand as PathCommand).endPoint
+        } else {
+            // reset everything
+            Log.e(TAG, " not a DynamicLineToolPathCommand")
+        }
     }
 
     fun redo() {
-
-        // what to do with redo if a line was moved ? empty the redo??
-//        currentPathCommand = commandManager.redoInDynamicLineTool() as PathCommand
-//        if (currentPathCommand != null) {
-//            this.startPoint = (currentPathCommand as PathCommand).startPoint
-//            this.endPoint = (currentPathCommand as PathCommand).endPoint
-//        }
+        // if moved after undo empty redo
         commandManager.redo()
-        var d = 3
     }
 
     override fun drawShape(canvas: Canvas) {
@@ -191,13 +185,13 @@ class DynamicLineTool(
     override fun handleMove(coordinate: PointF?): Boolean {
         coordinate ?: return false
         hideToolOptions()
+        pauseDrawing = false
         super.handleMove(coordinate)
 //        undoAdjustingPath()
 //        updateLastVertexPosition(copyPointF(coordinate))
 
         endPoint = copyPointF(coordinate)
-        Log.e(TAG, "Startcoordinate x: " + startPoint!!.x.toString() + " y: " + startPoint!!.y.toString())
-        Log.e(TAG, "Endcoordinate x: " + endPoint!!.x.toString() + " y: " + endPoint!!.y.toString())
+
         return true
     }
 
@@ -218,6 +212,7 @@ class DynamicLineTool(
         coordinate ?: return false
         showToolOptions()
         super.handleUp(coordinate)
+        pauseDrawing = true
 
         var currentlyDrawnPath = createSerializeablePath(startPoint, coordinate)
         // This would mean we are updating an existing path
@@ -231,6 +226,7 @@ class DynamicLineTool(
             // or create a new one
             currentPathCommand = commandFactory.createPathCommand(toolPaint.paint, currentlyDrawnPath) as PathCommand
             updateStartAndEndPointsOfCurrentPath(coordinate)
+            (currentPathCommand as PathCommand).isDynamicLineToolPathCommand = true
             commandManager.addCommand(currentPathCommand)
         }
 

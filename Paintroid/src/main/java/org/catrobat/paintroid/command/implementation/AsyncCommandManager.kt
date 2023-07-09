@@ -105,6 +105,10 @@ open class AsyncCommandManager(
         manageUndoAndRedo(commandManager::undo, isUndoAvailable)
     }
 
+    override fun getFirstUndoCommand(): Command? {
+        synchronized(layerModel) { return commandManager.getFirstUndoCommand() }
+    }
+
     override fun redo() {
         manageUndoAndRedo(commandManager::redo, isRedoAvailable)
     }
@@ -161,14 +165,6 @@ open class AsyncCommandManager(
 
     override fun undoInClippingTool() {
         synchronized(layerModel) { commandManager.undoInClippingTool() }
-    }
-
-    override fun undoInDynamicLineTool(): Command? {
-        synchronized(layerModel) { return commandManager.undoInDynamicLineTool() }
-    }
-
-    override fun redoInDynamicLineTool(): Command? {
-        synchronized(layerModel) { return commandManager.redoInDynamicLineTool() }
     }
 
     override fun popFirstCommandInUndo() {
