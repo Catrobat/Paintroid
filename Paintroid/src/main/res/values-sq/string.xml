@@ -105,9 +105,6 @@
     <string name="resize_nothing_to_resize">asgjë për të ndryshuar madhësinë</string>
     <string name="resize_cannot_resize_to_this_size">nuk mund të ndryshojë madhësinë në këto përmasa</string>
     <string name="resize_max_image_resolution_reached">resolucioni maksimal i imazhit u arrit</string>
-    <string name="text_tool_dialog_underline_shortcut">U</string>
-    <string name="text_tool_dialog_italic_shortcut">I</string>
-    <string name="text_tool_dialog_bold_shortcut">B</string>
     <string name="text_tool_dialog_input_hint">Prek këtu për të shkruar</string>
     <string name="text_tool_dialog_font_monospace">Monospace</string>
     <string name="text_tool_dialog_font_serif">Serif</string>

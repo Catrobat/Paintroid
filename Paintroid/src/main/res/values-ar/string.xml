@@ -105,9 +105,6 @@
     <string name="resize_nothing_to_resize">لا يوجد شيء لتغيير حجمه</string>
     <string name="resize_cannot_resize_to_this_size">لا يمكن تغيير الحجم إلى هذا الحجم</string>
     <string name="resize_max_image_resolution_reached">الوصول الى الحد الأقصى لدقة الشاشة</string>
-    <string name="text_tool_dialog_underline_shortcut">يو</string>
-    <string name="text_tool_dialog_italic_shortcut">ص</string>
-    <string name="text_tool_dialog_bold_shortcut">ب</string>
     <string name="text_tool_dialog_input_hint">أنقر هنا للكتابة</string>
     <string name="text_tool_dialog_font_monospace">فضاء أحادي</string>
     <string name="text_tool_dialog_font_serif">سيرفر</string>

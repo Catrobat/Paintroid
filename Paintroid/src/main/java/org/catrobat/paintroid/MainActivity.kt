@@ -43,6 +43,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.appcompat.widget.TooltipCompat
+import androidx.core.content.ContextCompat
 import androidx.core.widget.ContentLoadingProgressBar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -549,7 +550,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
     private fun setLayoutDirection() {
         var visibilityBtn = findViewById<ImageButton>(R.id.pocketpaint_layer_side_nav_button_visibility)
         var layerNavigationView = findViewById<NavigationView>(R.id.pocketpaint_nav_view_layer)
-        if (resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_RTL) {
+        if (LanguageHelper.isCurrentLanguageRTL()) {
             visibilityBtn.setBackgroundResource(R.drawable.rounded_corner_top_rtl)
             layerNavigationView.setBackgroundResource(R.drawable.layer_nav_view_background_rtl)
         } else {
@@ -587,9 +588,32 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         TooltipCompat.setTooltipText(topBar.redoButton, context.getString(R.string.button_redo))
     }
 
+    private fun mirrorUndoAndRedoButtonsForRtlLanguage() {
+        val undoButton: ImageButton = findViewById(R.id.pocketpaint_btn_top_undo)
+        val undoDrawable = ContextCompat.getDrawable(this, R.drawable.ic_pocketpaint_undo)
+
+        val redoButton: ImageButton = findViewById(R.id.pocketpaint_btn_top_redo)
+        val redoDrawable = ContextCompat.getDrawable(this, R.drawable.ic_pocketpaint_redo)
+
+        undoDrawable?.let {
+            it.isAutoMirrored = true
+            undoButton.setImageDrawable(it)
+        }
+
+        redoDrawable?.let {
+            it.isAutoMirrored = true
+            redoButton.setImageDrawable(it)
+        }
+    }
+
     private fun setTopBarListeners(topBar: TopBarViewHolder) {
         topBar.undoButton.setOnClickListener { presenterMain.undoClicked() }
         topBar.redoButton.setOnClickListener { presenterMain.redoClicked() }
+
+        if (LanguageHelper.isCurrentLanguageRTL()) {
+            mirrorUndoAndRedoButtonsForRtlLanguage()
+        }
+
         topBar.checkmarkButton.setOnClickListener {
             if (toolReference.tool?.toolType?.name.equals(ToolType.TRANSFORM.name)) {
                 (toolReference.tool as TransformTool).checkMarkClicked = true

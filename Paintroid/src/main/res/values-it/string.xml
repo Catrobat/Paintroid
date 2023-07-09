@@ -105,9 +105,6 @@
     <string name="resize_nothing_to_resize">nulla da ridimensionare</string>
     <string name="resize_cannot_resize_to_this_size">non si può ridimensionare a questa dimensione</string>
     <string name="resize_max_image_resolution_reached">si è raggiunta la risoluzione massima</string>
-    <string name="text_tool_dialog_underline_shortcut">U</string>
-    <string name="text_tool_dialog_italic_shortcut">I</string>
-    <string name="text_tool_dialog_bold_shortcut">B</string>
     <string name="text_tool_dialog_input_hint">Toccare qui per scrivere</string>
     <string name="text_tool_dialog_font_monospace">Monospace</string>
     <string name="text_tool_dialog_font_serif">Serif</string>

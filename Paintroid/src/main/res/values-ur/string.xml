@@ -105,9 +105,6 @@
     <string name="resize_nothing_to_resize">سائز تبدیل نہیں ہوا ہے۔</string>
     <string name="resize_cannot_resize_to_this_size">اس سائز کا سائز تبدیل نہیں کر سکتے ہیں</string>
     <string name="resize_max_image_resolution_reached">زیادہ سے زیادہ تصویر کے  ریسیلیوشن  تک پہنچ گئی</string>
-    <string name="text_tool_dialog_underline_shortcut">U</string>
-    <string name="text_tool_dialog_italic_shortcut">I</string>
-    <string name="text_tool_dialog_bold_shortcut">B</string>
     <string name="text_tool_dialog_input_hint">لکھنے کے لئے یہاں کلک کریں۔</string>
     <string name="text_tool_dialog_font_monospace">Monospace</string>
     <string name="text_tool_dialog_font_serif">Serif</string>

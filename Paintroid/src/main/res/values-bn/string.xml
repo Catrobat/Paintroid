@@ -105,9 +105,6 @@
     <string name="resize_nothing_to_resize">পুনঃস্থাপন করার মত কিছু নেই</string>
     <string name="resize_cannot_resize_to_this_size">এই আকার পরিবর্তন করতে পারে না</string>
     <string name="resize_max_image_resolution_reached">সর্বোচ্চ চিত্রের রেজোলিউশনে পৌঁছেছে</string>
-    <string name="text_tool_dialog_underline_shortcut">উ</string>
-    <string name="text_tool_dialog_italic_shortcut">আমি</string>
-    <string name="text_tool_dialog_bold_shortcut">খ</string>
     <string name="text_tool_dialog_input_hint">লিখতে এখানে আলতো চাপুন</string>
     <string name="text_tool_dialog_font_monospace">মনোস্পেস</string>
     <string name="text_tool_dialog_font_serif">সেরিফ</string>

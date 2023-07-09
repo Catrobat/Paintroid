@@ -39,16 +39,15 @@ import android.os.Environment
 import android.provider.DocumentsContract
 import android.provider.MediaStore
 import android.provider.OpenableColumns
+import android.text.TextUtils
 import android.util.Log
 import android.view.Gravity
 import android.view.Menu
+import android.view.View
 import android.widget.Toast
 import androidx.core.view.GravityCompat
 import androidx.test.espresso.idling.CountingIdlingResource
-import org.catrobat.paintroid.FileIO
-import org.catrobat.paintroid.MainActivity
-import org.catrobat.paintroid.R
-import org.catrobat.paintroid.UserPreferences
+import org.catrobat.paintroid.*
 import org.catrobat.paintroid.colorpicker.ColorHistory
 import org.catrobat.paintroid.command.CommandFactory
 import org.catrobat.paintroid.command.CommandManager
@@ -99,6 +98,7 @@ import org.catrobat.paintroid.tools.implementation.LineTool
 import org.catrobat.paintroid.tools.implementation.DefaultToolPaint
 import org.catrobat.paintroid.ui.LayerAdapter
 import java.io.File
+import java.util.*
 
 @SuppressWarnings("LongParameterList", "LargeClass", "ThrowingExceptionsWithoutMessageOrCause")
 open class MainActivityPresenter(

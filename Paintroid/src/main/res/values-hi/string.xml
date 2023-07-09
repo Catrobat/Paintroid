@@ -105,9 +105,6 @@
     <string name="resize_nothing_to_resize">आकार बदलने के लिए कुछ नहीं</string>
     <string name="resize_cannot_resize_to_this_size">इस आकार का आकार नहीं बदल सकता</string>
     <string name="resize_max_image_resolution_reached">अधिकतम छवि संकल्प पहुंचे</string>
-    <string name="text_tool_dialog_underline_shortcut">यू</string>
-    <string name="text_tool_dialog_italic_shortcut">मैं</string>
-    <string name="text_tool_dialog_bold_shortcut">बी</string>
     <string name="text_tool_dialog_input_hint">लिखने के लिए यहां टैप करें</string>
     <string name="text_tool_dialog_font_monospace">एकलस्पेस</string>
     <string name="text_tool_dialog_font_serif">सेरिफ़</string>

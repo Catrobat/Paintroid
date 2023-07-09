@@ -39,6 +39,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import org.catrobat.paintroid.LanguageHelper
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.contract.LayerContracts
@@ -269,21 +270,20 @@ class LayerAdapter(
         }
 
         private fun getRadius(backgroundType: BackgroundType): FloatArray {
-            val isRTL = mainActivity.resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_RTL
             val cornerRadius = CORNER_RADIUS * mainActivity.resources.displayMetrics.density
 
             return when (backgroundType) {
-                BackgroundType.TOP -> if (isRTL) {
+                BackgroundType.TOP -> if (LanguageHelper.isCurrentLanguageRTL()) {
                     floatArrayOf(0f, 0f, cornerRadius, cornerRadius, 0f, 0f, 0f, 0f)
                 } else {
                     floatArrayOf(cornerRadius, cornerRadius, 0f, 0f, 0f, 0f, 0f, 0f)
                 }
-                BackgroundType.BOTTOM -> if (isRTL) {
+                BackgroundType.BOTTOM -> if (LanguageHelper.isCurrentLanguageRTL()) {
                     floatArrayOf(0f, 0f, 0f, 0f, cornerRadius, cornerRadius, 0f, 0f)
                 } else {
                     floatArrayOf(0f, 0f, 0f, 0f, 0f, 0f, cornerRadius, cornerRadius)
                 }
-                BackgroundType.SINGLE -> if (isRTL) {
+                BackgroundType.SINGLE -> if (LanguageHelper.isCurrentLanguageRTL()) {
                     floatArrayOf(0f, 0f, cornerRadius, cornerRadius, cornerRadius, cornerRadius, 0f, 0f)
                 } else {
                     floatArrayOf(cornerRadius, cornerRadius, 0f, 0f, 0f, 0f, cornerRadius, cornerRadius)

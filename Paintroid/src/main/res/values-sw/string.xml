@@ -105,9 +105,6 @@
     <string name="resize_nothing_to_resize">hakuna kubadilisha ukubwa</string>
     <string name="resize_cannot_resize_to_this_size">cannot resize to this size</string>
     <string name="resize_max_image_resolution_reached">kikomo cha muonekano wa picha kimefikiwa</string>
-    <string name="text_tool_dialog_underline_shortcut">U</string>
-    <string name="text_tool_dialog_italic_shortcut">I</string>
-    <string name="text_tool_dialog_bold_shortcut">B</string>
     <string name="text_tool_dialog_input_hint">Bonyeza hapa ili kuandika</string>
     <string name="text_tool_dialog_font_monospace">Monospace</string>
     <string name="text_tool_dialog_font_serif">Serif</string>
