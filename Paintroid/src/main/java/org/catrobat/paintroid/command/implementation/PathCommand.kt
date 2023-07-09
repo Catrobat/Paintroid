@@ -22,12 +22,15 @@ package org.catrobat.paintroid.command.implementation
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Path
+import android.graphics.PointF
 import org.catrobat.paintroid.command.Command
 import org.catrobat.paintroid.contract.LayerContracts
 
 class PathCommand(var paint: Paint, path: Path) : Command {
 
     var path = path; private set
+    var startPoint: PointF? = null
+    var endPoint: PointF? = null
 
     override fun run(canvas: Canvas, layerModel: LayerContracts.Model) {
         canvas.drawPath(path, paint)
@@ -43,5 +46,10 @@ class PathCommand(var paint: Paint, path: Path) : Command {
 
     fun updatePaint(newPaint: Paint) {
         this.paint = newPaint
+    }
+
+    fun updateStartAndEndPoint(startPoint: PointF?, endPoint: PointF?) {
+        this.startPoint = startPoint
+        this.endPoint = endPoint
     }
 }

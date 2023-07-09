@@ -366,6 +366,14 @@ class DefaultCommandManager(
         }
     }
 
+    override fun undoInDynamicLineTool(): Command? {
+        return undoCommandList.firstOrNull()
+    }
+
+    override fun redoInDynamicLineTool(): Command? {
+        return redoCommandList.firstOrNull()
+    }
+
     override fun popFirstCommandInUndo() {
         if (isUndoAvailable) {
             undoCommandList.pop()

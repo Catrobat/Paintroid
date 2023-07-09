@@ -97,6 +97,7 @@ import org.catrobat.paintroid.tools.implementation.CLICK_TIMEOUT_MILLIS
 import org.catrobat.paintroid.tools.implementation.CONSTANT_3
 import org.catrobat.paintroid.tools.implementation.ClippingTool
 import org.catrobat.paintroid.tools.implementation.LineTool
+import org.catrobat.paintroid.tools.implementation.DynamicLineTool
 import org.catrobat.paintroid.tools.implementation.DefaultToolPaint
 import org.catrobat.paintroid.ui.LayerAdapter
 import java.io.File
@@ -594,6 +595,8 @@ open class MainActivityPresenter(
             setBottomNavigationColor(Color.BLACK)
             if (toolController.currentTool is LineTool) {
                 (toolController.currentTool as LineTool).undoChangePaintColor(Color.BLACK)
+            } else if (toolController.currentTool is DynamicLineTool) {
+                (toolController.currentTool as DynamicLineTool).undo()
             } else {
                 if (toolController.currentTool is ClippingTool) {
                     val clippingTool = toolController.currentTool as ClippingTool
@@ -616,6 +619,8 @@ open class MainActivityPresenter(
         } else {
             if (toolController.currentTool is LineTool) {
                 (toolController.currentTool as LineTool).redoLineTool()
+            } else if (toolController.currentTool is DynamicLineTool) {
+                (toolController.currentTool as DynamicLineTool).redo()
             } else {
                 commandManager.redo()
                 if (toolController.currentTool is ClippingTool) {

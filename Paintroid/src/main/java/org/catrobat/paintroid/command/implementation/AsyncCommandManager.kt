@@ -163,6 +163,14 @@ open class AsyncCommandManager(
         synchronized(layerModel) { commandManager.undoInClippingTool() }
     }
 
+    override fun undoInDynamicLineTool(): Command? {
+        synchronized(layerModel) { return commandManager.undoInDynamicLineTool() }
+    }
+
+    override fun redoInDynamicLineTool(): Command? {
+        synchronized(layerModel) { return commandManager.redoInDynamicLineTool() }
+    }
+
     override fun popFirstCommandInUndo() {
         synchronized(layerModel) { commandManager.popFirstCommandInUndo() }
     }
