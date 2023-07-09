@@ -45,7 +45,6 @@ class DynamicLineTool(
     private var startCoordinateIsSet: Boolean = false
     private var vertexStack: Deque<DynamicLineToolVertex> = ArrayDeque()
     private var currentPathCommand: PathCommand? = null
-    private var isFirstPath: Boolean = true
     private var createNewVertex: Boolean = true
     private var pauseDrawing = true
 
@@ -76,7 +75,6 @@ class DynamicLineTool(
         startCoordinateIsSet = false
         currentPathCommand = null
         createNewVertex = true
-        isFirstPath = true
     }
 
     fun onClickOnPlus() {
@@ -113,7 +111,11 @@ class DynamicLineTool(
             this.startPoint = (currentPathCommand as PathCommand).startPoint
             this.endPoint = (currentPathCommand as PathCommand).endPoint
         } else {
-            // reset everything
+            startPoint = null
+            endPoint = null
+            startCoordinateIsSet = false
+            currentPathCommand = null
+            pauseDrawing = true
             Log.e(TAG, " not a DynamicLineToolPathCommand")
         }
     }
