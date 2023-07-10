@@ -45,7 +45,6 @@ class DynamicLineTool(
     private var startCoordinateIsSet: Boolean = false
     private var vertexStack: Deque<DynamicLineToolVertex> = ArrayDeque()
     private var currentPathCommand: PathCommand? = null
-    private var createNewVertex: Boolean = true
     private var pauseDrawing = true
 
     init {
@@ -74,20 +73,18 @@ class DynamicLineTool(
         hidePlusButton()
         startCoordinateIsSet = false
         currentPathCommand = null
-        createNewVertex = true
     }
 
     fun onClickOnPlus() {
         startPoint = endPoint?.let { copyPointF(it) }
         currentPathCommand = null
-        createNewVertex = true
         Log.e(TAG, "+ clicked")
     }
 
     override fun toolPositionCoordinates(coordinate: PointF): PointF = coordinate
 
     override fun draw(canvas: Canvas) {
-        if (pauseDrawing) return
+//        if (pauseDrawing) return
         startPoint?.let { start ->
             endPoint?.let { end ->
                 Log.e(TAG, "drawing")
@@ -122,6 +119,7 @@ class DynamicLineTool(
 
     fun redo() {
         // if moved after undo empty redo
+        // check if last endpoint changed and is different to redo command startpoint
         commandManager.redo()
     }
 
@@ -189,25 +187,10 @@ class DynamicLineTool(
         hideToolOptions()
         pauseDrawing = false
         super.handleMove(coordinate)
-//        undoAdjustingPath()
-//        updateLastVertexPosition(copyPointF(coordinate))
 
         endPoint = copyPointF(coordinate)
 
         return true
-    }
-
-    private fun updateLastVertexPosition(newCenter: PointF) {
-        if (vertexStack.isNotEmpty()) {
-            vertexStack.last.updateVertex(newCenter)
-        }
-    }
-
-    private fun undoAdjustingPath() {
-        if (currentPathCommand != null) {
-            commandManager.undoIgnoringColorChanges()
-            currentPathCommand = null
-        }
     }
 
     override fun handleUp(coordinate: PointF?): Boolean {
@@ -215,8 +198,8 @@ class DynamicLineTool(
         showToolOptions()
         super.handleUp(coordinate)
         pauseDrawing = true
-
-        var currentlyDrawnPath = createSerializeablePath(startPoint, coordinate)
+        endPoint = copyPointF(coordinate)
+        var currentlyDrawnPath = createSerializablePath(startPoint, endPoint)
         // This would mean we are updating an existing path
         if (currentPathCommand != null) {
             // either update an existing command
@@ -280,7 +263,7 @@ class DynamicLineTool(
 
     private fun copyPointF(coordinate: PointF): PointF = PointF(coordinate.x, coordinate.y)
 
-    private fun createSerializeablePath(startCoordinate: PointF?, endCoordinate: PointF): SerializablePath {
+    private fun createSerializablePath(startCoordinate: PointF?, endCoordinate: PointF?): SerializablePath {
         return SerializablePath().apply {
             if (startCoordinate != null && endCoordinate != null) {
                 moveTo(startCoordinate.x, startCoordinate.y)
