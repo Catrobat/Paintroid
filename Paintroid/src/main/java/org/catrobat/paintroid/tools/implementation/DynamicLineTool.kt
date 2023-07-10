@@ -130,46 +130,6 @@ class DynamicLineTool(
         }
     }
 
-    private fun hideToolOptions() {
-        if (toolOptionsViewController.isVisible) {
-            if (brushToolOptionsView.getTopToolOptions().visibility == View.VISIBLE) {
-                toolOptionsViewController.slideUp(
-                    brushToolOptionsView.getTopToolOptions(),
-                    willHide = true,
-                    showOptionsView = false
-                )
-            }
-
-            if (brushToolOptionsView.getBottomToolOptions().visibility == View.VISIBLE) {
-                toolOptionsViewController.slideDown(
-                    brushToolOptionsView.getBottomToolOptions(),
-                    willHide = true,
-                    showOptionsView = false
-                )
-            }
-        }
-    }
-
-    private fun showToolOptions() {
-        if (!toolOptionsViewController.isVisible) {
-            if (brushToolOptionsView.getBottomToolOptions().visibility == View.INVISIBLE) {
-                toolOptionsViewController.slideDown(
-                    brushToolOptionsView.getTopToolOptions(),
-                    willHide = false,
-                    showOptionsView = true
-                )
-            }
-
-            if (brushToolOptionsView.getBottomToolOptions().visibility == View.INVISIBLE) {
-                toolOptionsViewController.slideUp(
-                    brushToolOptionsView.getBottomToolOptions(),
-                    willHide = false,
-                    showOptionsView = true
-                )
-            }
-        }
-    }
-
     override fun handleDown(coordinate: PointF?): Boolean {
         coordinate ?: return false
         topBarViewHolder?.showPlusButton()
@@ -187,9 +147,7 @@ class DynamicLineTool(
         hideToolOptions()
         pauseDrawing = false
         super.handleMove(coordinate)
-
         endPoint = copyPointF(coordinate)
-
         return true
     }
 
@@ -228,33 +186,44 @@ class DynamicLineTool(
     override fun changePaintColor(color: Int) {
         super.changePaintColor(color)
         updatePaintColor()
-        brushToolOptionsView.invalidate()
     }
 
     override fun changePaintStrokeWidth(strokeWidth: Int) {
         super.changePaintStrokeWidth(strokeWidth)
-        updatePaintStroke()
-        brushToolOptionsView.invalidate()
+        updatePaintStrokeWidth()
     }
 
     override fun changePaintStrokeCap(cap: Paint.Cap) {
         super.changePaintStrokeCap(cap)
-        updatePaintStroke()
-        brushToolOptionsView.invalidate()
+        updatePaintStrokeCap()
     }
 
     private fun updatePaintColor() {
         if (currentPathCommand != null) {
-            (currentPathCommand as PathCommand).updatePaint(toolPaint.paint)
+            (currentPathCommand as PathCommand).updatePaintColor(toolPaint.color)
+            brushToolOptionsView.invalidate()
+            Log.e(TAG, "updated paint color")
         }
     }
 
-    private fun updatePaintStroke() {
+    private fun updatePaintStrokeCap() {
         if (currentPathCommand != null) {
-            (currentPathCommand as PathCommand).updatePaint(toolPaint.paint)
+            (currentPathCommand as PathCommand).updatePaintStrokeCap(toolPaint.strokeCap)
             commandManager.executeAllCommands()
+            brushToolOptionsView.invalidate()
+            Log.e(TAG, "updated stroke cap")
         }
     }
+
+    private fun updatePaintStrokeWidth() {
+        if (currentPathCommand != null) {
+            (currentPathCommand as PathCommand).updatePaintStrokeWidth(toolPaint.strokeWidth)
+            commandManager.executeAllCommands()
+            brushToolOptionsView.invalidate()
+            Log.e(TAG, "updated stroke width")
+        }
+    }
+
     private fun hidePlusButton() {
         if (LineTool.topBarViewHolder != null && LineTool.topBarViewHolder?.plusButton?.visibility == View.VISIBLE) {
             LineTool.topBarViewHolder?.hidePlusButton()
@@ -268,6 +237,46 @@ class DynamicLineTool(
             if (startCoordinate != null && endCoordinate != null) {
                 moveTo(startCoordinate.x, startCoordinate.y)
                 lineTo(endCoordinate.x, endCoordinate.y)
+            }
+        }
+    }
+
+    private fun hideToolOptions() {
+        if (toolOptionsViewController.isVisible) {
+            if (brushToolOptionsView.getTopToolOptions().visibility == View.VISIBLE) {
+                toolOptionsViewController.slideUp(
+                    brushToolOptionsView.getTopToolOptions(),
+                    willHide = true,
+                    showOptionsView = false
+                )
+            }
+
+            if (brushToolOptionsView.getBottomToolOptions().visibility == View.VISIBLE) {
+                toolOptionsViewController.slideDown(
+                    brushToolOptionsView.getBottomToolOptions(),
+                    willHide = true,
+                    showOptionsView = false
+                )
+            }
+        }
+    }
+
+    private fun showToolOptions() {
+        if (!toolOptionsViewController.isVisible) {
+            if (brushToolOptionsView.getBottomToolOptions().visibility == View.INVISIBLE) {
+                toolOptionsViewController.slideDown(
+                    brushToolOptionsView.getTopToolOptions(),
+                    willHide = false,
+                    showOptionsView = true
+                )
+            }
+
+            if (brushToolOptionsView.getBottomToolOptions().visibility == View.INVISIBLE) {
+                toolOptionsViewController.slideUp(
+                    brushToolOptionsView.getBottomToolOptions(),
+                    willHide = false,
+                    showOptionsView = true
+                )
             }
         }
     }

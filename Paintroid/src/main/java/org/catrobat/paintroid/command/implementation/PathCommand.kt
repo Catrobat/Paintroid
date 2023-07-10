@@ -23,6 +23,7 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.PointF
+import androidx.annotation.ColorInt
 import org.catrobat.paintroid.command.Command
 import org.catrobat.paintroid.contract.LayerContracts
 
@@ -45,8 +46,16 @@ class PathCommand(var paint: Paint, path: Path) : Command {
         this.path = newPath
     }
 
-    fun updatePaint(newPaint: Paint) {
-        this.paint = newPaint
+    fun updatePaintColor(@ColorInt newColor: Int) {
+        this.paint.color = newColor
+    }
+
+    fun updatePaintStrokeWidth(newStrokeWidth: Float) {
+        this.paint.strokeWidth = newStrokeWidth
+    }
+
+    fun updatePaintStrokeCap(newCap: Paint.Cap) {
+        this.paint.strokeCap = newCap
     }
 
     fun updateStartAndEndPoint(startPoint: PointF?, endPoint: PointF?) {
