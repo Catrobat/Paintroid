@@ -45,7 +45,7 @@ class DynamicLineTool(
     private var startCoordinateIsSet: Boolean = false
     private var vertexStack: Deque<DynamicLineToolVertex> = ArrayDeque()
     private var currentPathCommand: PathCommand? = null
-    private var pauseDrawing = true
+    private var undoRecentlyClicked = false
 
     init {
         brushToolOptionsView.setBrushChangedListener(CommonBrushChangedListener(this))
@@ -84,7 +84,6 @@ class DynamicLineTool(
     override fun toolPositionCoordinates(coordinate: PointF): PointF = coordinate
 
     override fun draw(canvas: Canvas) {
-//        if (pauseDrawing) return
         startPoint?.let { start ->
             endPoint?.let { end ->
                 Log.e(TAG, "drawing")
@@ -96,31 +95,41 @@ class DynamicLineTool(
                 }
             }
         }
-        drawShape(canvas)
     }
 
     fun undo() {
         Log.e(TAG, "undo")
-        var lastCommand = commandManager.getFirstUndoCommand()
+        var undoCommand = commandManager.getFirstUndoCommand()
         commandManager.undo()
-        if (lastCommand != null && lastCommand is PathCommand && lastCommand.isDynamicLineToolPathCommand) {
-            currentPathCommand = lastCommand
-            this.startPoint = (currentPathCommand as PathCommand).startPoint
-            this.endPoint = (currentPathCommand as PathCommand).endPoint
+        undoRecentlyClicked = true
+        if (undoCommand != null && undoCommand is PathCommand && undoCommand.isDynamicLineToolPathCommand) {
+            setCurrentPathCommand(undoCommand)
         } else {
-            startPoint = null
-            endPoint = null
-            startCoordinateIsSet = false
-            currentPathCommand = null
-            pauseDrawing = true
-            Log.e(TAG, " not a DynamicLineToolPathCommand")
+            reset()
         }
     }
 
     fun redo() {
-        // if moved after undo empty redo
-        // check if last endpoint changed and is different to redo command startpoint
+        var redoCommand = commandManager.getFirstRedoCommand()
         commandManager.redo()
+        if (redoCommand != null && redoCommand is PathCommand && redoCommand.isDynamicLineToolPathCommand) {
+            setCurrentPathCommand(redoCommand)
+        } else {
+            reset()
+        }
+    }
+
+    private fun reset() {
+        startPoint = null
+        endPoint = null
+        startCoordinateIsSet = false
+        currentPathCommand = null
+    }
+
+    private fun setCurrentPathCommand(currentCommand: PathCommand) {
+        currentPathCommand = currentCommand
+        this.startPoint = (currentPathCommand as PathCommand).startPoint
+        this.endPoint = (currentPathCommand as PathCommand).endPoint
     }
 
     override fun drawShape(canvas: Canvas) {
@@ -145,42 +154,51 @@ class DynamicLineTool(
     override fun handleMove(coordinate: PointF?): Boolean {
         coordinate ?: return false
         hideToolOptions()
-        pauseDrawing = false
         super.handleMove(coordinate)
         endPoint = copyPointF(coordinate)
         return true
+    }
+
+    private fun handleRedo() {
+        if (undoRecentlyClicked) {
+            var firstRedoCommand = commandManager.getFirstRedoCommand()
+            if (firstRedoCommand != null &&
+                currentPathCommand != null &&
+                firstRedoCommand is PathCommand &&
+                firstRedoCommand.isDynamicLineToolPathCommand &&
+                firstRedoCommand.startPoint != currentPathCommand?.endPoint) {
+                // a previous command was moved so redo has to be deactivated
+                commandManager.clearRedoCommandList()
+                undoRecentlyClicked = false
+            }
+        }
     }
 
     override fun handleUp(coordinate: PointF?): Boolean {
         coordinate ?: return false
         showToolOptions()
         super.handleUp(coordinate)
-        pauseDrawing = true
         endPoint = copyPointF(coordinate)
         var currentlyDrawnPath = createSerializablePath(startPoint, endPoint)
         // This would mean we are updating an existing path
         if (currentPathCommand != null) {
-            // either update an existing command
-            (currentPathCommand as PathCommand).updatePath(currentlyDrawnPath)
-            updateStartAndEndPointsOfCurrentPath(coordinate)
-
+            (currentPathCommand as PathCommand).setPath(currentlyDrawnPath)
+            setStartAndEndPointsOfCurrentPath(coordinate)
             commandManager.executeAllCommands()
         } else {
-            // or create a new one
             currentPathCommand = commandFactory.createPathCommand(toolPaint.paint, currentlyDrawnPath) as PathCommand
-            updateStartAndEndPointsOfCurrentPath(coordinate)
+            setStartAndEndPointsOfCurrentPath(coordinate)
             (currentPathCommand as PathCommand).isDynamicLineToolPathCommand = true
             commandManager.addCommand(currentPathCommand)
         }
-
-
+        handleRedo()
         return true
     }
 
-    private fun updateStartAndEndPointsOfCurrentPath(coordinate: PointF) {
+    private fun setStartAndEndPointsOfCurrentPath(coordinate: PointF) {
         var pathStartPoint = startPoint?.let { copyPointF(it) }
         var pathEndPoint = copyPointF(coordinate)
-        (currentPathCommand as PathCommand).updateStartAndEndPoint(pathStartPoint, pathEndPoint)
+        (currentPathCommand as PathCommand).setStartAndEndPoint(pathStartPoint, pathEndPoint)
     }
 
     override fun changePaintColor(color: Int) {
@@ -200,7 +218,7 @@ class DynamicLineTool(
 
     private fun updatePaintColor() {
         if (currentPathCommand != null) {
-            (currentPathCommand as PathCommand).updatePaintColor(toolPaint.color)
+            (currentPathCommand as PathCommand).setPaintColor(toolPaint.color)
             brushToolOptionsView.invalidate()
             Log.e(TAG, "updated paint color")
         }
@@ -208,7 +226,7 @@ class DynamicLineTool(
 
     private fun updatePaintStrokeCap() {
         if (currentPathCommand != null) {
-            (currentPathCommand as PathCommand).updatePaintStrokeCap(toolPaint.strokeCap)
+            (currentPathCommand as PathCommand).setPaintStrokeCap(toolPaint.strokeCap)
             commandManager.executeAllCommands()
             brushToolOptionsView.invalidate()
             Log.e(TAG, "updated stroke cap")
@@ -217,7 +235,7 @@ class DynamicLineTool(
 
     private fun updatePaintStrokeWidth() {
         if (currentPathCommand != null) {
-            (currentPathCommand as PathCommand).updatePaintStrokeWidth(toolPaint.strokeWidth)
+            (currentPathCommand as PathCommand).setPaintStrokeWidth(toolPaint.strokeWidth)
             commandManager.executeAllCommands()
             brushToolOptionsView.invalidate()
             Log.e(TAG, "updated stroke width")

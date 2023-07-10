@@ -186,7 +186,7 @@ class DefaultToolController(
     override fun createTool() {
         val currentTool = toolReference.tool
         if (currentTool == null) {
-            toolReference.tool = createAndSetupTool(ToolType.BRUSH)
+            toolReference.tool = createAndSetupTool(ToolType.DYNAMICLINE)
         } else {
             val bundle = Bundle()
             toolReference.tool?.onSaveInstanceState(bundle)

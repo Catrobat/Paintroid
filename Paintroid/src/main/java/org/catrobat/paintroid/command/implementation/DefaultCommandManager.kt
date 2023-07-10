@@ -119,6 +119,14 @@ class DefaultCommandManager(
         return undoCommandList.elementAtOrNull(1)
     }
 
+    override fun getFirstRedoCommand(): Command? {
+        return redoCommandList.firstOrNull()
+    }
+
+    override fun clearRedoCommandList() {
+        redoCommandList.clear()
+    }
+
     private fun handleUndo(command: Command, ignoreColorCommand: Boolean = false) {
         var success = true
         var layerCount = layerModel.layerCount

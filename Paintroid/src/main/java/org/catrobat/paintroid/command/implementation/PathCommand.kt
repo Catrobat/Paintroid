@@ -42,23 +42,23 @@ class PathCommand(var paint: Paint, path: Path) : Command {
         // No resources to free
     }
 
-    fun updatePath(newPath: Path) {
+    fun setPath(newPath: Path) {
         this.path = newPath
     }
 
-    fun updatePaintColor(@ColorInt newColor: Int) {
+    fun setPaintColor(@ColorInt newColor: Int) {
         this.paint.color = newColor
     }
 
-    fun updatePaintStrokeWidth(newStrokeWidth: Float) {
+    fun setPaintStrokeWidth(newStrokeWidth: Float) {
         this.paint.strokeWidth = newStrokeWidth
     }
 
-    fun updatePaintStrokeCap(newCap: Paint.Cap) {
+    fun setPaintStrokeCap(newCap: Paint.Cap) {
         this.paint.strokeCap = newCap
     }
 
-    fun updateStartAndEndPoint(startPoint: PointF?, endPoint: PointF?) {
+    fun setStartAndEndPoint(startPoint: PointF?, endPoint: PointF?) {
         this.startPoint = startPoint
         this.endPoint = endPoint
     }

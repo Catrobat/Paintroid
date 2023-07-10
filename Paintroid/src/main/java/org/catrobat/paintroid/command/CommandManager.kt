@@ -63,6 +63,10 @@ interface CommandManager {
 
     fun getFirstUndoCommand(): Command?
 
+    fun getFirstRedoCommand(): Command?
+
+    fun clearRedoCommandList()
+
     fun popFirstCommandInUndo()
 
     fun popFirstCommandInRedo()
