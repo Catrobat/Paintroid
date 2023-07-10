@@ -69,7 +69,6 @@ class DynamicLineTool(
     }
 
     override fun onClickOnButton() {
-        Log.e(TAG, " ✓ clicked")
         hidePlusButton()
         startCoordinateIsSet = false
         currentPathCommand = null
@@ -78,7 +77,6 @@ class DynamicLineTool(
     fun onClickOnPlus() {
         startPoint = endPoint?.let { copyPointF(it) }
         currentPathCommand = null
-        Log.e(TAG, "+ clicked")
     }
 
     override fun toolPositionCoordinates(coordinate: PointF): PointF = coordinate
@@ -86,7 +84,6 @@ class DynamicLineTool(
     override fun draw(canvas: Canvas) {
         startPoint?.let { start ->
             endPoint?.let { end ->
-                Log.e(TAG, "drawing")
                 canvas.run {
                     save()
                     clipRect(0, 0, workspace.width, workspace.height)
@@ -98,7 +95,6 @@ class DynamicLineTool(
     }
 
     fun undo() {
-        Log.e(TAG, "undo")
         var undoCommand = commandManager.getFirstUndoCommand()
         commandManager.undo()
         undoRecentlyClicked = true
@@ -179,26 +175,25 @@ class DynamicLineTool(
         showToolOptions()
         super.handleUp(coordinate)
         endPoint = copyPointF(coordinate)
-        var currentlyDrawnPath = createSerializablePath(startPoint, endPoint)
-        // This would mean we are updating an existing path
-        if (currentPathCommand != null) {
-            (currentPathCommand as PathCommand).setPath(currentlyDrawnPath)
-            setStartAndEndPointsOfCurrentPath(coordinate)
-            commandManager.executeAllCommands()
-        } else {
-            currentPathCommand = commandFactory.createPathCommand(toolPaint.paint, currentlyDrawnPath) as PathCommand
-            setStartAndEndPointsOfCurrentPath(coordinate)
-            (currentPathCommand as PathCommand).isDynamicLineToolPathCommand = true
-            commandManager.addCommand(currentPathCommand)
-        }
+        createOrAdjustPathCommand()
         handleRedo()
         return true
     }
 
-    private fun setStartAndEndPointsOfCurrentPath(coordinate: PointF) {
-        var pathStartPoint = startPoint?.let { copyPointF(it) }
-        var pathEndPoint = copyPointF(coordinate)
-        (currentPathCommand as PathCommand).setStartAndEndPoint(pathStartPoint, pathEndPoint)
+    private fun createOrAdjustPathCommand() {
+        var currentlyDrawnPath = createSerializablePath(startPoint, endPoint)
+        if (currentPathCommand != null) {
+            (currentPathCommand as PathCommand).setPath(currentlyDrawnPath)
+            (currentPathCommand as PathCommand).
+                setStartAndEndPoint(startPoint?.let { start -> copyPointF(start) }, endPoint?.let { end -> copyPointF(end) })
+            commandManager.executeAllCommands()
+        } else {
+            currentPathCommand = commandFactory.createPathCommand(toolPaint.paint, currentlyDrawnPath) as PathCommand
+            (currentPathCommand as PathCommand).
+                setStartAndEndPoint(startPoint?.let { start -> copyPointF(start) }, endPoint?.let { end -> copyPointF(end) })
+            (currentPathCommand as PathCommand).isDynamicLineToolPathCommand = true
+            commandManager.addCommand(currentPathCommand)
+        }
     }
 
     override fun changePaintColor(color: Int) {
@@ -220,7 +215,6 @@ class DynamicLineTool(
         if (currentPathCommand != null) {
             (currentPathCommand as PathCommand).setPaintColor(toolPaint.color)
             brushToolOptionsView.invalidate()
-            Log.e(TAG, "updated paint color")
         }
     }
 
@@ -229,7 +223,6 @@ class DynamicLineTool(
             (currentPathCommand as PathCommand).setPaintStrokeCap(toolPaint.strokeCap)
             commandManager.executeAllCommands()
             brushToolOptionsView.invalidate()
-            Log.e(TAG, "updated stroke cap")
         }
     }
 
@@ -238,7 +231,6 @@ class DynamicLineTool(
             (currentPathCommand as PathCommand).setPaintStrokeWidth(toolPaint.strokeWidth)
             commandManager.executeAllCommands()
             brushToolOptionsView.invalidate()
-            Log.e(TAG, "updated stroke width")
         }
     }
 
