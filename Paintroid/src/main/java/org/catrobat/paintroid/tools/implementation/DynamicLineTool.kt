@@ -97,10 +97,12 @@ class DynamicLineTool(
 
     fun undo() {
         var undoCommand = commandManager.getFirstUndoCommand()
-        commandManager.undo()
+//        commandManager.undo()
+        commandManager.undoIgnoringColorChanges()
         undoRecentlyClicked = true
         if (undoCommand != null && undoCommand is PathCommand && undoCommand.isDynamicLineToolPathCommand) {
             setCurrentPathCommand(undoCommand)
+            setToolPaint()
         } else {
             reset()
         }
@@ -111,6 +113,7 @@ class DynamicLineTool(
         commandManager.redo()
         if (redoCommand != null && redoCommand is PathCommand && redoCommand.isDynamicLineToolPathCommand) {
             setCurrentPathCommand(redoCommand)
+            setToolPaint()
         } else {
             reset()
         }
@@ -127,6 +130,12 @@ class DynamicLineTool(
         currentPathCommand = currentCommand
         this.startPoint = (currentPathCommand as PathCommand).startPoint
         this.endPoint = (currentPathCommand as PathCommand).endPoint
+    }
+
+    private fun setToolPaint() {
+        super.changePaintColor((currentPathCommand as PathCommand).paint.color)
+        super.changePaintStrokeCap((currentPathCommand as PathCommand).paint.strokeCap)
+        super.changePaintStrokeWidth((currentPathCommand as PathCommand).paint.strokeWidth.toInt())
     }
 
     override fun drawShape(canvas: Canvas) {
@@ -215,6 +224,7 @@ class DynamicLineTool(
     private fun updatePaintColor() {
         if (currentPathCommand != null) {
             (currentPathCommand as PathCommand).setPaintColor(toolPaint.color)
+            commandManager.executeCommand(currentPathCommand)
             brushToolOptionsView.invalidate()
         }
     }

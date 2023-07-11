@@ -33,6 +33,8 @@ interface CommandManager {
 
     fun addCommand(command: Command?)
 
+    fun executeCommand(command: Command?)
+
     fun addCommandWithoutUndo(command: Command?)
 
     fun setInitialStateCommand(command: Command)

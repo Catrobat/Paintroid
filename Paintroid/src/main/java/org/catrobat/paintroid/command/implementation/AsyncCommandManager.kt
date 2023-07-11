@@ -75,6 +75,10 @@ open class AsyncCommandManager(
         }
     }
 
+    override fun executeCommand(command: Command?) {
+        synchronized(layerModel) { commandManager.executeCommand(command) }
+    }
+
     override fun addCommandWithoutUndo(command: Command?) {
         CoroutineScope(Dispatchers.Default).launch {
             mutex.withLock {
