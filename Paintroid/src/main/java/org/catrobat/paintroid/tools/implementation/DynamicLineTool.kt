@@ -85,6 +85,7 @@ class DynamicLineTool(
         startPoint?.let { start ->
             endPoint?.let { end ->
                 canvas.run {
+                    Log.e(TAG, "draw")
                     save()
                     clipRect(0, 0, workspace.width, workspace.height)
                     drawLine(start.x, start.y, end.x, end.y, toolPaint.previewPaint)
