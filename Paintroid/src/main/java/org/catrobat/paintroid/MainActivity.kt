@@ -606,14 +606,16 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             }
         }
         topBar.plusButton.setOnClickListener {
-            val tool = toolReference.tool as LineTool
-            tool.onClickOnPlus()
+            if (toolReference.tool?.toolType == ToolType.LINE) {
+                val tool = toolReference.tool as LineTool
+                tool.onClickOnPlus()
+            }
+            if (toolReference.tool?.toolType == ToolType.DYNAMICLINE) {
+                val tool = toolReference.tool as DynamicLineTool
+                tool.onClickOnPlus()
+            }
         }
 
-        topBar.plusButton.setOnClickListener {
-            val tool = toolReference.tool as DynamicLineTool
-            tool.onClickOnPlus()
-        }
         LineTool.topBarViewHolder = topBar
         DynamicLineTool.topBarViewHolder = topBar
     }
