@@ -88,7 +88,7 @@ class DefaultCommandManager(
         notifyCommandExecuted()
     }
 
-    private fun executeCommand(command: Command?) {
+    override fun executeCommand(command: Command?) {
         val currentLayer = layerModel.currentLayer
         val canvas = commonFactory.createCanvas()
         canvas.setBitmap(currentLayer?.bitmap)

@@ -141,9 +141,9 @@ class MainActivityNavigator(
                 mainActivity.model.colorHistory.addColor(color)
 
                 if (toolReference.tool?.toolType != ToolType.CLIP) {
-                    mainActivity.commandManager.addCommand(command)
+                    mainActivity.commandManager.executeCommand(command)
                 } else {
-                    mainActivity.commandManager.addCommandWithoutUndo(command)
+                    mainActivity.commandManager.executeCommand(command)
                 }
             }
         })
