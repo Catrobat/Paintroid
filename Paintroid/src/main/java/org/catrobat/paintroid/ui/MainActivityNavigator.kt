@@ -148,7 +148,7 @@ class MainActivityNavigator(
                 if (toolReference.tool?.toolType == ToolType.DYNAMICLINE) {
                     mainActivity.commandManager.executeCommand(command)
                 } else if (toolReference.tool?.toolType != ToolType.CLIP) {
-                    mainActivity.commandManager.addCommand(command)
+                    mainActivity.commandManager.executeCommand(command)
                 } else {
                     mainActivity.commandManager.addCommandWithoutUndo(command)
                 }

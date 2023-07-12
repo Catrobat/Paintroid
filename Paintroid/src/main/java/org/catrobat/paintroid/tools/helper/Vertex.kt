@@ -5,11 +5,10 @@ import android.graphics.Paint
 import android.graphics.PointF
 import android.graphics.RectF
 import org.catrobat.paintroid.command.Command
-import org.catrobat.paintroid.command.implementation.PathCommand
 
 const val VERTEX_WIDTH = 30.0f
 
-class DynamicLineToolVertex(vertexCenter: PointF?, outgoingPathCommand: Command?, ingoingPathCommand: Command?) {
+class Vertex(vertexCenter: PointF?, outgoingPathCommand: Command?, ingoingPathCommand: Command?) {
     var vertexCenter: PointF? = vertexCenter
     var vertex: RectF? = null
     var outgoingPathCommand: Command? = outgoingPathCommand

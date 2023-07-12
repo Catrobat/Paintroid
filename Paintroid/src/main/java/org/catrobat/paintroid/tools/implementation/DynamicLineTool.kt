@@ -15,7 +15,7 @@ import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.Workspace
 import org.catrobat.paintroid.tools.common.CommonBrushChangedListener
 import org.catrobat.paintroid.tools.common.CommonBrushPreviewListener
-import org.catrobat.paintroid.tools.helper.DynamicLineToolVertex
+import org.catrobat.paintroid.tools.helper.Vertex
 import org.catrobat.paintroid.tools.options.BrushToolOptionsView
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 import org.catrobat.paintroid.ui.viewholder.TopBarViewHolder
@@ -43,7 +43,7 @@ class DynamicLineTool(
     private var startPoint: PointF? = null
     private var endPoint: PointF? = null
     private var startCoordinateIsSet: Boolean = false
-    private var vertexStack: Deque<DynamicLineToolVertex> = ArrayDeque()
+    private var vertexStack: Deque<Vertex> = ArrayDeque()
     private var currentPathCommand: PathCommand? = null
     private var undoRecentlyClicked = false
 
@@ -97,8 +97,10 @@ class DynamicLineTool(
 
     fun undo() {
         var undoCommand = commandManager.getFirstUndoCommand()
-//        commandManager.undo()
-        commandManager.undoIgnoringColorChanges()
+        commandManager.undo()
+        // This workaround is not needed anymore since ColorChangedCommands do not add commands but
+        // only execute them in MainActivityNavigator
+//        commandManager.undoIgnoringColorChanges()
         undoRecentlyClicked = true
         if (undoCommand != null && undoCommand is PathCommand && undoCommand.isDynamicLineToolPathCommand) {
             setCurrentPathCommand(undoCommand)
@@ -140,7 +142,7 @@ class DynamicLineTool(
 
     override fun drawShape(canvas: Canvas) {
         vertexStack.forEach {
-            it.vertex?.let { vertex -> canvas.drawRect(vertex, DynamicLineToolVertex.getPaint())
+            it.vertex?.let { vertex -> canvas.drawRect(vertex, Vertex.getPaint())
             }
         }
     }
@@ -186,7 +188,9 @@ class DynamicLineTool(
         super.handleUp(coordinate)
         endPoint = copyPointF(coordinate)
         createOrAdjustPathCommand()
+        createVertices()
         handleRedo()
+        var lenk = vertexStack
         return true
     }
 
@@ -204,6 +208,32 @@ class DynamicLineTool(
             (currentPathCommand as PathCommand).isDynamicLineToolPathCommand = true
             commandManager.addCommand(currentPathCommand)
         }
+    }
+
+    private fun createVertices() {
+        if (vertexStack.isEmpty()) {
+            // this means its the first line and we have to create 2 vertices
+            // 1. outgoing path is current, ingoing is null
+            // 2. outgoing is null, ingoing is current
+            createSourceVertex()
+            createDestinationVertex()
+        } else {
+            // at this point we already have at least 2 vertices and we just need to add one
+            // with an ingoing path and outgoing path to null
+            createDestinationVertex()
+        }
+    }
+
+    private fun createSourceVertex() {
+        var vertexCenter = startPoint?.let { start -> copyPointF(start) }
+        var sourceVertex = Vertex(vertexCenter, currentPathCommand, null)
+        vertexStack.add(sourceVertex)
+    }
+
+    private fun createDestinationVertex() {
+        var vertexCenter = endPoint?.let { end -> copyPointF(end) }
+        var destinationVertex = Vertex(vertexCenter, null, currentPathCommand)
+        vertexStack.add(destinationVertex)
     }
 
     override fun changePaintColor(color: Int) {
@@ -224,7 +254,7 @@ class DynamicLineTool(
     private fun updatePaintColor() {
         if (currentPathCommand != null) {
             (currentPathCommand as PathCommand).setPaintColor(toolPaint.color)
-            commandManager.executeCommand(currentPathCommand)
+            commandManager.executeAllCommands()
             brushToolOptionsView.invalidate()
         }
     }
