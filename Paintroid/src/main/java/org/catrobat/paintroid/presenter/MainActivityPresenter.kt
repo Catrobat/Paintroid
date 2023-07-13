@@ -47,6 +47,7 @@ import androidx.core.view.GravityCompat
 import androidx.test.espresso.idling.CountingIdlingResource
 import org.catrobat.paintroid.FileIO
 import org.catrobat.paintroid.MainActivity
+import org.catrobat.paintroid.MainActivity.Companion.projectName
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.UserPreferences
 import org.catrobat.paintroid.colorpicker.ColorHistory
@@ -334,6 +335,7 @@ open class MainActivityPresenter(
     }
 
     override fun onNewImage() {
+        projectName = null
         val metrics = view.displayMetrics
         resetPerspectiveAfterNextCommand = true
         model.savedPictureUri = null
