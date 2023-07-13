@@ -10,13 +10,13 @@ const val VERTEX_WIDTH = 30.0f
 
 class Vertex(vertexCenter: PointF?, outgoingPathCommand: Command?, ingoingPathCommand: Command?) {
     var vertexCenter: PointF? = vertexCenter
-    var vertex: RectF? = null
+    var vertexShape: RectF? = null
     var outgoingPathCommand: Command? = outgoingPathCommand
     var ingoingPathCommand: Command? = ingoingPathCommand
 
     init {
         if (vertexCenter != null) {
-            vertex = RectF(
+            vertexShape = RectF(
                 vertexCenter.x - VERTEX_WIDTH,
                 vertexCenter.y - VERTEX_WIDTH,
                 vertexCenter.x + VERTEX_WIDTH,
@@ -25,9 +25,9 @@ class Vertex(vertexCenter: PointF?, outgoingPathCommand: Command?, ingoingPathCo
         }
     }
 
-    fun updateVertex(newCenter: PointF) {
+    fun updateVertexCenter(newCenter: PointF) {
         vertexCenter = newCenter
-        vertex = RectF(
+        vertexShape = RectF(
             newCenter.x - VERTEX_WIDTH,
             newCenter.y - VERTEX_WIDTH,
             newCenter.x + VERTEX_WIDTH,
@@ -35,11 +35,11 @@ class Vertex(vertexCenter: PointF?, outgoingPathCommand: Command?, ingoingPathCo
         )
     }
 
-    fun updateOutgoingPath(updatedOutgoingPath: Command?) {
+    fun setOutgoingPath(updatedOutgoingPath: Command?) {
         this.outgoingPathCommand = updatedOutgoingPath
     }
 
-    fun updateIngoingPath(updatedIngoingPath: Command?) {
+    fun setIngoingPath(updatedIngoingPath: Command?) {
         this.ingoingPathCommand = updatedIngoingPath
     }
 
