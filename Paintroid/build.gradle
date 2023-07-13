@@ -153,7 +153,7 @@ dependencies {
     testImplementation "androidx.test:core-ktx:1.4.0"
     implementation 'com.android.support.test.espresso:espresso-idling-resource:3.1.0'
 
-    def room_version = "2.3.0"
+    def room_version = "2.4.0-alpha03"
     implementation "androidx.room:room-ktx:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
 }
