@@ -3,65 +3,52 @@ package org.catrobat.paintroid.tools.helper
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PointF
-import android.graphics.RectF
 import org.catrobat.paintroid.command.Command
-
-const val VERTEX_WIDTH = 30.0f
+import kotlin.math.pow
+import kotlin.math.sqrt
 
 class Vertex(vertexCenter: PointF?, outgoingPathCommand: Command?, ingoingPathCommand: Command?) {
     var vertexCenter: PointF? = vertexCenter
-    var vertexShape: RectF? = null
     var outgoingPathCommand: Command? = outgoingPathCommand
     var ingoingPathCommand: Command? = ingoingPathCommand
 
-    init {
-        if (vertexCenter != null) {
-            vertexShape = RectF(
-                vertexCenter.x - VERTEX_WIDTH,
-                vertexCenter.y - VERTEX_WIDTH,
-                vertexCenter.x + VERTEX_WIDTH,
-                vertexCenter.y + VERTEX_WIDTH
-            )
-        }
-    }
-
     fun updateVertexCenter(newCenter: PointF) {
         vertexCenter = newCenter
-        vertexShape = RectF(
-            newCenter.x - VERTEX_WIDTH,
-            newCenter.y - VERTEX_WIDTH,
-            newCenter.x + VERTEX_WIDTH,
-            newCenter.y + VERTEX_WIDTH
-        )
     }
 
     fun setOutgoingPath(updatedOutgoingPath: Command?) {
         this.outgoingPathCommand = updatedOutgoingPath
     }
 
-    fun setIngoingPath(updatedIngoingPath: Command?) {
-        this.ingoingPathCommand = updatedIngoingPath
+    fun wasClicked(clickedCoordinate: PointF?): Boolean {
+        vertexCenter?.let { vc ->
+            clickedCoordinate?.let { cc ->
+                val distanceFromCenter = calculateDistance(vc.x, vc.y, cc.x, cc.y)
+                if (distanceFromCenter <= VERTEX_RADIUS) return true
+            }
+        }
+        return false
+    }
+
+    private fun calculateDistance(x0: Float, y0: Float, x1: Float, y1: Float): Double {
+        return sqrt((x1.toDouble() - x0.toDouble()).pow(2) +
+                       (y1.toDouble() - y0.toDouble()).pow(2))
     }
 
     companion object {
-        private const val RECT_PAINT_ALPHA = 128
-        private const val RECT_PAINT_STROKE_WIDTH = 2f
+        private const val PAINT_ALPHA = 128
+        private const val PAINT_STROKE_WIDTH = 2f
+        const val VERTEX_RADIUS = 50F
 
         fun getPaint(): Paint {
             val paint = Paint()
             paint.run {
                 style = Paint.Style.FILL
                 color = Color.GRAY
-                alpha = RECT_PAINT_ALPHA
-                strokeWidth = RECT_PAINT_STROKE_WIDTH
+                alpha = PAINT_ALPHA
+                strokeWidth = PAINT_STROKE_WIDTH
             }
             return paint
         }
-
-        fun isInsideVertex(clickedCoordinate: PointF, rectF: RectF): Boolean =
-            clickedCoordinate.x < rectF.right &&
-                rectF.left < clickedCoordinate.x &&
-                clickedCoordinate.y < rectF.bottom &&
-                rectF.top < clickedCoordinate.y
     }
 }

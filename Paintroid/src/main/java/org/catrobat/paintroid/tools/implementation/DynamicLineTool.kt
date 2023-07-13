@@ -22,6 +22,7 @@ import org.catrobat.paintroid.ui.viewholder.TopBarViewHolder
 import java.util.*
 import java.util.ArrayDeque
 
+const val MOVING_FRAMES = 3
 class DynamicLineTool(
     private val brushToolOptionsView: BrushToolOptionsView,
     contextCallback: ContextCallback,
@@ -49,6 +50,8 @@ class DynamicLineTool(
     private var movingVertex: Vertex? = null
     private var predecessorVertex: Vertex? = null
     private var successorVertex: Vertex? = null
+    private var movingFramesCounter: Int = 0
+
     init {
         brushToolOptionsView.setBrushChangedListener(CommonBrushChangedListener(this))
         brushToolOptionsView.setBrushPreviewListener(
@@ -100,8 +103,12 @@ class DynamicLineTool(
     }
     @Synchronized override fun drawShape(canvas: Canvas) {
         vertexStack.forEach { vertex ->
-            vertex.vertexShape?.let { vertexShape ->
-                canvas.drawRect(vertexShape, Vertex.getPaint())
+            vertex?.let { vertex ->
+                var cx = vertex.vertexCenter?.x
+                var cy = vertex.vertexCenter?.y
+                if (cx != null && cy != null) {
+                    canvas.drawCircle(cx, cy, Vertex.VERTEX_RADIUS, Vertex.getPaint())
+                }
             }
         }
     }
@@ -164,15 +171,18 @@ class DynamicLineTool(
         }
         return true
     }
+
     @Synchronized private fun vertexWasClicked(clickedCoordinate: PointF): Boolean {
         if (vertexStack.isEmpty()) return false
         for (vertex in vertexStack) {
-            vertex.vertexShape?.let { vertexShape ->
-                if (Vertex.isInsideVertex(clickedCoordinate, vertexShape)) {
+            vertex.let { vertex ->
+                if (vertex.wasClicked(clickedCoordinate)) {
                     movingVertex = vertex
                     val index = vertexStack.indexOf(movingVertex)
                     predecessorVertex = vertexStack.elementAtOrNull(index - 1)
                     successorVertex = vertexStack.elementAtOrNull(index + 1)
+                    currentStartPoint = null
+                    currentEndPoint = null
                     return true
                 }
             }
@@ -185,8 +195,12 @@ class DynamicLineTool(
         hideToolOptions()
         super.handleMove(coordinate)
         currentEndPoint = copyPointF(coordinate)
+        if (movingFramesCounter++ % MOVING_FRAMES != 0) return true
+        updateMovingVertices(coordinate)
+        return true
+    }
 
-        // method here to update the paths and a last one at handle up with let
+    private fun updateMovingVertices(coordinate: PointF) {
         if (movingVertex != null) {
             var newCenter = copyPointF(coordinate)
             movingVertex?.updateVertexCenter(newCenter)
@@ -208,8 +222,6 @@ class DynamicLineTool(
             }
             commandManager.executeAllCommands()
         }
-
-        return true
     }
 
     private fun handleRedo() {
@@ -220,9 +232,9 @@ class DynamicLineTool(
                 firstRedoCommand is PathCommand &&
                 firstRedoCommand.isDynamicLineToolPathCommand &&
                 firstRedoCommand.startPoint != currentPathCommand?.endPoint) {
-                // a previous command was moved so redo has to be deactivated
-                commandManager.clearRedoCommandList()
-                undoRecentlyClicked = false
+                    // a previous command was moved so redo has to be deactivated
+                    commandManager.clearRedoCommandList()
+                    undoRecentlyClicked = false
             }
         }
     }
@@ -231,12 +243,10 @@ class DynamicLineTool(
         coordinate ?: return false
         showToolOptions()
         super.handleUp(coordinate)
-
-        // check if vertices were moved and make a last update then reset to null
+        currentEndPoint = copyPointF(coordinate)
 
         if (resetClickedVertex(coordinate)) return true
 
-        currentEndPoint = copyPointF(coordinate)
         var pathWasCreated = createOrAdjustPathCommand()
         if (pathWasCreated) createVertex() else adjustVertex()
         handleRedo()
@@ -245,10 +255,14 @@ class DynamicLineTool(
     }
 
     private fun resetClickedVertex(coordinate: PointF): Boolean {
+        // maybe final redraw??
         movingVertex?.let {
+            // if the movingVertex is not null at an up event, this means vertices were moved
+            // if a middle vertex was moved, the
             movingVertex = null
             predecessorVertex = null
             successorVertex = null
+            currentEndPoint = vertexStack.last.vertexCenter?.let { it1 -> copyPointF(it1) }
             return true
         }
         return false
@@ -273,7 +287,9 @@ class DynamicLineTool(
     }
 
     private fun createVertex() {
-        if (vertexStack.isEmpty()) { createSourceVertex() }
+        if (vertexStack.isEmpty()) {
+            createSourceVertex()
+        }
         createDestinationVertex()
     }
 
