@@ -6,6 +6,7 @@ import android.graphics.PointF
 import android.util.Log
 import android.view.View
 import androidx.test.espresso.idling.CountingIdlingResource
+import org.catrobat.paintroid.command.Command
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.command.implementation.PathCommand
 import org.catrobat.paintroid.command.serialization.SerializablePath
@@ -22,7 +23,7 @@ import org.catrobat.paintroid.ui.viewholder.TopBarViewHolder
 import java.util.*
 import java.util.ArrayDeque
 
-const val MOVING_FRAMES = 3
+const val MOVING_FRAMES = 2
 class DynamicLineTool(
     private val brushToolOptionsView: BrushToolOptionsView,
     contextCallback: ContextCallback,
@@ -117,30 +118,22 @@ class DynamicLineTool(
         var undoCommand = commandManager.getFirstUndoCommand()
         commandManager.undo()
         undoRecentlyClicked = true
-        if (undoCommand != null && undoCommand is PathCommand && undoCommand.isDynamicLineToolPathCommand) {
-            setCurrentPathCommand(undoCommand)
-            setToolPaint()
-        } else {
-            reset()
-        }
+        updatePathOrResetAfterUndoOrRedoAction(undoCommand)
     }
 
     fun redo() {
         var redoCommand = commandManager.getFirstRedoCommand()
         commandManager.redo()
-        if (redoCommand != null && redoCommand is PathCommand && redoCommand.isDynamicLineToolPathCommand) {
-            setCurrentPathCommand(redoCommand)
+        updatePathOrResetAfterUndoOrRedoAction(redoCommand)
+    }
+
+    private fun updatePathOrResetAfterUndoOrRedoAction(command: Command?) {
+        if (command != null && command is PathCommand && command.isDynamicLineToolPathCommand) {
+            setCurrentPathCommand(command)
             setToolPaint()
         } else {
             reset()
         }
-    }
-
-    private fun reset() {
-        currentStartPoint = null
-        currentEndPoint = null
-        startCoordinateIsSet = false
-        currentPathCommand = null
     }
 
     private fun setCurrentPathCommand(currentCommand: PathCommand) {
@@ -155,6 +148,25 @@ class DynamicLineTool(
         super.changePaintStrokeWidth((currentPathCommand as PathCommand).paint.strokeWidth.toInt())
     }
 
+    private fun reset() {
+        currentStartPoint = null
+        currentEndPoint = null
+        startCoordinateIsSet = false
+        currentPathCommand = null
+    }
+
+    private fun updatePathCommand(start: PointF?, end: PointF?, pathCommand: Command?) {
+        start?.let { startPoint ->
+            end?.let { endPoint ->
+                pathCommand?.let { command->
+                    (command as PathCommand).setPath(createSerializablePath(startPoint, endPoint))
+                    command.setStartAndEndPoint(startPoint, endPoint)
+                    commandManager.executeAllCommands()
+                }
+            }
+        }
+    }
+
     override fun handleDown(coordinate: PointF?): Boolean {
         coordinate ?: return false
         topBarViewHolder?.showPlusButton()
@@ -164,11 +176,8 @@ class DynamicLineTool(
         Log.e(TAG, "Vertex clicked = $clicked")
         if (clicked) return false
 
-        currentStartPoint = if (!startCoordinateIsSet) {
-            copyPointF(coordinate).also { startCoordinateIsSet = true }
-        } else {
-            currentStartPoint
-        }
+        setStartPointOfPath(coordinate)
+
         return true
     }
 
@@ -190,6 +199,14 @@ class DynamicLineTool(
         return false
     }
 
+    private fun setStartPointOfPath(coordinate: PointF) {
+        currentStartPoint = if (!startCoordinateIsSet) {
+            copyPointF(coordinate).also { startCoordinateIsSet = true }
+        } else {
+            currentStartPoint
+        }
+    }
+
     override fun handleMove(coordinate: PointF?): Boolean {
         coordinate ?: return false
         hideToolOptions()
@@ -202,25 +219,17 @@ class DynamicLineTool(
 
     private fun updateMovingVertices(coordinate: PointF) {
         if (movingVertex != null) {
-            var newCenter = copyPointF(coordinate)
-            movingVertex?.updateVertexCenter(newCenter)
+            movingVertex?.updateVertexCenter(copyPointF(coordinate))
             if (movingVertex?.ingoingPathCommand != null) {
                 var startPoint = predecessorVertex?.vertexCenter?.let { center -> copyPointF(center) }
                 var endPoint = copyPointF(coordinate)
-                var updatedPath = createSerializablePath(startPoint, endPoint)
-                (movingVertex?.ingoingPathCommand as PathCommand).setPath(updatedPath)
-                (movingVertex?.ingoingPathCommand as PathCommand).setStartAndEndPoint(startPoint, endPoint)
-                commandManager.executeCommand(movingVertex?.ingoingPathCommand )
+                updatePathCommand(startPoint, endPoint, movingVertex?.ingoingPathCommand)
             }
             if (movingVertex?.outgoingPathCommand != null) {
                 var startPoint = copyPointF(coordinate)
                 var endPoint = successorVertex?.vertexCenter?.let { center -> copyPointF(center) }
-                var updatedPath = createSerializablePath(startPoint, endPoint)
-                (movingVertex?.outgoingPathCommand as PathCommand).setPath(updatedPath)
-                (movingVertex?.outgoingPathCommand as PathCommand).setStartAndEndPoint(startPoint, endPoint)
-                commandManager.executeCommand(movingVertex?.outgoingPathCommand )
+                updatePathCommand(startPoint, endPoint, movingVertex?.outgoingPathCommand)
             }
-            commandManager.executeAllCommands()
         }
     }
 
@@ -245,20 +254,16 @@ class DynamicLineTool(
         super.handleUp(coordinate)
         currentEndPoint = copyPointF(coordinate)
 
-        if (resetClickedVertex(coordinate)) return true
-
+        if (resetAfterMovingVertex(coordinate)) return true
         var pathWasCreated = createOrAdjustPathCommand()
         if (pathWasCreated) createVertex() else adjustVertex()
         handleRedo()
-        var lenk = vertexStack
         return true
     }
 
-    private fun resetClickedVertex(coordinate: PointF): Boolean {
-        // maybe final redraw??
+    private fun resetAfterMovingVertex(coordinate: PointF): Boolean {
         movingVertex?.let {
-            // if the movingVertex is not null at an up event, this means vertices were moved
-            // if a middle vertex was moved, the
+            updateMovingVertices(coordinate)
             movingVertex = null
             predecessorVertex = null
             successorVertex = null
@@ -269,20 +274,18 @@ class DynamicLineTool(
     }
 
     private fun createOrAdjustPathCommand(): Boolean {
-        var currentlyDrawnPath = createSerializablePath(currentStartPoint, currentEndPoint)
-        if (currentPathCommand != null) {
-            (currentPathCommand as PathCommand).setPath(currentlyDrawnPath)
-            (currentPathCommand as PathCommand).
-                setStartAndEndPoint(currentStartPoint?.let { start -> copyPointF(start) }, currentEndPoint?.let { end -> copyPointF(end) })
-            commandManager.executeAllCommands()
-            return false
-        } else {
+        var startPoint = currentStartPoint?.let { copyPointF(it) }
+        var endPoint = currentEndPoint?.let { copyPointF(it) }
+        return if (currentPathCommand == null) {
+            var currentlyDrawnPath = createSerializablePath(startPoint, endPoint)
             currentPathCommand = commandFactory.createPathCommand(toolPaint.paint, currentlyDrawnPath) as PathCommand
-            (currentPathCommand as PathCommand).
-                setStartAndEndPoint(currentStartPoint?.let { start -> copyPointF(start) }, currentEndPoint?.let { end -> copyPointF(end) })
+            (currentPathCommand as PathCommand).setStartAndEndPoint(startPoint , endPoint)
             (currentPathCommand as PathCommand).isDynamicLineToolPathCommand = true
             commandManager.addCommand(currentPathCommand)
-            return true
+            true
+        } else {
+            updatePathCommand(startPoint, endPoint, currentPathCommand)
+            false
         }
     }
 
