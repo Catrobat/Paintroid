@@ -17,7 +17,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
-import androidx.core.graphics.drawable.toBitmap
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
@@ -66,9 +65,7 @@ import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule
 import org.catrobat.paintroid.tools.ToolType
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.not
-import org.hamcrest.Description
 import org.hamcrest.Matcher
-import org.hamcrest.TypeSafeMatcher
 import org.junit.Test
 import org.junit.Rule
 import org.junit.After
@@ -512,8 +509,24 @@ class LandingPageActivityIntegrationTest {
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString()
         val imagePathToFile = imagesDirectory + File.separator + testName + "." + PNG_IMAGE_ENDING
         val imageFile = File(imagePathToFile)
-        val expectedBitmap = BitmapFactory.decodeFile(imageFile.absolutePath)
-        onView(withId(R.id.pocketpaint_image_preview)).check(matches(withBitmap(expectedBitmap)))
+        onView(withId(R.id.pocketpaint_image_preview)).perform(
+            object : ViewAction {
+                override fun getConstraints(): Matcher<View> {
+                    return isAssignableFrom(ImageView::class.java)
+                }
+
+                override fun getDescription(): String {
+                    return "Check if image is correctly displayed"
+                }
+
+                override fun perform(uiController: UiController?, view: View?) {
+                    val imageView = view as? ImageView
+                    val expectedBitmap = BitmapFactory.decodeFile(imageFile.absolutePath)
+                    val actualBitmap = (imageView?.drawable as? BitmapDrawable)?.bitmap
+                    actualBitmap?.sameAs(expectedBitmap)
+                }
+            }
+        )
     }
 
     private fun insertProjectIntoRecyclerView() {
@@ -552,20 +565,6 @@ class LandingPageActivityIntegrationTest {
         val imageFile = File(imageUri?.path, "testfile.jpg")
         deletionFileList.add(imageFile)
         return imageUri
-    }
-
-    private fun withBitmap(expectedBitmap: Bitmap): Matcher<View> {
-        return object : TypeSafeMatcher<View>() {
-            override fun describeTo(description: Description) {
-                description.appendText("with bitmap: ")
-            }
-
-            override fun matchesSafely(view: View): Boolean {
-                if (view !is ImageView) return false
-                val actualBitmap = view.drawable.toBitmap()
-                return expectedBitmap.sameAs(actualBitmap)
-            }
-        }
     }
 
     private fun isRecyclerViewEmpty(recyclerViewMatcher: Matcher<View>): Boolean {
