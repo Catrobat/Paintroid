@@ -23,7 +23,7 @@ import org.catrobat.paintroid.ui.viewholder.TopBarViewHolder
 import java.util.*
 import java.util.ArrayDeque
 
-const val MOVING_FRAMES = 2
+const val MOVING_FRAMES = 1
 class DynamicLineTool(
     private val brushToolOptionsView: BrushToolOptionsView,
     contextCallback: ContextCallback,
@@ -42,16 +42,16 @@ class DynamicLineTool(
     commandManager
 ) {
     override var toolType: ToolType = ToolType.DYNAMICLINE
-    private var currentStartPoint: PointF? = null
-    private var currentEndPoint: PointF? = null
-    private var startCoordinateIsSet: Boolean = false
-    private var vertexStack: Deque<Vertex> = ArrayDeque()
-    private var currentPathCommand: PathCommand? = null
-    private var undoRecentlyClicked = false
-    private var movingVertex: Vertex? = null
-    private var predecessorVertex: Vertex? = null
-    private var successorVertex: Vertex? = null
-    private var movingFramesCounter: Int = 0
+    var currentStartPoint: PointF? = null
+    var currentEndPoint: PointF? = null
+    var startCoordinateIsSet: Boolean = false
+    var vertexStack: Deque<Vertex> = ArrayDeque()
+    var currentPathCommand: PathCommand? = null
+    var undoRecentlyClicked = false
+    var movingVertex: Vertex? = null
+    var predecessorVertex: Vertex? = null
+    var successorVertex: Vertex? = null
+    var movingFramesCounter: Int = 0
 
     init {
         brushToolOptionsView.setBrushChangedListener(CommonBrushChangedListener(this))
@@ -129,15 +129,15 @@ class DynamicLineTool(
 
     private fun updatePathOrResetAfterUndoOrRedoAction(command: Command?) {
         if (command != null && command is PathCommand && command.isDynamicLineToolPathCommand) {
-            setCurrentPathCommand(command)
+            updateCurrentPathCommand(command)
             setToolPaint()
         } else {
             reset()
         }
     }
 
-    private fun setCurrentPathCommand(currentCommand: PathCommand) {
-        currentPathCommand = currentCommand
+    private fun updateCurrentPathCommand(currentCommand: PathCommand) {
+        this.currentPathCommand = currentCommand
         this.currentStartPoint = (currentPathCommand as PathCommand).startPoint
         this.currentEndPoint = (currentPathCommand as PathCommand).endPoint
     }
@@ -169,9 +169,7 @@ class DynamicLineTool(
 
     override fun handleDown(coordinate: PointF?): Boolean {
         coordinate ?: return false
-        topBarViewHolder?.showPlusButton()
         super.handleDown(coordinate)
-
         var clicked = vertexWasClicked(coordinate)
         Log.e(TAG, "Vertex clicked = $clicked")
         if (clicked) return false
@@ -233,7 +231,23 @@ class DynamicLineTool(
         }
     }
 
-    private fun handleRedo() {
+
+
+    override fun handleUp(coordinate: PointF?): Boolean {
+        coordinate ?: return false
+        super.handleUp(coordinate)
+        showToolOptions()
+        showPlusButton()
+        currentEndPoint = copyPointF(coordinate)
+
+        if (resetAfterMovingVertex(coordinate)) return true
+        var newPathWasCreated = createOrAdjustPathCommand()
+        if (newPathWasCreated) createVertex() else adjustVertex()
+        clearRedoIfPathWasAdjusted()
+        return true
+    }
+
+    private fun clearRedoIfPathWasAdjusted() {
         if (undoRecentlyClicked) {
             var firstRedoCommand = commandManager.getFirstRedoCommand()
             if (firstRedoCommand != null &&
@@ -241,24 +255,11 @@ class DynamicLineTool(
                 firstRedoCommand is PathCommand &&
                 firstRedoCommand.isDynamicLineToolPathCommand &&
                 firstRedoCommand.startPoint != currentPathCommand?.endPoint) {
-                    // a previous command was moved so redo has to be deactivated
-                    commandManager.clearRedoCommandList()
-                    undoRecentlyClicked = false
+                // a previous command was moved so redo has to be deactivated
+                commandManager.clearRedoCommandList()
+                undoRecentlyClicked = false
             }
         }
-    }
-
-    override fun handleUp(coordinate: PointF?): Boolean {
-        coordinate ?: return false
-        showToolOptions()
-        super.handleUp(coordinate)
-        currentEndPoint = copyPointF(coordinate)
-
-        if (resetAfterMovingVertex(coordinate)) return true
-        var pathWasCreated = createOrAdjustPathCommand()
-        if (pathWasCreated) createVertex() else adjustVertex()
-        handleRedo()
-        return true
     }
 
     private fun resetAfterMovingVertex(coordinate: PointF): Boolean {
@@ -356,9 +357,15 @@ class DynamicLineTool(
         }
     }
 
+    private fun showPlusButton() {
+        if (topBarViewHolder != null && topBarViewHolder?.plusButton?.visibility != View.VISIBLE) {
+            topBarViewHolder?.showPlusButton()
+        }
+    }
+
     private fun hidePlusButton() {
-        if (LineTool.topBarViewHolder != null && LineTool.topBarViewHolder?.plusButton?.visibility == View.VISIBLE) {
-            LineTool.topBarViewHolder?.hidePlusButton()
+        if (topBarViewHolder != null && topBarViewHolder?.plusButton?.visibility == View.VISIBLE) {
+            topBarViewHolder?.hidePlusButton()
         }
     }
 
