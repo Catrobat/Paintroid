@@ -23,7 +23,7 @@ import org.catrobat.paintroid.ui.viewholder.TopBarViewHolder
 import java.util.*
 import java.util.ArrayDeque
 
-const val MOVING_FRAMES = 1
+const val MOVING_FRAMES = 2
 class DynamicLineTool(
     private val brushToolOptionsView: BrushToolOptionsView,
     contextCallback: ContextCallback,
@@ -75,10 +75,10 @@ class DynamicLineTool(
     }
 
     override fun onClickOnButton() {
+        Log.e(TAG, "on button")
         hidePlusButton()
-        startCoordinateIsSet = false
-        currentPathCommand = null
-        vertexStack.clear()
+        reset()
+        commandManager.executeAllCommands()
     }
 
     fun onClickOnPlus() {
@@ -119,12 +119,24 @@ class DynamicLineTool(
         commandManager.undo()
         undoRecentlyClicked = true
         updatePathOrResetAfterUndoOrRedoAction(undoCommand)
+        updateVertexStackAfterUndo()
+    }
+
+    private fun updateVertexStackAfterUndo() {
+        if (vertexStack.size == 2) {
+            vertexStack.clear()
+            return
+        }
+        vertexStack.pollLast()
     }
 
     fun redo() {
         var redoCommand = commandManager.getFirstRedoCommand()
         commandManager.redo()
         updatePathOrResetAfterUndoOrRedoAction(redoCommand)
+        if (currentPathCommand != null) {
+            createVertex()
+        }
     }
 
     private fun updatePathOrResetAfterUndoOrRedoAction(command: Command?) {
@@ -153,6 +165,7 @@ class DynamicLineTool(
         currentEndPoint = null
         startCoordinateIsSet = false
         currentPathCommand = null
+        vertexStack.clear()
     }
 
     private fun updatePathCommand(start: PointF?, end: PointF?, pathCommand: Command?) {
@@ -170,10 +183,7 @@ class DynamicLineTool(
     override fun handleDown(coordinate: PointF?): Boolean {
         coordinate ?: return false
         super.handleDown(coordinate)
-        var clicked = vertexWasClicked(coordinate)
-        Log.e(TAG, "Vertex clicked = $clicked")
-        if (clicked) return false
-
+        if (vertexWasClicked(coordinate)) return false
         setStartPointOfPath(coordinate)
 
         return true

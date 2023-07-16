@@ -33,8 +33,8 @@ import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.tools.ContextCallback
 import org.catrobat.paintroid.tools.ToolPaint
 import org.catrobat.paintroid.tools.Workspace
+import org.catrobat.paintroid.tools.helper.Vertex
 import org.catrobat.paintroid.tools.implementation.DynamicLineTool
-import org.catrobat.paintroid.tools.implementation.LineTool
 import org.catrobat.paintroid.tools.options.BrushToolOptionsView
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 import org.catrobat.paintroid.ui.Perspective
@@ -42,9 +42,12 @@ import org.catrobat.paintroid.ui.viewholder.TopBarViewHolder
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before
+
+
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito
+import java.util.Deque
 
 class DynamicLineToolTest {
     private val toolPaint = Mockito.mock(ToolPaint::class.java)
@@ -86,9 +89,9 @@ class DynamicLineToolTest {
         val paint = Paint()
         Mockito.`when`(toolPaint.paint).thenReturn(paint)
         val topBarLayout = launchActivityRule.activity.findViewById<ViewGroup>(R.id.pocketpaint_layout_top_bar)
-        LineTool.topBarViewHolder = TopBarViewHolder(topBarLayout)
+        DynamicLineTool.topBarViewHolder = TopBarViewHolder(topBarLayout)
         val plusButton: ImageButton = launchActivityRule.activity.findViewById(R.id.pocketpaint_btn_top_plus)
-        LineTool.topBarViewHolder!!.plusButton = plusButton
+        DynamicLineTool.topBarViewHolder!!.plusButton = plusButton
         tool = DynamicLineTool(
             brushToolOptions,
             contextCallback,
@@ -170,6 +173,218 @@ class DynamicLineToolTest {
 
     @Test
     @UiThreadTest
+    fun testIfCheckmarkResetWorks() {
+        // reset should be as if tool is opened freshly, think about what should be resetted
+        // resetInternalstate override??
+
+    }
+
+    @Test
+    @UiThreadTest
+    fun testPlusButtonIsVisibleAfterFirstDrawnPath() {
+        var plusButtonVisibility = DynamicLineTool.topBarViewHolder?.plusButton?.visibility
+        Assert.assertEquals(plusButtonVisibility, View.GONE)
+
+        var tapDownCoordinate = PointF(5f, 5f)
+        var tapUpCoordinate = PointF(10f, 10f)
+        tool.handleDown(tapDownCoordinate)
+        tool.handleUp(tapUpCoordinate)
+
+        plusButtonVisibility = DynamicLineTool.topBarViewHolder?.plusButton?.visibility
+        Assert.assertEquals(plusButtonVisibility, View.VISIBLE)
+    }
+
+    @Test
+    @UiThreadTest
+    fun testPlusButtonIsNotVisibleAfterClickingCheckmark() {
+        var plusButtonVisibility = DynamicLineTool.topBarViewHolder?.plusButton?.visibility
+        Assert.assertEquals(plusButtonVisibility, View.GONE)
+
+        var tapDownCoordinate = PointF(5f, 5f)
+        var tapUpCoordinate = PointF(10f, 10f)
+        tool.handleDown(tapDownCoordinate)
+        tool.handleUp(tapUpCoordinate)
+
+        plusButtonVisibility = DynamicLineTool.topBarViewHolder?.plusButton?.visibility
+        Assert.assertEquals(plusButtonVisibility, View.VISIBLE)
+
+        tool.onClickOnButton()
+
+        plusButtonVisibility = DynamicLineTool.topBarViewHolder?.plusButton?.visibility
+        Assert.assertEquals(plusButtonVisibility, View.GONE)
+    }
+
+    @Test
+    @UiThreadTest
+    fun testLastEndpointIsNextStartPointAfterPlus() {
+        var tapDownCoordinate = PointF(5f, 5f)
+        var tapUpCoordinate = PointF(10f, 10f)
+        tool.handleDown(tapDownCoordinate)
+        tool.handleUp(tapUpCoordinate)
+        tool.onClickOnPlus()
+
+        Assert.assertEquals(tapUpCoordinate, tool.currentStartPoint)
+    }
+
+    @Test
+    @UiThreadTest
+    fun testVertexStackSizeAfterOnePath() {
+        Assert.assertEquals(0, tool.vertexStack.size)
+
+        var tapDownCoordinate = PointF(5f, 5f)
+        var tapUpCoordinate = PointF(10f, 10f)
+        tool.handleDown(tapDownCoordinate)
+        tool.handleUp(tapUpCoordinate)
+
+        Assert.assertEquals(2, tool.vertexStack.size)
+    }
+
+    @Test
+    @UiThreadTest
+    fun testVertexStackSizeAfterTwoPaths() {
+        Assert.assertEquals(0, tool.vertexStack.size)
+
+        var tapDownCoordinate = PointF(5f, 5f)
+        var tapUpCoordinate = PointF(10f, 10f)
+        tool.handleDown(tapDownCoordinate)
+        tool.handleUp(tapUpCoordinate)
+
+        tool.onClickOnPlus()
+
+        tapDownCoordinate = PointF(100f, 100f)
+        tapUpCoordinate = PointF(100f, 100f)
+        tool.handleDown(tapDownCoordinate)
+        tool.handleUp(tapUpCoordinate)
+
+        Assert.assertEquals(3, tool.vertexStack.size)
+    }
+
+    @Test
+    @UiThreadTest
+    fun testVertexStackSizeAfterThreePaths() {
+        Assert.assertEquals(0, tool.vertexStack.size)
+
+        var tapDownCoordinate = PointF(5f, 5f)
+        var tapUpCoordinate = PointF(10f, 10f)
+        tool.handleDown(tapDownCoordinate)
+        tool.handleUp(tapUpCoordinate)
+
+        tool.onClickOnPlus()
+
+        tapDownCoordinate = PointF(100f, 100f)
+        tapUpCoordinate = PointF(100f, 100f)
+        tool.handleDown(tapDownCoordinate)
+        tool.handleUp(tapUpCoordinate)
+
+        tool.onClickOnPlus()
+
+        tapDownCoordinate = PointF(200f, 200f)
+        tapUpCoordinate = PointF(200f, 200f)
+        tool.handleDown(tapDownCoordinate)
+        tool.handleUp(tapUpCoordinate)
+
+        Assert.assertEquals(4, tool.vertexStack.size)
+    }
+
+    @Test
+    @UiThreadTest
+    fun testVertexStackIsClearedAfterCheckmark() {
+        Assert.assertEquals(0, tool.vertexStack.size)
+
+        var tapDownCoordinate = PointF(5f, 5f)
+        var tapUpCoordinate = PointF(10f, 10f)
+        tool.handleDown(tapDownCoordinate)
+        tool.handleUp(tapUpCoordinate)
+
+        Assert.assertEquals(2, tool.vertexStack.size)
+        tool.onClickOnButton()
+        Assert.assertEquals(0, tool.vertexStack.size)
+    }
+
+    @Test
+    @UiThreadTest
+    fun testClickOnVertexSetsMovingVertices() {
+        Assert.assertEquals(null, tool.predecessorVertex)
+        Assert.assertEquals(null, tool.movingVertex)
+        Assert.assertEquals(null, tool.successorVertex)
+
+        var firstVertexCoordinate = PointF(5f, 5f)
+        var middleVertexCoordinate = PointF(100f, 100f)
+        tool.handleDown(firstVertexCoordinate)
+        tool.handleUp(middleVertexCoordinate)
+
+        tool.onClickOnPlus()
+
+        var lastVertexCoordinate = PointF(200f, 200f)
+        tool.handleDown(lastVertexCoordinate)
+        tool.handleUp(lastVertexCoordinate)
+
+        tool.handleDown(middleVertexCoordinate)
+
+        Assert.assertEquals(tool.vertexStack.first, tool.predecessorVertex)
+        Assert.assertEquals(getElementAtIndex(tool.vertexStack, 1), tool.movingVertex)
+        Assert.assertEquals(tool.vertexStack.last, tool.successorVertex)
+    }
+
+    @Test
+    @UiThreadTest
+    fun testHandleUpResetsMovingVerticesAfterMoving() {
+        Assert.assertEquals(null, tool.predecessorVertex)
+        Assert.assertEquals(null, tool.movingVertex)
+        Assert.assertEquals(null, tool.successorVertex)
+
+        var firstVertexCoordinate = PointF(5f, 5f)
+        var middleVertexCoordinate = PointF(100f, 100f)
+        tool.handleDown(firstVertexCoordinate)
+        tool.handleUp(middleVertexCoordinate)
+
+        tool.onClickOnPlus()
+
+        var lastVertexCoordinate = PointF(200f, 200f)
+        tool.handleDown(lastVertexCoordinate)
+        tool.handleUp(lastVertexCoordinate)
+
+        tool.handleDown(middleVertexCoordinate)
+
+        Assert.assertEquals(tool.vertexStack.first, tool.predecessorVertex)
+        Assert.assertEquals(getElementAtIndex(tool.vertexStack, 1), tool.movingVertex)
+        Assert.assertEquals(tool.vertexStack.last, tool.successorVertex)
+
+        middleVertexCoordinate = PointF(150f, 150f)
+
+        tool.handleUp(middleVertexCoordinate)
+
+        Assert.assertEquals(null, tool.predecessorVertex)
+        Assert.assertEquals(null, tool.movingVertex)
+        Assert.assertEquals(null, tool.successorVertex)
+    }
+
+    @Test
+    @UiThreadTest
+    fun testEndpointIsSetToLastVertexAfterMovingMiddleVertex() {
+        var firstVertexCoordinate = PointF(5f, 5f)
+        var middleVertexCoordinate = PointF(100f, 100f)
+        tool.handleDown(firstVertexCoordinate)
+        tool.handleUp(middleVertexCoordinate)
+
+        tool.onClickOnPlus()
+
+        var lastVertexCoordinate = PointF(200f, 200f)
+        tool.handleDown(lastVertexCoordinate)
+        tool.handleUp(lastVertexCoordinate)
+
+        tool.handleDown(middleVertexCoordinate)
+
+        Assert.assertEquals(tool.currentEndPoint, null)
+
+        middleVertexCoordinate = PointF(150f, 150f)
+        tool.handleUp(middleVertexCoordinate)
+
+        Assert.assertEquals(tool.currentEndPoint, tool.vertexStack.last.vertexCenter)
+    }
+
+    @Test
+    @UiThreadTest
     fun testShouldCallHideWhenDrawing() {
         val tap1 = PointF(7f, 7f)
         Mockito.`when`(toolOptionsViewController.isVisible).thenReturn(true)
@@ -203,6 +418,15 @@ class DynamicLineToolTest {
                                                           willHide = false,
                                                           showOptionsView = true
         )
+    }
+
+    private fun getElementAtIndex(deque: Deque<Vertex>, index: Int): Vertex? {
+        for ((currentIndex, element) in deque.withIndex()) {
+            if (currentIndex == index) {
+                return element
+            }
+        }
+        return null
     }
 
 

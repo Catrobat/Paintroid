@@ -107,6 +107,9 @@ class DefaultCommandManager(
     override fun undo() {
         if (isUndoAvailable) {
             val command = undoCommandList.pop()
+
+            // check here for DynamicLineToolMetaCommand and build the tool
+
             redoCommandList.addFirst(command)
 
             handleUndo(command)
