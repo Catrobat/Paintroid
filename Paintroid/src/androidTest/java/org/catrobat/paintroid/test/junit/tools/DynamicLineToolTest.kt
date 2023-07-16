@@ -42,8 +42,6 @@ import org.catrobat.paintroid.ui.viewholder.TopBarViewHolder
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before
-
-
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito
@@ -170,13 +168,11 @@ class DynamicLineToolTest {
         Assert.assertEquals(tool.currentEndPoint, moveCoordinate)
     }
 
-
     @Test
     @UiThreadTest
     fun testIfCheckmarkResetWorks() {
         // reset should be as if tool is opened freshly, think about what should be resetted
         // resetInternalstate override??
-
     }
 
     @Test

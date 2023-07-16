@@ -247,22 +247,20 @@ class DynamicLineTool(
         showToolOptions()
         showPlusButton()
         currentEndPoint = copyPointF(coordinate)
-
+        clearRedoIfPathWasAdjusted()
         if (resetAfterMovingVertex(coordinate)) return true
         var newPathWasCreated = createOrAdjustPathCommand()
         if (newPathWasCreated) createVertex() else adjustVertex()
-        clearRedoIfPathWasAdjusted()
         return true
     }
 
     private fun clearRedoIfPathWasAdjusted() {
         if (undoRecentlyClicked) {
-            var firstRedoCommand = commandManager.getFirstRedoCommand()
-            if (firstRedoCommand != null &&
-                currentPathCommand != null &&
-                firstRedoCommand is PathCommand &&
-                firstRedoCommand.isDynamicLineToolPathCommand &&
-                firstRedoCommand.startPoint != currentPathCommand?.endPoint) {
+            var firstRedoCommand = commandManager.getFirstRedoCommand()?: return
+            if (currentPathCommand != null
+                && firstRedoCommand is PathCommand
+                && firstRedoCommand.isDynamicLineToolPathCommand
+                && firstRedoCommand.startPoint != currentPathCommand?.endPoint) {
                 // a previous command was moved so redo has to be deactivated
                 commandManager.clearRedoCommandList()
                 undoRecentlyClicked = false
