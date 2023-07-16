@@ -256,11 +256,11 @@ class DynamicLineTool(
 
     private fun clearRedoIfPathWasAdjusted() {
         if (undoRecentlyClicked) {
-            var firstRedoCommand = commandManager.getFirstRedoCommand()?: return
-            if (currentPathCommand != null
-                && firstRedoCommand is PathCommand
-                && firstRedoCommand.isDynamicLineToolPathCommand
-                && firstRedoCommand.startPoint != currentPathCommand?.endPoint) {
+            var firstRedoCommand = commandManager.getFirstRedoCommand() ?: return
+            if (currentPathCommand != null &&
+                firstRedoCommand is PathCommand &&
+                firstRedoCommand.isDynamicLineToolPathCommand &&
+                firstRedoCommand.startPoint != currentPathCommand?.endPoint) {
                 // a previous command was moved so redo has to be deactivated
                 commandManager.clearRedoCommandList()
                 undoRecentlyClicked = false
