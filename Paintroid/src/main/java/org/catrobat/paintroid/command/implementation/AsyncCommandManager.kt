@@ -118,7 +118,7 @@ open class AsyncCommandManager(
     }
 
     override fun clearRedoCommandList() {
-        synchronized(layerModel) {commandManager.clearRedoCommandList() }
+        synchronized(layerModel) { commandManager.clearRedoCommandList() }
     }
 
     override fun redo() {

@@ -118,13 +118,9 @@ class DefaultCommandManager(
         }
     }
 
-    override fun getFirstUndoCommand(): Command? {
-        return undoCommandList.elementAtOrNull(1)
-    }
+    override fun getFirstUndoCommand(): Command? = undoCommandList.elementAtOrNull(1)
 
-    override fun getFirstRedoCommand(): Command? {
-        return redoCommandList.firstOrNull()
-    }
+    override fun getFirstRedoCommand(): Command? = redoCommandList.firstOrNull()
 
     override fun clearRedoCommandList() {
         redoCommandList.clear()

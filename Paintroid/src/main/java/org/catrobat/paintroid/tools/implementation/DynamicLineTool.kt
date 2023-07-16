@@ -171,7 +171,7 @@ class DynamicLineTool(
     private fun updatePathCommand(start: PointF?, end: PointF?, pathCommand: Command?) {
         start?.let { startPoint ->
             end?.let { endPoint ->
-                pathCommand?.let { command->
+                pathCommand?.let { command ->
                     (command as PathCommand).setPath(createSerializablePath(startPoint, endPoint))
                     command.setStartAndEndPoint(startPoint, endPoint)
                     commandManager.executeAllCommands()
@@ -241,8 +241,6 @@ class DynamicLineTool(
         }
     }
 
-
-
     override fun handleUp(coordinate: PointF?): Boolean {
         coordinate ?: return false
         super.handleUp(coordinate)
@@ -290,7 +288,7 @@ class DynamicLineTool(
         return if (currentPathCommand == null) {
             var currentlyDrawnPath = createSerializablePath(startPoint, endPoint)
             currentPathCommand = commandFactory.createPathCommand(toolPaint.paint, currentlyDrawnPath) as PathCommand
-            (currentPathCommand as PathCommand).setStartAndEndPoint(startPoint , endPoint)
+            (currentPathCommand as PathCommand).setStartAndEndPoint(startPoint, endPoint)
             (currentPathCommand as PathCommand).isDynamicLineToolPathCommand = true
             commandManager.addCommand(currentPathCommand)
             true
@@ -318,7 +316,6 @@ class DynamicLineTool(
         var vertexCenter = currentEndPoint?.let { end -> copyPointF(end) }
         var destinationVertex = Vertex(vertexCenter, null, currentPathCommand)
         vertexStack.add(destinationVertex)
-
     }
 
     @Synchronized private fun adjustVertex() {

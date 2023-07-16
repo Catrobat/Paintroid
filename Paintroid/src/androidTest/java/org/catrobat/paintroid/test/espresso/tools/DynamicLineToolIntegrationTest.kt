@@ -33,8 +33,16 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.ActivityTestRule
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.R
-import org.catrobat.paintroid.test.espresso.util.*
-import org.catrobat.paintroid.test.espresso.util.wrappers.*
+import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider
+import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider
+import org.catrobat.paintroid.test.espresso.util.EspressoUtils
+import org.catrobat.paintroid.test.espresso.util.UiInteractions
+import org.catrobat.paintroid.test.espresso.util.UiMatcher
+import org.catrobat.paintroid.test.espresso.util.wrappers.BottomNavigationViewInteraction
+import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction
+import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction
+import org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction
+import org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction
 import org.catrobat.paintroid.test.utils.TestUtils
 import org.catrobat.paintroid.tools.ToolType
 import org.hamcrest.Matchers
@@ -489,5 +497,4 @@ class DynamicLineToolIntegrationTest {
             )
         TopBarViewInteraction.onTopBarView().performClickCheckmark()
     }
-
 }

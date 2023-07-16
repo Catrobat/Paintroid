@@ -428,6 +428,4 @@ class DynamicLineToolTest {
         }
         return null
     }
-
-
 }
