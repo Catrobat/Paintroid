@@ -56,6 +56,25 @@ class ColorChangedCommand(toolReference: ToolReference, context: Context, color:
         }
     }
 
+     fun runInUndoMode() {
+        if (toolReference.tool !is LineTool) {
+            (context as MainActivity).runOnUiThread {
+                toolReference.tool?.changePaintColor(color, false)
+            }
+        } else {
+            if (toolReference.tool is LineTool && !firstTime) {
+                (context as MainActivity).runOnUiThread {
+                    (toolReference.tool as LineTool).undoColorChangedCommand(color, false)
+                }
+            } else {
+                (context as MainActivity).runOnUiThread {
+                    toolReference.tool?.changePaintColor(color, false)
+                }
+                firstTime = false
+            }
+        }
+    }
+
     override fun freeResources() {
         // No resources to free
     }

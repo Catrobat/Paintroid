@@ -108,9 +108,9 @@ class ShapeTool(
         shapeDrawable = drawableFactory.createDrawable(shape)
     }
 
-    override fun changePaintColor(color: Int) {
-        super.changePaintColor(color)
-        workspace.invalidate()
+    override fun changePaintColor(color: Int, invalidate: Boolean) {
+        super.changePaintColor(color, invalidate)
+        if (invalidate) workspace.invalidate()
     }
 
     override fun onSaveInstanceState(bundle: Bundle?) {
