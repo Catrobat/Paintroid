@@ -74,6 +74,9 @@ class DynamicLineTool(
     override fun onClickOnButton() {
         hidePlusButton()
         vertexStack.clear()
+        movingVertex = null
+        predecessorVertex = null
+        successorVertex = null
         commandManager.executeAllCommands()
     }
 
@@ -192,7 +195,7 @@ class DynamicLineTool(
         coordinate ?: return false
         hideToolOptions()
         super.handleMove(coordinate)
-        if (movingFramesCounter++ % MOVING_FRAMES != 0) return true
+//        if (movingFramesCounter++ % MOVING_FRAMES != 0) return true
         updateMovingVertices(coordinate)
         clearRedoIfPathWasAdjusted()
         return true

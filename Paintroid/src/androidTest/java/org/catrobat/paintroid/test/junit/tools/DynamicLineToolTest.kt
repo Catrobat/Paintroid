@@ -111,69 +111,86 @@ class DynamicLineToolTest {
 
     @Test
     @UiThreadTest
-    fun testStartAndEndPointIsSetAfterFirstTouch() {
-        Assert.assertEquals(tool.startCoordinateIsSet, false)
-        Assert.assertEquals(tool.currentStartPoint, null)
-        Assert.assertEquals(tool.currentEndPoint, null)
+    fun testTwoVerticesCreatedAfterFirstClick() {
+        Assert.assertEquals(0, tool.vertexStack.size)
 
-        var tapDownCoordinate = PointF(5f, 5f)
-        var tapUpCoordinate = PointF(10f, 10f)
-        tool.handleDown(tapDownCoordinate)
-        tool.handleUp(tapUpCoordinate)
+        var firstClickCoordinate = PointF(5f, 5f)
+        tool.handleDown(firstClickCoordinate)
+        tool.handleUp(firstClickCoordinate)
 
-        Assert.assertEquals(tool.startCoordinateIsSet, true)
-        Assert.assertEquals(tool.currentStartPoint, tapDownCoordinate)
-        Assert.assertEquals(tool.currentEndPoint, tapUpCoordinate)
+        Assert.assertEquals(2, tool.vertexStack.size)
     }
 
     @Test
     @UiThreadTest
-    fun testEndPointChangesAfterSecondTouch() {
-        Assert.assertEquals(tool.currentStartPoint, null)
-        Assert.assertEquals(tool.currentEndPoint, null)
+    fun testLastVertexCenterChangesAfterClick() {
+        var firstClickCoordinate = PointF(5f, 5f)
+        tool.handleDown(firstClickCoordinate)
+        tool.handleUp(firstClickCoordinate)
 
-        var tapDownCoordinate = PointF(5f, 5f)
-        var tapUpCoordinate = PointF(10f, 10f)
-        tool.handleDown(tapDownCoordinate)
-        tool.handleUp(tapUpCoordinate)
+        var secondClickCoordinate = PointF(100f, 100f)
+        tool.handleDown(secondClickCoordinate)
+        tool.handleUp(secondClickCoordinate)
 
-        Assert.assertEquals(tool.currentStartPoint, tapDownCoordinate)
-        Assert.assertEquals(tool.currentEndPoint, tapUpCoordinate)
+        Assert.assertEquals(2, tool.vertexStack.size)
+        Assert.assertEquals(secondClickCoordinate, tool.vertexStack.last.vertexCenter)
 
-        var secondTapUpCoordinate = PointF(15f, 15f)
-        tool.handleUp(secondTapUpCoordinate)
+        var thirdClickCoordinate = PointF(200f, 200f)
+        tool.handleDown(thirdClickCoordinate)
+        tool.handleUp(thirdClickCoordinate)
 
-        Assert.assertEquals(tool.currentStartPoint, tapDownCoordinate)
-        Assert.assertEquals(tool.currentEndPoint, secondTapUpCoordinate)
+        Assert.assertEquals(2, tool.vertexStack.size)
+        Assert.assertEquals(thirdClickCoordinate, tool.vertexStack.last.vertexCenter)
     }
 
     @Test
     @UiThreadTest
-    fun testEndPointChangesAfterMoving() {
-        Assert.assertEquals(tool.currentStartPoint, null)
-        Assert.assertEquals(tool.currentEndPoint, null)
+    fun testLastVertexCenterChangesAfterMove() {
+        var firstClickCoordinate = PointF(5f, 5f)
+        tool.handleDown(firstClickCoordinate)
+        tool.handleUp(firstClickCoordinate)
 
-        var tapDownCoordinate = PointF(5f, 5f)
-        var tapUpCoordinate = PointF(10f, 10f)
-        tool.handleDown(tapDownCoordinate)
-        tool.handleUp(tapUpCoordinate)
+        var secondClickCoordinate = PointF(100f, 100f)
+        tool.handleDown(secondClickCoordinate)
+        tool.handleUp(secondClickCoordinate)
 
-        Assert.assertEquals(tool.currentStartPoint, tapDownCoordinate)
-        Assert.assertEquals(tool.currentEndPoint, tapUpCoordinate)
+        Assert.assertEquals(2, tool.vertexStack.size)
+        Assert.assertEquals(secondClickCoordinate, tool.vertexStack.last.vertexCenter)
 
-        var moveCoordinate = PointF(15f, 15f)
-        tool.handleMove(moveCoordinate)
+        tool.handleDown(secondClickCoordinate)
 
-        Assert.assertEquals(tool.currentStartPoint, tapDownCoordinate)
-        Assert.assertEquals(tool.currentEndPoint, moveCoordinate)
+        var movingCoordinate = PointF(200f, 200f)
+        tool.handleMove(movingCoordinate)
+        tool.handleUp(movingCoordinate)
+
+        Assert.assertEquals(2, tool.vertexStack.size)
+        Assert.assertEquals(movingCoordinate, tool.vertexStack.last.vertexCenter)
     }
 
     @Test
     @UiThreadTest
-    fun testIfCheckmarkResetWorks() {
-        // reset should be as if tool is opened freshly, think about what should be resetted
-        // resetInternalstate override??
+    fun testFirstVertexCenterChangesAfterMove() {
+        var firstClickCoordinate = PointF(5f, 5f)
+        tool.handleDown(firstClickCoordinate)
+        tool.handleUp(firstClickCoordinate)
+
+        var secondClickCoordinate = PointF(100f, 100f)
+        tool.handleDown(secondClickCoordinate)
+        tool.handleUp(secondClickCoordinate)
+
+        Assert.assertEquals(2, tool.vertexStack.size)
+        Assert.assertEquals(firstClickCoordinate, tool.vertexStack.first.vertexCenter)
+
+        tool.handleDown(firstClickCoordinate)
+
+        var movingCoordinate = PointF(200f, 200f)
+        tool.handleMove(movingCoordinate)
+        tool.handleUp(movingCoordinate)
+
+        Assert.assertEquals(2, tool.vertexStack.size)
+        Assert.assertEquals(movingCoordinate, tool.vertexStack.first.vertexCenter)
     }
+
 
     @Test
     @UiThreadTest
@@ -188,6 +205,47 @@ class DynamicLineToolTest {
 
         plusButtonVisibility = DynamicLineTool.topBarViewHolder?.plusButton?.visibility
         Assert.assertEquals(plusButtonVisibility, View.VISIBLE)
+    }
+
+    @Test
+    @UiThreadTest
+    fun testAddPathIsSetAfterClickingPlus() {
+        Assert.assertEquals(false, tool.addNewPath)
+
+        var firstClickCoordinate = PointF(5f, 5f)
+        tool.handleDown(firstClickCoordinate)
+        tool.handleUp(firstClickCoordinate)
+
+        var secondClickCoordinate = PointF(100f, 100f)
+        tool.handleDown(secondClickCoordinate)
+        tool.handleUp(secondClickCoordinate)
+
+        tool.onClickOnPlus()
+
+        Assert.assertEquals(true, tool.addNewPath)
+    }
+
+    @Test
+    @UiThreadTest
+    fun testThreeVerticesCreatedAfterClickingPlus() {
+        Assert.assertEquals(0, tool.vertexStack.size)
+
+        var firstClickCoordinate = PointF(5f, 5f)
+        tool.handleDown(firstClickCoordinate)
+        tool.handleUp(firstClickCoordinate)
+
+        var secondClickCoordinate = PointF(100f, 100f)
+        tool.handleDown(secondClickCoordinate)
+        tool.handleUp(secondClickCoordinate)
+
+        tool.onClickOnPlus()
+
+        var thirdClickCoordinate = PointF(200f, 200f)
+        tool.handleDown(thirdClickCoordinate)
+        tool.handleUp(thirdClickCoordinate)
+
+
+        Assert.assertEquals(3, tool.vertexStack.size)
     }
 
     @Test
@@ -213,71 +271,43 @@ class DynamicLineToolTest {
     @Test
     @UiThreadTest
     fun testLastEndpointIsNextStartPointAfterPlus() {
-        var tapDownCoordinate = PointF(5f, 5f)
-        var tapUpCoordinate = PointF(10f, 10f)
-        tool.handleDown(tapDownCoordinate)
-        tool.handleUp(tapUpCoordinate)
+        var tapCoordinate = PointF(5f, 5f)
+        tool.handleDown(tapCoordinate)
+        tool.handleUp(tapCoordinate)
+
+        tapCoordinate = PointF(50f, 50f)
+        tool.handleDown(tapCoordinate)
+        tool.handleUp(tapCoordinate)
+
         tool.onClickOnPlus()
 
-        Assert.assertEquals(tapUpCoordinate, tool.currentStartPoint)
+        Assert.assertEquals(tapCoordinate, tool.vertexStack.last.vertexCenter)
     }
 
     @Test
     @UiThreadTest
-    fun testVertexStackSizeAfterOnePath() {
+    fun testFourVerticesCreatedAfterClickingPlus() {
         Assert.assertEquals(0, tool.vertexStack.size)
 
-        var tapDownCoordinate = PointF(5f, 5f)
-        var tapUpCoordinate = PointF(10f, 10f)
-        tool.handleDown(tapDownCoordinate)
-        tool.handleUp(tapUpCoordinate)
+        var tapCoordinate = PointF(5f, 5f)
+        tool.handleDown(tapCoordinate)
+        tool.handleUp(tapCoordinate)
 
-        Assert.assertEquals(2, tool.vertexStack.size)
-    }
-
-    @Test
-    @UiThreadTest
-    fun testVertexStackSizeAfterTwoPaths() {
-        Assert.assertEquals(0, tool.vertexStack.size)
-
-        var tapDownCoordinate = PointF(5f, 5f)
-        var tapUpCoordinate = PointF(10f, 10f)
-        tool.handleDown(tapDownCoordinate)
-        tool.handleUp(tapUpCoordinate)
+        tapCoordinate = PointF(100f, 100f)
+        tool.handleDown(tapCoordinate)
+        tool.handleUp(tapCoordinate)
 
         tool.onClickOnPlus()
 
-        tapDownCoordinate = PointF(100f, 100f)
-        tapUpCoordinate = PointF(100f, 100f)
-        tool.handleDown(tapDownCoordinate)
-        tool.handleUp(tapUpCoordinate)
-
-        Assert.assertEquals(3, tool.vertexStack.size)
-    }
-
-    @Test
-    @UiThreadTest
-    fun testVertexStackSizeAfterThreePaths() {
-        Assert.assertEquals(0, tool.vertexStack.size)
-
-        var tapDownCoordinate = PointF(5f, 5f)
-        var tapUpCoordinate = PointF(10f, 10f)
-        tool.handleDown(tapDownCoordinate)
-        tool.handleUp(tapUpCoordinate)
+        tapCoordinate = PointF(200f, 200f)
+        tool.handleDown(tapCoordinate)
+        tool.handleUp(tapCoordinate)
 
         tool.onClickOnPlus()
 
-        tapDownCoordinate = PointF(100f, 100f)
-        tapUpCoordinate = PointF(100f, 100f)
-        tool.handleDown(tapDownCoordinate)
-        tool.handleUp(tapUpCoordinate)
-
-        tool.onClickOnPlus()
-
-        tapDownCoordinate = PointF(200f, 200f)
-        tapUpCoordinate = PointF(200f, 200f)
-        tool.handleDown(tapDownCoordinate)
-        tool.handleUp(tapUpCoordinate)
+        tapCoordinate = PointF(300f, 300f)
+        tool.handleDown(tapCoordinate)
+        tool.handleUp(tapCoordinate)
 
         Assert.assertEquals(4, tool.vertexStack.size)
     }
@@ -305,8 +335,12 @@ class DynamicLineToolTest {
         Assert.assertEquals(null, tool.successorVertex)
 
         var firstVertexCoordinate = PointF(5f, 5f)
-        var middleVertexCoordinate = PointF(100f, 100f)
         tool.handleDown(firstVertexCoordinate)
+        tool.handleUp(firstVertexCoordinate)
+
+
+        var middleVertexCoordinate = PointF(100f, 100f)
+        tool.handleDown(middleVertexCoordinate)
         tool.handleUp(middleVertexCoordinate)
 
         tool.onClickOnPlus()
@@ -320,63 +354,6 @@ class DynamicLineToolTest {
         Assert.assertEquals(tool.vertexStack.first, tool.predecessorVertex)
         Assert.assertEquals(getElementAtIndex(tool.vertexStack, 1), tool.movingVertex)
         Assert.assertEquals(tool.vertexStack.last, tool.successorVertex)
-    }
-
-    @Test
-    @UiThreadTest
-    fun testHandleUpResetsMovingVerticesAfterMoving() {
-        Assert.assertEquals(null, tool.predecessorVertex)
-        Assert.assertEquals(null, tool.movingVertex)
-        Assert.assertEquals(null, tool.successorVertex)
-
-        var firstVertexCoordinate = PointF(5f, 5f)
-        var middleVertexCoordinate = PointF(100f, 100f)
-        tool.handleDown(firstVertexCoordinate)
-        tool.handleUp(middleVertexCoordinate)
-
-        tool.onClickOnPlus()
-
-        var lastVertexCoordinate = PointF(200f, 200f)
-        tool.handleDown(lastVertexCoordinate)
-        tool.handleUp(lastVertexCoordinate)
-
-        tool.handleDown(middleVertexCoordinate)
-
-        Assert.assertEquals(tool.vertexStack.first, tool.predecessorVertex)
-        Assert.assertEquals(getElementAtIndex(tool.vertexStack, 1), tool.movingVertex)
-        Assert.assertEquals(tool.vertexStack.last, tool.successorVertex)
-
-        middleVertexCoordinate = PointF(150f, 150f)
-
-        tool.handleUp(middleVertexCoordinate)
-
-        Assert.assertEquals(null, tool.predecessorVertex)
-        Assert.assertEquals(null, tool.movingVertex)
-        Assert.assertEquals(null, tool.successorVertex)
-    }
-
-    @Test
-    @UiThreadTest
-    fun testEndpointIsSetToLastVertexAfterMovingMiddleVertex() {
-        var firstVertexCoordinate = PointF(5f, 5f)
-        var middleVertexCoordinate = PointF(100f, 100f)
-        tool.handleDown(firstVertexCoordinate)
-        tool.handleUp(middleVertexCoordinate)
-
-        tool.onClickOnPlus()
-
-        var lastVertexCoordinate = PointF(200f, 200f)
-        tool.handleDown(lastVertexCoordinate)
-        tool.handleUp(lastVertexCoordinate)
-
-        tool.handleDown(middleVertexCoordinate)
-
-        Assert.assertEquals(tool.currentEndPoint, null)
-
-        middleVertexCoordinate = PointF(150f, 150f)
-        tool.handleUp(middleVertexCoordinate)
-
-        Assert.assertEquals(tool.currentEndPoint, tool.vertexStack.last.vertexCenter)
     }
 
     @Test
