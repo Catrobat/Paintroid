@@ -20,49 +20,26 @@
 package org.catrobat.paintroid.command.implementation
 
 import android.graphics.Canvas
-import android.graphics.Paint
-import android.graphics.Path
-import android.graphics.PointF
 import android.util.Log
-import androidx.annotation.ColorInt
 import org.catrobat.paintroid.command.Command
 import org.catrobat.paintroid.contract.LayerContracts
 import org.catrobat.paintroid.tools.implementation.DynamicLineTool
 
-class PathCommand(var paint: Paint, path: Path) : Command {
+class PathSequenceCommand(position: PathSequence) : Command {
 
-    var path = path; private set
-    var startPoint: PointF? = null
-    var endPoint: PointF? = null
-    var isDynamicLineToolPathCommand: Boolean = false
+    var position: PathSequence = position; private set
 
     override fun run(canvas: Canvas, layerModel: LayerContracts.Model) {
-        canvas.drawPath(path, paint)
-        Log.e(DynamicLineTool.TAG, "run PathCommand")
+        Log.e(DynamicLineTool.TAG, "run PathSequenceCommand $position")
     }
 
     override fun freeResources() {
         // No resources to free
     }
 
-    fun setPath(newPath: Path) {
-        this.path = newPath
-    }
-
-    fun setPaintColor(@ColorInt newColor: Int) {
-        this.paint.color = newColor
-    }
-
-    fun setPaintStrokeWidth(newStrokeWidth: Float) {
-        this.paint.strokeWidth = newStrokeWidth
-    }
-
-    fun setPaintStrokeCap(newCap: Paint.Cap) {
-        this.paint.strokeCap = newCap
-    }
-
-    fun setStartAndEndPoint(startPoint: PointF?, endPoint: PointF?) {
-        this.startPoint = startPoint
-        this.endPoint = endPoint
+    companion object {
+        enum class PathSequence {
+            START, END
+        }
     }
 }

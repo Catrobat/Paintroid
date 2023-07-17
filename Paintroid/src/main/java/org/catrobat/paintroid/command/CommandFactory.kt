@@ -25,6 +25,7 @@ import android.graphics.Point
 import android.graphics.PointF
 import android.graphics.RectF
 import org.catrobat.paintroid.command.implementation.FlipCommand.FlipDirection
+import org.catrobat.paintroid.command.implementation.PathSequenceCommand
 import org.catrobat.paintroid.command.implementation.RotateCommand.RotateDirection
 import org.catrobat.paintroid.command.serialization.SerializablePath
 import org.catrobat.paintroid.command.serialization.SerializableTypeface
@@ -123,4 +124,6 @@ interface CommandFactory {
         bitmap: Bitmap,
         pathBitmap: Bitmap
     ): Command
+
+    fun createPathSequenceCommand(position: PathSequenceCommand.Companion.PathSequence): Command
 }

@@ -6,8 +6,11 @@ import android.graphics.PointF
 import android.view.View
 import androidx.test.espresso.idling.CountingIdlingResource
 import org.catrobat.paintroid.command.Command
+import org.catrobat.paintroid.command.CommandFactory
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.command.implementation.PathCommand
+import org.catrobat.paintroid.command.implementation.PathSequenceCommand
+import org.catrobat.paintroid.command.implementation.PathSequenceCommand.Companion.PathSequence
 import org.catrobat.paintroid.command.serialization.SerializablePath
 import org.catrobat.paintroid.tools.ContextCallback
 import org.catrobat.paintroid.tools.ToolPaint
@@ -22,7 +25,6 @@ import org.catrobat.paintroid.ui.viewholder.TopBarViewHolder
 import java.util.*
 import java.util.ArrayDeque
 
-const val MOVING_FRAMES = 2
 class DynamicLineTool(
     private val brushToolOptionsView: BrushToolOptionsView,
     contextCallback: ContextCallback,
@@ -47,7 +49,6 @@ class DynamicLineTool(
     var successorVertex: Vertex? = null
     var undoRecentlyClicked = false
     var addNewPath: Boolean = false
-    var movingFramesCounter: Int = 0
 
     init {
         brushToolOptionsView.setBrushChangedListener(CommonBrushChangedListener(this))
@@ -69,17 +70,10 @@ class DynamicLineTool(
     override fun handleDownAnimations(coordinate: PointF?) {
         super.handleDown(coordinate)
     }
-    override fun resetInternalState() {
-
-    }
-
 
     override fun onClickOnButton() {
+        addPathSequenceCommand(PathSequence.END)
         hidePlusButton()
-        finalize()
-    }
-
-    fun finalize() {
         vertexStack.clear()
         movingVertex = null
         predecessorVertex = null
@@ -202,7 +196,6 @@ class DynamicLineTool(
         coordinate ?: return false
         hideToolOptions()
         super.handleMove(coordinate)
-//        if (movingFramesCounter++ % MOVING_FRAMES != 0) return true
         updateMovingVertices(coordinate)
         clearRedoIfPathWasAdjusted()
         return true
@@ -217,10 +210,16 @@ class DynamicLineTool(
     }
 
     private fun createSourceAndDestinationCommandAndVertices(coordinate: PointF) {
+        addPathSequenceCommand(PathSequence.START)
         var startPoint = copyPointF(coordinate)
         var endPoint = copyPointF(coordinate)
         var command = createPathCommand(startPoint, endPoint)
         createSourceAndDestinationVertices(startPoint, endPoint, command)
+    }
+
+    private fun addPathSequenceCommand(position: PathSequence) {
+        var pathSequenceStartCommand = commandFactory.createPathSequenceCommand(position)
+        commandManager.addCommand(pathSequenceStartCommand)
     }
 
     private fun createSourceAndDestinationVertices(startPoint: PointF?, endPoint: PointF?, command: Command?) {

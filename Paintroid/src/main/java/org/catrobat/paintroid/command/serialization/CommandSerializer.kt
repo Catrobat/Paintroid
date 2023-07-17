@@ -61,6 +61,7 @@ import org.catrobat.paintroid.command.implementation.SelectLayerCommand
 import org.catrobat.paintroid.command.implementation.SetDimensionCommand
 import org.catrobat.paintroid.command.implementation.SprayCommand
 import org.catrobat.paintroid.command.implementation.ClipboardCommand
+import org.catrobat.paintroid.command.implementation.PathSequenceCommand
 import org.catrobat.paintroid.command.implementation.TextToolCommand
 import org.catrobat.paintroid.command.implementation.SmudgePathCommand
 import org.catrobat.paintroid.common.Constants.DOWNLOADS_DIRECTORY
@@ -145,6 +146,7 @@ open class CommandSerializer(private val activityContext: Context, private val c
             put(ColorHistory::class.java, ColorHistorySerializer(version))
             put(ClippingCommand::class.java, ClippingCommandSerializer(version))
             put(LayerOpacityCommand::class.java, LayerOpacityCommandSerializer(version))
+            put(PathSequenceCommand::class.java, PathSequenceCommandSerializer(version))
         }
     }
 
