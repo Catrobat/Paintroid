@@ -157,6 +157,7 @@ class DynamicLineTool(
     override fun handleDown(coordinate: PointF?): Boolean {
         coordinate ?: return false
         super.handleDown(coordinate)
+
         if (vertexWasClicked(coordinate)) {
             return true
         }
@@ -170,7 +171,22 @@ class DynamicLineTool(
             return true
         }
         updateMovingVertices(coordinate)
+        clearRedoIfPathWasAdjusted()
+
         return true
+    }
+
+
+    private fun clearRedoIfPathWasAdjusted() {
+        if (!undoRecentlyClicked) return
+        var firstRedoCommand = commandManager.getFirstRedoCommand() ?: return
+        if (firstRedoCommand is PathCommand &&
+            firstRedoCommand.isDynamicLineToolPathCommand &&
+            firstRedoCommand.startPoint != vertexStack.last.vertexCenter) {
+            // a previous command was moved so redo has to be deactivated
+            commandManager.clearRedoCommandList()
+            undoRecentlyClicked = false
+        }
     }
 
     override fun handleMove(coordinate: PointF?): Boolean {
@@ -178,6 +194,7 @@ class DynamicLineTool(
         hideToolOptions()
         super.handleMove(coordinate)
         updateMovingVertices(coordinate)
+        clearRedoIfPathWasAdjusted()
         return true
     }
 
