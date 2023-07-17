@@ -23,7 +23,7 @@ import org.catrobat.paintroid.ui.viewholder.TopBarViewHolder
 import java.util.*
 import java.util.ArrayDeque
 
-const val MOVING_FRAMES = 1
+const val MOVING_FRAMES = 2
 class DynamicLineTool(
     private val brushToolOptionsView: BrushToolOptionsView,
     contextCallback: ContextCallback,
@@ -43,12 +43,12 @@ class DynamicLineTool(
 ) {
     override var toolType: ToolType = ToolType.DYNAMICLINE
     var vertexStack: Deque<Vertex> = ArrayDeque()
-    var undoRecentlyClicked = false
     var movingVertex: Vertex? = null
     var predecessorVertex: Vertex? = null
     var successorVertex: Vertex? = null
-    var movingFramesCounter: Int = 0
+    var undoRecentlyClicked = false
     var addNewPath: Boolean = false
+    var movingFramesCounter: Int = 0
 
     init {
         brushToolOptionsView.setBrushChangedListener(CommonBrushChangedListener(this))
@@ -148,7 +148,6 @@ class DynamicLineTool(
                 pathCommand?.let { command ->
                     (command as PathCommand).setPath(createSerializablePath(startPoint, endPoint))
                     command.setStartAndEndPoint(startPoint, endPoint)
-                    commandManager.executeAllCommands()
                 }
             }
         }
@@ -162,7 +161,7 @@ class DynamicLineTool(
             return true
         }
         if (vertexStack.isEmpty()) {
-            createFirstCommandAndVertices(coordinate)
+            createSourceAndDestinationCommandAndVertices(coordinate)
             return true
         }
         if (addNewPath) {
@@ -193,6 +192,7 @@ class DynamicLineTool(
         coordinate ?: return false
         hideToolOptions()
         super.handleMove(coordinate)
+        if (movingFramesCounter++ % MOVING_FRAMES != 0) return true
         updateMovingVertices(coordinate)
         clearRedoIfPathWasAdjusted()
         return true
@@ -206,7 +206,7 @@ class DynamicLineTool(
         return true
     }
 
-    private fun createFirstCommandAndVertices(coordinate: PointF) {
+    private fun createSourceAndDestinationCommandAndVertices(coordinate: PointF) {
         var startPoint = copyPointF(coordinate)
         var endPoint = copyPointF(coordinate)
         var command = createPathCommand(startPoint, endPoint)
@@ -224,7 +224,6 @@ class DynamicLineTool(
         var startPoint = vertexStack.last.vertexCenter?.let { center -> copyPointF(center) }
         var endPoint = copyPointF(coordinate)
         var command = createPathCommand(startPoint, endPoint)
-
         createDestinationVertex(endPoint, command)
     }
 
@@ -281,6 +280,7 @@ class DynamicLineTool(
                 var endPoint = successorVertex?.vertexCenter?.let { center -> copyPointF(center) }
                 updatePathCommand(startPoint, endPoint, movingVertex?.outgoingPathCommand)
             }
+            commandManager.executeAllCommands()
         }
     }
 
