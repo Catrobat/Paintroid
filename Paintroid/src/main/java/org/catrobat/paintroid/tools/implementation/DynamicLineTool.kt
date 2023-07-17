@@ -23,7 +23,7 @@ import org.catrobat.paintroid.ui.viewholder.TopBarViewHolder
 import java.util.*
 import java.util.ArrayDeque
 
-const val MOVING_FRAMES = 3
+const val MOVING_FRAMES = 1
 class DynamicLineTool(
     private val brushToolOptionsView: BrushToolOptionsView,
     contextCallback: ContextCallback,
@@ -42,16 +42,13 @@ class DynamicLineTool(
     commandManager
 ) {
     override var toolType: ToolType = ToolType.DYNAMICLINE
-    var currentStartPoint: PointF? = null
-    var currentEndPoint: PointF? = null
-    var startCoordinateIsSet: Boolean = false
     var vertexStack: Deque<Vertex> = ArrayDeque()
-    var currentPathCommand: PathCommand? = null
     var undoRecentlyClicked = false
     var movingVertex: Vertex? = null
     var predecessorVertex: Vertex? = null
     var successorVertex: Vertex? = null
     var movingFramesCounter: Int = 0
+    var addNewPath: Boolean = false
 
     init {
         brushToolOptionsView.setBrushChangedListener(CommonBrushChangedListener(this))
@@ -75,31 +72,18 @@ class DynamicLineTool(
     }
 
     override fun onClickOnButton() {
-        Log.e(TAG, "on button")
         hidePlusButton()
-        reset()
+        vertexStack.clear()
         commandManager.executeAllCommands()
     }
 
     fun onClickOnPlus() {
-        currentStartPoint = currentEndPoint?.let { copyPointF(it) }
-        currentPathCommand = null
+        addNewPath = true
     }
 
     override fun toolPositionCoordinates(coordinate: PointF): PointF = coordinate
 
     override fun draw(canvas: Canvas) {
-        currentStartPoint?.let { start ->
-            currentEndPoint?.let { end ->
-                canvas.run {
-                    Log.e(TAG, "draw")
-                    save()
-                    clipRect(0, 0, workspace.width, workspace.height)
-                    drawLine(start.x, start.y, end.x, end.y, toolPaint.previewPaint)
-                    restore()
-                }
-            }
-        }
         drawShape(canvas)
     }
     @Synchronized override fun drawShape(canvas: Canvas) {
@@ -115,11 +99,18 @@ class DynamicLineTool(
     }
 
     fun undo() {
-        var undoCommand = commandManager.getFirstUndoCommand()
+        var command = commandManager.getFirstUndoCommand()
+        setToolPaint(command)
         commandManager.undo()
         undoRecentlyClicked = true
-        updatePathOrResetAfterUndoOrRedoAction(undoCommand)
         updateVertexStackAfterUndo()
+    }
+
+    private fun setToolPaint(command: Command?) {
+        if (command !is PathCommand) return
+        super.changePaintColor(command.paint.color)
+        super.changePaintStrokeCap(command.paint.strokeCap)
+        super.changePaintStrokeWidth(command.paint.strokeWidth.toInt())
     }
 
     private fun updateVertexStackAfterUndo() {
@@ -128,44 +119,27 @@ class DynamicLineTool(
             return
         }
         vertexStack.pollLast()
+        val index = vertexStack.indexOf(vertexStack.last)
+        predecessorVertex = vertexStack.elementAtOrNull(index - 1)
+        movingVertex = vertexStack.last
     }
 
     fun redo() {
         var redoCommand = commandManager.getFirstRedoCommand()
         commandManager.redo()
-        updatePathOrResetAfterUndoOrRedoAction(redoCommand)
-        if (currentPathCommand != null) {
-            createVertex()
-        }
+        updateVertexStackAfterRedo(redoCommand)
+        setToolPaint(redoCommand)
     }
 
-    private fun updatePathOrResetAfterUndoOrRedoAction(command: Command?) {
-        if (command != null && command is PathCommand && command.isDynamicLineToolPathCommand) {
-            updateCurrentPathCommand(command)
-            setToolPaint()
+    private fun updateVertexStackAfterRedo(redoCommand: Command?) {
+        if (!(redoCommand != null && redoCommand is PathCommand && redoCommand.isDynamicLineToolPathCommand)) return
+        var startPoint = redoCommand.startPoint?.let { copyPointF(it) }
+        var endPoint = redoCommand.endPoint?.let { copyPointF(it) }
+        if (vertexStack.isEmpty()) {
+            createSourceAndDestinationVertices(startPoint, endPoint, redoCommand)
         } else {
-            reset()
+            createDestinationVertex(endPoint, redoCommand)
         }
-    }
-
-    private fun updateCurrentPathCommand(currentCommand: PathCommand) {
-        this.currentPathCommand = currentCommand
-        this.currentStartPoint = (currentPathCommand as PathCommand).startPoint
-        this.currentEndPoint = (currentPathCommand as PathCommand).endPoint
-    }
-
-    private fun setToolPaint() {
-        super.changePaintColor((currentPathCommand as PathCommand).paint.color)
-        super.changePaintStrokeCap((currentPathCommand as PathCommand).paint.strokeCap)
-        super.changePaintStrokeWidth((currentPathCommand as PathCommand).paint.strokeWidth.toInt())
-    }
-
-    private fun reset() {
-        currentStartPoint = null
-        currentEndPoint = null
-        startCoordinateIsSet = false
-        currentPathCommand = null
-        vertexStack.clear()
     }
 
     private fun updatePathCommand(start: PointF?, end: PointF?, pathCommand: Command?) {
@@ -183,20 +157,82 @@ class DynamicLineTool(
     override fun handleDown(coordinate: PointF?): Boolean {
         coordinate ?: return false
         super.handleDown(coordinate)
-        if (vertexWasClicked(coordinate)) return false
-        setStartPointOfPath(coordinate)
-        setLastPathIfEndpointWasChangedByClick(coordinate)
-
+        if (vertexWasClicked(coordinate)) {
+            return true
+        }
+        if (vertexStack.isEmpty()) {
+            createFirstCommandAndVertices(coordinate)
+            return true
+        }
+        if (addNewPath) {
+            createDestinationCommandAndVertex(coordinate)
+            addNewPath = false
+            return true
+        }
+        updateMovingVertices(coordinate)
         return true
     }
 
-    private fun setLastPathIfEndpointWasChangedByClick(coordinate: PointF) {
-        if (currentStartPoint == null) {
-            movingVertex = vertexStack.last
-            val index = vertexStack.indexOf(movingVertex)
-            predecessorVertex = vertexStack.elementAtOrNull(index - 1)
-            updateMovingVertices(coordinate)
-        }
+    override fun handleMove(coordinate: PointF?): Boolean {
+        coordinate ?: return false
+        hideToolOptions()
+        super.handleMove(coordinate)
+        updateMovingVertices(coordinate)
+        return true
+    }
+
+    override fun handleUp(coordinate: PointF?): Boolean {
+        coordinate ?: return false
+        super.handleUp(coordinate)
+        showToolOptions()
+        showPlusButton()
+        return true
+    }
+
+    private fun createFirstCommandAndVertices(coordinate: PointF) {
+        var startPoint = copyPointF(coordinate)
+        var endPoint = copyPointF(coordinate)
+        var command = createPathCommand(startPoint, endPoint)
+        createSourceAndDestinationVertices(startPoint, endPoint, command)
+    }
+
+    private fun createSourceAndDestinationVertices(startPoint: PointF?, endPoint: PointF?, command: Command?) {
+        var sourceVertex = createAndAddVertex(startPoint, command, null)
+        var destinationVertex = createAndAddVertex(endPoint, null, command)
+        predecessorVertex = sourceVertex
+        movingVertex = destinationVertex
+    }
+
+    private fun createDestinationCommandAndVertex(coordinate: PointF) {
+        var startPoint = vertexStack.last.vertexCenter?.let { center -> copyPointF(center) }
+        var endPoint = copyPointF(coordinate)
+        var command = createPathCommand(startPoint, endPoint)
+
+        createDestinationVertex(endPoint, command)
+    }
+
+    private fun createDestinationVertex(endPoint: PointF?, command: Command?) {
+        vertexStack.last.setOutgoingPath(command)
+        var destinationVertex = createAndAddVertex(endPoint, null, command)
+
+        val index = vertexStack.indexOf(destinationVertex)
+        predecessorVertex = vertexStack.elementAtOrNull(index - 1)
+        movingVertex = destinationVertex
+    }
+
+    private fun createAndAddVertex(vertexCenter: PointF?, outgoingCommand: Command?, ingoingCommand: Command?): Vertex {
+        var vertex = Vertex(vertexCenter, outgoingCommand, ingoingCommand)
+        vertexStack.add(vertex)
+        return vertex
+    }
+
+    private fun createPathCommand(startPoint: PointF?, endPoint: PointF?): Command? {
+        var currentlyDrawnPath = createSerializablePath(startPoint, endPoint)
+        var command = commandFactory.createPathCommand(toolPaint.paint, currentlyDrawnPath) as PathCommand
+        command.setStartAndEndPoint(startPoint, endPoint)
+        command.isDynamicLineToolPathCommand = true
+        commandManager.addCommand(command)
+        return command
     }
 
     @Synchronized private fun vertexWasClicked(clickedCoordinate: PointF): Boolean {
@@ -208,32 +244,11 @@ class DynamicLineTool(
                     val index = vertexStack.indexOf(movingVertex)
                     predecessorVertex = vertexStack.elementAtOrNull(index - 1)
                     successorVertex = vertexStack.elementAtOrNull(index + 1)
-                    currentStartPoint = null
-                    currentEndPoint = null
                     return true
                 }
             }
         }
         return false
-    }
-
-    private fun setStartPointOfPath(coordinate: PointF) {
-        currentStartPoint = if (!startCoordinateIsSet) {
-            copyPointF(coordinate).also { startCoordinateIsSet = true }
-        } else {
-
-            currentStartPoint
-        }
-    }
-
-    override fun handleMove(coordinate: PointF?): Boolean {
-        coordinate ?: return false
-        hideToolOptions()
-        super.handleMove(coordinate)
-        currentEndPoint = copyPointF(coordinate)
-        if (movingFramesCounter++ % MOVING_FRAMES != 0) return true
-        updateMovingVertices(coordinate)
-        return true
     }
 
     private fun updateMovingVertices(coordinate: PointF) {
@@ -252,125 +267,28 @@ class DynamicLineTool(
         }
     }
 
-    override fun handleUp(coordinate: PointF?): Boolean {
-        coordinate ?: return false
-        super.handleUp(coordinate)
-        showToolOptions()
-        showPlusButton()
-        currentEndPoint = copyPointF(coordinate)
-        clearRedoIfPathWasAdjusted()
-        if (resetAfterMovingVertex(coordinate)) return true
-        var newPathWasCreated = createOrAdjustPathCommand()
-        if (newPathWasCreated) createVertex() else adjustVertex()
-        return true
-    }
-
-    private fun clearRedoIfPathWasAdjusted() {
-        if (undoRecentlyClicked) {
-            var firstRedoCommand = commandManager.getFirstRedoCommand() ?: return
-            if (currentPathCommand != null &&
-                firstRedoCommand is PathCommand &&
-                firstRedoCommand.isDynamicLineToolPathCommand &&
-                firstRedoCommand.startPoint != currentPathCommand?.endPoint) {
-                // a previous command was moved so redo has to be deactivated
-                commandManager.clearRedoCommandList()
-                undoRecentlyClicked = false
-            }
-        }
-    }
-
-    private fun resetAfterMovingVertex(coordinate: PointF): Boolean {
-        movingVertex?.let {
-            updateMovingVertices(coordinate)
-            movingVertex = null
-            predecessorVertex = null
-            successorVertex = null
-            currentEndPoint = vertexStack.last.vertexCenter?.let { it1 -> copyPointF(it1) }
-            return true
-        }
-        return false
-    }
-
-    private fun createOrAdjustPathCommand(): Boolean {
-        var startPoint = currentStartPoint?.let { copyPointF(it) }
-        var endPoint = currentEndPoint?.let { copyPointF(it) }
-        return if (currentPathCommand == null) {
-            var currentlyDrawnPath = createSerializablePath(startPoint, endPoint)
-            currentPathCommand = commandFactory.createPathCommand(toolPaint.paint, currentlyDrawnPath) as PathCommand
-            (currentPathCommand as PathCommand).setStartAndEndPoint(startPoint, endPoint)
-            (currentPathCommand as PathCommand).isDynamicLineToolPathCommand = true
-            commandManager.addCommand(currentPathCommand)
-            true
-        } else {
-            updatePathCommand(startPoint, endPoint, currentPathCommand)
-            false
-        }
-    }
-
-    private fun createVertex() {
-        if (vertexStack.isEmpty()) {
-            createSourceVertex()
-        }
-        createDestinationVertex()
-    }
-
-    @Synchronized private fun createSourceVertex() {
-        var vertexCenter = currentStartPoint?.let { start -> copyPointF(start) }
-        var sourceVertex = Vertex(vertexCenter, currentPathCommand, null)
-        vertexStack.add(sourceVertex)
-    }
-
-    @Synchronized private fun createDestinationVertex() {
-        vertexStack.last.setOutgoingPath(currentPathCommand)
-        var vertexCenter = currentEndPoint?.let { end -> copyPointF(end) }
-        var destinationVertex = Vertex(vertexCenter, null, currentPathCommand)
-        vertexStack.add(destinationVertex)
-    }
-
-    @Synchronized private fun adjustVertex() {
-        var newVertexCenter: PointF? = currentEndPoint?.let { end -> copyPointF(end) }
-        if (newVertexCenter != null) {
-            vertexStack.last.updateVertexCenter(newVertexCenter)
-        }
-    }
-
     override fun changePaintColor(color: Int) {
         super.changePaintColor(color)
-        updatePaintColor()
+        if (vertexStack.isEmpty()) return
+        (vertexStack.last.ingoingPathCommand as PathCommand).setPaintColor(toolPaint.color)
+        commandManager.executeAllCommands()
+        brushToolOptionsView.invalidate()
     }
 
     override fun changePaintStrokeWidth(strokeWidth: Int) {
         super.changePaintStrokeWidth(strokeWidth)
-        updatePaintStrokeWidth()
+        if (vertexStack.isEmpty()) return
+        (vertexStack.last.ingoingPathCommand as PathCommand).setPaintStrokeWidth(toolPaint.strokeWidth)
+        commandManager.executeAllCommands()
+        brushToolOptionsView.invalidate()
     }
 
     override fun changePaintStrokeCap(cap: Paint.Cap) {
         super.changePaintStrokeCap(cap)
-        updatePaintStrokeCap()
-    }
-
-    private fun updatePaintColor() {
-        if (currentPathCommand != null) {
-            (currentPathCommand as PathCommand).setPaintColor(toolPaint.color)
-            commandManager.executeAllCommands()
-            brushToolOptionsView.invalidate()
-        }
-    }
-
-    private fun updatePaintStrokeCap() {
-        if (currentPathCommand != null) {
-            (currentPathCommand as PathCommand).setPaintStrokeCap(toolPaint.strokeCap)
-            commandManager.executeAllCommands()
-            brushToolOptionsView.invalidate()
-        }
-    }
-
-    private fun updatePaintStrokeWidth() {
-        if (currentPathCommand != null) {
-            (currentPathCommand as PathCommand).setPaintStrokeWidth(toolPaint.strokeWidth)
-            commandManager.executeAllCommands()
-            brushToolOptionsView.invalidate()
-        }
+        if (vertexStack.isEmpty()) return
+        (vertexStack.last.ingoingPathCommand as PathCommand).setPaintStrokeCap(toolPaint.strokeCap)
+        commandManager.executeAllCommands()
+        brushToolOptionsView.invalidate()
     }
 
     private fun showPlusButton() {
