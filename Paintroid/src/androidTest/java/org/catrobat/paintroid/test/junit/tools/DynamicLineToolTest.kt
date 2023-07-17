@@ -358,6 +358,41 @@ class DynamicLineToolTest {
 
     @Test
     @UiThreadTest
+    fun testMovingVerticesAreResetAfterCheckmark() {
+        Assert.assertEquals(null, tool.predecessorVertex)
+        Assert.assertEquals(null, tool.movingVertex)
+        Assert.assertEquals(null, tool.successorVertex)
+
+        var firstVertexCoordinate = PointF(5f, 5f)
+        tool.handleDown(firstVertexCoordinate)
+        tool.handleUp(firstVertexCoordinate)
+
+
+        var middleVertexCoordinate = PointF(100f, 100f)
+        tool.handleDown(middleVertexCoordinate)
+        tool.handleUp(middleVertexCoordinate)
+
+        tool.onClickOnPlus()
+
+        var lastVertexCoordinate = PointF(200f, 200f)
+        tool.handleDown(lastVertexCoordinate)
+        tool.handleUp(lastVertexCoordinate)
+
+        tool.handleDown(middleVertexCoordinate)
+
+        Assert.assertEquals(tool.vertexStack.first, tool.predecessorVertex)
+        Assert.assertEquals(getElementAtIndex(tool.vertexStack, 1), tool.movingVertex)
+        Assert.assertEquals(tool.vertexStack.last, tool.successorVertex)
+
+        tool.onClickOnButton()
+
+        Assert.assertEquals(null, tool.predecessorVertex)
+        Assert.assertEquals(null, tool.movingVertex)
+        Assert.assertEquals(null, tool.successorVertex)
+    }
+
+    @Test
+    @UiThreadTest
     fun testShouldCallHideWhenDrawing() {
         val tap1 = PointF(7f, 7f)
         Mockito.`when`(toolOptionsViewController.isVisible).thenReturn(true)

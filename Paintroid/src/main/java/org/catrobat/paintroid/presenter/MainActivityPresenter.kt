@@ -155,12 +155,14 @@ open class MainActivityPresenter(
 
     override fun replaceImageClicked() {
         checkIfClippingToolNeedsAdjustment()
+        resetDynamicLineToolIfInUse()
         switchBetweenVersions(PERMISSION_REQUEST_CODE_REPLACE_PICTURE, false)
         setFirstCheckBoxInLayerMenu()
     }
 
     override fun addImageToCurrentLayerClicked() {
         checkIfClippingToolNeedsAdjustment()
+        resetDynamicLineToolIfInUse()
         setTool(ToolType.IMPORTPNG)
         switchBetweenVersions(PERMISSION_REQUEST_CODE_IMPORT_PICTURE)
     }
@@ -179,12 +181,14 @@ open class MainActivityPresenter(
 
     override fun loadNewImage() {
         checkIfClippingToolNeedsAdjustment()
+        resetDynamicLineToolIfInUse()
         navigator.startLoadImageActivity(REQUEST_CODE_LOAD_PICTURE)
         setFirstCheckBoxInLayerMenu()
     }
 
     override fun newImageClicked() {
         checkIfClippingToolNeedsAdjustment()
+        resetDynamicLineToolIfInUse()
         if (isImageUnchanged || model.isSaved) {
             onNewImage()
             setFirstCheckBoxInLayerMenu()
@@ -196,6 +200,7 @@ open class MainActivityPresenter(
 
     override fun saveBeforeNewImage() {
         checkIfClippingToolNeedsAdjustment()
+        resetDynamicLineToolIfInUse()
         navigator.showSaveImageInformationDialogWhenStandalone(
             PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY,
             imageNumber,
@@ -219,6 +224,7 @@ open class MainActivityPresenter(
 
     override fun saveBeforeFinish() {
         checkIfClippingToolNeedsAdjustment()
+        resetDynamicLineToolIfInUse()
         navigator.showSaveImageInformationDialogWhenStandalone(
             PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH,
             imageNumber,
@@ -244,6 +250,7 @@ open class MainActivityPresenter(
 
     override fun shareImageClicked() {
         checkIfClippingToolNeedsAdjustment()
+        resetDynamicLineToolIfInUse()
         view.refreshDrawingSurface()
         val bitmap: Bitmap? = workspace.bitmapOfAllLayers
         navigator.startShareImageActivity(bitmap)
@@ -577,12 +584,14 @@ open class MainActivityPresenter(
 
     override fun saveImageConfirmClicked(requestCode: Int, uri: Uri?) {
         checkIfClippingToolNeedsAdjustment()
+        resetDynamicLineToolIfInUse()
         view.refreshDrawingSurface()
         interactor.saveImage(this, requestCode, workspace.layerModel, commandSerializer, uri, context)
     }
 
     override fun saveCopyConfirmClicked(requestCode: Int, uri: Uri?) {
         checkIfClippingToolNeedsAdjustment()
+        resetDynamicLineToolIfInUse()
         view.refreshDrawingSurface()
         interactor.saveCopy(this, requestCode, workspace.layerModel, commandSerializer, uri, context)
     }
@@ -1155,6 +1164,12 @@ open class MainActivityPresenter(
                 (toolController.currentTool as ClippingTool).wasRecentlyApplied = true
                 clippingTool.resetInternalState(Tool.StateChange.NEW_IMAGE_LOADED)
             }
+        }
+    }
+
+    private fun resetDynamicLineToolIfInUse() {
+        if (toolController.currentTool is DynamicLineTool) {
+            (toolController.currentTool as DynamicLineTool).onClickOnButton()
         }
     }
 

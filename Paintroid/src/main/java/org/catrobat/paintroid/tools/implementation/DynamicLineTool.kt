@@ -3,7 +3,6 @@ package org.catrobat.paintroid.tools.implementation
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.PointF
-import android.util.Log
 import android.view.View
 import androidx.test.espresso.idling.CountingIdlingResource
 import org.catrobat.paintroid.command.Command
@@ -70,9 +69,17 @@ class DynamicLineTool(
     override fun handleDownAnimations(coordinate: PointF?) {
         super.handleDown(coordinate)
     }
+    override fun resetInternalState() {
+
+    }
+
 
     override fun onClickOnButton() {
         hidePlusButton()
+        finalize()
+    }
+
+    fun finalize() {
         vertexStack.clear()
         movingVertex = null
         predecessorVertex = null
