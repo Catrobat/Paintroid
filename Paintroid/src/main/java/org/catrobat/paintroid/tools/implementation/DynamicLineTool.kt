@@ -23,7 +23,7 @@ import org.catrobat.paintroid.ui.viewholder.TopBarViewHolder
 import java.util.*
 import java.util.ArrayDeque
 
-const val MOVING_FRAMES = 2
+const val MOVING_FRAMES = 3
 class DynamicLineTool(
     private val brushToolOptionsView: BrushToolOptionsView,
     contextCallback: ContextCallback,
@@ -185,8 +185,18 @@ class DynamicLineTool(
         super.handleDown(coordinate)
         if (vertexWasClicked(coordinate)) return false
         setStartPointOfPath(coordinate)
+        setLastPathIfEndpointWasChangedByClick(coordinate)
 
         return true
+    }
+
+    private fun setLastPathIfEndpointWasChangedByClick(coordinate: PointF) {
+        if (currentStartPoint == null) {
+            movingVertex = vertexStack.last
+            val index = vertexStack.indexOf(movingVertex)
+            predecessorVertex = vertexStack.elementAtOrNull(index - 1)
+            updateMovingVertices(coordinate)
+        }
     }
 
     @Synchronized private fun vertexWasClicked(clickedCoordinate: PointF): Boolean {
@@ -211,6 +221,7 @@ class DynamicLineTool(
         currentStartPoint = if (!startCoordinateIsSet) {
             copyPointF(coordinate).also { startCoordinateIsSet = true }
         } else {
+
             currentStartPoint
         }
     }
