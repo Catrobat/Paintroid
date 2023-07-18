@@ -4,19 +4,20 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PointF
 import org.catrobat.paintroid.command.Command
+import org.catrobat.paintroid.command.implementation.DynamicPathCommand
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-class Vertex(vertexCenter: PointF?, outgoingPathCommand: Command?, ingoingPathCommand: Command?) {
+class Vertex(vertexCenter: PointF?, outgoingPathCommand: DynamicPathCommand?, ingoingPathCommand: DynamicPathCommand?) {
     var vertexCenter: PointF? = vertexCenter
-    var outgoingPathCommand: Command? = outgoingPathCommand
-    var ingoingPathCommand: Command? = ingoingPathCommand
+    var outgoingPathCommand: DynamicPathCommand? = outgoingPathCommand
+    var ingoingPathCommand: DynamicPathCommand? = ingoingPathCommand
 
     fun updateVertexCenter(newCenter: PointF) {
         vertexCenter = newCenter
     }
 
-    fun setOutgoingPath(updatedOutgoingPath: Command?) {
+    fun setOutgoingPath(updatedOutgoingPath: DynamicPathCommand?) {
         this.outgoingPathCommand = updatedOutgoingPath
     }
 

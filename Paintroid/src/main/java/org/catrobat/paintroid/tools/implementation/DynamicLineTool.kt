@@ -6,10 +6,9 @@ import android.graphics.PointF
 import android.view.View
 import androidx.test.espresso.idling.CountingIdlingResource
 import org.catrobat.paintroid.command.Command
-import org.catrobat.paintroid.command.CommandFactory
 import org.catrobat.paintroid.command.CommandManager
+import org.catrobat.paintroid.command.implementation.DynamicPathCommand
 import org.catrobat.paintroid.command.implementation.PathCommand
-import org.catrobat.paintroid.command.implementation.PathSequenceCommand
 import org.catrobat.paintroid.command.implementation.PathSequenceCommand.Companion.PathSequence
 import org.catrobat.paintroid.command.serialization.SerializablePath
 import org.catrobat.paintroid.tools.ContextCallback
@@ -111,7 +110,7 @@ class DynamicLineTool(
     }
 
     private fun setToolPaint(command: Command?) {
-        if (command !is PathCommand) return
+        if (command !is PathCommand) return // ??
         super.changePaintColor(command.paint.color)
         super.changePaintStrokeCap(command.paint.strokeCap)
         super.changePaintStrokeWidth(command.paint.strokeWidth.toInt())
@@ -136,7 +135,7 @@ class DynamicLineTool(
     }
 
     private fun updateVertexStackAfterRedo(redoCommand: Command?) {
-        if (!(redoCommand != null && redoCommand is PathCommand && redoCommand.isDynamicLineToolPathCommand)) return
+        if (!(redoCommand != null && redoCommand is DynamicPathCommand)) return
         var startPoint = redoCommand.startPoint?.let { copyPointF(it) }
         var endPoint = redoCommand.endPoint?.let { copyPointF(it) }
         if (vertexStack.isEmpty()) {
@@ -146,11 +145,11 @@ class DynamicLineTool(
         }
     }
 
-    private fun updatePathCommand(start: PointF?, end: PointF?, pathCommand: Command?) {
+    private fun updatePathCommand(start: PointF?, end: PointF?, pathCommand: DynamicPathCommand?) {
         start?.let { startPoint ->
             end?.let { endPoint ->
                 pathCommand?.let { command ->
-                    (command as PathCommand).setPath(createSerializablePath(startPoint, endPoint))
+                    command.updatePath(createSerializablePath(startPoint, endPoint))
                     command.setStartAndEndPoint(startPoint, endPoint)
                 }
             }
@@ -183,8 +182,7 @@ class DynamicLineTool(
     private fun clearRedoIfPathWasAdjusted() {
         if (!undoRecentlyClicked) return
         var firstRedoCommand = commandManager.getFirstRedoCommand() ?: return
-        if (firstRedoCommand is PathCommand &&
-            firstRedoCommand.isDynamicLineToolPathCommand &&
+        if (firstRedoCommand is DynamicPathCommand &&
             firstRedoCommand.startPoint != vertexStack.last.vertexCenter) {
             // a previous command was moved so redo has to be deactivated
             commandManager.clearRedoCommandList()
@@ -222,7 +220,7 @@ class DynamicLineTool(
         commandManager.addCommand(pathSequenceStartCommand)
     }
 
-    private fun createSourceAndDestinationVertices(startPoint: PointF?, endPoint: PointF?, command: Command?) {
+    private fun createSourceAndDestinationVertices(startPoint: PointF?, endPoint: PointF?, command: DynamicPathCommand?) {
         var sourceVertex = createAndAddVertex(startPoint, command, null)
         var destinationVertex = createAndAddVertex(endPoint, null, command)
         predecessorVertex = sourceVertex
@@ -236,7 +234,7 @@ class DynamicLineTool(
         createDestinationVertex(endPoint, command)
     }
 
-    private fun createDestinationVertex(endPoint: PointF?, command: Command?) {
+    private fun createDestinationVertex(endPoint: PointF?, command: DynamicPathCommand?) {
         vertexStack.last.setOutgoingPath(command)
         var destinationVertex = createAndAddVertex(endPoint, null, command)
 
@@ -245,17 +243,16 @@ class DynamicLineTool(
         movingVertex = destinationVertex
     }
 
-    private fun createAndAddVertex(vertexCenter: PointF?, outgoingCommand: Command?, ingoingCommand: Command?): Vertex {
+    private fun createAndAddVertex(vertexCenter: PointF?, outgoingCommand: DynamicPathCommand?, ingoingCommand: DynamicPathCommand?): Vertex {
         var vertex = Vertex(vertexCenter, outgoingCommand, ingoingCommand)
         vertexStack.add(vertex)
         return vertex
     }
 
-    private fun createPathCommand(startPoint: PointF?, endPoint: PointF?): Command? {
+    private fun createPathCommand(startPoint: PointF?, endPoint: PointF?): DynamicPathCommand? {
+        if (startPoint == null || endPoint == null) return null
         var currentlyDrawnPath = createSerializablePath(startPoint, endPoint)
-        var command = commandFactory.createPathCommand(toolPaint.paint, currentlyDrawnPath) as PathCommand
-        command.setStartAndEndPoint(startPoint, endPoint)
-        command.isDynamicLineToolPathCommand = true
+        var command = commandFactory.createDynamicPathCommand(toolPaint.paint, currentlyDrawnPath ,startPoint, endPoint) as DynamicPathCommand
         commandManager.addCommand(command)
         return command
     }
@@ -296,7 +293,7 @@ class DynamicLineTool(
     override fun changePaintColor(color: Int) {
         super.changePaintColor(color)
         if (vertexStack.isEmpty()) return
-        (vertexStack.last.ingoingPathCommand as PathCommand).setPaintColor(toolPaint.color)
+        vertexStack.last.ingoingPathCommand?.setPaintColor(toolPaint.color)
         commandManager.executeAllCommands()
         brushToolOptionsView.invalidate()
     }
@@ -304,7 +301,7 @@ class DynamicLineTool(
     override fun changePaintStrokeWidth(strokeWidth: Int) {
         super.changePaintStrokeWidth(strokeWidth)
         if (vertexStack.isEmpty()) return
-        (vertexStack.last.ingoingPathCommand as PathCommand).setPaintStrokeWidth(toolPaint.strokeWidth)
+        vertexStack.last.ingoingPathCommand?.setPaintStrokeWidth(toolPaint.strokeWidth)
         commandManager.executeAllCommands()
         brushToolOptionsView.invalidate()
     }
@@ -312,7 +309,7 @@ class DynamicLineTool(
     override fun changePaintStrokeCap(cap: Paint.Cap) {
         super.changePaintStrokeCap(cap)
         if (vertexStack.isEmpty()) return
-        (vertexStack.last.ingoingPathCommand as PathCommand).setPaintStrokeCap(toolPaint.strokeCap)
+        vertexStack.last.ingoingPathCommand?.setPaintStrokeCap(toolPaint.strokeCap)
         commandManager.executeAllCommands()
         brushToolOptionsView.invalidate()
     }

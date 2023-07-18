@@ -80,6 +80,13 @@ interface CommandFactory {
 
     fun createPathCommand(paint: Paint, path: SerializablePath): Command
 
+    fun createDynamicPathCommand(
+        paint: Paint,
+        path: SerializablePath,
+        startPoint: PointF,
+        endPointF: PointF
+    ): Command
+
     fun createSmudgePathCommand(
         bitmap: Bitmap,
         pointPath: MutableList<PointF>,

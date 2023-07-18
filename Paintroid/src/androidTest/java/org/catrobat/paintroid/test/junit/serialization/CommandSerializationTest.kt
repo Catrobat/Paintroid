@@ -51,6 +51,7 @@ import org.catrobat.paintroid.command.implementation.SelectLayerCommand
 import org.catrobat.paintroid.command.implementation.SetDimensionCommand
 import org.catrobat.paintroid.command.implementation.SprayCommand
 import org.catrobat.paintroid.command.implementation.ClipboardCommand
+import org.catrobat.paintroid.command.implementation.DynamicPathCommand
 import org.catrobat.paintroid.command.implementation.TextToolCommand
 import org.catrobat.paintroid.command.implementation.SmudgePathCommand
 import org.catrobat.paintroid.command.implementation.LayerOpacityCommand
@@ -301,6 +302,20 @@ class CommandSerializationTest {
     }
 
     @Test
+    fun testSerializeDynamicPathCommand() {
+        val path = SerializablePath().apply {
+            moveTo(20f, 30f)
+            lineTo(30f, 10f)
+            quadTo(10f, 20f, 30f, 40f)
+            cubicTo(10f, 20f, 30f, 3f, 19f, 20f)
+        }
+        var startPoint = PointF(5f, 5f)
+        var endPoint = PointF(50f, 50f)
+        expectedModel.commands.add(commandFactory.createDynamicPathCommand(paint, path, startPoint, endPoint))
+        assertSerializeAndDeserialize()
+    }
+
+    @Test
     fun testSerializeSmudgePathCommand() {
         val bitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888)
         val pointArray = mutableListOf<PointF>()
@@ -452,6 +467,9 @@ class CommandSerializationTest {
             )
             is PathCommand -> equalsPathCommand(
                 expectedCommand, actualCommand as PathCommand
+            )
+            is DynamicPathCommand -> equalsDynamicPathCommand(
+                expectedCommand, actualCommand as DynamicPathCommand
             )
             is SmudgePathCommand -> equalsSmudgePathCommand(
                 expectedCommand, actualCommand as SmudgePathCommand
@@ -615,6 +633,12 @@ class CommandSerializationTest {
             actualCommand.path as SerializablePath
         ) &&
             DefaultToolPaint.arePaintEquals(expectedCommand.paint, actualCommand.paint)
+
+    private fun equalsDynamicPathCommand(expectedCommand: DynamicPathCommand, actualCommand: DynamicPathCommand) =
+        equalsSerializablePath(expectedCommand.path as SerializablePath,actualCommand.path as SerializablePath) &&
+            DefaultToolPaint.arePaintEquals(expectedCommand.paint, actualCommand.paint) &&
+            expectedCommand.startPoint == actualCommand.startPoint &&
+            expectedCommand.endPoint == actualCommand.endPoint
 
     private fun equalsSmudgePathCommand(expectedCommand: SmudgePathCommand, actualCommand: SmudgePathCommand) =
         expectedCommand.maxPressure == actualCommand.maxPressure &&
