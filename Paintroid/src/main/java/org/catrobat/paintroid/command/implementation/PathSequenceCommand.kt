@@ -38,7 +38,7 @@ class PathSequenceCommand(position: PathSequence) : Command {
     fun setupVertexStackAfterUndo(mainActivity: MainActivity, dynamicPathCommands: Deque<DynamicPathCommand>) {
         mainActivity?.runOnUiThread {
             mainActivity?.defaultToolController?.switchTool(ToolType.DYNAMICLINE)
-            var tool = mainActivity?.toolReference?.tool as DynamicLineTool
+            var tool = mainActivity?.defaultToolController?.currentTool as DynamicLineTool
             tool.createSourceAndDestinationVertices(
                 dynamicPathCommands.first.startPoint,
                 dynamicPathCommands.first.endPoint,
