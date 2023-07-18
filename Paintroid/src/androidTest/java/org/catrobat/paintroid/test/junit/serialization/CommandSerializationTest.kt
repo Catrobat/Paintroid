@@ -635,7 +635,7 @@ class CommandSerializationTest {
             DefaultToolPaint.arePaintEquals(expectedCommand.paint, actualCommand.paint)
 
     private fun equalsDynamicPathCommand(expectedCommand: DynamicPathCommand, actualCommand: DynamicPathCommand) =
-        equalsSerializablePath(expectedCommand.path as SerializablePath,actualCommand.path as SerializablePath) &&
+        equalsSerializablePath(expectedCommand.path as SerializablePath, actualCommand.path as SerializablePath) &&
             DefaultToolPaint.arePaintEquals(expectedCommand.paint, actualCommand.paint) &&
             expectedCommand.startPoint == actualCommand.startPoint &&
             expectedCommand.endPoint == actualCommand.endPoint

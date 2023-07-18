@@ -185,7 +185,6 @@ class DynamicLineTool(
         return true
     }
 
-
     private fun clearRedoIfPathWasAdjusted() {
         if (!undoRecentlyClicked) return
         var firstRedoCommand = commandManager.getFirstRedoCommand() ?: return
@@ -256,7 +255,7 @@ class DynamicLineTool(
     private fun createPathCommand(startPoint: PointF?, endPoint: PointF?): DynamicPathCommand? {
         if (startPoint == null || endPoint == null) return null
         var currentlyDrawnPath = createSerializablePath(startPoint, endPoint)
-        var command = commandFactory.createDynamicPathCommand(toolPaint.paint, currentlyDrawnPath ,startPoint, endPoint) as DynamicPathCommand
+        var command = commandFactory.createDynamicPathCommand(toolPaint.paint, currentlyDrawnPath, startPoint, endPoint) as DynamicPathCommand
         commandManager.addCommand(command)
         return command
     }

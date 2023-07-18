@@ -19,7 +19,6 @@
 package org.catrobat.paintroid.command.implementation
 
 import android.graphics.Color
-import android.util.Log
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.command.Command
 import org.catrobat.paintroid.command.CommandManager
@@ -27,7 +26,6 @@ import org.catrobat.paintroid.command.CommandManager.CommandListener
 import org.catrobat.paintroid.common.CommonFactory
 import org.catrobat.paintroid.contract.LayerContracts
 import org.catrobat.paintroid.model.CommandManagerModel
-import org.catrobat.paintroid.tools.implementation.DynamicLineTool
 import java.util.ArrayDeque
 import java.util.Collections
 import java.util.Deque
@@ -126,25 +124,15 @@ class DefaultCommandManager(
     }
     private fun prepareVertexStackForDynamicLineTool(command: PathSequenceCommand) {
         if (command.position == PathSequenceCommand.Companion.PathSequence.END) {
-
-//            var vertexStackCommands: Deque<DynamicPathCommand> = ArrayDeque()
-//            for (command in undoCommandList) {
-//                if (command is PathSequenceCommand && command.position == PathSequenceCommand.Companion.PathSequence.START) {
-//                    break
-//                }
-//                if (command is DynamicPathCommand) {
-//                    vertexStackCommands.addFirst(command)
-//                }
-//            }
             val vertexStackCommands: Deque<DynamicPathCommand> = ArrayDeque()
             undoCommandList.takeWhile { command ->
                 !(command is PathSequenceCommand && command.position == PathSequenceCommand.Companion.PathSequence.START)
             }.filterIsInstance<DynamicPathCommand>().forEach {
                 vertexStackCommands.addFirst(it)
             }
-
-
-//            command.setupVertexStackAfterUndo(mainActivity, vertexStackCommands)
+            if (mainActivity != null) {
+                command.setupVertexStackAfterUndo(mainActivity, vertexStackCommands)
+            }
         }
     }
 

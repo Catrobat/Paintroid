@@ -3,7 +3,6 @@ package org.catrobat.paintroid.tools.helper
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PointF
-import org.catrobat.paintroid.command.Command
 import org.catrobat.paintroid.command.implementation.DynamicPathCommand
 import kotlin.math.pow
 import kotlin.math.sqrt

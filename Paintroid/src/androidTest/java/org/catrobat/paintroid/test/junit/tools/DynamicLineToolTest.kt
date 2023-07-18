@@ -191,7 +191,6 @@ class DynamicLineToolTest {
         Assert.assertEquals(movingCoordinate, tool.vertexStack.first.vertexCenter)
     }
 
-
     @Test
     @UiThreadTest
     fun testPlusButtonIsVisibleAfterFirstDrawnPath() {
@@ -243,7 +242,6 @@ class DynamicLineToolTest {
         var thirdClickCoordinate = PointF(200f, 200f)
         tool.handleDown(thirdClickCoordinate)
         tool.handleUp(thirdClickCoordinate)
-
 
         Assert.assertEquals(3, tool.vertexStack.size)
     }
@@ -338,7 +336,6 @@ class DynamicLineToolTest {
         tool.handleDown(firstVertexCoordinate)
         tool.handleUp(firstVertexCoordinate)
 
-
         var middleVertexCoordinate = PointF(100f, 100f)
         tool.handleDown(middleVertexCoordinate)
         tool.handleUp(middleVertexCoordinate)
@@ -366,7 +363,6 @@ class DynamicLineToolTest {
         var firstVertexCoordinate = PointF(5f, 5f)
         tool.handleDown(firstVertexCoordinate)
         tool.handleUp(firstVertexCoordinate)
-
 
         var middleVertexCoordinate = PointF(100f, 100f)
         tool.handleDown(middleVertexCoordinate)

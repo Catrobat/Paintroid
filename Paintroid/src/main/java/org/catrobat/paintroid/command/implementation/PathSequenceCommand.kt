@@ -20,12 +20,10 @@
 package org.catrobat.paintroid.command.implementation
 
 import android.graphics.Canvas
-import android.util.Log
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.command.Command
 import org.catrobat.paintroid.contract.LayerContracts
 import org.catrobat.paintroid.tools.ToolType
-import org.catrobat.paintroid.tools.helper.Vertex
 import org.catrobat.paintroid.tools.implementation.DynamicLineTool
 import java.util.Deque
 
@@ -40,7 +38,7 @@ class PathSequenceCommand(position: PathSequence) : Command {
     fun setupVertexStackAfterUndo(mainActivity: MainActivity, dynamicPathCommands: Deque<DynamicPathCommand>) {
         mainActivity?.runOnUiThread {
             mainActivity?.defaultToolController?.switchTool(ToolType.DYNAMICLINE)
-            var tool = (mainActivity?.toolReference?.tool as DynamicLineTool)
+            var tool = mainActivity?.toolReference?.tool as DynamicLineTool
             tool.createSourceAndDestinationVertices(
                 dynamicPathCommands.first.startPoint,
                 dynamicPathCommands.first.endPoint,
