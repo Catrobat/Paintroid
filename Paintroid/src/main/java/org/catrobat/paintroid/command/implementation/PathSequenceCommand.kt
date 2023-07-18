@@ -21,16 +21,36 @@ package org.catrobat.paintroid.command.implementation
 
 import android.graphics.Canvas
 import android.util.Log
+import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.command.Command
 import org.catrobat.paintroid.contract.LayerContracts
+import org.catrobat.paintroid.tools.ToolType
+import org.catrobat.paintroid.tools.helper.Vertex
 import org.catrobat.paintroid.tools.implementation.DynamicLineTool
+import java.util.Deque
 
 class PathSequenceCommand(position: PathSequence) : Command {
 
     var position: PathSequence = position; private set
 
     override fun run(canvas: Canvas, layerModel: LayerContracts.Model) {
-        Log.e(DynamicLineTool.TAG, "run PathSequenceCommand $position")
+        // nothing to run
+    }
+
+    fun setupVertexStackAfterUndo(mainActivity: MainActivity, dynamicPathCommands: Deque<DynamicPathCommand>) {
+        mainActivity?.runOnUiThread {
+            mainActivity?.defaultToolController?.switchTool(ToolType.DYNAMICLINE)
+            var tool = (mainActivity?.toolReference?.tool as DynamicLineTool)
+            tool.createSourceAndDestinationVertices(
+                dynamicPathCommands.first.startPoint,
+                dynamicPathCommands.first.endPoint,
+                dynamicPathCommands.first)
+            dynamicPathCommands.removeFirst()
+            for (command in dynamicPathCommands) {
+                tool.createDestinationVertex(command.endPoint, command)
+            }
+            mainActivity.commandManager.executeAllCommands()
+        }
     }
 
     override fun freeResources() {

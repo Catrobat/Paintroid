@@ -21,6 +21,7 @@ package org.catrobat.paintroid.test.junit.model
 import android.graphics.Bitmap
 import android.graphics.Color
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.command.CommandFactory
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.command.CommandManager.CommandListener
@@ -55,7 +56,7 @@ class LayerTest {
         (layerModel as LayerModel).addLayerAt(0, layer)
         (layerModel as LayerModel).currentLayer = layer
         commandManager =
-            AsyncCommandManager(DefaultCommandManager(CommonFactory(), layerModel as LayerModel),
+            AsyncCommandManager(DefaultCommandManager(CommonFactory(), layerModel as LayerModel, null),
                                 layerModel as LayerModel
             )
     }

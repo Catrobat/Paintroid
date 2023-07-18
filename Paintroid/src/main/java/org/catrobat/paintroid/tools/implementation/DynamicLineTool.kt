@@ -71,7 +71,9 @@ class DynamicLineTool(
     }
 
     override fun onClickOnButton() {
-        addPathSequenceCommand(PathSequence.END)
+        if (vertexStack.isNotEmpty()) {
+            addPathSequenceCommand(PathSequence.END)
+        }
         hidePlusButton()
         vertexStack.clear()
         movingVertex = null
@@ -102,8 +104,8 @@ class DynamicLineTool(
     }
 
     fun undo() {
-        var command = commandManager.getFirstUndoCommand()
-        setToolPaint(command)
+//        var command = commandManager.getFirstUndoCommand()
+//        setToolPaint(command)
         commandManager.undo()
         undoRecentlyClicked = true
         updateVertexStackAfterUndo()
@@ -122,6 +124,11 @@ class DynamicLineTool(
             return
         }
         vertexStack.pollLast()
+        setLastMovingAndPredecessorVertex()
+    }
+
+    private fun setLastMovingAndPredecessorVertex() {
+        if (vertexStack.isEmpty()) return
         val index = vertexStack.indexOf(vertexStack.last)
         predecessorVertex = vertexStack.elementAtOrNull(index - 1)
         movingVertex = vertexStack.last
@@ -220,7 +227,7 @@ class DynamicLineTool(
         commandManager.addCommand(pathSequenceStartCommand)
     }
 
-    private fun createSourceAndDestinationVertices(startPoint: PointF?, endPoint: PointF?, command: DynamicPathCommand?) {
+   fun createSourceAndDestinationVertices(startPoint: PointF?, endPoint: PointF?, command: DynamicPathCommand?) {
         var sourceVertex = createAndAddVertex(startPoint, command, null)
         var destinationVertex = createAndAddVertex(endPoint, null, command)
         predecessorVertex = sourceVertex
@@ -234,13 +241,10 @@ class DynamicLineTool(
         createDestinationVertex(endPoint, command)
     }
 
-    private fun createDestinationVertex(endPoint: PointF?, command: DynamicPathCommand?) {
+    fun createDestinationVertex(endPoint: PointF?, command: DynamicPathCommand?) {
         vertexStack.last.setOutgoingPath(command)
-        var destinationVertex = createAndAddVertex(endPoint, null, command)
-
-        val index = vertexStack.indexOf(destinationVertex)
-        predecessorVertex = vertexStack.elementAtOrNull(index - 1)
-        movingVertex = destinationVertex
+        createAndAddVertex(endPoint, null, command)
+        setLastMovingAndPredecessorVertex()
     }
 
     private fun createAndAddVertex(vertexCenter: PointF?, outgoingCommand: DynamicPathCommand?, ingoingCommand: DynamicPathCommand?): Vertex {

@@ -37,6 +37,7 @@ import org.junit.Test
 import org.mockito.junit.MockitoJUnitRunner
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.eq
+import org.catrobat.paintroid.MainActivity
 
 @RunWith(MockitoJUnitRunner::class)
 class DefaultCommandManagerTest {
@@ -51,7 +52,7 @@ class DefaultCommandManagerTest {
     @Before
     fun setUp() {
         layerModel = LayerModel()
-        commandManager = DefaultCommandManager(commonFactory, layerModel)
+        commandManager = DefaultCommandManager(commonFactory, layerModel, MainActivity())
     }
 
     @Test

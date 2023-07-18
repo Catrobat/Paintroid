@@ -19,21 +19,25 @@
 package org.catrobat.paintroid.command.implementation
 
 import android.graphics.Color
+import android.util.Log
+import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.command.Command
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.command.CommandManager.CommandListener
 import org.catrobat.paintroid.common.CommonFactory
 import org.catrobat.paintroid.contract.LayerContracts
 import org.catrobat.paintroid.model.CommandManagerModel
-import java.util.Deque
+import org.catrobat.paintroid.tools.implementation.DynamicLineTool
 import java.util.ArrayDeque
 import java.util.Collections
+import java.util.Deque
 
 const val FIVE = 5
 
 class DefaultCommandManager(
     private val commonFactory: CommonFactory,
-    private val layerModel: LayerContracts.Model
+    private val layerModel: LayerContracts.Model,
+    private val mainActivity: MainActivity?
 ) : CommandManager {
     private val commandListeners: MutableList<CommandListener> = ArrayList()
     private val redoCommandList: Deque<Command> = ArrayDeque()
@@ -109,12 +113,38 @@ class DefaultCommandManager(
             val command = undoCommandList.pop()
 
             // check here for DynamicLineToolMetaCommand and build the tool
-
+            if (command is PathSequenceCommand) {
+                prepareVertexStackForDynamicLineTool(command)
+                return
+            }
             redoCommandList.addFirst(command)
 
             handleUndo(command)
 
             notifyCommandExecuted()
+        }
+    }
+    private fun prepareVertexStackForDynamicLineTool(command: PathSequenceCommand) {
+        if (command.position == PathSequenceCommand.Companion.PathSequence.END) {
+
+//            var vertexStackCommands: Deque<DynamicPathCommand> = ArrayDeque()
+//            for (command in undoCommandList) {
+//                if (command is PathSequenceCommand && command.position == PathSequenceCommand.Companion.PathSequence.START) {
+//                    break
+//                }
+//                if (command is DynamicPathCommand) {
+//                    vertexStackCommands.addFirst(command)
+//                }
+//            }
+            val vertexStackCommands: Deque<DynamicPathCommand> = ArrayDeque()
+            undoCommandList.takeWhile { command ->
+                !(command is PathSequenceCommand && command.position == PathSequenceCommand.Companion.PathSequence.START)
+            }.filterIsInstance<DynamicPathCommand>().forEach {
+                vertexStackCommands.addFirst(it)
+            }
+
+
+//            command.setupVertexStackAfterUndo(mainActivity, vertexStackCommands)
         }
     }
 

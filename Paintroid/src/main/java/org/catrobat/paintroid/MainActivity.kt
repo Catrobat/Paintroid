@@ -427,7 +427,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         if (currentCommandManager == null) {
             val metrics = resources.displayMetrics
             val synchronousCommandManager: CommandManager =
-                DefaultCommandManager(CommonFactory(), layerModel)
+                DefaultCommandManager(CommonFactory(), layerModel, this)
             commandManager = AsyncCommandManager(synchronousCommandManager, layerModel)
             val initCommand =
                 commandFactory.createInitCommand(metrics.widthPixels, metrics.heightPixels)
