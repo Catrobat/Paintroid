@@ -63,7 +63,26 @@ pipeline {
             }
         }
 
-        stage('Approve upload to Google Play') {
+        stage('Build signed AAB') {
+            steps {
+                // Build, zipalign and sign releasable AAB
+                withCredentials([file(credentialsId: 'a925b6e8-b3c6-407e-8cad-65886e330037', variable: 'SIGNING_KEYSTORE')]) {
+                    script {
+                        sh '''
+                            set +x
+                            ./gradlew bundleSignedRelease \
+                            -PsigningKeystore=${SIGNING_KEYSTORE} \
+                            -PsigningKeystorePassword=$signingKeystorePassword \
+                            -PsigningKeyAlias=$signingKeyAlias \
+                            -PsigningKeyPassword=$signingKeyPassword
+                        '''
+                    }
+                }
+                archiveArtifacts artifacts: 'app/build/outputs/bundle/signedRelease/paintroid-signedRelease.apk', fingerprint: true
+            }
+        }
+
+        stage('Approve APK upload to Google Play') {
             options {
                 timeout(time: 60, unit: 'MINUTES')
             }
@@ -83,6 +102,30 @@ pipeline {
             steps {
                 script {
                     sh 'fastlane android upload_APK_Paintroid'
+                }
+            }
+        }
+
+        stage('Approve AAB upload to Google Play') {
+            options {
+                timeout(time: 60, unit: 'MINUTES')
+            }
+            steps {
+                script {
+                    env.APPROVE_UPLOAD_AAB = input message: 'User input required',
+                            parameters: [choice(name: 'Upload', choices: 'no\nyes',
+                                    description: 'Do you want to upload this AAB to Alpha Channel on Google Play?')]
+                }
+            }
+        }
+
+        stage('Upload AAB to Alpha') {
+            when {
+                environment name: 'APPROVE_UPLOAD_AAB', value: 'yes'
+            }
+            steps {
+                script {
+                    sh 'fastlane android upload_AAB_Paintroid'
                 }
             }
         }
