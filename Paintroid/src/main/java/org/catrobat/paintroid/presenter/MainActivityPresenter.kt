@@ -605,7 +605,7 @@ open class MainActivityPresenter(
             if (toolController.currentTool is LineTool) {
                 (toolController.currentTool as LineTool).undoChangePaintColor(Color.BLACK)
             } else if (toolController.currentTool is DynamicLineTool) {
-                (toolController.currentTool as DynamicLineTool).undo()
+                commandManager.undo()
             } else {
                 if (toolController.currentTool is ClippingTool) {
                     val clippingTool = toolController.currentTool as ClippingTool

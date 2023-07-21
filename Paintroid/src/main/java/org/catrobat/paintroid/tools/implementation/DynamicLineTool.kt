@@ -71,9 +71,9 @@ class DynamicLineTool(
     }
 
     override fun onClickOnButton() {
-        if (vertexStack.isNotEmpty()) {
-            addPathSequenceCommand(PathSequence.END)
-        }
+//        if (vertexStack.isNotEmpty()) {
+//            addPathSequenceCommand(PathSequence.END)
+//        }
         hidePlusButton()
         vertexStack.clear()
         movingVertex = null
@@ -107,7 +107,7 @@ class DynamicLineTool(
 //        var command = commandManager.getFirstUndoCommand()
 //        setToolPaint(command)
         commandManager.undo()
-        undoRecentlyClicked = true
+//        undoRecentlyClicked = true
         updateVertexStackAfterUndo()
     }
 
@@ -118,7 +118,8 @@ class DynamicLineTool(
         super.changePaintStrokeWidth(command.paint.strokeWidth.toInt())
     }
 
-    private fun updateVertexStackAfterUndo() {
+    fun updateVertexStackAfterUndo() {
+        undoRecentlyClicked = true
         if (vertexStack.size == 2) {
             vertexStack.clear()
             return
@@ -214,10 +215,11 @@ class DynamicLineTool(
     }
 
     private fun createSourceAndDestinationCommandAndVertices(coordinate: PointF) {
-        addPathSequenceCommand(PathSequence.START)
+//        addPathSequenceCommand(PathSequence.START)
         var startPoint = copyPointF(coordinate)
         var endPoint = copyPointF(coordinate)
         var command = createPathCommand(startPoint, endPoint)
+        command?.setAsSourcePath()
         createSourceAndDestinationVertices(startPoint, endPoint, command)
     }
 

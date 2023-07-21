@@ -32,6 +32,7 @@ class DynamicPathCommandSerializer(version: Int) : VersionSerializer<DynamicPath
             writeObject(output, command.path as SerializablePath)
             writeObject(output, command.startPoint as PointF)
             writeObject(output, command.endPoint as PointF)
+            writeObject(output, command.isSourcePath)
         }
     }
 
@@ -39,12 +40,15 @@ class DynamicPathCommandSerializer(version: Int) : VersionSerializer<DynamicPath
         super.handleVersions(this, kryo, input, type)
 
     override fun readCurrentVersion(kryo: Kryo, input: Input, type: Class<out DynamicPathCommand>): DynamicPathCommand {
-        return with(kryo) {
+        with(kryo) {
             val paint = readObject(input, Paint::class.java)
             val path = readObject(input, SerializablePath::class.java)
             val startPoint = readObject(input, PointF::class.java)
             val endPoint = readObject(input, PointF::class.java)
-            DynamicPathCommand(Paint(paint), path, startPoint, endPoint)
+            val isSourcePath = readObject(input, Boolean::class.java)
+            var command = DynamicPathCommand(Paint(paint), path, startPoint, endPoint)
+            command.isSourcePath = isSourcePath
+            return command
         }
     }
 }
