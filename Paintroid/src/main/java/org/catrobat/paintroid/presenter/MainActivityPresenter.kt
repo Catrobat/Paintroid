@@ -156,6 +156,7 @@ open class MainActivityPresenter(
     var toolOptionsViewWasShown = false
 
     override fun replaceImageClicked() {
+        projectName = null
         checkIfClippingToolNeedsAdjustment()
         switchBetweenVersions(PERMISSION_REQUEST_CODE_REPLACE_PICTURE, false)
         setFirstCheckBoxInLayerMenu()

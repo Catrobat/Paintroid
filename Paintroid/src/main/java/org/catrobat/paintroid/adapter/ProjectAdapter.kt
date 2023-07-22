@@ -90,6 +90,7 @@ class ProjectAdapter(
         }
 
         if (imageUri != null) {
+            holder.itemImageView.setImageDrawable(null)
             holder.itemImageView.setImageURI(Uri.parse(item.imagePreviewPath))
         } else {
             holder.itemImageView.setImageResource(R.drawable.pocketpaint_logo_small)

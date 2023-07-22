@@ -70,6 +70,14 @@ import org.catrobat.paintroid.common.PAINTROID_PICTURE_PATH
 import org.catrobat.paintroid.common.REQUEST_CODE_LOAD_PICTURE
 import org.catrobat.paintroid.common.PERMISSION_EXTERNAL_STORAGE_SAVE_PROJECT
 import org.catrobat.paintroid.common.CommonFactory
+import org.catrobat.paintroid.common.CATROBAT_IMAGE_ENDING
+import org.catrobat.paintroid.common.NEW_PROJECT
+import org.catrobat.paintroid.common.LOAD_NEW_IMAGE
+import org.catrobat.paintroid.common.LOAD_IMAGE
+import org.catrobat.paintroid.common.LOAD_PROJECT
+import org.catrobat.paintroid.common.PROJECT_NAME
+import org.catrobat.paintroid.common.PROJECT_URI
+import org.catrobat.paintroid.common.PROJECT_IMAGE_PREVIEW_URI
 import org.catrobat.paintroid.contract.LayerContracts
 import org.catrobat.paintroid.contract.MainActivityContracts
 import org.catrobat.paintroid.contract.MainActivityContracts.MainView
@@ -317,10 +325,10 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             }
             savedInstanceState == null ->
                 when (receivedIntent.getStringExtra(PROJECT_ACTION)) {
-                    "new_project" -> presenterMain.onNewImage()
-                    "new_image" -> presenterMain.onNewImage()
-                    "load_image" -> presenterMain.replaceImageClicked()
-                    "load_project" -> loadProject(receivedIntent)
+                    NEW_PROJECT -> presenterMain.onNewImage()
+                    LOAD_NEW_IMAGE -> presenterMain.onNewImage()
+                    LOAD_IMAGE -> presenterMain.replaceImageClicked()
+                    LOAD_PROJECT -> loadProject(receivedIntent)
                     else -> {
                     val intent = intent
                     val picturePath = intent.getStringExtra(PAINTROID_PICTURE_PATH)
@@ -372,11 +380,11 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
     }
 
     private fun loadProject(receivedIntent: Intent) {
-        projectName = receivedIntent.getStringExtra("PROJECT_NAME")
-        projectUri = receivedIntent.getStringExtra("PROJECT_URI")
-        projectImagePreviewUri = receivedIntent.getStringExtra("PROJECT_IMAGE_PREVIEW_URI")
+        projectName = receivedIntent.getStringExtra(PROJECT_NAME)
+        projectUri = receivedIntent.getStringExtra(PROJECT_URI)
+        projectImagePreviewUri = receivedIntent.getStringExtra(PROJECT_IMAGE_PREVIEW_URI)
         val projectNameText = findViewById<Toolbar>(R.id.pocketpaint_toolbar)
-        projectNameText.subtitle = projectName?.substringBefore(".catrobat-image")
+        projectNameText.subtitle = projectName?.substringBefore(".$CATROBAT_IMAGE_ENDING")
         presenterMain.loadScaledImage(projectUri?.toUri(), REQUEST_CODE_LOAD_PICTURE)
     }
 
@@ -427,10 +435,12 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
                         FileIO.checkFileExists(FileIO.FileType.CATROBAT,
                             it, this.contentResolver)
                     } == true) {
+                    FileIO.filename = projectName!!.removeSuffix(".$CATROBAT_IMAGE_ENDING")
                     FileIO.storeImageUri = Uri.parse(projectUri)
                     FileIO.storeImagePreviewUri = Uri.parse(projectImagePreviewUri)
                     presenterMain.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_PROJECT, false)
                     presenterMain.finishActivity()
+                    projectName = null
                 } else {
                     presenterMain.backToPocketCodeClicked()
                 }
@@ -726,6 +736,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             presenterMain.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_PROJECT, false)
             presenterMain.finishActivity()
             launchLandingPageActivity()
+            projectName = null
         } else if (!supportFragmentManager.popBackStackImmediate()) {
             presenterMain.onBackPressed()
         }
