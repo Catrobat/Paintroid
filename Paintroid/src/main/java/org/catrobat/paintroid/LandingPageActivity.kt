@@ -10,6 +10,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.catrobat.paintroid.adapter.ProjectAdapter
+import org.catrobat.paintroid.common.LOAD_IMAGE
+import org.catrobat.paintroid.common.LOAD_NEW_IMAGE
+import org.catrobat.paintroid.common.LOAD_PROJECT
+import org.catrobat.paintroid.common.NEW_PROJECT
+import org.catrobat.paintroid.common.PROJECT_NAME
+import org.catrobat.paintroid.common.PROJECT_URI
+import org.catrobat.paintroid.common.PROJECT_IMAGE_PREVIEW_URI
 import org.catrobat.paintroid.data.local.database.ProjectDatabase
 import org.catrobat.paintroid.data.local.database.ProjectDatabaseProvider
 import org.catrobat.paintroid.model.Project
@@ -49,15 +56,15 @@ class LandingPageActivity : AppCompatActivity() {
             latestProject = allProjects.firstOrNull()
             if (allProjects.isNotEmpty()) {
                 val loadProjectIntent = Intent(applicationContext, MainActivity::class.java).apply {
-                    putExtra(PROJECT_ACTION, "load_project")
-                    putExtra("PROJECT_URI", latestProject?.path)
-                    putExtra("PROJECT_NAME", latestProject?.name)
-                    putExtra("PROJECT_IMAGE_PREVIEW_URI", latestProject?.imagePreviewPath)
+                    putExtra(PROJECT_ACTION, LOAD_PROJECT)
+                    putExtra(PROJECT_URI, latestProject?.path)
+                    putExtra(PROJECT_NAME, latestProject?.name)
+                    putExtra(PROJECT_IMAGE_PREVIEW_URI, latestProject?.imagePreviewPath)
                 }
                 startActivity(loadProjectIntent)
             } else {
                 val newProjectIntent = Intent(this, MainActivity::class.java).apply {
-                    putExtra(PROJECT_ACTION, "new_project")
+                    putExtra(PROJECT_ACTION, NEW_PROJECT)
                 }
                 startActivity(newProjectIntent)
             }
@@ -70,13 +77,13 @@ class LandingPageActivity : AppCompatActivity() {
 
         val newImage = findViewById<FloatingActionButton>(R.id.pocketpaint_fab_new_image)
         newImage.setOnClickListener {
-            mainActivityIntent.putExtra(PROJECT_ACTION, "new_image")
+            mainActivityIntent.putExtra(PROJECT_ACTION, LOAD_NEW_IMAGE)
             startActivity(mainActivityIntent)
         }
 
         val loadImage = findViewById<FloatingActionButton>(R.id.pocketpaint_fab_load_image)
         loadImage.setOnClickListener {
-            mainActivityIntent.putExtra(PROJECT_ACTION, "load_image")
+            mainActivityIntent.putExtra(PROJECT_ACTION, LOAD_IMAGE)
             startActivity(mainActivityIntent)
         }
     }
@@ -101,10 +108,10 @@ class LandingPageActivity : AppCompatActivity() {
                 projectImagePreviewUri: String
             ) {
                 val loadProjectIntent = Intent(applicationContext, MainActivity::class.java).apply {
-                    putExtra(PROJECT_ACTION, "load_project")
-                    putExtra("PROJECT_URI", projectUri)
-                    putExtra("PROJECT_NAME", projectName)
-                    putExtra("PROJECT_IMAGE_PREVIEW_URI", projectImagePreviewUri)
+                    putExtra(PROJECT_ACTION, LOAD_PROJECT)
+                    putExtra(PROJECT_URI, projectUri)
+                    putExtra(PROJECT_NAME, projectName)
+                    putExtra(PROJECT_IMAGE_PREVIEW_URI, projectImagePreviewUri)
                 }
                 startActivity(loadProjectIntent)
             }

@@ -33,6 +33,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.catrobat.paintroid.FileIO
 import org.catrobat.paintroid.command.serialization.CommandSerializer
+import org.catrobat.paintroid.common.CATROBAT_IMAGE_ENDING
 
 class LoadImage(
     callback: LoadImageCallback,
@@ -52,8 +53,12 @@ class LoadImage(
             resolver.getType(uri)
         } else {
             val fileExtension = MimeTypeMap.getFileExtensionFromUrl(uri.toString())
-            MimeTypeMap.getSingleton()
-                .getMimeTypeFromExtension(fileExtension.toLowerCase(Locale.US))
+            if (fileExtension.equals(CATROBAT_IMAGE_ENDING)) {
+                "application/octet-stream"
+            } else {
+                MimeTypeMap.getSingleton()
+                    .getMimeTypeFromExtension(fileExtension.toLowerCase(Locale.US))
+            }
         }
 
     private fun getBitmapReturnValue(
