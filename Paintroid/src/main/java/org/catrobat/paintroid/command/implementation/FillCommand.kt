@@ -35,15 +35,15 @@ class FillCommand(private val fillAlgorithmFactory: FillAlgorithmFactory, clicke
     override fun run(canvas: Canvas, layerModel: LayerContracts.Model) {
         val currentLayer = layerModel.currentLayer
         currentLayer ?: return
-        currentLayer.bitmap?.let { bitmap ->
-            val replacementColor = bitmap.getPixel(clickedPixel.x, clickedPixel.y)
+        currentLayer.bitmap.let { bitmap ->
+            val colorToBeReplaced = bitmap.getPixel(clickedPixel.x, clickedPixel.y)
             val fillAlgorithm = fillAlgorithmFactory.createFillAlgorithm()
             fillAlgorithm.setParameters(
-                bitmap,
-                clickedPixel,
-                paint.color,
-                replacementColor,
-                colorTolerance
+                    bitmap,
+                    clickedPixel,
+                    paint.color,
+                    colorToBeReplaced,
+                    colorTolerance
             )
             fillAlgorithm.performFilling()
         }

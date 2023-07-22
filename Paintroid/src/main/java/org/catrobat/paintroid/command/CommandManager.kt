@@ -65,6 +65,10 @@ interface CommandManager {
 
     fun popFirstCommandInRedo()
 
+    fun executeAllCommands()
+
+    fun getUndoCommandCount(): Int
+
     interface CommandListener {
         fun commandPostExecute()
     }

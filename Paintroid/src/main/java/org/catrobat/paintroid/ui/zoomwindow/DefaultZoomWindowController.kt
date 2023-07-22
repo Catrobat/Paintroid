@@ -221,27 +221,20 @@ class DefaultZoomWindowController
     }
 
     override fun checkIfToolCompatibleWithZoomWindow(tool: Tool?): Constants {
-        if (
-            tool?.toolType?.name.equals(ToolType.HAND.name) ||
-            tool?.toolType?.name.equals(ToolType.FILL.name) ||
-            tool?.toolType?.name.equals(ToolType.CLIPBOARD.name) ||
-            tool?.toolType?.name.equals(ToolType.TRANSFORM.name)
-        ) {
-            return Constants.NOT_COMPATIBLE
-        } else if (
-            tool?.toolType?.name.equals(ToolType.IMPORTPNG.name) ||
-            tool?.toolType?.name.equals(ToolType.SHAPE.name) ||
-            tool?.toolType?.name.equals(ToolType.TEXT.name)
-        ) {
-            return Constants.NOT_COMPATIBLE
-        } else if (
-            tool?.toolType?.name.equals(ToolType.LINE.name) ||
-            tool?.toolType?.name.equals(ToolType.CURSOR.name) ||
-            tool?.toolType?.name.equals(ToolType.WATERCOLOR.name)
-        ) {
-            return Constants.COMPATIBLE_NEW
-        } else {
-            return Constants.COMPATIBLE_ALL
+        return when (tool?.toolType?.name) {
+            ToolType.HAND.name,
+            ToolType.FILL.name,
+            ToolType.CLIPBOARD.name,
+            ToolType.TRANSFORM.name,
+            ToolType.IMPORTPNG.name,
+            ToolType.SHAPE.name,
+            ToolType.TEXT.name -> Constants.NOT_COMPATIBLE
+            ToolType.LINE.name,
+            ToolType.CURSOR.name,
+            ToolType.WATERCOLOR.name,
+            ToolType.SPRAY.name,
+            ToolType.BRUSH.name -> Constants.COMPATIBLE_NEW
+            else -> Constants.COMPATIBLE_ALL
         }
     }
 

@@ -1,6 +1,8 @@
+package org.catrobat.paintroid.test.espresso.tools
+
 /*
  * Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2022 The Catrobat Team
+ * Copyright (C) 2010-2023 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,147 +18,155 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.catrobat.paintroid.test.espresso.tools
 
 import android.graphics.Color
-import androidx.test.espresso.Espresso.onView
+import android.os.Build
+import androidx.annotation.RequiresApi
+import androidx.test.espresso.Espresso
 import androidx.test.espresso.action.ViewActions
-import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.action.ViewActions.replaceText
-import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.rule.ActivityTestRule
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider
 import org.catrobat.paintroid.test.espresso.util.UiInteractions
+import org.catrobat.paintroid.test.espresso.util.UiInteractions.swipeAccurate
 import org.catrobat.paintroid.test.espresso.util.UiMatcher
-import org.catrobat.paintroid.test.espresso.util.UiMatcher.withProgress
 import org.catrobat.paintroid.test.espresso.util.wrappers.ColorPickerViewInteraction.Companion.onColorPickerView
-import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.Companion.onDrawingSurfaceView
+import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction
 import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction
-import org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction.Companion.onToolProperties
+import org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule
 import org.catrobat.paintroid.tools.ToolReference
 import org.catrobat.paintroid.tools.ToolType
-import org.catrobat.paintroid.ui.tools.MIN_RADIUS
-import org.hamcrest.Matchers.allOf
+import org.hamcrest.Matchers
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
+@RequiresApi(api = Build.VERSION_CODES.P)
 @RunWith(AndroidJUnit4::class)
-class SprayToolIntegrationTest {
+class BrushToolIntegrationTest {
+
+    private lateinit var activity: MainActivity
     private var toolReference: ToolReference? = null
 
     @get:Rule
-    var launchActivityRule = ActivityTestRule(MainActivity::class.java)
+    var activityScenarioRule: ActivityScenarioRule<MainActivity> = ActivityScenarioRule(MainActivity::class.java)
 
     @get:Rule
     var screenshotOnFailRule = ScreenshotOnFailRule()
 
+    private fun getActivity(): MainActivity {
+        lateinit var activity: MainActivity
+        activityScenarioRule.scenario.onActivity {
+            activity = it
+        }
+        return activity
+    }
+
     @Before
     fun setUp() {
-        toolReference = launchActivityRule.activity.toolReference
-        ToolBarViewInteraction.onToolBarView().performSelectTool(ToolType.SPRAY)
+        activity = getActivity()
+        toolReference = activity.toolReference
+        ToolBarViewInteraction.onToolBarView().performSelectTool(ToolType.BRUSH)
     }
 
     @Test
-    fun testEmptyRadius() {
-        val emptyString = ""
-        onView(withId(R.id.pocketpaint_radius_text))
-            .perform(replaceText(emptyString))
-            .check(matches(withText(emptyString)))
-
-        onView(withId(R.id.pocketpaint_spray_radius_seek_bar))
-            .check(matches(withProgress(MIN_RADIUS)))
+    fun drawOnlyOneLineWithSmoothingAlgorithm() {
+        val commandManager = activity.commandManager
+        val previousCommandCount = commandManager.getUndoCommandCount()
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
+                .perform(swipeAccurate(DrawingSurfaceLocationProvider.MIDDLE, DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT))
+        val updatedCommandCount = commandManager.getUndoCommandCount()
+        assertEquals(previousCommandCount + 1, updatedCommandCount)
     }
 
     @Test
-    fun testSprayToolColor() {
+    fun testBrushToolColor() {
         ToolBarViewInteraction.onToolBarView()
-            .performSelectTool(ToolType.SPRAY)
-        onDrawingSurfaceView()
+            .performSelectTool(ToolType.BRUSH)
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
-        onDrawingSurfaceView()
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
             .checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
     }
 
     @Test
-    fun testSprayToolTransparentColor() {
+    fun testBrushToolTransparentColor() {
         ToolBarViewInteraction.onToolBarView()
-            .performSelectTool(ToolType.SPRAY)
+            .performSelectTool(ToolType.BRUSH)
         onColorPickerView()
             .performOpenColorPicker()
-        onView(
-            allOf(
+        Espresso.onView(
+            Matchers.allOf(
                 withId(R.id.color_picker_tab_icon),
                 UiMatcher.withBackground(R.drawable.ic_color_picker_tab_preset)
             )
-        ).perform(click())
-        onView(withId(R.id.color_alpha_slider)).perform(
+        ).perform(ViewActions.click())
+        Espresso.onView(withId(R.id.color_alpha_slider)).perform(
             ViewActions.scrollTo(),
             UiInteractions.touchCenterMiddle()
         )
-        onView(
-            allOf(
+        Espresso.onView(
+            Matchers.allOf(
                 withId(R.id.color_picker_tab_icon),
                 UiMatcher.withBackground(R.drawable.ic_color_picker_tab_rgba)
             )
-        ).perform(click())
+        ).perform(ViewActions.click())
         onColorPickerView()
             .onPositiveButton()
-            .perform(click())
-        onDrawingSurfaceView()
+            .perform(ViewActions.click())
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
 
         val selectedColor = toolReference?.tool?.drawPaint!!.color
-        onDrawingSurfaceView()
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
             .checkPixelColor(selectedColor, BitmapLocationProvider.MIDDLE)
     }
 
     @Test
-    fun testSprayToolWithHandleMoveColor() {
+    fun testBrushToolWithHandleMoveColor() {
         ToolBarViewInteraction.onToolBarView()
-            .performSelectTool(ToolType.SPRAY)
-        onToolProperties()
+            .performSelectTool(ToolType.BRUSH)
+        ToolPropertiesInteraction.onToolProperties()
             .setColor(Color.BLACK)
-        onDrawingSurfaceView()
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
             .perform(UiInteractions.swipe(DrawingSurfaceLocationProvider.MIDDLE, DrawingSurfaceLocationProvider.BOTTOM_MIDDLE))
-        onDrawingSurfaceView()
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
             .checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
     }
 
     @Test
-    fun testSprayToolWithHandleMoveTransparentColor() {
+    fun testBrushToolWithHandleMoveTransparentColor() {
         ToolBarViewInteraction.onToolBarView()
-            .performSelectTool(ToolType.SPRAY)
+            .performSelectTool(ToolType.BRUSH)
         onColorPickerView()
             .performOpenColorPicker()
-        onView(
-            allOf(
+        Espresso.onView(
+            Matchers.allOf(
                 withId(R.id.color_picker_tab_icon),
                 UiMatcher.withBackground(R.drawable.ic_color_picker_tab_preset)
             )
-        ).perform(click())
-        onView(withId(R.id.color_alpha_slider)).perform(
+        ).perform(ViewActions.click())
+        Espresso.onView(withId(R.id.color_alpha_slider)).perform(
             ViewActions.scrollTo(),
             UiInteractions.touchCenterMiddle()
         )
-        onView(
-            allOf(
+        Espresso.onView(
+            Matchers.allOf(
                 withId(R.id.color_picker_tab_icon),
                 UiMatcher.withBackground(R.drawable.ic_color_picker_tab_rgba)
             )
-        ).perform(click())
+        ).perform(ViewActions.click())
         onColorPickerView()
             .onPositiveButton()
-            .perform(click())
-        onDrawingSurfaceView()
+            .perform(ViewActions.click())
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
             .perform(
                 UiInteractions.swipe(
                     DrawingSurfaceLocationProvider.MIDDLE,
@@ -165,39 +175,7 @@ class SprayToolIntegrationTest {
             )
 
         val selectedColor = toolReference?.tool?.drawPaint!!.color
-        onDrawingSurfaceView()
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
             .checkPixelColor(selectedColor, BitmapLocationProvider.MIDDLE)
-    }
-
-    fun testSprayRadiusToStrokeWidthStaysConsistent() {
-        ToolBarViewInteraction.onToolBarView().performSelectTool(ToolType.BRUSH)
-
-        var radius = "30"
-        onView(withId(R.id.pocketpaint_stroke_width_width_text))
-            .perform(replaceText(radius))
-            .check(matches(withText(radius)))
-        onView(withId(R.id.pocketpaint_stroke_width_seek_bar))
-            .check(matches(withProgress(radius.toInt())))
-
-        ToolBarViewInteraction.onToolBarView().performSelectTool(ToolType.SPRAY)
-        onView(withId(R.id.pocketpaint_radius_text))
-            .perform(replaceText(radius))
-            .check(matches(withText(radius)))
-        onView(withId(R.id.pocketpaint_spray_radius_seek_bar))
-            .check(matches(withProgress(radius.toInt())))
-
-        radius = "20"
-        onView(withId(R.id.pocketpaint_radius_text))
-            .perform(replaceText(radius))
-            .check(matches(withText(radius)))
-        onView(withId(R.id.pocketpaint_spray_radius_seek_bar))
-            .check(matches(withProgress(radius.toInt())))
-
-        ToolBarViewInteraction.onToolBarView().performSelectTool(ToolType.BRUSH)
-        onView(withId(R.id.pocketpaint_stroke_width_width_text))
-            .perform(replaceText(radius))
-            .check(matches(withText(radius)))
-        onView(withId(R.id.pocketpaint_stroke_width_seek_bar))
-            .check(matches(withProgress(radius.toInt())))
     }
 }
