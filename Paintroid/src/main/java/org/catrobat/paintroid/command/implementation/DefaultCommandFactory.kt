@@ -139,7 +139,9 @@ class DefaultCommandFactory : CommandFactory {
         startPoint: PointF,
         endPoint: PointF
     ): Command = DynamicPathCommand(
-        paint, path, startPoint, endPoint
+        commonFactory.createPaint(paint),
+        commonFactory.createSerializablePath(path),
+        startPoint, endPoint
     )
 
     override fun createSmudgePathCommand(
