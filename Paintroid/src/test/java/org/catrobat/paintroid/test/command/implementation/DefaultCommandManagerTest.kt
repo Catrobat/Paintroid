@@ -37,7 +37,6 @@ import org.junit.Test
 import org.mockito.junit.MockitoJUnitRunner
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.eq
-import org.catrobat.paintroid.MainActivity
 
 @RunWith(MockitoJUnitRunner::class)
 class DefaultCommandManagerTest {
