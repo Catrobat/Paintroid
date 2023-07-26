@@ -144,11 +144,8 @@ class MainActivityNavigator(
                 val command = commandFactory.createColorChangedCommand(toolReference, mainActivity, color)
                 mainActivity.model.colorHistory.addColor(color)
 
-                // is there a need to save the command? Causes a lot of issues :/
-                if (toolReference.tool?.toolType == ToolType.DYNAMICLINE) {
-                    mainActivity.commandManager.executeCommand(command)
-                } else if (toolReference.tool?.toolType != ToolType.CLIP) {
-                    mainActivity.commandManager.executeCommand(command)
+                if (toolReference.tool?.toolType != ToolType.CLIP) {
+                    mainActivity.commandManager.addCommand(command)
                 } else {
                     mainActivity.commandManager.addCommandWithoutUndo(command)
                 }

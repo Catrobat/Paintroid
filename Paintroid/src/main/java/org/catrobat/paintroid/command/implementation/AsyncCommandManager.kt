@@ -109,10 +109,6 @@ open class AsyncCommandManager(
         manageUndoAndRedo(commandManager::undo, isUndoAvailable)
     }
 
-    override fun getFirstUndoCommand(): Command? {
-        synchronized(layerModel) { return commandManager.getFirstUndoCommand() }
-    }
-
     override fun getFirstRedoCommand(): Command? {
         synchronized(layerModel) { return commandManager.getFirstRedoCommand() }
     }

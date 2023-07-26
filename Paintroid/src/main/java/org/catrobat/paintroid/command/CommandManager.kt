@@ -63,8 +63,6 @@ interface CommandManager {
 
     fun undoInClippingTool()
 
-    fun getFirstUndoCommand(): Command?
-
     fun getFirstRedoCommand(): Command?
 
     fun clearRedoCommandList()

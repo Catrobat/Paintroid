@@ -299,7 +299,7 @@ class DynamicLineTool(
         super.changePaintColor(color)
         if (vertexStack.isEmpty()) return
         vertexStack.last.ingoingPathCommand?.setPaintColor(toolPaint.color)
-        commandManager.executeAllCommands()
+        commandManager.executeCommand(vertexStack.last.ingoingPathCommand)
         brushToolOptionsView.invalidate()
     }
 
