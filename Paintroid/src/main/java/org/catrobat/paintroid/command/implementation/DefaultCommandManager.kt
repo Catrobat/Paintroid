@@ -26,6 +26,7 @@ import org.catrobat.paintroid.command.CommandManager.CommandListener
 import org.catrobat.paintroid.common.CommonFactory
 import org.catrobat.paintroid.contract.LayerContracts
 import org.catrobat.paintroid.model.CommandManagerModel
+import org.catrobat.paintroid.tools.Tool
 import org.catrobat.paintroid.tools.implementation.DynamicLineTool
 import java.util.ArrayDeque
 import java.util.Collections
@@ -235,6 +236,9 @@ class DefaultCommandManager(
     override fun redo() {
         if (isRedoAvailable) {
             val command = redoCommandList.pop()
+
+            handleRedoForDynamicLineTool(command)
+
             undoCommandList.addFirst(command)
 
             val currentLayer = layerModel.currentLayer
@@ -245,6 +249,44 @@ class DefaultCommandManager(
 
             command.run(canvas, layerModel)
             notifyCommandExecuted()
+        }
+    }
+
+//    private fun handleRedoForDynamicLineTool(command: Command) {
+//        var currentTool = mainActivity.defaultToolController.currentTool
+//        if (currentTool is DynamicLineTool && command !is DynamicPathCommand) {
+//            currentTool.clear()
+//        }
+//        if (command is DynamicPathCommand) {
+//            if (currentTool !is DynamicLineTool) {
+//                command.switchToDynamicLineTool(mainActivity)
+//            }
+//            while (mainActivity.defaultToolController.currentTool !is DynamicLineTool)
+//                currentTool = mainActivity.defaultToolController.currentTool
+//            if (command.isSourcePath) {
+//                (currentTool as DynamicLineTool).clear()
+//            }
+//            (currentTool as DynamicLineTool).updateVertexStackAfterRedo(command)
+//        }
+//    }
+    private fun handleRedoForDynamicLineTool(command: Command) {
+        var currentTool = mainActivity.defaultToolController.currentTool
+        if (command is DynamicPathCommand) {
+            switchToDynamicLineToolIfNeeded(currentTool, command)
+            currentTool = mainActivity.defaultToolController.currentTool
+            if (command.isSourcePath) {
+                (currentTool as DynamicLineTool).clear()
+            }
+            (currentTool as DynamicLineTool).updateVertexStackAfterRedo(command)
+        } else if (currentTool is DynamicLineTool) {
+            currentTool.clear()
+        }
+    }
+
+    private fun switchToDynamicLineToolIfNeeded(currentTool: Tool?, command: DynamicPathCommand) {
+        if (currentTool !is DynamicLineTool) {
+            command.switchToDynamicLineTool(mainActivity)
+            while (mainActivity.defaultToolController.currentTool !is DynamicLineTool) {}
         }
     }
 

@@ -72,14 +72,17 @@ class DynamicLineTool(
 
     override fun onClickOnButton() {
         if (vertexStack.isEmpty()) return
-        vertexStack.last.ingoingPathCommand?.setAsEndPath()
         hidePlusButton()
+        clear()
+        commandManager.clearRedoCommandList()
+        commandManager.executeAllCommands()
+    }
+
+    fun clear() {
         vertexStack.clear()
         movingVertex = null
         predecessorVertex = null
         successorVertex = null
-        commandManager.clearRedoCommandList()
-        commandManager.executeAllCommands()
     }
 
     fun onClickOnPlus() {
@@ -103,13 +106,6 @@ class DynamicLineTool(
         }
     }
 
-    private fun setToolPaint(command: Command?) {
-        if (command !is PathCommand) return // ??
-        super.changePaintColor(command.paint.color)
-        super.changePaintStrokeCap(command.paint.strokeCap)
-        super.changePaintStrokeWidth(command.paint.strokeWidth.toInt())
-    }
-
     fun updateVertexStackAfterUndo() {
         undoRecentlyClicked = true
         if (vertexStack.size == 2) {
@@ -127,17 +123,9 @@ class DynamicLineTool(
         movingVertex = vertexStack.last
     }
 
-    fun redo() {
-        var redoCommand = commandManager.getFirstRedoCommand()
-        commandManager.redo()
-        updateVertexStackAfterRedo(redoCommand)
-        setToolPaint(redoCommand)
-    }
-
-    private fun updateVertexStackAfterRedo(redoCommand: Command?) {
-        if (!(redoCommand != null && redoCommand is DynamicPathCommand)) return
-        var startPoint = redoCommand.startPoint?.let { copyPointF(it) }
-        var endPoint = redoCommand.endPoint?.let { copyPointF(it) }
+    fun updateVertexStackAfterRedo(redoCommand: DynamicPathCommand?) {
+        var startPoint = redoCommand?.startPoint?.let { copyPointF(it) }
+        var endPoint = redoCommand?.endPoint?.let { copyPointF(it) }
         if (vertexStack.isEmpty()) {
             createSourceAndDestinationVertices(startPoint, endPoint, redoCommand)
         } else {

@@ -604,8 +604,6 @@ open class MainActivityPresenter(
             setBottomNavigationColor(Color.BLACK)
             if (toolController.currentTool is LineTool) {
                 (toolController.currentTool as LineTool).undoChangePaintColor(Color.BLACK)
-            } else if (toolController.currentTool is DynamicLineTool) {
-                commandManager.undo()
             } else {
                 if (toolController.currentTool is ClippingTool) {
                     val clippingTool = toolController.currentTool as ClippingTool
@@ -628,8 +626,6 @@ open class MainActivityPresenter(
         } else {
             if (toolController.currentTool is LineTool) {
                 (toolController.currentTool as LineTool).redoLineTool()
-            } else if (toolController.currentTool is DynamicLineTool) {
-                (toolController.currentTool as DynamicLineTool).redo()
             } else {
                 commandManager.redo()
                 if (toolController.currentTool is ClippingTool) {

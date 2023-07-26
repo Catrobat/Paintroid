@@ -33,7 +33,6 @@ class DynamicPathCommandSerializer(version: Int) : VersionSerializer<DynamicPath
             writeObject(output, command.startPoint as PointF)
             writeObject(output, command.endPoint as PointF)
             writeObject(output, command.isSourcePath)
-            writeObject(output, command.isEndPath)
         }
     }
 
@@ -47,10 +46,8 @@ class DynamicPathCommandSerializer(version: Int) : VersionSerializer<DynamicPath
             val startPoint = readObject(input, PointF::class.java)
             val endPoint = readObject(input, PointF::class.java)
             val isSourcePath = readObject(input, Boolean::class.java)
-            val isEndPath = readObject(input, Boolean::class.java)
             var command = DynamicPathCommand(Paint(paint), path, startPoint, endPoint)
             command.isSourcePath = isSourcePath
-            command.isEndPath = isEndPath
             return command
         }
     }
