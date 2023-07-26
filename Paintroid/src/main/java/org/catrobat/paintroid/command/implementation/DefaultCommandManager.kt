@@ -286,7 +286,9 @@ class DefaultCommandManager(
     private fun switchToDynamicLineToolIfNeeded(currentTool: Tool?, command: DynamicPathCommand) {
         if (currentTool !is DynamicLineTool) {
             command.switchToDynamicLineTool(mainActivity)
-            while (mainActivity.defaultToolController.currentTool !is DynamicLineTool) {}
+            while (mainActivity.defaultToolController.currentTool !is DynamicLineTool) {
+                // do nothing
+            }
         }
     }
 
@@ -304,13 +306,13 @@ class DefaultCommandManager(
 
     override fun shutdown() = Unit
 
-    //! LINETOOL_ONLY
+    // LINETOOL_ONLY
     override fun undoIgnoringColorChanges() {
         addAndExecuteCommands(separateColorCommandsAndUndo())
         notifyCommandExecuted()
     }
 
-    //! LINETOOL_ONLY
+    // LINETOOL_ONLY
     override fun undoIgnoringColorChangesAndAddCommand(command: Command) {
         val colorCommandList = separateColorCommandsAndUndo()
         undoCommandList.addFirst(command)
@@ -320,7 +322,7 @@ class DefaultCommandManager(
         notifyCommandExecuted()
     }
 
-    //! LINETOOL_ONLY
+    // LINETOOL_ONLY
     private fun separateColorCommandsAndUndo(): Deque<Command> {
         val colorCommandList = removeColorCommands()
         if (undoCommandList.isNotEmpty() && undoCommandList.first != null) {
@@ -331,7 +333,7 @@ class DefaultCommandManager(
         return colorCommandList
     }
 
-    //! LINETOOL_ONLY
+    // LINETOOL_ONLY
     override fun undoInConnectedLinesMode() {
         val colorCommandList = removeColorCommands()
         if (undoCommandList.isNotEmpty()) {
@@ -354,7 +356,7 @@ class DefaultCommandManager(
         }
     }
 
-    //! LINETOOL_ONLY
+    // LINETOOL_ONLY
     private fun recolorLastLine(colorCommandList: Deque<Command>) {
         if (undoCommandList.isNotEmpty() && undoCommandList.first !is ColorChangedCommand) {
             val firstNonColorCommand = undoCommandList.pop()
@@ -391,7 +393,7 @@ class DefaultCommandManager(
         notifyCommandExecuted()
     }
 
-    //! LINETOOL_ONLY
+    // LINETOOL_ONLY
     override fun redoInConnectedLinesMode() {
         if (isRedoAvailable) {
             val command = redoCommandList.pop()
@@ -512,7 +514,7 @@ class DefaultCommandManager(
         }
     }
 
-    //! LINETOOL_ONLY
+    // LINETOOL_ONLY
     private fun removeColorCommands(): Deque<Command> {
         val colorCommandList: Deque<Command> = ArrayDeque()
         while (undoCommandList.isNotEmpty() && undoCommandList.first is ColorChangedCommand) {

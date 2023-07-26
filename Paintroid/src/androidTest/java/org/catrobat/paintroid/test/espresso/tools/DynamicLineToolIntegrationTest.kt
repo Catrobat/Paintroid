@@ -21,10 +21,8 @@
 
 package org.catrobat.paintroid.test.espresso.tools
 
-import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.Paint
-import android.graphics.PointF
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions
@@ -35,7 +33,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.ActivityTestRule
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.R
-import org.catrobat.paintroid.colorpicker.COLOR_EXTRA
 import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider
 import org.catrobat.paintroid.test.espresso.util.EspressoUtils
@@ -63,12 +60,10 @@ class DynamicLineToolIntegrationTest {
     private val colorStringIndex0 = "#FF0074CD"
     private val colorStringIndex1 = "#FF00B4F1"
     private val colorStringIndex2 = "#FF078707"
-    private val colorStringIndex3 = "#FF0074CD"
     private val colorStringBlack = "#FF000000"
     private val colorStringTransparent = "#00000000"
     private val colorStringGreen = "#FF00FF00"
     private val colorStringRed = "#FFFF0000"
-    private val vertexColor = "#807F7F7F"
 
     @get:Rule
     var launchActivityRule = ActivityTestRule(MainActivity::class.java)
@@ -154,7 +149,6 @@ class DynamicLineToolIntegrationTest {
         checkPixelColor(colorStringBlack, BitmapLocationProvider.MIDDLE)
     }
 
-
     @Test
     fun testCheckmarkLineFeatureChangeColor() {
         ToolPropertiesInteraction.onToolProperties().setColor(Color.parseColor(colorStringBlack))
@@ -211,7 +205,6 @@ class DynamicLineToolIntegrationTest {
         checkPixelColor(colorStringBlack, BitmapLocationProvider.MIDDLE)
     }
 
-
     @Test
     fun testCheckmarkLineFeatureChangeStrokeWidth() {
         ToolPropertiesInteraction.onToolProperties().setColor(Color.parseColor(colorStringBlack))
@@ -239,7 +232,6 @@ class DynamicLineToolIntegrationTest {
         checkPixelColor(colorStringBlack, BitmapLocationProvider.MIDDLE)
     }
 
-
     @Test
     fun testConnectedLinesFeature() {
         ToolPropertiesInteraction.onToolProperties().setColor(Color.parseColor(colorStringBlack))
@@ -263,7 +255,6 @@ class DynamicLineToolIntegrationTest {
         TopBarViewInteraction.onTopBarView().performClickCheckmark()
     }
 
-
     @Test
     fun testConnectedLinesFeatureDrawingLine() {
         ToolPropertiesInteraction.onToolProperties().setColor(Color.parseColor(colorStringBlack))
@@ -285,8 +276,6 @@ class DynamicLineToolIntegrationTest {
 
         TopBarViewInteraction.onTopBarView().performClickCheckmark()
     }
-
-
 
     @Test
     fun testClickingUndoOnceOnConnectedLines() {
@@ -313,7 +302,6 @@ class DynamicLineToolIntegrationTest {
         TopBarViewInteraction.onTopBarView().performClickCheckmark()
     }
 
-
     @Test
     fun testClickingUndoMoreThanOnceOnConnectedLines() {
         ToolPropertiesInteraction.onToolProperties().setColor(Color.parseColor(colorStringBlack))
@@ -338,7 +326,6 @@ class DynamicLineToolIntegrationTest {
 
         TopBarViewInteraction.onTopBarView().performClickCheckmark()
     }
-
 
     @Test
     fun testUndoWithDrawingConnectedLines() {
@@ -379,7 +366,6 @@ class DynamicLineToolIntegrationTest {
 
         TopBarViewInteraction.onTopBarView().performClickCheckmark()
     }
-
 
     @Test
     fun testColorChangesInConnectedLineMode() {
@@ -422,7 +408,6 @@ class DynamicLineToolIntegrationTest {
 
         TopBarViewInteraction.onTopBarView().performClickCheckmark()
     }
-
 
     @Test
     fun testColorChangesAndQuittingConnectedLineMode() {
@@ -482,7 +467,7 @@ class DynamicLineToolIntegrationTest {
         Assert.assertEquals(2, currentTool.vertexStack.size)
     }
 
-    private fun checkPixelColor(colorString: String, position: BitmapLocationProvider, ) {
+    private fun checkPixelColor(colorString: String, position: BitmapLocationProvider) {
         DrawingSurfaceInteraction.onDrawingSurfaceView()
             .checkPixelColor(Color.parseColor(colorString), position)
     }
@@ -491,5 +476,4 @@ class DynamicLineToolIntegrationTest {
         DrawingSurfaceInteraction.onDrawingSurfaceView()
             .perform(UiInteractions.touchAt(position))
     }
-
 }

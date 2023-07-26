@@ -71,7 +71,6 @@ class DynamicPathCommand(var paint: Paint, path: Path, startPoint: PointF, endPo
         this.endPoint = endPoint
     }
 
-
     fun setupVertexStackAfterUndo(mainActivity: MainActivity, dynamicPathCommands: Deque<DynamicPathCommand>) {
         mainActivity.runOnUiThread {
             mainActivity.presenter.toolClicked(ToolType.DYNAMICLINE)

@@ -5,11 +5,8 @@ import android.graphics.Paint
 import android.graphics.PointF
 import android.view.View
 import androidx.test.espresso.idling.CountingIdlingResource
-import org.catrobat.paintroid.command.Command
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.command.implementation.DynamicPathCommand
-import org.catrobat.paintroid.command.implementation.PathCommand
-import org.catrobat.paintroid.command.implementation.PathSequenceCommand.Companion.PathSequence
 import org.catrobat.paintroid.command.serialization.SerializablePath
 import org.catrobat.paintroid.tools.ContextCallback
 import org.catrobat.paintroid.tools.ToolPaint
@@ -21,8 +18,8 @@ import org.catrobat.paintroid.tools.helper.Vertex
 import org.catrobat.paintroid.tools.options.BrushToolOptionsView
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 import org.catrobat.paintroid.ui.viewholder.TopBarViewHolder
-import java.util.*
 import java.util.ArrayDeque
+import java.util.Deque
 
 class DynamicLineTool(
     private val brushToolOptionsView: BrushToolOptionsView,
