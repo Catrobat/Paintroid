@@ -52,7 +52,7 @@ class DefaultCommandManagerTest {
     @Before
     fun setUp() {
         layerModel = LayerModel()
-        commandManager = DefaultCommandManager(commonFactory, layerModel, MainActivity())
+        commandManager = DefaultCommandManager(commonFactory, layerModel, null)
     }
 
     @Test

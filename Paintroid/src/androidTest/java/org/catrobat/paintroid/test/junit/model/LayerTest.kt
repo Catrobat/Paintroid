@@ -56,7 +56,7 @@ class LayerTest {
         (layerModel as LayerModel).addLayerAt(0, layer)
         (layerModel as LayerModel).currentLayer = layer
         commandManager =
-            AsyncCommandManager(DefaultCommandManager(CommonFactory(), layerModel as LayerModel, MainActivity()),
+            AsyncCommandManager(DefaultCommandManager(CommonFactory(), layerModel as LayerModel, null),
                                 layerModel as LayerModel
             )
     }

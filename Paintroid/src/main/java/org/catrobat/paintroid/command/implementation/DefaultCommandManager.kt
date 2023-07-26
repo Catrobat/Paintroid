@@ -37,7 +37,7 @@ const val FIVE = 5
 class DefaultCommandManager(
     private val commonFactory: CommonFactory,
     private val layerModel: LayerContracts.Model,
-    private val mainActivity: MainActivity
+    private val mainActivity: MainActivity?
 ) : CommandManager {
     private val commandListeners: MutableList<CommandListener> = ArrayList()
     private val redoCommandList: Deque<Command> = ArrayDeque()
@@ -125,6 +125,7 @@ class DefaultCommandManager(
     }
 
     private fun handleUndoForDynamicLineTool(command: Command?): Boolean {
+        if (mainActivity == null) return false
         var currentTool = mainActivity.defaultToolController.currentTool
         if (currentTool is DynamicLineTool && currentTool.vertexStack.isNotEmpty()) {
             currentTool.updateVertexStackAfterUndo()
@@ -270,6 +271,7 @@ class DefaultCommandManager(
 //        }
 //    }
     private fun handleRedoForDynamicLineTool(command: Command) {
+        if (mainActivity == null) return
         var currentTool = mainActivity.defaultToolController.currentTool
         if (command is DynamicPathCommand) {
             switchToDynamicLineToolIfNeeded(currentTool, command)
@@ -284,6 +286,7 @@ class DefaultCommandManager(
     }
 
     private fun switchToDynamicLineToolIfNeeded(currentTool: Tool?, command: DynamicPathCommand) {
+        if (mainActivity == null) return
         if (currentTool !is DynamicLineTool) {
             command.switchToDynamicLineTool(mainActivity)
             while (mainActivity.defaultToolController.currentTool !is DynamicLineTool) {
