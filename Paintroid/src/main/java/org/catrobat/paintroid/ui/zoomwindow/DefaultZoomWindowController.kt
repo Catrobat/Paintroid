@@ -230,6 +230,7 @@ class DefaultZoomWindowController
             ToolType.SHAPE.name,
             ToolType.TEXT.name -> Constants.NOT_COMPATIBLE
             ToolType.LINE.name,
+            ToolType.DYNAMICLINE.name,
             ToolType.CURSOR.name,
             ToolType.WATERCOLOR.name,
             ToolType.SPRAY.name,
