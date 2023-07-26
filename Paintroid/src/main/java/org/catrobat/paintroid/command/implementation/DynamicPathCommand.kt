@@ -38,6 +38,7 @@ class DynamicPathCommand(var paint: Paint, path: Path, startPoint: PointF, endPo
     var startPoint: PointF? = startPoint
     var endPoint: PointF? = endPoint
     var isSourcePath: Boolean = false
+    var isEndPath: Boolean = false
 
     override fun run(canvas: Canvas, layerModel: LayerContracts.Model) {
         canvas.drawPath(path, paint)
@@ -53,6 +54,10 @@ class DynamicPathCommand(var paint: Paint, path: Path, startPoint: PointF, endPo
 
     fun setAsSourcePath() {
         this.isSourcePath = true
+    }
+
+    fun setAsEndPath() {
+        this.isEndPath = true
     }
 
     fun setPaintColor(@ColorInt newColor: Int) {
@@ -86,6 +91,12 @@ class DynamicPathCommand(var paint: Paint, path: Path, startPoint: PointF, endPo
                 tool.createDestinationVertex(command.endPoint, command)
             }
             mainActivity.commandManager.executeAllCommands()
+        }
+    }
+
+    fun switchToDynamicLineTool(mainActivity: MainActivity) {
+        mainActivity.runOnUiThread {
+            mainActivity.defaultToolController.switchTool(ToolType.DYNAMICLINE)
         }
     }
 }

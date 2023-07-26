@@ -38,7 +38,7 @@ class Vertex(vertexCenter: PointF?, outgoingPathCommand: DynamicPathCommand?, in
     companion object {
         private const val PAINT_ALPHA = 128
         private const val PAINT_STROKE_WIDTH = 2f
-        const val VERTEX_RADIUS = 50F
+        const val VERTEX_RADIUS = 30f
 
         fun getPaint(): Paint {
             val paint = Paint()

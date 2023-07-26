@@ -71,14 +71,14 @@ class DynamicLineTool(
     }
 
     override fun onClickOnButton() {
-//        if (vertexStack.isNotEmpty()) {
-//            addPathSequenceCommand(PathSequence.END)
-//        }
+        if (vertexStack.isEmpty()) return
+        vertexStack.last.ingoingPathCommand?.setAsEndPath()
         hidePlusButton()
         vertexStack.clear()
         movingVertex = null
         predecessorVertex = null
         successorVertex = null
+        commandManager.clearRedoCommandList()
         commandManager.executeAllCommands()
     }
 
@@ -101,14 +101,6 @@ class DynamicLineTool(
                 }
             }
         }
-    }
-
-    fun undo() {
-//        var command = commandManager.getFirstUndoCommand()
-//        setToolPaint(command)
-        commandManager.undo()
-//        undoRecentlyClicked = true
-        updateVertexStackAfterUndo()
     }
 
     private fun setToolPaint(command: Command?) {
@@ -215,7 +207,6 @@ class DynamicLineTool(
     }
 
     private fun createSourceAndDestinationCommandAndVertices(coordinate: PointF) {
-//        addPathSequenceCommand(PathSequence.START)
         var startPoint = copyPointF(coordinate)
         var endPoint = copyPointF(coordinate)
         var command = createPathCommand(startPoint, endPoint)
@@ -223,12 +214,7 @@ class DynamicLineTool(
         createSourceAndDestinationVertices(startPoint, endPoint, command)
     }
 
-    private fun addPathSequenceCommand(position: PathSequence) {
-        var pathSequenceStartCommand = commandFactory.createPathSequenceCommand(position)
-        commandManager.addCommand(pathSequenceStartCommand)
-    }
-
-   fun createSourceAndDestinationVertices(startPoint: PointF?, endPoint: PointF?, command: DynamicPathCommand?) {
+    fun createSourceAndDestinationVertices(startPoint: PointF?, endPoint: PointF?, command: DynamicPathCommand?) {
         var sourceVertex = createAndAddVertex(startPoint, command, null)
         var destinationVertex = createAndAddVertex(endPoint, null, command)
         predecessorVertex = sourceVertex
