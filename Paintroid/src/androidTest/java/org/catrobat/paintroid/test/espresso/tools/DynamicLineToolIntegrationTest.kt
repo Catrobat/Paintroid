@@ -23,6 +23,7 @@ package org.catrobat.paintroid.test.espresso.tools
 
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.PointF
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions
@@ -444,8 +445,6 @@ class DynamicLineToolIntegrationTest {
 
     @Test
     fun testTwoVerticesAfterOneLine() {
-        checkPixelColor(colorStringTransparent, BitmapLocationProvider.MIDDLE)
-
         touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_MIDDLE)
         touchAt(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_MIDDLE)
 
@@ -455,16 +454,110 @@ class DynamicLineToolIntegrationTest {
 
     @Test
     fun testTwoVerticesAfterOneLineWhichIsAdjusted() {
-        checkPixelColor(colorStringTransparent, BitmapLocationProvider.MIDDLE)
-
         touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_MIDDLE)
         touchAt(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_MIDDLE)
         touchAt(DrawingSurfaceLocationProvider.BOTTOM_MIDDLE)
         touchAt(DrawingSurfaceLocationProvider.BOTTOM_RIGHT_CLOSE_CENTER)
-        touchAt(DrawingSurfaceLocationProvider.TOP_MIDDLE)
+
 
         val currentTool = launchActivityRule.activity.defaultToolController.currentTool as DynamicLineTool
         Assert.assertEquals(2, currentTool.vertexStack.size)
+    }
+
+    @Test
+    fun testThreeVerticesAfterTwoLines() {
+        touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT)
+        touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_RIGHT)
+
+        TopBarViewInteraction.onTopBarView().performClickPlus()
+
+        touchAt(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_MIDDLE)
+
+        val currentTool = launchActivityRule.activity.defaultToolController.currentTool as DynamicLineTool
+        Assert.assertEquals(3, currentTool.vertexStack.size)
+    }
+
+    @Test
+    fun testThreeVerticesAfterTwoLineWhichIsAdjusted() {
+        touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT)
+        touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_RIGHT)
+
+        TopBarViewInteraction.onTopBarView().performClickPlus()
+
+        touchAt(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_MIDDLE)
+        touchAt(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_LEFT)
+        touchAt(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_RIGHT)
+
+        val currentTool = launchActivityRule.activity.defaultToolController.currentTool as DynamicLineTool
+        Assert.assertEquals(3, currentTool.vertexStack.size)
+    }
+
+    @Test
+    fun testMoveSourceVertex() {
+        ToolPropertiesInteraction.onToolProperties().setColor(Color.BLACK)
+
+        touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT)
+        touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_RIGHT)
+
+        checkPixelColor(colorStringTransparent, BitmapLocationProvider.HALFWAY_RIGHT_MIDDLE)
+
+        swipe(DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT, DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_RIGHT)
+
+        checkPixelColor(colorStringBlack, BitmapLocationProvider.HALFWAY_RIGHT_MIDDLE)
+    }
+
+    @Test
+    fun testMoveEndVertex() {
+        ToolPropertiesInteraction.onToolProperties().setColor(Color.BLACK)
+
+        touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT)
+        touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_RIGHT)
+
+        checkPixelColor(colorStringTransparent, BitmapLocationProvider.HALFWAY_LEFT_MIDDLE)
+
+        swipe(DrawingSurfaceLocationProvider.HALFWAY_TOP_RIGHT, DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_LEFT)
+
+        checkPixelColor(colorStringBlack, BitmapLocationProvider.HALFWAY_LEFT_MIDDLE)
+    }
+
+    @Test
+    fun testMoveMiddleVertex() {
+        ToolPropertiesInteraction.onToolProperties().setColor(Color.BLACK)
+
+        touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT)
+        touchAt(DrawingSurfaceLocationProvider.HALFWAY_LEFT_MIDDLE)
+
+        TopBarViewInteraction.onTopBarView().performClickPlus()
+
+        touchAt(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_LEFT)
+
+        checkPixelColor(colorStringTransparent, BitmapLocationProvider.HALFWAY_TOP_MIDDLE)
+
+        swipe(DrawingSurfaceLocationProvider.HALFWAY_LEFT_MIDDLE, DrawingSurfaceLocationProvider.HALFWAY_TOP_RIGHT)
+
+        checkPixelColor(colorStringBlack, BitmapLocationProvider.HALFWAY_TOP_MIDDLE)
+    }
+
+    @Test
+    fun testMoveAllThreeVertices() {
+        ToolPropertiesInteraction.onToolProperties().setColor(Color.BLACK)
+
+        touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT)
+        touchAt(DrawingSurfaceLocationProvider.HALFWAY_LEFT_MIDDLE)
+
+        TopBarViewInteraction.onTopBarView().performClickPlus()
+
+        touchAt(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_LEFT)
+
+        checkPixelColor(colorStringTransparent, BitmapLocationProvider.HALFWAY_RIGHT_MIDDLE)
+        checkPixelColor(colorStringTransparent, BitmapLocationProvider.HALFWAY_BOTTOM_RIGHT)
+
+        swipe(DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT, DrawingSurfaceLocationProvider.HALFWAY_TOP_RIGHT)
+        swipe(DrawingSurfaceLocationProvider.HALFWAY_LEFT_MIDDLE, DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE)
+        swipe(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_LEFT, DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_RIGHT)
+
+        checkPixelColor(colorStringBlack, BitmapLocationProvider.HALFWAY_RIGHT_MIDDLE)
+        checkPixelColor(colorStringBlack, BitmapLocationProvider.HALFWAY_BOTTOM_RIGHT)
     }
 
     private fun checkPixelColor(colorString: String, position: BitmapLocationProvider) {
@@ -475,5 +568,21 @@ class DynamicLineToolIntegrationTest {
     private fun touchAt(position: DrawingSurfaceLocationProvider) {
         DrawingSurfaceInteraction.onDrawingSurfaceView()
             .perform(UiInteractions.touchAt(position))
+    }
+
+    private fun touchAt(coordinates: PointF) {
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
+            .perform(UiInteractions.touchAt(coordinates.x, coordinates.y))
+    }
+
+    private fun swipe(from: DrawingSurfaceLocationProvider, to: DrawingSurfaceLocationProvider) {
+        touchAt(from)
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
+            .perform(UiInteractions.swipe(to, from))
+    }
+
+    private fun swipe(from: PointF, to: PointF) {
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
+            .perform(UiInteractions.swipe(from, to))
     }
 }
