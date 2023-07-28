@@ -23,7 +23,6 @@ package org.catrobat.paintroid.test.espresso.tools
 
 import android.graphics.Color
 import android.graphics.Paint
-import android.graphics.PointF
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions
@@ -616,6 +615,202 @@ class DynamicLineToolIntegrationTest {
         Assert.assertEquals(0, currentTool.vertexStack.size)
     }
 
+    @Test
+    fun testRedoOnceRebuildsVertexStack() {
+        val currentTool = launchActivityRule.activity.defaultToolController.currentTool as DynamicLineTool
+        ToolPropertiesInteraction.onToolProperties().setColor(Color.BLACK)
+
+        touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT)
+        touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_RIGHT)
+
+        Assert.assertEquals(2, currentTool.vertexStack.size)
+
+        TopBarViewInteraction.onTopBarView().performUndo()
+
+        Assert.assertEquals(0, currentTool.vertexStack.size)
+
+        TopBarViewInteraction.onTopBarView().performRedo()
+
+        Assert.assertEquals(2, currentTool.vertexStack.size)
+    }
+
+    @Test
+    fun testRedoTwiceRebuildsVertexStack() {
+        val currentTool = launchActivityRule.activity.defaultToolController.currentTool as DynamicLineTool
+        ToolPropertiesInteraction.onToolProperties().setColor(Color.BLACK)
+
+        touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT)
+        touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_RIGHT)
+        TopBarViewInteraction.onTopBarView().performClickPlus()
+        touchAt(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_RIGHT)
+
+        Assert.assertEquals(3, currentTool.vertexStack.size)
+
+        performUndo(2)
+
+        Assert.assertEquals(0, currentTool.vertexStack.size)
+
+        performRedo(2)
+
+        Assert.assertEquals(3, currentTool.vertexStack.size)
+    }
+
+    @Test
+    fun testUndoAfterSecondLineSequenceRebuildsOnlySecondVertexStack() {
+        val currentTool = launchActivityRule.activity.defaultToolController.currentTool as DynamicLineTool
+        ToolPropertiesInteraction.onToolProperties().setColor(Color.BLACK)
+
+        touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT)
+        touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_RIGHT)
+        TopBarViewInteraction.onTopBarView().performClickPlus()
+        touchAt(DrawingSurfaceLocationProvider.MIDDLE)
+
+        Assert.assertEquals(3, currentTool.vertexStack.size)
+
+        TopBarViewInteraction.onTopBarView().performClickCheckmark()
+
+        Assert.assertEquals(0, currentTool.vertexStack.size)
+
+        touchAt(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_LEFT)
+        touchAt(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_RIGHT)
+
+        Assert.assertEquals(2, currentTool.vertexStack.size)
+
+        TopBarViewInteraction.onTopBarView().performClickCheckmark()
+
+        Assert.assertEquals(0, currentTool.vertexStack.size)
+
+        TopBarViewInteraction.onTopBarView().performUndo()
+
+        Assert.assertEquals(2, currentTool.vertexStack.size)
+    }
+
+    @Test
+    fun testUndoUntilFirstLineSequenceRebuildsOnlyFirstVertexStack() {
+        val currentTool = launchActivityRule.activity.defaultToolController.currentTool as DynamicLineTool
+        ToolPropertiesInteraction.onToolProperties().setColor(Color.BLACK)
+
+        touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT)
+        touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_RIGHT)
+        TopBarViewInteraction.onTopBarView().performClickPlus()
+        touchAt(DrawingSurfaceLocationProvider.MIDDLE)
+
+        Assert.assertEquals(3, currentTool.vertexStack.size)
+
+        TopBarViewInteraction.onTopBarView().performClickCheckmark()
+
+        Assert.assertEquals(0, currentTool.vertexStack.size)
+
+        touchAt(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_LEFT)
+        touchAt(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_RIGHT)
+
+        Assert.assertEquals(2, currentTool.vertexStack.size)
+
+        TopBarViewInteraction.onTopBarView().performClickCheckmark()
+
+        Assert.assertEquals(0, currentTool.vertexStack.size)
+
+        performUndo(3)
+
+        Assert.assertEquals(3, currentTool.vertexStack.size)
+    }
+
+    @Test
+    fun testUndoAndRedoTwoPathSequences() {
+        val currentTool = launchActivityRule.activity.defaultToolController.currentTool as DynamicLineTool
+        ToolPropertiesInteraction.onToolProperties().setColor(Color.BLACK)
+
+        touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT)
+        touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_RIGHT)
+        TopBarViewInteraction.onTopBarView().performClickPlus()
+        touchAt(DrawingSurfaceLocationProvider.MIDDLE)
+
+        Assert.assertEquals(3, currentTool.vertexStack.size)
+
+        TopBarViewInteraction.onTopBarView().performClickCheckmark()
+        Assert.assertEquals(0, currentTool.vertexStack.size)
+
+        touchAt(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_LEFT)
+        touchAt(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_RIGHT)
+        TopBarViewInteraction.onTopBarView().performClickPlus()
+        touchAt(DrawingSurfaceLocationProvider.MIDDLE)
+
+        Assert.assertEquals(3, currentTool.vertexStack.size)
+
+        TopBarViewInteraction.onTopBarView().performClickCheckmark()
+        Assert.assertEquals(0, currentTool.vertexStack.size)
+
+        performUndo(6)
+
+        Assert.assertEquals(0, currentTool.vertexStack.size)
+
+        performRedo(2)
+
+        Assert.assertEquals(3, currentTool.vertexStack.size)
+
+        performRedo(2)
+
+        Assert.assertEquals(3, currentTool.vertexStack.size)
+
+        TopBarViewInteraction.onTopBarView().performClickCheckmark()
+
+        Assert.assertEquals(0, currentTool.vertexStack.size)
+    }
+
+    @Test
+    fun testUndoAfterToolChangeSetsDynamicLineToolAndRebuildsVertexStack() {
+        touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT)
+        touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_RIGHT)
+
+        TopBarViewInteraction.onTopBarView().performClickCheckmark()
+
+        ToolBarViewInteraction.onToolBarView()
+            .performSelectTool(ToolType.SPRAY)
+        Assert.assertEquals(ToolType.SPRAY, launchActivityRule.activity.defaultToolController.currentTool?.toolType)
+
+        touchAt(DrawingSurfaceLocationProvider.MIDDLE)
+
+        performUndo(2)
+
+        Assert.assertEquals(ToolType.DYNAMICLINE, launchActivityRule.activity.defaultToolController.currentTool?.toolType)
+        val currentTool = launchActivityRule.activity.defaultToolController.currentTool as DynamicLineTool
+        Assert.assertEquals(2, currentTool.vertexStack.size)
+    }
+
+    @Test
+    fun testRedoFromDifferentActiveToolSwitchesToDynamicLineToolAndRebuildsVertexStack() {
+        ToolBarViewInteraction.onToolBarView()
+            .performSelectTool(ToolType.SPRAY)
+        Assert.assertEquals(ToolType.SPRAY, launchActivityRule.activity.defaultToolController.currentTool?.toolType)
+
+        touchAt(DrawingSurfaceLocationProvider.HALFWAY_LEFT_MIDDLE)
+        touchAt(DrawingSurfaceLocationProvider.MIDDLE)
+        touchAt(DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE)
+
+        ToolBarViewInteraction.onToolBarView()
+            .performSelectTool(ToolType.DYNAMICLINE)
+        Assert.assertEquals(ToolType.DYNAMICLINE, launchActivityRule.activity.defaultToolController.currentTool?.toolType)
+
+        TopBarViewInteraction.onTopBarView().performClickCheckmark()
+
+        touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT)
+        touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_RIGHT)
+
+        TopBarViewInteraction.onTopBarView().performClickCheckmark()
+
+        performUndo(5)
+
+        ToolBarViewInteraction.onToolBarView()
+            .performSelectTool(ToolType.SPRAY)
+        Assert.assertEquals(ToolType.SPRAY, launchActivityRule.activity.defaultToolController.currentTool?.toolType)
+
+        performRedo(4)
+
+        Assert.assertEquals(ToolType.DYNAMICLINE, launchActivityRule.activity.defaultToolController.currentTool?.toolType)
+        val currentTool = launchActivityRule.activity.defaultToolController.currentTool as DynamicLineTool
+        Assert.assertEquals(2, currentTool.vertexStack.size)
+    }
+
     private fun checkPixelColor(colorString: String, position: BitmapLocationProvider) {
         DrawingSurfaceInteraction.onDrawingSurfaceView()
             .checkPixelColor(Color.parseColor(colorString), position)
@@ -626,19 +821,21 @@ class DynamicLineToolIntegrationTest {
             .perform(UiInteractions.touchAt(position))
     }
 
-    private fun touchAt(coordinates: PointF) {
-        DrawingSurfaceInteraction.onDrawingSurfaceView()
-            .perform(UiInteractions.touchAt(coordinates.x, coordinates.y))
-    }
-
     private fun swipe(from: DrawingSurfaceLocationProvider, to: DrawingSurfaceLocationProvider) {
         touchAt(from)
         DrawingSurfaceInteraction.onDrawingSurfaceView()
             .perform(UiInteractions.swipe(to, from))
     }
 
-    private fun swipe(from: PointF, to: PointF) {
-        DrawingSurfaceInteraction.onDrawingSurfaceView()
-            .perform(UiInteractions.swipe(from, to))
+    private fun performUndo(times: Int) {
+        repeat(times) {
+            TopBarViewInteraction.onTopBarView().performUndo()
+        }
+    }
+
+    private fun performRedo(times: Int) {
+        repeat(times) {
+            TopBarViewInteraction.onTopBarView().performRedo()
+        }
     }
 }
