@@ -811,6 +811,38 @@ class DynamicLineToolIntegrationTest {
         Assert.assertEquals(2, currentTool.vertexStack.size)
     }
 
+    @Test
+    fun testRedoIsAvailableAfterUndo() {
+        ToolPropertiesInteraction.onToolProperties().setColor(Color.BLACK)
+
+        touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT)
+        touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_RIGHT)
+        TopBarViewInteraction.onTopBarView().performClickPlus()
+        touchAt(DrawingSurfaceLocationProvider.MIDDLE)
+
+        performUndo(1)
+
+        Assert.assertTrue(launchActivityRule.activity.commandManager.isRedoAvailable)
+    }
+
+    @Test
+    fun testRedoIsClearedAfterUndoAndMovingVertex() {
+        ToolPropertiesInteraction.onToolProperties().setColor(Color.BLACK)
+
+        touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT)
+        touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_RIGHT)
+        TopBarViewInteraction.onTopBarView().performClickPlus()
+        touchAt(DrawingSurfaceLocationProvider.MIDDLE)
+
+        performUndo(1)
+
+        Assert.assertTrue(launchActivityRule.activity.commandManager.isRedoAvailable)
+
+        swipe(DrawingSurfaceLocationProvider.HALFWAY_TOP_RIGHT, DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_RIGHT)
+
+        Assert.assertFalse(launchActivityRule.activity.commandManager.isRedoAvailable)
+    }
+
     private fun checkPixelColor(colorString: String, position: BitmapLocationProvider) {
         DrawingSurfaceInteraction.onDrawingSurfaceView()
             .checkPixelColor(Color.parseColor(colorString), position)

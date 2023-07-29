@@ -36,7 +36,6 @@ import org.catrobat.paintroid.contract.LayerContracts
 import org.catrobat.paintroid.tools.drawable.ShapeDrawable
 import org.catrobat.paintroid.tools.helper.JavaFillAlgorithmFactory
 import org.catrobat.paintroid.tools.helper.toPoint
-import org.catrobat.paintroid.command.implementation.PathSequenceCommand.Companion.PathSequence
 
 class DefaultCommandFactory : CommandFactory {
     private val commonFactory = CommonFactory()
@@ -197,9 +196,6 @@ class DefaultCommandFactory : CommandFactory {
             bitmap,
             pathBitmap
         )
-
-    override fun createPathSequenceCommand(position: PathSequence): Command =
-        PathSequenceCommand(position)
 
     override fun createSprayCommand(sprayedPoints: FloatArray, paint: Paint): Command =
         SprayCommand(sprayedPoints, paint)
