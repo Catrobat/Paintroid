@@ -204,6 +204,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         var projectUri: String? = null
         var projectImagePreviewUri: String? = null
         var downloadManagerIdRemoved: Boolean = true
+        const val DOWNLOAD_MANAGER_ID_DELAY = 100L
     }
 
     override val presenter: MainActivityContracts.Presenter
@@ -445,7 +446,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
                     if (VERSION.SDK_INT <= Build.VERSION_CODES.M) {
                         while (downloadManagerIdRemoved) {
                             runBlocking {
-                                delay(100)
+                                delay(DOWNLOAD_MANAGER_ID_DELAY)
                             }
                         }
                     }
