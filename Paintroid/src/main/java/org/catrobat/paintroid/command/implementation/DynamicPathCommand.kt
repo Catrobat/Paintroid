@@ -27,7 +27,6 @@ import androidx.annotation.ColorInt
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.command.Command
 import org.catrobat.paintroid.contract.LayerContracts
-import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.implementation.DynamicLineTool
 import java.util.Deque
 

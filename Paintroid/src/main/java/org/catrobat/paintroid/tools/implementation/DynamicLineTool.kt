@@ -275,7 +275,7 @@ class DynamicLineTool(
         }
     }
 
-    fun getToolPaintColor (): Int = toolPaint.color
+    fun getToolPaintColor(): Int = toolPaint.color
 
     override fun changePaintColor(color: Int) {
         super.changePaintColor(color)
