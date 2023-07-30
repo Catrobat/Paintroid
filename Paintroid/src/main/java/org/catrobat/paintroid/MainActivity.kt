@@ -54,6 +54,7 @@ import com.google.android.material.navigation.NavigationView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.launch
 import org.catrobat.paintroid.LandingPageActivity.Companion.PROJECT_ACTION
 import org.catrobat.paintroid.colorpicker.ColorHistory
@@ -202,6 +203,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         var projectName: String? = null
         var projectUri: String? = null
         var projectImagePreviewUri: String? = null
+        var downloadManagerIdRemoved: Boolean = true
     }
 
     override val presenter: MainActivityContracts.Presenter
@@ -435,10 +437,18 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
                         FileIO.checkFileExists(FileIO.FileType.CATROBAT,
                             it, this.contentResolver)
                     } == true) {
+                    downloadManagerIdRemoved = true
                     FileIO.filename = projectName!!.removeSuffix(".$CATROBAT_IMAGE_ENDING")
                     FileIO.storeImageUri = Uri.parse(projectUri)
                     FileIO.storeImagePreviewUri = Uri.parse(projectImagePreviewUri)
                     presenterMain.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_PROJECT, false)
+                    if (VERSION.SDK_INT <= Build.VERSION_CODES.M) {
+                        while (downloadManagerIdRemoved) {
+                            runBlocking {
+                                delay(100)
+                            }
+                        }
+                    }
                     presenterMain.finishActivity()
                     projectName = null
                 } else {
