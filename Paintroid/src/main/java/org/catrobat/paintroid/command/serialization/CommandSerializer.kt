@@ -87,6 +87,7 @@ open class CommandSerializer(private val activityContext: Context, private val c
     companion object {
         const val CURRENT_IMAGE_VERSION = 2
         const val MAGIC_VALUE = "CATROBAT"
+        const val DOWNLOAD_MANAGER_DELAY_TIME = 1000L
     }
 
     val kryo = Kryo()
@@ -217,7 +218,7 @@ open class CommandSerializer(private val activityContext: Context, private val c
                 runBlocking {
                     downloadManager.remove(id)
                     if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
-                        delay(1000)
+                        delay(DOWNLOAD_MANAGER_DELAY_TIME)
                         downloadManagerIdRemoved = false
                     }
                 }
