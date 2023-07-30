@@ -124,16 +124,17 @@ class DefaultCommandManager(
         }
     }
 
-    private fun handleUndoForDynamicLineTool(command: Command?): Boolean {
+    private fun handleUndoForDynamicLineTool(command: DynamicPathCommand): Boolean {
         if (mainActivity == null) return false
         var currentTool = mainActivity.defaultToolController.currentTool
         if (currentTool is DynamicLineTool && currentTool.vertexStack.isNotEmpty()) {
             currentTool.updateVertexStackAfterUndo()
+            currentTool.setToolPaint(command)
             return false
         }
         undoCommandList.addFirst(command)
         val vertexStackCommands: Deque<DynamicPathCommand> = createDynamicPathsSequence()
-        (command as DynamicPathCommand).setupVertexStackAfterUndo(mainActivity, vertexStackCommands)
+        command.setupVertexStackAfterUndo(mainActivity, vertexStackCommands)
         return true
     }
 
@@ -279,7 +280,9 @@ class DefaultCommandManager(
             if (command.isSourcePath) {
                 (currentTool as DynamicLineTool).clear()
             }
-            (currentTool as DynamicLineTool).updateVertexStackAfterRedo(command)
+            currentTool as DynamicLineTool
+            currentTool.updateVertexStackAfterRedo(command)
+            currentTool.setToolPaint(command) // here
         } else if (currentTool is DynamicLineTool) {
             currentTool.clear()
         }

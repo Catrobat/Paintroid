@@ -602,7 +602,9 @@ open class MainActivityPresenter(
             view.hideKeyboard()
         } else {
             setBottomNavigationColor(Color.BLACK)
-            if (toolController.currentTool is LineTool) {
+            if (toolController.currentTool is DynamicLineTool) {
+                commandManager.undo()
+            } else if (toolController.currentTool is LineTool) {
                 (toolController.currentTool as LineTool).undoChangePaintColor(Color.BLACK)
             } else {
                 if (toolController.currentTool is ClippingTool) {
@@ -805,6 +807,14 @@ open class MainActivityPresenter(
         }
     }
 
+    override fun switchToDynamicLineTool() {
+        if (toolController.toolType == ToolType.DYNAMICLINE) return
+        idlingResource.increment()
+//        bottomBarViewHolder.hide()
+        checkForImplicitToolApplication()
+        switchTool(ToolType.DYNAMICLINE)
+        idlingResource.decrement()
+    }
     override fun toolClicked(toolType: ToolType) {
         idlingResource.increment()
         bottomBarViewHolder.hide()

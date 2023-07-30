@@ -3,6 +3,7 @@ package org.catrobat.paintroid.tools.implementation
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.PointF
+import android.util.Log
 import android.view.View
 import androidx.test.espresso.idling.CountingIdlingResource
 import org.catrobat.paintroid.command.CommandManager
@@ -89,6 +90,7 @@ class DynamicLineTool(
     override fun toolPositionCoordinates(coordinate: PointF): PointF = coordinate
 
     override fun draw(canvas: Canvas) {
+        Log.e(TAG, "draw")
         drawShape(canvas)
     }
     @Synchronized override fun drawShape(canvas: Canvas) {
@@ -111,6 +113,12 @@ class DynamicLineTool(
         }
         vertexStack.pollLast()
         setLastMovingAndPredecessorVertex()
+    }
+
+    fun setToolPaint(command: DynamicPathCommand) {
+        super.changePaintColor(command.paint.color)
+        super.changePaintStrokeCap(command.paint.strokeCap)
+        super.changePaintStrokeWidth(command.paint.strokeWidth.toInt())
     }
 
     private fun setLastMovingAndPredecessorVertex() {
@@ -204,6 +212,7 @@ class DynamicLineTool(
         var destinationVertex = createAndAddVertex(endPoint, null, command)
         predecessorVertex = sourceVertex
         movingVertex = destinationVertex
+        showPlusButton()
     }
 
     private fun createDestinationCommandAndVertex(coordinate: PointF) {
@@ -266,11 +275,13 @@ class DynamicLineTool(
         }
     }
 
+    fun getToolPaintColor (): Int = toolPaint.color
+
     override fun changePaintColor(color: Int) {
         super.changePaintColor(color)
         if (vertexStack.isEmpty()) return
         vertexStack.last.ingoingPathCommand?.setPaintColor(toolPaint.color)
-        commandManager.executeCommand(vertexStack.last.ingoingPathCommand)
+        commandManager.executeAllCommands()
         brushToolOptionsView.invalidate()
     }
 
