@@ -24,7 +24,7 @@ Let's start to set up the working environment using the instructions in our  [Wi
 # Resources and links #
 * [Google Play Store Download](https://play.google.com/store/apps/details?id=org.catrobat.paintroid)
 * [F-Droid Download](https://f-droid.org/packages/org.catrobat.paintroid/)
-* [Frequently Asked Questions](https://github.com/Catrobat/Catroid/wiki/Frequently-Asked-Questions)
+* [Frequently Asked Questions](https://github.com/Catrobat/Catroid/wiki/Frequently-Asked-Questions-(Developers))
 * [Credits](http://developer.catrobat.org/credits)
 * [Statistics on OpenHub](https://www.openhub.net/p/catrobat/)
 * [Twitter](http://twitter.com/Catroid)
