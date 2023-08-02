@@ -856,7 +856,8 @@ class DynamicLineToolIntegrationTest {
     private fun swipe(from: DrawingSurfaceLocationProvider, to: DrawingSurfaceLocationProvider) {
         touchAt(from)
         DrawingSurfaceInteraction.onDrawingSurfaceView()
-            .perform(UiInteractions.swipe(to, from))
+            .perform(UiInteractions.swipe(from, to))
+        touchAt(to)
     }
 
     private fun performUndo(times: Int) {
