@@ -58,7 +58,6 @@ import org.junit.runner.RunWith
 class DynamicLineToolIntegrationTest {
 
     private val colorStringIndex0 = "#FF0074CD"
-//    private val colorStringIndex1 = "#FF00B4F1"
     private val colorStringIndex2 = "#FF078707"
     private val colorStringBlack = "#FF000000"
     private val colorStringTransparent = "#00000000"
