@@ -601,12 +601,13 @@ open class MainActivityPresenter(
         if (view.isKeyboardShown) {
             view.hideKeyboard()
         } else {
-            setBottomNavigationColor(Color.BLACK)
             if (toolController.currentTool is DynamicLineTool) {
                 commandManager.undo()
             } else if (toolController.currentTool is LineTool) {
+                setBottomNavigationColor(Color.BLACK)
                 (toolController.currentTool as LineTool).undoChangePaintColor(Color.BLACK)
             } else {
+                setBottomNavigationColor(Color.BLACK)
                 if (toolController.currentTool is ClippingTool) {
                     val clippingTool = toolController.currentTool as ClippingTool
                     clippingToolPaint = clippingTool.drawPaint

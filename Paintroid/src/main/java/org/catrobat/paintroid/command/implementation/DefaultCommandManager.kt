@@ -130,6 +130,7 @@ class DefaultCommandManager(
         if (currentTool is DynamicLineTool && currentTool.vertexStack.isNotEmpty()) {
             currentTool.updateVertexStackAfterUndo()
             currentTool.setToolPaint(command)
+            mainActivity.presenter.setBottomNavigationColor(command.paint.color)
             return false
         }
         undoCommandList.addFirst(command)
@@ -283,6 +284,7 @@ class DefaultCommandManager(
             currentTool as DynamicLineTool
             currentTool.updateVertexStackAfterRedo(command)
             currentTool.setToolPaint(command) // here
+            mainActivity.presenter.setBottomNavigationColor(command.paint.color)
         } else if (currentTool is DynamicLineTool) {
             currentTool.clear()
         }
