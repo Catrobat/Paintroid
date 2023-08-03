@@ -73,6 +73,7 @@ class DynamicPathCommand(var paint: Paint, path: Path, startPoint: PointF, endPo
     fun setupVertexStackAfterUndo(mainActivity: MainActivity, dynamicPathCommands: Deque<DynamicPathCommand>) {
         mainActivity.runOnUiThread {
             mainActivity.presenter.switchToDynamicLineTool()
+            if (mainActivity.defaultToolController.currentTool !is DynamicLineTool) return@runOnUiThread
             var tool = mainActivity.defaultToolController.currentTool as DynamicLineTool
             tool.createSourceAndDestinationVertices(
                 dynamicPathCommands.first.startPoint,

@@ -39,6 +39,12 @@ class DynamicLineTool(
     idlingResource,
     commandManager
 ) {
+    private var ingoingStartCoordinate: PointF? = null
+    private var ingoingEndCoordinate: PointF? = null
+    private var ingoingGhostPathColor: Int = 0
+    private var outgoingGhostPathColor: Int = 0
+    private var outgoingStartCoordinate: PointF? = null
+    private var outgoingEndCoordinate: PointF? = null
     override var toolType: ToolType = ToolType.DYNAMICLINE
     var vertexStack: Deque<Vertex> = ArrayDeque()
     var movingVertex: Vertex? = null
@@ -91,7 +97,22 @@ class DynamicLineTool(
 
     override fun draw(canvas: Canvas) {
         Log.e(TAG, "draw")
+        drawGhostPath(ingoingStartCoordinate, ingoingEndCoordinate, canvas, workspace, ingoingGhostPathColor)
+        drawGhostPath(outgoingStartCoordinate, outgoingEndCoordinate, canvas, workspace, outgoingGhostPathColor)
         drawShape(canvas)
+    }
+
+    private fun drawGhostPath(startCoordinate: PointF?, endCoordinate: PointF?, canvas: Canvas, workspace: Workspace, color: Int) {
+        startCoordinate?.let { start ->
+            endCoordinate?.let { end ->
+                canvas.run {
+                    save()
+                    clipRect(0, 0, workspace.width, workspace.height)
+                    drawLine(start.x, start.y, end.x, end.y, Vertex.getEdgePaint(color))
+                    restore()
+                }
+            }
+        }
     }
     @Synchronized override fun drawShape(canvas: Canvas) {
         vertexStack.forEach { vertex ->
@@ -99,7 +120,7 @@ class DynamicLineTool(
                 var cx = vertex.vertexCenter?.x
                 var cy = vertex.vertexCenter?.y
                 if (cx != null && cy != null) {
-                    canvas.drawCircle(cx, cy, Vertex.VERTEX_RADIUS, Vertex.getPaint())
+                    canvas.drawCircle(cx, cy, Vertex.VERTEX_RADIUS, Vertex.getVertexPaint())
                 }
             }
         }
@@ -165,7 +186,7 @@ class DynamicLineTool(
             addNewPath = false
             return true
         }
-        updateMovingVertices(coordinate)
+//        updateMovingVertices(coordinate)
         clearRedoIfPathWasAdjusted()
 
         return true
@@ -184,19 +205,27 @@ class DynamicLineTool(
 
     override fun handleMove(coordinate: PointF?): Boolean {
         coordinate ?: return false
-        hideToolOptions()
-        super.handleMove(coordinate)
-        updateMovingVertices(coordinate)
+        updateMovingGhostVertices(coordinate)
         clearRedoIfPathWasAdjusted()
         return true
     }
 
     override fun handleUp(coordinate: PointF?): Boolean {
         coordinate ?: return false
-        super.handleUp(coordinate)
-        showToolOptions()
+        updateMovingVertices(coordinate)
+        commandManager.executeAllCommands()
+        resetGhostPathCoordinates()
         showPlusButton()
         return true
+    }
+
+    private fun resetGhostPathCoordinates() {
+        ingoingStartCoordinate = null
+        ingoingEndCoordinate = null
+        ingoingGhostPathColor = 0
+        outgoingStartCoordinate = null
+        outgoingEndCoordinate = null
+        outgoingGhostPathColor = 0
     }
 
     private fun createSourceAndDestinationCommandAndVertices(coordinate: PointF) {
@@ -217,7 +246,8 @@ class DynamicLineTool(
 
     private fun createDestinationCommandAndVertex(coordinate: PointF) {
         var startPoint = vertexStack.last.vertexCenter?.let { center -> copyPointF(center) }
-        var endPoint = copyPointF(coordinate)
+        var endPoint = vertexStack.last.vertexCenter?.let { center -> copyPointF(center) }
+        // use only one coordinate
         var command = createPathCommand(startPoint, endPoint)
         createDestinationVertex(endPoint, command)
     }
@@ -258,6 +288,22 @@ class DynamicLineTool(
         return false
     }
 
+    private fun updateMovingGhostVertices(coordinate: PointF) {
+        if (movingVertex != null) {
+            movingVertex?.updateVertexCenter(copyPointF(coordinate))
+            if (movingVertex?.ingoingPathCommand != null) {
+                ingoingStartCoordinate = predecessorVertex?.vertexCenter?.let { center -> copyPointF(center) }
+                ingoingEndCoordinate = copyPointF(coordinate)
+                ingoingGhostPathColor = movingVertex?.ingoingPathCommand!!.paint.color
+            }
+            if (movingVertex?.outgoingPathCommand != null) {
+                outgoingStartCoordinate = copyPointF(coordinate)
+                outgoingEndCoordinate = successorVertex?.vertexCenter?.let { center -> copyPointF(center) }
+                outgoingGhostPathColor = movingVertex?.outgoingPathCommand!!.paint.color
+            }
+        }
+    }
+
     private fun updateMovingVertices(coordinate: PointF) {
         if (movingVertex != null) {
             movingVertex?.updateVertexCenter(copyPointF(coordinate))
@@ -271,11 +317,8 @@ class DynamicLineTool(
                 var endPoint = successorVertex?.vertexCenter?.let { center -> copyPointF(center) }
                 updatePathCommand(startPoint, endPoint, movingVertex?.outgoingPathCommand)
             }
-            commandManager.executeAllCommands()
         }
     }
-
-    fun getToolPaintColor(): Int = toolPaint.color
 
     override fun changePaintColor(color: Int) {
         super.changePaintColor(color)
