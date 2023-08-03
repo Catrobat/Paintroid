@@ -906,7 +906,6 @@ class DynamicLineToolIntegrationTest {
         activity.commandManager.executeAllCommands()
     }
 
-
     private fun newImage() {
         TopBarViewInteraction.onTopBarView().performOpenMoreOptions()
         Espresso.onView(ViewMatchers.withText(R.string.menu_new_image)).perform(ViewActions.click())
