@@ -105,6 +105,10 @@ class MainActivityNavigator(
         @SuppressLint("AnnotateVersionCheck")
         get() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
 
+    override val isSdkAboveOrEqualT: Boolean
+        @SuppressLint("AnnotateVersionCheck")
+        get() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+
     private var commandFactory: CommandFactory = DefaultCommandFactory()
 
     private fun showFragment(
@@ -190,7 +194,7 @@ class MainActivityNavigator(
             val queryCursor = mainActivity.contentResolver.query(uri, null, null, null, null)
             queryCursor.use { cursor ->
                 if (cursor != null && cursor.moveToFirst()) {
-                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
+                    result = cursor.getString(cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME))
                 }
             }
         }

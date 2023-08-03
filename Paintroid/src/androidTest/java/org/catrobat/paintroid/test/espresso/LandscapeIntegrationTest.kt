@@ -33,6 +33,7 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.scrollTo
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.idling.CountingIdlingResource
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withClassName
 import androidx.test.espresso.matcher.ViewMatchers.withId
@@ -44,6 +45,7 @@ import org.catrobat.paintroid.R
 import org.catrobat.paintroid.colorpicker.HSVColorPickerView
 import org.catrobat.paintroid.colorpicker.PresetSelectorView
 import org.catrobat.paintroid.colorpicker.RgbSelectorView
+import org.catrobat.paintroid.test.espresso.util.UiInteractions
 import org.catrobat.paintroid.test.espresso.util.UiMatcher.withBackground
 import org.catrobat.paintroid.test.espresso.util.UiMatcher.withBackgroundColor
 import org.catrobat.paintroid.test.espresso.util.wrappers.BottomNavigationViewInteraction.Companion.onBottomNavigationView
@@ -110,13 +112,11 @@ class LandscapeIntegrationTest {
             onToolBarView()
                 .performSelectTool(toolType)
             if (toolOptionsViewController?.isVisible?.not() == true) {
-                onToolBarView()
-                    .performClickSelectedToolButton()
+                onToolBarView().performClickSelectedToolButton()
             }
-            onBottomNavigationView()
-                .onCurrentClicked()
-            onView(withId(R.id.pocketpaint_layout_tool_specific_options))
-                .check(matches(not(isDisplayed())))
+            onBottomNavigationView().onCurrentClicked()
+            onView(ViewMatchers.isRoot()).perform(UiInteractions.waitFor(5000))
+            onView(withId(R.id.pocketpaint_layout_tool_specific_options)).check(matches(not(isDisplayed())))
         }
     }
 
@@ -416,10 +416,9 @@ class LandscapeIntegrationTest {
                 toolType == ToolType.LAYER ||
                 !toolType.hasOptions()
             if (tools) { continue }
-            onToolBarView()
-                .performSelectTool(toolType)
-            onBottomNavigationView()
-                .checkShowsCurrentTool(toolType)
+            onToolBarView().performSelectTool(toolType)
+            onView(ViewMatchers.isRoot()).perform(UiInteractions.waitFor(5000))
+            onBottomNavigationView().checkShowsCurrentTool(toolType)
         }
     }
 

@@ -19,6 +19,7 @@
 package org.catrobat.paintroid.presenter
 
 import android.Manifest
+import android.annotation.TargetApi
 import android.app.Activity
 import android.content.ContentResolver
 import android.content.ContentUris
@@ -386,7 +387,22 @@ open class MainActivityPresenter(
             )
             return
         }
-        if (navigator.isSdkAboveOrEqualQ) {
+
+        @TargetApi(Build.VERSION_CODES.TIRAMISU)
+        if (navigator.isSdkAboveOrEqualT) {
+            if (!navigator.doIHavePermission(Manifest.permission.READ_MEDIA_IMAGES)) {
+                navigator.askForPermission(
+                        arrayOf(Manifest.permission.READ_MEDIA_IMAGES),
+                        requestCode
+                )
+            } else {
+                handleRequestPermissionsResult(
+                        requestCode,
+                        arrayOf(Manifest.permission.READ_MEDIA_IMAGES),
+                        intArrayOf(PackageManager.PERMISSION_GRANTED)
+                )
+            }
+        } else if (navigator.isSdkAboveOrEqualQ) {
             if (!navigator.doIHavePermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
                 navigator.askForPermission(
                     arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
@@ -472,7 +488,9 @@ open class MainActivityPresenter(
         permissions: Array<String>,
         grantResults: IntArray
     ) {
-        if (permissions.size == 1 && (permissions[0] == Manifest.permission.READ_EXTERNAL_STORAGE || permissions[0] == Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+        if (permissions.size == 1 && (permissions[0] == Manifest.permission.READ_EXTERNAL_STORAGE ||
+                        permissions[0] == Manifest.permission.WRITE_EXTERNAL_STORAGE ||
+                        permissions[0] == Manifest.permission.READ_MEDIA_IMAGES)) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 when (requestCode) {
                     PERMISSION_EXTERNAL_STORAGE_SAVE -> {
@@ -1052,7 +1070,7 @@ open class MainActivityPresenter(
             val cursor = fileActivity?.contentResolver?.query(uri, null, null, null, null)
             cursor?.use {
                 if (it.moveToFirst()) {
-                    result = it.getString(it.getColumnIndex(OpenableColumns.DISPLAY_NAME))
+                    result = it.getString(it.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME))
                 }
             }
         }
