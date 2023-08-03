@@ -364,7 +364,7 @@ class DynamicLineTool(
         }
     }
 
-    private fun hideToolOptions() {
+    fun hideToolOptions() {
         if (toolOptionsViewController.isVisible) {
             if (brushToolOptionsView.getTopToolOptions().visibility == View.VISIBLE) {
                 toolOptionsViewController.slideUp(
@@ -384,7 +384,7 @@ class DynamicLineTool(
         }
     }
 
-    private fun showToolOptions() {
+    fun showToolOptions() {
         if (!toolOptionsViewController.isVisible) {
             if (brushToolOptionsView.getBottomToolOptions().visibility == View.INVISIBLE) {
                 toolOptionsViewController.slideDown(
