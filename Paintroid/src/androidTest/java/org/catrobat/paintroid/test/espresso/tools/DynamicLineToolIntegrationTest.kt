@@ -23,16 +23,23 @@ package org.catrobat.paintroid.test.espresso.tools
 
 import android.graphics.Color
 import android.graphics.Paint
+import android.net.Uri
+import android.os.Environment
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.idling.CountingIdlingResource
+import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.ActivityTestRule
+import androidx.test.rule.GrantPermissionRule
+import org.catrobat.paintroid.FileIO
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.R
+import org.catrobat.paintroid.command.serialization.CommandSerializer
+import org.catrobat.paintroid.common.CATROBAT_IMAGE_ENDING
 import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider
 import org.catrobat.paintroid.test.espresso.util.EspressoUtils
@@ -47,16 +54,19 @@ import org.catrobat.paintroid.test.utils.TestUtils
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.implementation.DynamicLineTool
 import org.hamcrest.Matchers
+import org.hamcrest.core.AllOf
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.io.File
 
 @RunWith(AndroidJUnit4::class)
 class DynamicLineToolIntegrationTest {
 
+    private val IMAGE_NAME = "fileName"
     private val colorStringIndex0 = "#FF0074CD"
     private val colorStringIndex2 = "#FF078707"
     private val colorStringBlack = "#FF000000"
@@ -67,9 +77,12 @@ class DynamicLineToolIntegrationTest {
     @get:Rule
     var launchActivityRule = ActivityTestRule(MainActivity::class.java)
     private var idlingResource: CountingIdlingResource? = null
+    val grantPermissionRule: GrantPermissionRule = EspressoUtils.grantPermissionRulesVersionCheck()
+    private lateinit var activity: MainActivity
 
     @Before
     fun setUp() {
+        activity = launchActivityRule.activity
         idlingResource = launchActivityRule.activity.idlingResource
         IdlingRegistry.getInstance().register(idlingResource)
         ToolBarViewInteraction.onToolBarView()
@@ -78,7 +91,16 @@ class DynamicLineToolIntegrationTest {
     }
 
     @After
-    fun tearDown() { IdlingRegistry.getInstance().unregister(idlingResource) }
+    fun tearDown() {
+        IdlingRegistry.getInstance().unregister(idlingResource)
+        val imagesDirectory =
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString()
+        val pathToFile = imagesDirectory + File.separator + IMAGE_NAME + "." + CATROBAT_IMAGE_ENDING
+        val imageFile = File(pathToFile)
+        if (imageFile.exists()) {
+            imageFile.delete()
+        }
+    }
 
     @Test
     fun testIfCurrentToolIsShownInBottomNavigation() {
@@ -840,6 +862,79 @@ class DynamicLineToolIntegrationTest {
         swipe(DrawingSurfaceLocationProvider.HALFWAY_TOP_RIGHT, DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_RIGHT)
 
         Assert.assertFalse(launchActivityRule.activity.commandManager.isRedoAvailable)
+    }
+
+    @Test
+    fun testReadCatrobatImageRebuildsVertexStack() {
+        touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT)
+        touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_RIGHT)
+
+        TopBarViewInteraction.onTopBarView().performClickPlus()
+        touchAt(DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE)
+
+        TopBarViewInteraction.onTopBarView().performClickPlus()
+        touchAt(DrawingSurfaceLocationProvider.MIDDLE)
+
+        TopBarViewInteraction.onTopBarView().performClickPlus()
+        touchAt(DrawingSurfaceLocationProvider.HALFWAY_LEFT_MIDDLE)
+
+        TopBarViewInteraction.onTopBarView().performClickPlus()
+        touchAt(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_LEFT)
+
+        TopBarViewInteraction.onTopBarView().performClickPlus()
+        touchAt(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_RIGHT)
+
+        val currentTool = launchActivityRule.activity.defaultToolController.currentTool as DynamicLineTool
+        Assert.assertEquals(7, currentTool.vertexStack.size)
+
+        var uriFile = saveImage()
+
+        newImage()
+        Assert.assertEquals(0, currentTool.vertexStack.size)
+
+        loadImage(uriFile)
+
+        performUndo(1)
+        Assert.assertEquals(7, currentTool.vertexStack.size)
+    }
+
+    private fun loadImage(uriFile: Uri) {
+        var fileContent = CommandSerializer(activity, activity.commandManager, activity.model).readFromFile(uriFile!!)
+        for (command in fileContent.commandModel.commands) {
+            activity.commandManager.addCommand(command)
+        }
+        activity.commandManager.executeAllCommands()
+    }
+
+
+    private fun newImage() {
+        TopBarViewInteraction.onTopBarView().performOpenMoreOptions()
+        Espresso.onView(ViewMatchers.withText(R.string.menu_new_image)).perform(ViewActions.click())
+    }
+
+    private fun saveImage(): Uri {
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
+        TopBarViewInteraction.onTopBarView()
+            .performOpenMoreOptions()
+        Espresso.onView(ViewMatchers.withText(R.string.menu_save_image))
+            .perform(ViewActions.click())
+        Espresso.onView(ViewMatchers.withId(R.id.pocketpaint_save_dialog_spinner))
+            .perform(ViewActions.click())
+        Espresso.onData(
+            AllOf.allOf(
+                Matchers.`is`(Matchers.instanceOf<Any>(String::class.java)),
+                Matchers.`is`(FileIO.FileType.CATROBAT.value)
+            )
+        ).inRoot(RootMatchers.isPlatformPopup()).perform(ViewActions.click())
+        Espresso.onView(ViewMatchers.withId(R.id.pocketpaint_image_name_save_text))
+            .perform(ViewActions.replaceText(IMAGE_NAME))
+        Espresso.onView(ViewMatchers.withText(R.string.save_button_text)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+            .perform(ViewActions.click())
+        var uriFile = launchActivityRule.activity.model.savedPictureUri!!
+        Assert.assertNotNull(uriFile)
+
+        return uriFile
     }
 
     private fun checkPixelColor(colorString: String, position: BitmapLocationProvider) {
