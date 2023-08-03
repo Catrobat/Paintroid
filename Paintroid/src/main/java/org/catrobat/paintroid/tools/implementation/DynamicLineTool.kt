@@ -1,6 +1,7 @@
 package org.catrobat.paintroid.tools.implementation
 
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PointF
 import android.util.Log
@@ -41,8 +42,8 @@ class DynamicLineTool(
 ) {
     private var ingoingStartCoordinate: PointF? = null
     private var ingoingEndCoordinate: PointF? = null
-    private var ingoingGhostPathColor: Int = 0
-    private var outgoingGhostPathColor: Int = 0
+    private var ingoingGhostPathColor: Int = Color.GRAY
+    private var outgoingGhostPathColor: Int = Color.GRAY
     private var outgoingStartCoordinate: PointF? = null
     private var outgoingEndCoordinate: PointF? = null
     override var toolType: ToolType = ToolType.DYNAMICLINE
@@ -182,13 +183,11 @@ class DynamicLineTool(
             return true
         }
         if (addNewPath) {
-            createDestinationCommandAndVertex(coordinate)
+            createDestinationCommandAndVertex()
             addNewPath = false
             return true
         }
-//        updateMovingVertices(coordinate)
         clearRedoIfPathWasAdjusted()
-
         return true
     }
 
@@ -222,10 +221,10 @@ class DynamicLineTool(
     private fun resetGhostPathCoordinates() {
         ingoingStartCoordinate = null
         ingoingEndCoordinate = null
-        ingoingGhostPathColor = 0
+        ingoingGhostPathColor = Color.GRAY
         outgoingStartCoordinate = null
         outgoingEndCoordinate = null
-        outgoingGhostPathColor = 0
+        outgoingGhostPathColor = Color.GRAY
     }
 
     private fun createSourceAndDestinationCommandAndVertices(coordinate: PointF) {
@@ -244,12 +243,10 @@ class DynamicLineTool(
         showPlusButton()
     }
 
-    private fun createDestinationCommandAndVertex(coordinate: PointF) {
+    private fun createDestinationCommandAndVertex() {
         var startPoint = vertexStack.last.vertexCenter?.let { center -> copyPointF(center) }
-        var endPoint = vertexStack.last.vertexCenter?.let { center -> copyPointF(center) }
-        // use only one coordinate
-        var command = createPathCommand(startPoint, endPoint)
-        createDestinationVertex(endPoint, command)
+        var command = createPathCommand(startPoint, startPoint)
+        createDestinationVertex(startPoint, command)
     }
 
     fun createDestinationVertex(endPoint: PointF?, command: DynamicPathCommand?) {
@@ -294,12 +291,12 @@ class DynamicLineTool(
             if (movingVertex?.ingoingPathCommand != null) {
                 ingoingStartCoordinate = predecessorVertex?.vertexCenter?.let { center -> copyPointF(center) }
                 ingoingEndCoordinate = copyPointF(coordinate)
-                ingoingGhostPathColor = movingVertex?.ingoingPathCommand!!.paint.color
+                ingoingGhostPathColor = movingVertex?.ingoingPathCommand?.paint?.color ?: Color.GRAY
             }
             if (movingVertex?.outgoingPathCommand != null) {
                 outgoingStartCoordinate = copyPointF(coordinate)
                 outgoingEndCoordinate = successorVertex?.vertexCenter?.let { center -> copyPointF(center) }
-                outgoingGhostPathColor = movingVertex?.outgoingPathCommand!!.paint.color
+                outgoingGhostPathColor = movingVertex?.outgoingPathCommand?.paint?.color ?: Color.GRAY
             }
         }
     }
