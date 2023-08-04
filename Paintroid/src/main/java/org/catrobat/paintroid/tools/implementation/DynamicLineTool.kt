@@ -206,11 +206,15 @@ class DynamicLineTool(
         coordinate ?: return false
         updateMovingGhostVertices(coordinate)
         clearRedoIfPathWasAdjusted()
+        hideToolOptions()
+        super.handleMove(coordinate)
         return true
     }
 
     override fun handleUp(coordinate: PointF?): Boolean {
         coordinate ?: return false
+        super.handleUp(coordinate)
+        showToolOptions()
         updateMovingVertices(coordinate)
         commandManager.executeAllCommands()
         resetGhostPathCoordinates()
