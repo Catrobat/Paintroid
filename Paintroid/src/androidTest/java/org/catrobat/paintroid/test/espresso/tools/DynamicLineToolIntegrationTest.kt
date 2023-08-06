@@ -68,6 +68,7 @@ class DynamicLineToolIntegrationTest {
 
     private val IMAGE_NAME = "fileName"
     private val colorStringIndex0 = "#FF0074CD"
+    private val colorStringIndex1 = "#FF00B4F1"
     private val colorStringIndex2 = "#FF078707"
     private val colorStringBlack = "#FF000000"
     private val colorStringTransparent = "#00000000"
@@ -389,7 +390,7 @@ class DynamicLineToolIntegrationTest {
     }
 
     @Test
-    fun testColorChangesAndQuittingConnectedLineMode() {
+    fun testColorChangesChangeLineColor() {
         ToolPropertiesInteraction.onToolProperties().setColor(Color.BLACK)
         touchAt(DrawingSurfaceLocationProvider.HALFWAY_LEFT_MIDDLE)
         touchAt(DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE)
@@ -399,26 +400,24 @@ class DynamicLineToolIntegrationTest {
         touchAt(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_RIGHT)
 
         TestUtils.selectColorInDialog(0)
-
         checkPixelColor(colorStringIndex0, BitmapLocationProvider.HALFWAY_BOTTOM_RIGHT)
 
         TestUtils.selectColorInDialog(1)
-        TestUtils.selectColorInDialog(2)
+        checkPixelColor(colorStringIndex1, BitmapLocationProvider.HALFWAY_BOTTOM_RIGHT)
 
+        TestUtils.selectColorInDialog(2)
         checkPixelColor(colorStringIndex2, BitmapLocationProvider.HALFWAY_BOTTOM_RIGHT)
 
         TopBarViewInteraction.onTopBarView().performUndo()
-        TopBarViewInteraction.onTopBarView().performUndo()
 
-        checkPixelColor(colorStringIndex0, BitmapLocationProvider.HALFWAY_BOTTOM_RIGHT)
+        TestUtils.selectColorInDialog(0)
+        checkPixelColor(colorStringIndex0, BitmapLocationProvider.HALFWAY_RIGHT_MIDDLE)
 
-        touchAt(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_LEFT)
-        checkPixelColor(colorStringIndex0, BitmapLocationProvider.HALFWAY_BOTTOM_LEFT)
+        TestUtils.selectColorInDialog(1)
+        checkPixelColor(colorStringIndex1, BitmapLocationProvider.HALFWAY_RIGHT_MIDDLE)
 
-        touchAt(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_RIGHT)
-        checkPixelColor(colorStringIndex0, BitmapLocationProvider.HALFWAY_BOTTOM_RIGHT)
-
-        TopBarViewInteraction.onTopBarView().performClickCheckmark()
+        TestUtils.selectColorInDialog(2)
+        checkPixelColor(colorStringIndex2, BitmapLocationProvider.HALFWAY_RIGHT_MIDDLE)
     }
 
     @Test

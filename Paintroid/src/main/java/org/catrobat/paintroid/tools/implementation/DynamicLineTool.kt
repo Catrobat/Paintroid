@@ -187,7 +187,6 @@ class DynamicLineTool(
             addNewPath = false
             return true
         }
-        clearRedoIfPathWasAdjusted()
         return true
     }
 
@@ -204,19 +203,19 @@ class DynamicLineTool(
 
     override fun handleMove(coordinate: PointF?): Boolean {
         coordinate ?: return false
-        updateMovingGhostVertices(coordinate)
-        clearRedoIfPathWasAdjusted()
         hideToolOptions()
         super.handleMove(coordinate)
+        updateMovingGhostVertices(coordinate)
+        clearRedoIfPathWasAdjusted()
         return true
     }
 
     override fun handleUp(coordinate: PointF?): Boolean {
         coordinate ?: return false
-        super.handleUp(coordinate)
         showToolOptions()
+        super.handleUp(coordinate)
         updateMovingVertices(coordinate)
-        commandManager.executeAllCommands()
+        clearRedoIfPathWasAdjusted()
         resetGhostPathCoordinates()
         showPlusButton()
         return true
@@ -318,6 +317,7 @@ class DynamicLineTool(
                 var endPoint = successorVertex?.vertexCenter?.let { center -> copyPointF(center) }
                 updatePathCommand(startPoint, endPoint, movingVertex?.outgoingPathCommand)
             }
+            commandManager.executeAllCommands()
         }
     }
 
@@ -368,7 +368,7 @@ class DynamicLineTool(
         }
     }
 
-    fun hideToolOptions() {
+    private fun hideToolOptions() {
         if (toolOptionsViewController.isVisible) {
             if (brushToolOptionsView.getTopToolOptions().visibility == View.VISIBLE) {
                 toolOptionsViewController.slideUp(
@@ -388,7 +388,7 @@ class DynamicLineTool(
         }
     }
 
-    fun showToolOptions() {
+    private fun showToolOptions() {
         if (!toolOptionsViewController.isVisible) {
             if (brushToolOptionsView.getBottomToolOptions().visibility == View.INVISIBLE) {
                 toolOptionsViewController.slideDown(
