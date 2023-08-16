@@ -96,8 +96,10 @@ abstract class BaseTool(
         return true
     }
 
-    override fun handleMove(coordinate: PointF?): Boolean {
-        toolOptionsViewController.animateBottomAndTopNavigation(true)
+    override fun handleMove(coordinate: PointF?, shouldAnimate: Boolean): Boolean {
+        if (shouldAnimate) {
+            toolOptionsViewController.animateBottomAndTopNavigation(true)
+        }
         return true
     }
     override val drawPaint

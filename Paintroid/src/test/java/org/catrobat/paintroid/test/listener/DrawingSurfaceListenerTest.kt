@@ -200,6 +200,9 @@ class DrawingSurfaceListenerTest {
         Mockito.verify(currentTool, Mockito.never())?.handleMove(
             ArgumentMatchers.any(
                 PointF::class.java
+            ),
+            ArgumentMatchers.any(
+                Boolean::class.java
             )
         )
     }
@@ -220,6 +223,9 @@ class DrawingSurfaceListenerTest {
         Mockito.verify(currentTool, Mockito.never())?.handleMove(
             ArgumentMatchers.any(
                 PointF::class.java
+            ),
+            ArgumentMatchers.any(
+                Boolean::class.java
             )
         )
         Mockito.verify(callback, Mockito.never())
@@ -255,6 +261,9 @@ class DrawingSurfaceListenerTest {
         Mockito.verify(currentTool, Mockito.never()).handleMove(
             ArgumentMatchers.any(
                 PointF::class.java
+            ),
+            ArgumentMatchers.any(
+                Boolean::class.java
             )
         )
         Mockito.verify(callback, Mockito.never())
@@ -310,6 +319,9 @@ class DrawingSurfaceListenerTest {
         Mockito.verify(currentTool, Mockito.never())?.handleMove(
             ArgumentMatchers.any(
                 PointF::class.java
+            ),
+            ArgumentMatchers.any(
+                Boolean::class.java
             )
         )
         Mockito.verify(callback)?.translatePerspective(10f, -10f)
@@ -346,6 +358,9 @@ class DrawingSurfaceListenerTest {
         Mockito.verify(currentTool, Mockito.never()).handleMove(
             ArgumentMatchers.any(
                 PointF::class.java
+            ),
+            ArgumentMatchers.any(
+                Boolean::class.java
             )
         )
         Mockito.verify(callback)?.translatePerspective(10f, -10f)
@@ -379,6 +394,9 @@ class DrawingSurfaceListenerTest {
         Mockito.verify(currentTool, Mockito.never())?.handleMove(
             ArgumentMatchers.any(
                 PointF::class.java
+            ),
+            ArgumentMatchers.any(
+                Boolean::class.java
             )
         )
         Mockito.verify(callback, Mockito.never())
@@ -420,6 +438,9 @@ class DrawingSurfaceListenerTest {
         Mockito.verify(currentTool, Mockito.never())?.handleMove(
             ArgumentMatchers.any(
                 PointF::class.java
+            ),
+            ArgumentMatchers.any(
+                Boolean::class.java
             )
         )
         Mockito.verify(currentTool, Mockito.never())?.handleUp(
