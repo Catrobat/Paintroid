@@ -141,7 +141,7 @@ object UiInteractions {
                         (r.right + 50).toFloat(),
                         r.centerY().toFloat()
                     )
-                    else -> return@CoordinatesProvider null
+                    else -> throw IllegalArgumentException("Invalid direction: $direction")
                 }
                 null
             }, Press.FINGER, 0, 1)
