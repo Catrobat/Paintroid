@@ -116,7 +116,8 @@ class LandscapeIntegrationTest {
             }
             onBottomNavigationView().onCurrentClicked()
             onView(ViewMatchers.isRoot()).perform(UiInteractions.waitFor(5000))
-            onView(withId(R.id.pocketpaint_layout_tool_specific_options)).check(matches(not(isDisplayed())))
+            onView(withId(R.id.pocketpaint_layout_tool_specific_options))
+                .check(matches(not(isDisplayed())))
         }
     }
 
