@@ -225,7 +225,8 @@ class DefaultZoomWindowController
             tool?.toolType?.name.equals(ToolType.HAND.name) ||
             tool?.toolType?.name.equals(ToolType.FILL.name) ||
             tool?.toolType?.name.equals(ToolType.CLIPBOARD.name) ||
-            tool?.toolType?.name.equals(ToolType.TRANSFORM.name)
+            tool?.toolType?.name.equals(ToolType.TRANSFORM.name) ||
+            tool?.toolType?.name.equals(ToolType.PIXEL.name)
         ) {
             return Constants.NOT_COMPATIBLE
         } else if (

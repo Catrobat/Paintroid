@@ -214,6 +214,16 @@ enum class ToolType(
         R.id.pocketpaint_tools_clipping,
         INVALID_RESOURCE_ID,
         true
+    )
+    ,
+    PIXEL(
+        R.string.button_pixel,
+        R.string.help_content_text,
+        R.drawable.ic_pocketpaint_tool_pixel,
+        EnumSet.of(StateChange.ALL),
+        R.id.pocketpaint_tools_pixel,
+        INVALID_RESOURCE_ID,
+        true
     );
 
     fun shouldReactToStateChange(stateChange: StateChange): Boolean =

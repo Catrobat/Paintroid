@@ -23,6 +23,7 @@
     <string name="button_brush">Brush</string>
     <string name="button_cursor">Cursor</string>
     <string name="button_pipette">Pipette</string>
+    <string name="button_pixel">Pixelation</string>
     <string name="button_undo">Undo</string>
     <string name="button_redo">Redo</string>
     <string name="button_info">Information</string>
@@ -46,6 +47,9 @@
     <string name="gallery">Gallery</string>
     
     <string name="no_connection_sticker">Stickers not available, check your internet connection.</string>
+
+
+    <string name="pixel_layer">Current Layer</string>
 
     <string name="clipboard_tool_paste">Paste</string>
     <string name="clipboard_tool_copy">Copy</string>
@@ -146,8 +150,11 @@
     <string name="transform_height_text">Height</string>
     <string name="transform_auto_crop_text">Auto</string>
     <string name="transform_set_center_text">Set center</string>
-    <string name="pixel">px</string>
 
+
+    <string name="pixel">px</string>
+    <string name="pixelate_ui_name">Pixelate Picture</string>
+    <string name="pixel_ui_color">Amount of Colors</string>
     <string name="clipboard_tool_copy_hint">Tap on copy to copy content</string>
 
     <string name="layers_title">Layers</string>

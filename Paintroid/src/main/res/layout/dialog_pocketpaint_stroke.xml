@@ -52,7 +52,7 @@
                 android:saveEnabled="false"
                 android:textColor="?attr/colorAccent"
                 android:textStyle="bold"
-                tools:ignore="LabelFor"
+                tools:ignore="LabelFor,TouchTargetSizeCheck,TouchTargetSizeCheck"
                 tools:text="100" />
 
         </com.google.android.material.textfield.TextInputLayout>

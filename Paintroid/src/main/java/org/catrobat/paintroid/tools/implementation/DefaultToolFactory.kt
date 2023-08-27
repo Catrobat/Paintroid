@@ -29,14 +29,7 @@ import org.catrobat.paintroid.tools.ToolPaint
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.Workspace
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
-import org.catrobat.paintroid.ui.tools.DefaultBrushToolOptionsView
-import org.catrobat.paintroid.ui.tools.DefaultFillToolOptionsView
-import org.catrobat.paintroid.ui.tools.DefaultShapeToolOptionsView
-import org.catrobat.paintroid.ui.tools.DefaultSprayToolOptionsView
-import org.catrobat.paintroid.ui.tools.DefaultClipboardToolOptionsView
-import org.catrobat.paintroid.ui.tools.DefaultTextToolOptionsView
-import org.catrobat.paintroid.ui.tools.DefaultTransformToolOptionsView
-import org.catrobat.paintroid.ui.tools.DefaultSmudgeToolOptionsView
+import org.catrobat.paintroid.ui.tools.*
 
 private const val DRAW_TIME_INIT: Long = 30_000_000
 
@@ -202,6 +195,16 @@ class DefaultToolFactory(mainActivity: MainActivity) : ToolFactory {
                 commandManager,
                 DRAW_TIME_INIT,
                 mainActivity
+            )
+            ToolType.PIXEL ->PixelTool(
+                DefaultPixelToolOptionsView(toolLayout),
+                contextCallback,
+                toolOptionsViewController,
+                toolPaint,
+                workspace,
+                idlingResource,
+                commandManager,
+                DRAW_TIME_INIT
             )
             else -> BrushTool(
                 DefaultBrushToolOptionsView(toolLayout),
