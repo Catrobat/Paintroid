@@ -12,9 +12,11 @@ interface PixelationToolOptionsView {
     fun setPixelPreviewListener(onPixelationPreviewListener: OnPixelationPreviewListener)
 
     interface OnPixelationPreviewListener{
-        val pixelNumWidth : Int
-        val pixelNumHeight : Int
-        val pixelNumColours : Int
+        fun setPixelWidth(widthPixels : Float)
+
+        fun setPixelHeight(heightPixels : Float)
+
+        fun setNumCollor(collorNum : Float)
     }
 }
 

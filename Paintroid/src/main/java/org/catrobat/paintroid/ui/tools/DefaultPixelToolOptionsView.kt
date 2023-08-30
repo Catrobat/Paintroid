@@ -12,10 +12,15 @@ import android.widget.EditText
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.annotation.VisibleForTesting
+import androidx.appcompat.widget.AppCompatEditText
+import androidx.appcompat.widget.AppCompatSeekBar
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.tools.helper.DefaultNumberRangeFilter
 import org.catrobat.paintroid.tools.options.PixelationToolOptionsView.OnPixelationPreviewListener
 import org.catrobat.paintroid.tools.options.PixelationToolOptionsView
+import java.lang.NumberFormatException
+import java.text.NumberFormat
+import java.text.ParseException
 import java.util.*
 
 @VisibleForTesting
@@ -41,22 +46,86 @@ class DefaultPixelToolOptionsView (rootView : ViewGroup): PixelationToolOptionsV
     private var widthSeekBar : SeekBar
     private var heightSeekBar : SeekBar*/
 
+    private val pixelNumWidth : AppCompatEditText
+    private val pixelNumHeight : AppCompatEditText
+    private var colorNumText : AppCompatEditText
     //private val thisLayer : Chip
     private val currentView = rootView
-    private val pixelChangedListener : OnPixelationPreviewListener? = null
+    private var pixelChangedListener : OnPixelationPreviewListener? = null
+    private var pixelNumWidthWatcher : PixelToolNumTextWatcher
+    private var pixelNumHeightWatcher : PixelToolNumTextWatcher
+    private var colorNumBar : AppCompatSeekBar
+
+    private var callback : PixelationToolOptionsView.OnPixelationPreviewListener?=  null
+
     companion object {
-        private val TAG = DefaultBrushToolOptionsView::class.java.simpleName
+        private val TAG = DefaultPixelToolOptionsView::class.java.simpleName
     }
+
+
 
     init {
         val inflater  = LayoutInflater.from(rootView.context)
         val pixelView = inflater.inflate(R.layout.dialog_pocketpaint_pixel, rootView, true)
-        pixelView.apply {
-
-        }
+        colorNumBar = pixelView.findViewById(R.id.pocketpaint_pixel_color_seekbar)
+        colorNumText = pixelView.findViewById(R.id.pocketpaint_transform_pixel_color_text)
         /*initColorText()
         initWidthText()
         initHeightText()*/
+        pixelNumWidth =pixelView.findViewById(R.id.pocketpaint_pixel_width_value)
+        pixelNumHeight = pixelView.findViewById(R.id.pocketpaint_pixel_height_value)
+        pixelNumWidthWatcher = object : PixelToolNumTextWatcher()
+        {
+            override fun setValue(value: Float) {
+                callback?.setPixelWidth(value)
+            }
+        }
+        pixelNumHeightWatcher = object : PixelToolNumTextWatcher()
+        {
+            override fun setValue(value: Float) {
+                callback?.setPixelHeight(value)
+            }
+        }
+        pixelNumWidth.addTextChangedListener(pixelNumWidthWatcher)
+        pixelNumHeight.addTextChangedListener(pixelNumHeightWatcher)
+      //  pixelNumHeight.setText(MAX_HEIGHT)
+      //  pixelNumWidth.setText(MAX_WIDTH)
+        colorNumText.filters = arrayOf<InputFilter>(DefaultNumberRangeFilter(MIN_COLOR, MAX_COLOR))
+        colorNumText.setText(String.format(Locale.getDefault(), "%d", colorNumBar.progress))
+        colorNumText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) =
+                Unit
+
+            override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) =
+                Unit
+
+            override fun afterTextChanged(editable: Editable) {
+                val percentageTextString = colorNumText.text.toString()
+                val percentageTextInt: Int = try {
+                    percentageTextString.toInt()
+                } catch (exp: NumberFormatException) {
+                    exp.localizedMessage?.let {
+                        Log.d(TAG, it)
+                    }
+                    MIN_COLOR
+                }
+                colorNumBar.progress = percentageTextInt
+                colorNumText.setSelection(colorNumText.length())
+            }
+        })
+        colorNumBar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+                if (progress == 0) {
+                    return
+                }
+                colorNumText.setText(String.format(Locale.getDefault(), "%d", progress))
+            }
+            override fun onStartTrackingTouch(seekBar: SeekBar) = Unit
+
+            override fun onStopTrackingTouch(seekBar: SeekBar) {
+                colorNumText.setText(String.format(Locale.getDefault(), "%d", seekBar.progress))
+            }
+        })
     }
     // handle up probs error
 
@@ -73,67 +142,29 @@ class DefaultPixelToolOptionsView (rootView : ViewGroup): PixelationToolOptionsV
     }
 
     override fun setPixelPreviewListener(onPixelationPreviewListener: PixelationToolOptionsView.OnPixelationPreviewListener) {
-        TODO("Not yet implemented")
-    }
-   /* inner class OnPixelChangedColorSeekBarListener : OnSeekBarChangeListener
-    {
-        override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-            if (progress < MIN_COLOR)
-            {
-                seekBar.progress = MIN_COLOR
-            }
-            if(fromUser)
-            {
-                colorText.setText(String.format(Locale.getDefault(), "%d", seekBar.progress))
-            }
-        }
-
-        override fun onStartTrackingTouch(seekBar: SeekBar)  = Unit
-
-        override fun onStopTrackingTouch(seekBar: SeekBar) {
-            colorText.setText(String.format(Locale.getDefault(), "%d", seekBar.progress))
-        }
-
+        this.pixelChangedListener = onPixelationPreviewListener
     }
 
-    inner class OnPixelChangedWidthSeekBarListener : OnSeekBarChangeListener
-    {
-        override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-            if (progress < MIN_WIDTH)
-            {
-                seekBar.progress = MIN_WIDTH
+    abstract class PixelToolNumTextWatcher : TextWatcher {
+
+        protected abstract fun setValue(value: Float)
+
+        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) = Unit
+
+        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) = Unit
+        override fun afterTextChanged(editable: Editable) {
+            var str = editable.toString()
+            if (str.isEmpty()) {
+                str = MAX_COLOR.toString()
+
             }
-            if(fromUser)
-            {
-                widthText.setText(String.format(Locale.getDefault(), "%d", seekBar.progress))
+            try {
+                val value = NumberFormat.getIntegerInstance().parse(str)?.toFloat()
+                value?.let { setValue(it) }
+            } catch (e: ParseException) {
+                e.message?.let { Log.e(TAG, it) }
             }
         }
-
-        override fun onStartTrackingTouch(seekBar: SeekBar)  = Unit
-
-        override fun onStopTrackingTouch(seekBar: SeekBar) {
-            widthText.setText(String.format(Locale.getDefault(), "%d", seekBar.progress))
-        }
-
     }
-    inner class OnPixelChangedHeightSeekBarListener : OnSeekBarChangeListener
-    {
-        override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-            if (progress < MIN_HEIGHT)
-            {
-                seekBar.progress = MIN_HEIGHT
-            }
-            if(fromUser)
-            {
-                heightText.setText(String.format(Locale.getDefault(), "%d", seekBar.progress))
-            }
-        }
 
-        override fun onStartTrackingTouch(seekBar: SeekBar)  = Unit
-
-        override fun onStopTrackingTouch(seekBar: SeekBar) {
-            heightText.setText(String.format(Locale.getDefault(), "%d", seekBar.progress))
-        }
-
-    }*/
 }

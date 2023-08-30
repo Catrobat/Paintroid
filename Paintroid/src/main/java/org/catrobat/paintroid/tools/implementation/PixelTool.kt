@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.PointF
 import android.widget.Toast
+import androidx.annotation.VisibleForTesting
 import androidx.test.espresso.idling.CountingIdlingResource
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.tools.ContextCallback
@@ -25,13 +26,41 @@ class PixelTool(
 ) : BaseToolWithRectangleShape(contextCallback, toolOptionsViewController,toolPaint, workspace, idlingResource, commandManager)
 {
     private val pixelToolOptionsView: PixelationToolOptionsView
+    @VisibleForTesting
+    @JvmField
+    var numPixelHeight = 30f
 
+    @VisibleForTesting
+    @JvmField
+    var numPixelWidth = 30f
+
+    @VisibleForTesting
+    @JvmField
+    var numCollors = 10f
 
     init {
-        rotationEnabled = true
+        boxHeight = workspace.height.toFloat()
+        boxWidth = workspace.width.toFloat()
+        toolPosition.x = boxWidth / 2f
+        toolPosition.y = boxHeight / 2f
         this.pixelToolOptionsView = pixelToolOptionsView
         setBitmap(Bitmap.createBitmap(boxWidth.toInt(), boxHeight.toInt(), Bitmap.Config.ARGB_8888))
         toolOptionsViewController.showDelayed()
+        pixelToolOptionsView.setPixelPreviewListener(object  : PixelationToolOptionsView.OnPixelationPreviewListener
+        {
+            override fun setPixelWidth(widthPixels: Float) {
+                this@PixelTool.numPixelWidth = widthPixels
+            }
+
+            override fun setPixelHeight(heightPixels: Float) {
+               this@PixelTool.numPixelHeight = heightPixels
+            }
+
+            override fun setNumCollor(collorNum: Float) {
+                this@PixelTool.numCollors = collorNum
+            }
+
+        })
     }
 
 
@@ -48,9 +77,9 @@ class PixelTool(
 
     override fun toolPositionCoordinates(coordinate: PointF): PointF  = coordinate
 
-
     // is the checkmark to run the programm
     override fun onClickOnButton() {
+        // test if the  ui works good then shoudl be enought for the 30.8
     }
 
     override fun resetInternalState() = Unit
