@@ -12,6 +12,7 @@ import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.Workspace
 import org.catrobat.paintroid.tools.options.PixelationToolOptionsView
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
+import org.catrobat.paintroid.ui.tools.DefaultPixelToolOptionsView
 
 class PixelTool(
     pixelToolOptionsViewParam : PixelationToolOptionsView,
@@ -27,15 +28,15 @@ class PixelTool(
     private val pixelToolOptionsView: PixelationToolOptionsView
     @VisibleForTesting
     @JvmField
-    var numPixelHeight = 0f
+    var numPixelHeight = DefaultPixelToolOptionsView.defaultHeight
 
     @VisibleForTesting
     @JvmField
-    var numPixelWidth = 0f
+    var numPixelWidth = DefaultPixelToolOptionsView.defaulWidth
 
     @VisibleForTesting
     @JvmField
-    var numCollors = 0f
+    var numCollors = DefaultPixelToolOptionsView.defaultCollor
 
     init {
         boxHeight = workspace.height.toFloat()

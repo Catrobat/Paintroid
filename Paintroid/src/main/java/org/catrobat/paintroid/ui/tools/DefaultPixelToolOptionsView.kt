@@ -1,5 +1,6 @@
 package org.catrobat.paintroid.ui.tools
 
+import android.annotation.SuppressLint
 import android.text.Editable
 import android.text.InputFilter
 import android.text.TextWatcher
@@ -19,18 +20,20 @@ import org.catrobat.paintroid.tools.options.PixelationToolOptionsView
 import java.lang.NumberFormatException
 import java.text.NumberFormat
 import java.text.ParseException
-import java.util.*
+import java.util.Locale
 
 @VisibleForTesting
+
 private const val MIN_WIDTH = 1
 private const val MAX_WIDTH = 100
 private const val MIN_HEIGHT = 1
 private const val MAX_HEIGHT = 200
 private const val MIN_COLOR = 1
-private const val MAX_COLOR = 30
+private const val MAX_COLOR = 40
 
 // ask PO maybe nee  ded the minumum but the bar is not scalable so far (API 21 is current?)
 
+@SuppressLint("SetTextI18n")
 class DefaultPixelToolOptionsView (rootView : ViewGroup): PixelationToolOptionsView{
 
     private val pixelNumWidth : AppCompatEditText
@@ -46,6 +49,9 @@ class DefaultPixelToolOptionsView (rootView : ViewGroup): PixelationToolOptionsV
 
     companion object {
         private val TAG = DefaultPixelToolOptionsView::class.java.simpleName
+        public val defaulWidth = 40f
+        public val defaultHeight = 60f
+        public val defaultCollor = 20f
     }
 
     init {
@@ -53,11 +59,16 @@ class DefaultPixelToolOptionsView (rootView : ViewGroup): PixelationToolOptionsV
         val pixelView = inflater.inflate(R.layout.dialog_pocketpaint_pixel, rootView, true)
         colorNumBar = pixelView.findViewById(R.id.pocketpaint_pixel_color_seekbar)
         colorNumText = pixelView.findViewById(R.id.pocketpaint_transform_pixel_color_text)
-        /*initColorText()
-        initWidthText()
-        initHeightText()*/
+        colorNumBar.progress = defaultCollor.toInt()
+        colorNumText.setText(String.format(Locale.getDefault(), "%d", colorNumBar.progress))
         pixelNumWidth =pixelView.findViewById(R.id.pocketpaint_pixel_width_value)
         pixelNumHeight = pixelView.findViewById(R.id.pocketpaint_pixel_height_value)
+        pixelNumWidth.setText(defaulWidth.toString())
+        pixelNumHeight.setText(defaultHeight.toString())
+      //  initColorText()
+     //   initWidthText()
+       // initHeightText()
+
         pixelNumWidthWatcher = object : PixelToolNumTextWatcher() {
             override fun setValue(value: Float) {
                 pixelChangedListener?.setPixelWidth(value)
@@ -113,6 +124,8 @@ class DefaultPixelToolOptionsView (rootView : ViewGroup): PixelationToolOptionsV
 
             pixelChangedListener?.setNumCollor(colorNumBar.progress.toFloat())
         }
+
+
     }
     // handle up probs error
 
@@ -131,6 +144,8 @@ class DefaultPixelToolOptionsView (rootView : ViewGroup): PixelationToolOptionsV
     override fun setPixelPreviewListener(onPixelationPreviewListener: PixelationToolOptionsView.OnPixelationPreviewListener) {
         this.pixelChangedListener = onPixelationPreviewListener
     }
+
+
     abstract class PixelToolNumTextWatcher : TextWatcher {
 
         protected abstract fun setValue(value: Float)

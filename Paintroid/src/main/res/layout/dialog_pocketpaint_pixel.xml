@@ -127,8 +127,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:max="40"
-                android:minHeight="30dip"
-                android:progress="40" />
+                android:minHeight="30dip" />
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/pocketpaint_transform_pixel_color_text"
