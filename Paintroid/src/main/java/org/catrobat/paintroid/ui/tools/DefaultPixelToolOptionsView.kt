@@ -1,6 +1,5 @@
 package org.catrobat.paintroid.ui.tools
 
-import android.annotation.SuppressLint
 import android.text.Editable
 import android.text.InputFilter
 import android.text.TextWatcher
@@ -8,7 +7,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.annotation.VisibleForTesting
@@ -18,7 +16,6 @@ import org.catrobat.paintroid.R
 import org.catrobat.paintroid.tools.helper.DefaultNumberRangeFilter
 import org.catrobat.paintroid.tools.options.PixelationToolOptionsView.OnPixelationPreviewListener
 import org.catrobat.paintroid.tools.options.PixelationToolOptionsView
-import org.catrobat.paintroid.tools.options.TransformToolOptionsView
 import java.lang.NumberFormatException
 import java.text.NumberFormat
 import java.text.ParseException
@@ -111,6 +108,11 @@ class DefaultPixelToolOptionsView (rootView : ViewGroup): PixelationToolOptionsV
                 colorNumText.setText(String.format(Locale.getDefault(), "%d", seekBar.progress))
             }
         })
+    pixelView.findViewById<View>(R.id.pocketpaint_pixel_apply_button)
+        .setOnClickListener {
+
+            pixelChangedListener?.setNumCollor(colorNumBar.progress.toFloat())
+        }
     }
     // handle up probs error
 

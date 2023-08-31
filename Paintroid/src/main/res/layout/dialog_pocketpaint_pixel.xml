@@ -150,12 +150,13 @@
                 android:layout_width="16dp" />
 
             <Button
-                android:id="@+id/pocketpaint_transform_apply_resize_btn"
+                android:id="@+id/pocketpaint_pixel_apply_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:clickable="true"
                 android:focusable="true"
                 android:text="@string/button_apply" />
+
         </LinearLayout>
 
 

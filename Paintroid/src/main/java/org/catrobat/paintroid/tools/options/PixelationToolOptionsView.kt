@@ -16,7 +16,7 @@ interface PixelationToolOptionsView {
 
         fun setPixelHeight(heightPixels : Float)
 
-        fun setNumCollor(collorNum : Float)
+        fun setNumCollor(collorNum: Float)
     }
 }
 
