@@ -15,7 +15,7 @@ import org.catrobat.paintroid.tools.options.PixelationToolOptionsView
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 
 class PixelTool(
-    pixelToolOptionsView : PixelationToolOptionsView,
+    pixelToolOptionsViewParam : PixelationToolOptionsView,
     contextCallback : ContextCallback,
     toolOptionsViewController: ToolOptionsViewController,
     toolPaint: ToolPaint,
@@ -28,28 +28,27 @@ class PixelTool(
     private val pixelToolOptionsView: PixelationToolOptionsView
     @VisibleForTesting
     @JvmField
-    var numPixelHeight = 30f
+    var numPixelHeight = 0f
 
     @VisibleForTesting
     @JvmField
-    var numPixelWidth = 30f
+    var numPixelWidth = 0f
 
     @VisibleForTesting
     @JvmField
-    var numCollors = 10f
+    var numCollors = 0f
 
     init {
         boxHeight = workspace.height.toFloat()
         boxWidth = workspace.width.toFloat()
         toolPosition.x = boxWidth / 2f
         toolPosition.y = boxHeight / 2f
-        this.pixelToolOptionsView = pixelToolOptionsView
+        this.pixelToolOptionsView = pixelToolOptionsViewParam
         setBitmap(Bitmap.createBitmap(boxWidth.toInt(), boxHeight.toInt(), Bitmap.Config.ARGB_8888))
         toolOptionsViewController.showDelayed()
-        pixelToolOptionsView.setPixelPreviewListener(object  : PixelationToolOptionsView.OnPixelationPreviewListener
-        {
+        this.pixelToolOptionsView.setPixelPreviewListener(object  : PixelationToolOptionsView.OnPixelationPreviewListener {
             override fun setPixelWidth(widthPixels: Float) {
-                this@PixelTool.numPixelWidth = widthPixels
+                    this@PixelTool.numPixelWidth = widthPixels
             }
 
             override fun setPixelHeight(heightPixels: Float) {
@@ -80,6 +79,8 @@ class PixelTool(
     // is the checkmark to run the programm
     override fun onClickOnButton() {
         // test if the  ui works good then shoudl be enought for the 30.8
+        var i = 10
+
     }
 
     override fun resetInternalState() = Unit

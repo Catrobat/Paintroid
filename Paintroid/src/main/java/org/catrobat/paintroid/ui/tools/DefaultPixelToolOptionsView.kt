@@ -18,6 +18,7 @@ import org.catrobat.paintroid.R
 import org.catrobat.paintroid.tools.helper.DefaultNumberRangeFilter
 import org.catrobat.paintroid.tools.options.PixelationToolOptionsView.OnPixelationPreviewListener
 import org.catrobat.paintroid.tools.options.PixelationToolOptionsView
+import org.catrobat.paintroid.tools.options.TransformToolOptionsView
 import java.lang.NumberFormatException
 import java.text.NumberFormat
 import java.text.ParseException
@@ -31,20 +32,9 @@ private const val MAX_HEIGHT = 200
 private const val MIN_COLOR = 1
 private const val MAX_COLOR = 30
 
-// ask PO maybe needed the minumum but the bar is not scalable so far (API 21 is current?)
+// ask PO maybe nee  ded the minumum but the bar is not scalable so far (API 21 is current?)
 
 class DefaultPixelToolOptionsView (rootView : ViewGroup): PixelationToolOptionsView{
-    /*private val widthLayout : View
-    private val heightLayout : View
-    private val topLayout : View
-    private val colorLayout : View
-    private val bottomLayout : View
-    private var widthText : EditText
-    private var heightText : EditText
-    private var colorText : EditText
-    private var colorSeekBar : SeekBar
-    private var widthSeekBar : SeekBar
-    private var heightSeekBar : SeekBar*/
 
     private val pixelNumWidth : AppCompatEditText
     private val pixelNumHeight : AppCompatEditText
@@ -56,13 +46,10 @@ class DefaultPixelToolOptionsView (rootView : ViewGroup): PixelationToolOptionsV
     private var pixelNumHeightWatcher : PixelToolNumTextWatcher
     private var colorNumBar : AppCompatSeekBar
 
-    private var callback : PixelationToolOptionsView.OnPixelationPreviewListener?=  null
 
     companion object {
         private val TAG = DefaultPixelToolOptionsView::class.java.simpleName
     }
-
-
 
     init {
         val inflater  = LayoutInflater.from(rootView.context)
@@ -74,16 +61,14 @@ class DefaultPixelToolOptionsView (rootView : ViewGroup): PixelationToolOptionsV
         initHeightText()*/
         pixelNumWidth =pixelView.findViewById(R.id.pocketpaint_pixel_width_value)
         pixelNumHeight = pixelView.findViewById(R.id.pocketpaint_pixel_height_value)
-        pixelNumWidthWatcher = object : PixelToolNumTextWatcher()
-        {
+        pixelNumWidthWatcher = object : PixelToolNumTextWatcher() {
             override fun setValue(value: Float) {
-                callback?.setPixelWidth(value)
+                pixelChangedListener?.setPixelWidth(value)
             }
         }
-        pixelNumHeightWatcher = object : PixelToolNumTextWatcher()
-        {
+        pixelNumHeightWatcher = object : PixelToolNumTextWatcher() {
             override fun setValue(value: Float) {
-                callback?.setPixelHeight(value)
+                pixelChangedListener?.setPixelHeight(value)
             }
         }
         pixelNumWidth.addTextChangedListener(pixelNumWidthWatcher)
@@ -144,7 +129,6 @@ class DefaultPixelToolOptionsView (rootView : ViewGroup): PixelationToolOptionsV
     override fun setPixelPreviewListener(onPixelationPreviewListener: PixelationToolOptionsView.OnPixelationPreviewListener) {
         this.pixelChangedListener = onPixelationPreviewListener
     }
-
     abstract class PixelToolNumTextWatcher : TextWatcher {
 
         protected abstract fun setValue(value: Float)

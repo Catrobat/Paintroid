@@ -371,7 +371,7 @@ class TransformTool(
         }
     }
 
-    private fun onApplyResizeClicked(resizePercentage: Int) {
+    private fun  onApplyResizeClicked(resizePercentage: Int) {
         val newWidth = (workspace.width / HUNDRED * resizePercentage).toInt()
         val newHeight = (workspace.height / HUNDRED * resizePercentage).toInt()
         if (newWidth == 0 || newHeight == 0) {
