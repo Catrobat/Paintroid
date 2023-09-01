@@ -214,8 +214,7 @@ enum class ToolType(
         R.id.pocketpaint_tools_clipping,
         INVALID_RESOURCE_ID,
         true
-    )
-    ,
+    ),
     PIXEL(
         R.string.button_pixel,
         R.string.help_content_text,

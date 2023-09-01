@@ -1,50 +1,29 @@
 package org.catrobat.paintroid.test.espresso.tools
 
-import android.graphics.Bitmap
-import android.graphics.Color
-import android.graphics.PointF
-import android.widget.SeekBar
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.PerformException
-import androidx.test.espresso.action.ViewActions.*
-import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
+import androidx.test.espresso.action.ViewActions.replaceText
+import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.*
-import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.filters.LargeTest
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.rule.ActivityTestRule
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.contract.LayerContracts
-import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider
-import org.catrobat.paintroid.test.espresso.util.EspressoUtils.waitForToast
 import org.catrobat.paintroid.test.espresso.util.MainActivityHelper
-import org.catrobat.paintroid.test.espresso.util.UiInteractions
-import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.Companion.onDrawingSurfaceView
-import org.catrobat.paintroid.test.espresso.util.wrappers.LayerMenuViewInteraction
 import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction
-import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.Companion.onToolBarView
-import org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction
-import org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction
-import org.catrobat.paintroid.test.espresso.util.wrappers.TransformToolOptionsViewInteraction.Companion.onTransformToolOptionsView
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule
 import org.catrobat.paintroid.tools.ToolReference
 import org.catrobat.paintroid.tools.ToolType
-import org.catrobat.paintroid.tools.implementation.*
+import org.catrobat.paintroid.tools.implementation.MAXIMUM_BITMAP_SIZE_FACTOR
+import org.catrobat.paintroid.tools.implementation.PixelTool
 import org.catrobat.paintroid.ui.Perspective
-import org.hamcrest.Matchers.equalTo
-import org.hamcrest.Matchers.greaterThan
-import org.hamcrest.Matchers.lessThan
-import org.hamcrest.Matchers.not
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertThat
-import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
 
 class PixelationToolIntegrationTest {
     @get:Rule
@@ -64,23 +43,8 @@ class PixelationToolIntegrationTest {
     private lateinit var toolReference: ToolReference
     private lateinit var mainActivity: MainActivity
     private lateinit var activityHelper: MainActivityHelper
-    private lateinit var pixelTool : PixelTool
+    private lateinit var pixelTool: PixelTool
 
-    private var toolSelectionBoxHeight: Float
-        get() {
-            return (toolReference.tool as BaseToolWithRectangleShape).boxHeight
-        }
-        private set(height) {
-            (toolReference.tool as BaseToolWithRectangleShape).boxHeight = height
-        }
-
-    private var toolSelectionBoxWidth: Float
-        get() {
-            return (toolReference.tool as BaseToolWithRectangleShape).boxWidth
-        }
-        private set(width) {
-            (toolReference.tool as BaseToolWithRectangleShape).boxWidth = width
-        }
     @Before
     fun setUp() {
         mainActivity = launchActivityRule.activity
@@ -101,9 +65,7 @@ class PixelationToolIntegrationTest {
     }
 
     @Test
-    fun inputeTest()
-    {
-
+    fun inputeTest() {
         var width = 80.0f
         var height = 49.0f
         onView(withId(R.id.pocketpaint_pixel_width_value))

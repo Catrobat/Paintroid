@@ -22,52 +22,40 @@ import java.text.NumberFormat
 import java.text.ParseException
 import java.util.Locale
 
-@VisibleForTesting
-
-private const val MIN_WIDTH = 1
-private const val MAX_WIDTH = 100
-private const val MIN_HEIGHT = 1
-private const val MAX_HEIGHT = 200
 private const val MIN_COLOR = 1
 private const val MAX_COLOR = 40
 
-// ask PO maybe nee  ded the minumum but the bar is not scalable so far (API 21 is current?)
+@SuppressLint("NotImplementedDeclaration")
+class DefaultPixelToolOptionsView(rootView: ViewGroup) : PixelationToolOptionsView {
 
-@SuppressLint("SetTextI18n")
-class DefaultPixelToolOptionsView (rootView : ViewGroup): PixelationToolOptionsView{
-
-    private val pixelNumWidth : AppCompatEditText
-    private val pixelNumHeight : AppCompatEditText
-    private var colorNumText : AppCompatEditText
-    //private val thisLayer : Chip
-    private val currentView = rootView
-    private var pixelChangedListener : OnPixelationPreviewListener? = null
-    private var pixelNumWidthWatcher : PixelToolNumTextWatcher
-    private var pixelNumHeightWatcher : PixelToolNumTextWatcher
-    private var colorNumBar : AppCompatSeekBar
-
+    private val pixelNumWidth: AppCompatEditText
+    private val pixelNumHeight: AppCompatEditText
+    private var colorNumText: AppCompatEditText
+    // private val thisLayer : Chip
+    // private val currentView = rootView
+    private var pixelChangedListener: OnPixelationPreviewListener? = null
+    private var pixelNumWidthWatcher: PixelToolNumTextWatcher
+    private var pixelNumHeightWatcher: PixelToolNumTextWatcher
+    private var colorNumBar: AppCompatSeekBar
 
     companion object {
         private val TAG = DefaultPixelToolOptionsView::class.java.simpleName
-        public val defaulWidth = 40f
-        public val defaultHeight = 60f
-        public val defaultCollor = 20f
+        const val defaulWidth = 40f
+        const val defaultHeight = 60f
+        const val defaultCollor = 20f
     }
 
     init {
-        val inflater  = LayoutInflater.from(rootView.context)
+        val inflater = LayoutInflater.from(rootView.context)
         val pixelView = inflater.inflate(R.layout.dialog_pocketpaint_pixel, rootView, true)
         colorNumBar = pixelView.findViewById(R.id.pocketpaint_pixel_color_seekbar)
         colorNumText = pixelView.findViewById(R.id.pocketpaint_transform_pixel_color_text)
         colorNumBar.progress = defaultCollor.toInt()
         colorNumText.setText(String.format(Locale.getDefault(), "%d", colorNumBar.progress))
-        pixelNumWidth =pixelView.findViewById(R.id.pocketpaint_pixel_width_value)
+        pixelNumWidth = pixelView.findViewById(R.id.pocketpaint_pixel_width_value)
         pixelNumHeight = pixelView.findViewById(R.id.pocketpaint_pixel_height_value)
         pixelNumWidth.setText(defaulWidth.toString())
         pixelNumHeight.setText(defaultHeight.toString())
-      //  initColorText()
-     //   initWidthText()
-       // initHeightText()
 
         pixelNumWidthWatcher = object : PixelToolNumTextWatcher() {
             override fun setValue(value: Float) {
@@ -81,8 +69,6 @@ class DefaultPixelToolOptionsView (rootView : ViewGroup): PixelationToolOptionsV
         }
         pixelNumWidth.addTextChangedListener(pixelNumWidthWatcher)
         pixelNumHeight.addTextChangedListener(pixelNumHeightWatcher)
-      //  pixelNumHeight.setText(MAX_HEIGHT)
-      //  pixelNumWidth.setText(MAX_WIDTH)
         colorNumText.filters = arrayOf<InputFilter>(DefaultNumberRangeFilter(MIN_COLOR, MAX_COLOR))
         colorNumText.setText(String.format(Locale.getDefault(), "%d", colorNumBar.progress))
         colorNumText.addTextChangedListener(object : TextWatcher {
@@ -124,32 +110,14 @@ class DefaultPixelToolOptionsView (rootView : ViewGroup): PixelationToolOptionsV
 
             pixelChangedListener?.setNumCollor(colorNumBar.progress.toFloat())
         }
-
-
-    }
-    // handle up probs error
-
-    override fun invalidate() {
-        TODO("Not yet implemented")
-    }
-
-    override fun getTopToolOptions(): View {
-        TODO("Not yet implemented")
-    }  //topLayout
-
-    override fun getBottomToolOptions(): View {
-        TODO("Not yet implemented")
     }
 
     override fun setPixelPreviewListener(onPixelationPreviewListener: PixelationToolOptionsView.OnPixelationPreviewListener) {
         this.pixelChangedListener = onPixelationPreviewListener
     }
 
-
     abstract class PixelToolNumTextWatcher : TextWatcher {
-
         protected abstract fun setValue(value: Float)
-
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) = Unit
 
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) = Unit
@@ -157,7 +125,6 @@ class DefaultPixelToolOptionsView (rootView : ViewGroup): PixelationToolOptionsV
             var str = editable.toString()
             if (str.isEmpty()) {
                 str = MAX_COLOR.toString()
-
             }
             try {
                 val value = NumberFormat.getIntegerInstance().parse(str)?.toFloat()
@@ -167,5 +134,4 @@ class DefaultPixelToolOptionsView (rootView : ViewGroup): PixelationToolOptionsV
             }
         }
     }
-
 }

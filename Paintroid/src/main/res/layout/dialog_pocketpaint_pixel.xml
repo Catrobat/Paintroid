@@ -111,8 +111,6 @@
                 android:layout_width="21dp" />
         </LinearLayout>
 
-
-
         <TextView
             style="@style/PocketPaintToolSubtitle"
             android:text="@string/pixel_ui_color" />
