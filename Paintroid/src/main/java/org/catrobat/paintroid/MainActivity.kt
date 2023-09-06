@@ -204,6 +204,8 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         var projectUri: String? = null
         var projectImagePreviewUri: String? = null
         var downloadManagerIdRemoved: Boolean = true
+        var isHomePressed: Boolean = false
+
         const val DOWNLOAD_MANAGER_ID_DELAY = 100L
     }
 
@@ -438,6 +440,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
                         FileIO.checkFileExists(FileIO.FileType.CATROBAT,
                             it, this.contentResolver)
                     } == true) {
+                    isHomePressed = true
                     downloadManagerIdRemoved = true
                     FileIO.filename = projectName!!.removeSuffix(".$CATROBAT_IMAGE_ENDING")
                     FileIO.storeImageUri = Uri.parse(projectUri)
@@ -450,8 +453,6 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
                             }
                         }
                     }
-                    presenterMain.finishActivity()
-                    projectName = null
                 } else {
                     presenterMain.backToPocketCodeClicked()
                 }

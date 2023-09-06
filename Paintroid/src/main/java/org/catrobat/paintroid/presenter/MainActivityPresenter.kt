@@ -48,6 +48,7 @@ import androidx.core.view.GravityCompat
 import androidx.test.espresso.idling.CountingIdlingResource
 import org.catrobat.paintroid.FileIO
 import org.catrobat.paintroid.MainActivity
+import org.catrobat.paintroid.MainActivity.Companion.isHomePressed
 import org.catrobat.paintroid.MainActivity.Companion.projectName
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.UserPreferences
@@ -1054,6 +1055,11 @@ open class MainActivityPresenter(
                 REQUEST_CODE_LOAD_PICTURE
             )
             else -> throw IllegalArgumentException()
+        }
+        if (requestCode == SAVE_PROJECT_DEFAULT && isHomePressed) {
+            navigator.finishActivity()
+            isHomePressed = false
+            projectName = null
         }
     }
 
