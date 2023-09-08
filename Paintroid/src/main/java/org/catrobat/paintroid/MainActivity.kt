@@ -442,7 +442,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
                     } == true) {
                     isHomePressed = true
                     downloadManagerIdRemoved = true
-                    FileIO.filename = projectName!!.removeSuffix(".$CATROBAT_IMAGE_ENDING")
+                    FileIO.filename = projectName?.removeSuffix(".$CATROBAT_IMAGE_ENDING").toString()
                     FileIO.storeImageUri = Uri.parse(projectUri)
                     FileIO.storeImagePreviewUri = Uri.parse(projectImagePreviewUri)
                     presenterMain.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_PROJECT, false)
