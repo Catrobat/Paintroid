@@ -79,19 +79,6 @@
                 style="@style/PocketPaintToolSelectionButtonTextView"
                 android:text="@string/button_line"/>
         </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/pocketpaint_tools_dynamic_line"
-            tools:ignore="UseCompoundDrawables"
-            style="@style/PocketPaintToolSelectionButton">
-            <ImageView
-                style="@style/PocketPaintToolSelectionButtonImageView"
-                android:src="@drawable/ic_pocketpaint_tool_dynamic_line"
-                android:contentDescription="@string/button_dynamic_line"/>
-            <TextView
-                style="@style/PocketPaintToolSelectionButtonTextView"
-                android:text="@string/button_dynamic_line"/>
-        </LinearLayout>
     </TableRow>
 
     <TableRow
@@ -259,6 +246,24 @@
             <TextView
                 style="@style/PocketPaintToolSelectionButtonTextView"
                 android:text="@string/button_clip"/>
+        </LinearLayout>
+    </TableRow>
+
+    <TableRow
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp">
+
+        <LinearLayout
+            android:id="@+id/pocketpaint_tools_dynamic_line"
+            tools:ignore="UseCompoundDrawables"
+            style="@style/PocketPaintToolSelectionButton">
+            <ImageView
+                style="@style/PocketPaintToolSelectionButtonImageView"
+                android:src="@drawable/ic_pocketpaint_tool_dynamic_line"
+                android:contentDescription="@string/button_dynamic_line"/>
+            <TextView
+                style="@style/PocketPaintToolSelectionButtonTextView"
+                android:text="@string/button_dynamic_line"/>
         </LinearLayout>
     </TableRow>
 </TableLayout>

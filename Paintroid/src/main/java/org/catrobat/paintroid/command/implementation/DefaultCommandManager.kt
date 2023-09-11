@@ -113,7 +113,7 @@ class DefaultCommandManager(
             val command = undoCommandList.pop()
 
             if (command is DynamicPathCommand) {
-                var switchedTool = handleUndoForDynamicLineTool(command)
+                val switchedTool = handleUndoForDynamicLineTool(command)
                 if (switchedTool) return
             }
             redoCommandList.addFirst(command)
@@ -126,7 +126,7 @@ class DefaultCommandManager(
 
     private fun handleUndoForDynamicLineTool(command: DynamicPathCommand): Boolean {
         if (mainActivity == null) return false
-        var currentTool = mainActivity.defaultToolController.currentTool
+        val currentTool = mainActivity.defaultToolController.currentTool
         if (currentTool is DynamicLineTool && currentTool.vertexStack.isNotEmpty()) {
             currentTool.updateVertexStackAfterUndo()
             currentTool.setToolPaint(command)
@@ -255,23 +255,6 @@ class DefaultCommandManager(
         }
     }
 
-//    private fun handleRedoForDynamicLineTool(command: Command) {
-//        var currentTool = mainActivity.defaultToolController.currentTool
-//        if (currentTool is DynamicLineTool && command !is DynamicPathCommand) {
-//            currentTool.clear()
-//        }
-//        if (command is DynamicPathCommand) {
-//            if (currentTool !is DynamicLineTool) {
-//                command.switchToDynamicLineTool(mainActivity)
-//            }
-//            while (mainActivity.defaultToolController.currentTool !is DynamicLineTool)
-//                currentTool = mainActivity.defaultToolController.currentTool
-//            if (command.isSourcePath) {
-//                (currentTool as DynamicLineTool).clear()
-//            }
-//            (currentTool as DynamicLineTool).updateVertexStackAfterRedo(command)
-//        }
-//    }
     private fun handleRedoForDynamicLineTool(command: Command) {
         if (mainActivity == null) return
         var currentTool = mainActivity.defaultToolController.currentTool
@@ -314,13 +297,11 @@ class DefaultCommandManager(
 
     override fun shutdown() = Unit
 
-    // LINETOOL_ONLY
     override fun undoIgnoringColorChanges() {
         addAndExecuteCommands(separateColorCommandsAndUndo())
         notifyCommandExecuted()
     }
 
-    // LINETOOL_ONLY
     override fun undoIgnoringColorChangesAndAddCommand(command: Command) {
         val colorCommandList = separateColorCommandsAndUndo()
         undoCommandList.addFirst(command)
@@ -330,7 +311,6 @@ class DefaultCommandManager(
         notifyCommandExecuted()
     }
 
-    // LINETOOL_ONLY
     private fun separateColorCommandsAndUndo(): Deque<Command> {
         val colorCommandList = removeColorCommands()
         if (undoCommandList.isNotEmpty() && undoCommandList.first != null) {
@@ -341,7 +321,6 @@ class DefaultCommandManager(
         return colorCommandList
     }
 
-    // LINETOOL_ONLY
     override fun undoInConnectedLinesMode() {
         val colorCommandList = removeColorCommands()
         if (undoCommandList.isNotEmpty()) {
@@ -364,7 +343,6 @@ class DefaultCommandManager(
         }
     }
 
-    // LINETOOL_ONLY
     private fun recolorLastLine(colorCommandList: Deque<Command>) {
         if (undoCommandList.isNotEmpty() && undoCommandList.first !is ColorChangedCommand) {
             val firstNonColorCommand = undoCommandList.pop()
@@ -401,7 +379,6 @@ class DefaultCommandManager(
         notifyCommandExecuted()
     }
 
-    // LINETOOL_ONLY
     override fun redoInConnectedLinesMode() {
         if (isRedoAvailable) {
             val command = redoCommandList.pop()
@@ -522,7 +499,6 @@ class DefaultCommandManager(
         }
     }
 
-    // LINETOOL_ONLY
     private fun removeColorCommands(): Deque<Command> {
         val colorCommandList: Deque<Command> = ArrayDeque()
         while (undoCommandList.isNotEmpty() && undoCommandList.first is ColorChangedCommand) {

@@ -811,7 +811,6 @@ open class MainActivityPresenter(
     override fun switchToDynamicLineTool() {
         if (toolController.toolType == ToolType.DYNAMICLINE) return
         idlingResource.increment()
-//        bottomBarViewHolder.hide()
         checkForImplicitToolApplication()
         switchTool(ToolType.DYNAMICLINE)
         idlingResource.decrement()

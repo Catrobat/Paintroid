@@ -74,7 +74,7 @@ class DynamicPathCommand(var paint: Paint, path: Path, startPoint: PointF, endPo
         mainActivity.runOnUiThread {
             mainActivity.presenter.switchToDynamicLineTool()
             if (mainActivity.defaultToolController.currentTool !is DynamicLineTool) return@runOnUiThread
-            var tool = mainActivity.defaultToolController.currentTool as DynamicLineTool
+            val tool = mainActivity.defaultToolController.currentTool as DynamicLineTool
             tool.createSourceAndDestinationVertices(
                 dynamicPathCommands.first.startPoint,
                 dynamicPathCommands.first.endPoint,

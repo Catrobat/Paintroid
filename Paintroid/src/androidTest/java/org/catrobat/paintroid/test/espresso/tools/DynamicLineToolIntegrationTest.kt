@@ -886,7 +886,7 @@ class DynamicLineToolIntegrationTest {
         val currentTool = launchActivityRule.activity.defaultToolController.currentTool as DynamicLineTool
         Assert.assertEquals(7, currentTool.vertexStack.size)
 
-        var uriFile = saveImage()
+        val uriFile = saveImage()
 
         newImage()
         Assert.assertEquals(0, currentTool.vertexStack.size)
@@ -898,7 +898,7 @@ class DynamicLineToolIntegrationTest {
     }
 
     private fun loadImage(uriFile: Uri) {
-        var fileContent = CommandSerializer(activity, activity.commandManager, activity.model).readFromFile(uriFile!!)
+        val fileContent = CommandSerializer(activity, activity.commandManager, activity.model).readFromFile(uriFile)
         for (command in fileContent.commandModel.commands) {
             activity.commandManager.addCommand(command)
         }

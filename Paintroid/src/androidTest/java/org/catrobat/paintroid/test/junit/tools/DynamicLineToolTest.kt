@@ -114,7 +114,7 @@ class DynamicLineToolTest {
     fun testTwoVerticesCreatedAfterFirstClick() {
         Assert.assertEquals(0, tool.vertexStack.size)
 
-        var firstClickCoordinate = PointF(5f, 5f)
+        val firstClickCoordinate = PointF(5f, 5f)
         tool.handleDown(firstClickCoordinate)
         tool.handleUp(firstClickCoordinate)
 
@@ -124,18 +124,18 @@ class DynamicLineToolTest {
     @Test
     @UiThreadTest
     fun testLastVertexCenterChangesAfterClick() {
-        var firstClickCoordinate = PointF(5f, 5f)
+        val firstClickCoordinate = PointF(5f, 5f)
         tool.handleDown(firstClickCoordinate)
         tool.handleUp(firstClickCoordinate)
 
-        var secondClickCoordinate = PointF(100f, 100f)
+        val secondClickCoordinate = PointF(100f, 100f)
         tool.handleDown(secondClickCoordinate)
         tool.handleUp(secondClickCoordinate)
 
         Assert.assertEquals(2, tool.vertexStack.size)
         Assert.assertEquals(secondClickCoordinate, tool.vertexStack.last.vertexCenter)
 
-        var thirdClickCoordinate = PointF(200f, 200f)
+        val thirdClickCoordinate = PointF(200f, 200f)
         tool.handleDown(thirdClickCoordinate)
         tool.handleUp(thirdClickCoordinate)
 
@@ -146,11 +146,11 @@ class DynamicLineToolTest {
     @Test
     @UiThreadTest
     fun testLastVertexCenterChangesAfterMove() {
-        var firstClickCoordinate = PointF(5f, 5f)
+        val firstClickCoordinate = PointF(5f, 5f)
         tool.handleDown(firstClickCoordinate)
         tool.handleUp(firstClickCoordinate)
 
-        var secondClickCoordinate = PointF(100f, 100f)
+        val secondClickCoordinate = PointF(100f, 100f)
         tool.handleDown(secondClickCoordinate)
         tool.handleUp(secondClickCoordinate)
 
@@ -159,7 +159,7 @@ class DynamicLineToolTest {
 
         tool.handleDown(secondClickCoordinate)
 
-        var movingCoordinate = PointF(200f, 200f)
+        val movingCoordinate = PointF(200f, 200f)
         tool.handleMove(movingCoordinate)
         tool.handleUp(movingCoordinate)
 
@@ -170,11 +170,11 @@ class DynamicLineToolTest {
     @Test
     @UiThreadTest
     fun testFirstVertexCenterChangesAfterMove() {
-        var firstClickCoordinate = PointF(5f, 5f)
+        val firstClickCoordinate = PointF(5f, 5f)
         tool.handleDown(firstClickCoordinate)
         tool.handleUp(firstClickCoordinate)
 
-        var secondClickCoordinate = PointF(100f, 100f)
+        val secondClickCoordinate = PointF(100f, 100f)
         tool.handleDown(secondClickCoordinate)
         tool.handleUp(secondClickCoordinate)
 
@@ -183,7 +183,7 @@ class DynamicLineToolTest {
 
         tool.handleDown(firstClickCoordinate)
 
-        var movingCoordinate = PointF(200f, 200f)
+        val movingCoordinate = PointF(200f, 200f)
         tool.handleMove(movingCoordinate)
         tool.handleUp(movingCoordinate)
 
@@ -197,8 +197,8 @@ class DynamicLineToolTest {
         var plusButtonVisibility = DynamicLineTool.topBarViewHolder?.plusButton?.visibility
         Assert.assertEquals(plusButtonVisibility, View.GONE)
 
-        var tapDownCoordinate = PointF(5f, 5f)
-        var tapUpCoordinate = PointF(10f, 10f)
+        val tapDownCoordinate = PointF(5f, 5f)
+        val tapUpCoordinate = PointF(10f, 10f)
         tool.handleDown(tapDownCoordinate)
         tool.handleUp(tapUpCoordinate)
 
@@ -211,11 +211,11 @@ class DynamicLineToolTest {
     fun testAddPathIsSetAfterClickingPlus() {
         Assert.assertEquals(false, tool.addNewPath)
 
-        var firstClickCoordinate = PointF(5f, 5f)
+        val firstClickCoordinate = PointF(5f, 5f)
         tool.handleDown(firstClickCoordinate)
         tool.handleUp(firstClickCoordinate)
 
-        var secondClickCoordinate = PointF(100f, 100f)
+        val secondClickCoordinate = PointF(100f, 100f)
         tool.handleDown(secondClickCoordinate)
         tool.handleUp(secondClickCoordinate)
 
@@ -229,17 +229,17 @@ class DynamicLineToolTest {
     fun testThreeVerticesCreatedAfterClickingPlus() {
         Assert.assertEquals(0, tool.vertexStack.size)
 
-        var firstClickCoordinate = PointF(5f, 5f)
+        val firstClickCoordinate = PointF(5f, 5f)
         tool.handleDown(firstClickCoordinate)
         tool.handleUp(firstClickCoordinate)
 
-        var secondClickCoordinate = PointF(100f, 100f)
+        val secondClickCoordinate = PointF(100f, 100f)
         tool.handleDown(secondClickCoordinate)
         tool.handleUp(secondClickCoordinate)
 
         tool.onClickOnPlus()
 
-        var thirdClickCoordinate = PointF(200f, 200f)
+        val thirdClickCoordinate = PointF(200f, 200f)
         tool.handleDown(thirdClickCoordinate)
         tool.handleUp(thirdClickCoordinate)
 
@@ -252,8 +252,8 @@ class DynamicLineToolTest {
         var plusButtonVisibility = DynamicLineTool.topBarViewHolder?.plusButton?.visibility
         Assert.assertEquals(plusButtonVisibility, View.GONE)
 
-        var tapDownCoordinate = PointF(5f, 5f)
-        var tapUpCoordinate = PointF(10f, 10f)
+        val tapDownCoordinate = PointF(5f, 5f)
+        val tapUpCoordinate = PointF(10f, 10f)
         tool.handleDown(tapDownCoordinate)
         tool.handleUp(tapUpCoordinate)
 
@@ -315,8 +315,8 @@ class DynamicLineToolTest {
     fun testVertexStackIsClearedAfterCheckmark() {
         Assert.assertEquals(0, tool.vertexStack.size)
 
-        var tapDownCoordinate = PointF(5f, 5f)
-        var tapUpCoordinate = PointF(10f, 10f)
+        val tapDownCoordinate = PointF(5f, 5f)
+        val tapUpCoordinate = PointF(10f, 10f)
         tool.handleDown(tapDownCoordinate)
         tool.handleUp(tapUpCoordinate)
 
@@ -332,17 +332,17 @@ class DynamicLineToolTest {
         Assert.assertEquals(null, tool.movingVertex)
         Assert.assertEquals(null, tool.successorVertex)
 
-        var firstVertexCoordinate = PointF(5f, 5f)
+        val firstVertexCoordinate = PointF(5f, 5f)
         tool.handleDown(firstVertexCoordinate)
         tool.handleUp(firstVertexCoordinate)
 
-        var middleVertexCoordinate = PointF(100f, 100f)
+        val middleVertexCoordinate = PointF(100f, 100f)
         tool.handleDown(middleVertexCoordinate)
         tool.handleUp(middleVertexCoordinate)
 
         tool.onClickOnPlus()
 
-        var lastVertexCoordinate = PointF(200f, 200f)
+        val lastVertexCoordinate = PointF(200f, 200f)
         tool.handleDown(lastVertexCoordinate)
         tool.handleUp(lastVertexCoordinate)
 
@@ -360,17 +360,17 @@ class DynamicLineToolTest {
         Assert.assertEquals(null, tool.movingVertex)
         Assert.assertEquals(null, tool.successorVertex)
 
-        var firstVertexCoordinate = PointF(5f, 5f)
+        val firstVertexCoordinate = PointF(5f, 5f)
         tool.handleDown(firstVertexCoordinate)
         tool.handleUp(firstVertexCoordinate)
 
-        var middleVertexCoordinate = PointF(100f, 100f)
+        val middleVertexCoordinate = PointF(100f, 100f)
         tool.handleDown(middleVertexCoordinate)
         tool.handleUp(middleVertexCoordinate)
 
         tool.onClickOnPlus()
 
-        var lastVertexCoordinate = PointF(200f, 200f)
+        val lastVertexCoordinate = PointF(200f, 200f)
         tool.handleDown(lastVertexCoordinate)
         tool.handleUp(lastVertexCoordinate)
 

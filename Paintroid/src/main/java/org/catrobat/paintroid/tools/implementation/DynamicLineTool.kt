@@ -4,7 +4,6 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PointF
-import android.util.Log
 import android.view.View
 import androidx.test.espresso.idling.CountingIdlingResource
 import org.catrobat.paintroid.command.CommandManager
@@ -47,11 +46,11 @@ class DynamicLineTool(
     private var outgoingStartCoordinate: PointF? = null
     private var outgoingEndCoordinate: PointF? = null
     override var toolType: ToolType = ToolType.DYNAMICLINE
+    private var undoRecentlyClicked = false
     var vertexStack: Deque<Vertex> = ArrayDeque()
     var movingVertex: Vertex? = null
     var predecessorVertex: Vertex? = null
     var successorVertex: Vertex? = null
-    var undoRecentlyClicked = false
     var addNewPath: Boolean = false
 
     init {
@@ -97,7 +96,6 @@ class DynamicLineTool(
     override fun toolPositionCoordinates(coordinate: PointF): PointF = coordinate
 
     override fun draw(canvas: Canvas) {
-        Log.e(TAG, "draw")
         drawGhostPath(ingoingStartCoordinate, ingoingEndCoordinate, canvas, workspace, ingoingGhostPathColor)
         drawGhostPath(outgoingStartCoordinate, outgoingEndCoordinate, canvas, workspace, outgoingGhostPathColor)
         drawShape(canvas)
@@ -118,8 +116,8 @@ class DynamicLineTool(
     @Synchronized override fun drawShape(canvas: Canvas) {
         vertexStack.forEach { vertex ->
             vertex?.let { vertex ->
-                var cx = vertex.vertexCenter?.x
-                var cy = vertex.vertexCenter?.y
+                val cx = vertex.vertexCenter?.x
+                val cy = vertex.vertexCenter?.y
                 if (cx != null && cy != null) {
                     canvas.drawCircle(cx, cy, Vertex.VERTEX_RADIUS, Vertex.getVertexPaint())
                 }
@@ -151,8 +149,8 @@ class DynamicLineTool(
     }
 
     fun updateVertexStackAfterRedo(redoCommand: DynamicPathCommand?) {
-        var startPoint = redoCommand?.startPoint?.let { copyPointF(it) }
-        var endPoint = redoCommand?.endPoint?.let { copyPointF(it) }
+        val startPoint = redoCommand?.startPoint?.let { copyPointF(it) }
+        val endPoint = redoCommand?.endPoint?.let { copyPointF(it) }
         if (vertexStack.isEmpty()) {
             createSourceAndDestinationVertices(startPoint, endPoint, redoCommand)
         } else {
@@ -192,7 +190,7 @@ class DynamicLineTool(
 
     private fun clearRedoIfPathWasAdjusted() {
         if (!undoRecentlyClicked) return
-        var firstRedoCommand = commandManager.getFirstRedoCommand() ?: return
+        val firstRedoCommand = commandManager.getFirstRedoCommand() ?: return
         if (firstRedoCommand is DynamicPathCommand &&
             firstRedoCommand.startPoint != vertexStack.last.vertexCenter) {
             // a previous command was moved so redo has to be deactivated
@@ -231,24 +229,24 @@ class DynamicLineTool(
     }
 
     private fun createSourceAndDestinationCommandAndVertices(coordinate: PointF) {
-        var startPoint = copyPointF(coordinate)
-        var endPoint = copyPointF(coordinate)
-        var command = createPathCommand(startPoint, endPoint)
+        val startPoint = copyPointF(coordinate)
+        val endPoint = copyPointF(coordinate)
+        val command = createPathCommand(startPoint, endPoint)
         command?.setAsSourcePath()
         createSourceAndDestinationVertices(startPoint, endPoint, command)
     }
 
     fun createSourceAndDestinationVertices(startPoint: PointF?, endPoint: PointF?, command: DynamicPathCommand?) {
-        var sourceVertex = createAndAddVertex(startPoint, command, null)
-        var destinationVertex = createAndAddVertex(endPoint, null, command)
+        val sourceVertex = createAndAddVertex(startPoint, command, null)
+        val destinationVertex = createAndAddVertex(endPoint, null, command)
         predecessorVertex = sourceVertex
         movingVertex = destinationVertex
         showPlusButton()
     }
 
     private fun createDestinationCommandAndVertex() {
-        var startPoint = vertexStack.last.vertexCenter?.let { center -> copyPointF(center) }
-        var command = createPathCommand(startPoint, startPoint)
+        val startPoint = vertexStack.last.vertexCenter?.let { center -> copyPointF(center) }
+        val command = createPathCommand(startPoint, startPoint)
         createDestinationVertex(startPoint, command)
     }
 
@@ -259,15 +257,15 @@ class DynamicLineTool(
     }
 
     private fun createAndAddVertex(vertexCenter: PointF?, outgoingCommand: DynamicPathCommand?, ingoingCommand: DynamicPathCommand?): Vertex {
-        var vertex = Vertex(vertexCenter, outgoingCommand, ingoingCommand)
+        val vertex = Vertex(vertexCenter, outgoingCommand, ingoingCommand)
         vertexStack.add(vertex)
         return vertex
     }
 
     private fun createPathCommand(startPoint: PointF?, endPoint: PointF?): DynamicPathCommand? {
         if (startPoint == null || endPoint == null) return null
-        var currentlyDrawnPath = createSerializablePath(startPoint, endPoint)
-        var command = commandFactory.createDynamicPathCommand(toolPaint.paint, currentlyDrawnPath, startPoint, endPoint) as DynamicPathCommand
+        val currentlyDrawnPath = createSerializablePath(startPoint, endPoint)
+        val command = commandFactory.createDynamicPathCommand(toolPaint.paint, currentlyDrawnPath, startPoint, endPoint) as DynamicPathCommand
         commandManager.addCommand(command)
         return command
     }
@@ -308,13 +306,13 @@ class DynamicLineTool(
         if (movingVertex != null) {
             movingVertex?.updateVertexCenter(copyPointF(coordinate))
             if (movingVertex?.ingoingPathCommand != null) {
-                var startPoint = predecessorVertex?.vertexCenter?.let { center -> copyPointF(center) }
-                var endPoint = copyPointF(coordinate)
+                val startPoint = predecessorVertex?.vertexCenter?.let { center -> copyPointF(center) }
+                val endPoint = copyPointF(coordinate)
                 updatePathCommand(startPoint, endPoint, movingVertex?.ingoingPathCommand)
             }
             if (movingVertex?.outgoingPathCommand != null) {
-                var startPoint = copyPointF(coordinate)
-                var endPoint = successorVertex?.vertexCenter?.let { center -> copyPointF(center) }
+                val startPoint = copyPointF(coordinate)
+                val endPoint = successorVertex?.vertexCenter?.let { center -> copyPointF(center) }
                 updatePathCommand(startPoint, endPoint, movingVertex?.outgoingPathCommand)
             }
             commandManager.executeAllCommands()
