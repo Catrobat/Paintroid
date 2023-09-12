@@ -35,6 +35,8 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 import org.catrobat.paintroid.FileIO
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.R
@@ -953,8 +955,11 @@ class DynamicLineToolIntegrationTest {
     }
 
     private fun performUndo(times: Int) {
-        repeat(times) {
+        runBlocking {
+            repeat(times) {
             TopBarViewInteraction.onTopBarView().performUndo()
+            }
+            delay(500)
         }
     }
 
