@@ -9,6 +9,7 @@ import org.catrobat.paintroid.tools.ContextCallback
 import org.catrobat.paintroid.tools.ToolPaint
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.Workspace
+import org.catrobat.paintroid.tools.helper.PixelPixelAlgorithm
 import org.catrobat.paintroid.tools.options.PixelationToolOptionsView
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 import org.catrobat.paintroid.ui.tools.DefaultPixelToolOptionsView
@@ -35,6 +36,8 @@ class PixelTool(
     @VisibleForTesting
     @JvmField
     var numCollors = DefaultPixelToolOptionsView.defaultCollor
+
+    lateinit var algorithm : PixelPixelAlgorithm
 
     init {
         boxHeight = workspace.height.toFloat()
@@ -75,6 +78,8 @@ class PixelTool(
     // is the checkmark to run the programm
     override fun onClickOnButton() {
         // test if the  ui works good then shoudl be enought for the 30.8
+        algorithm = PixelPixelAlgorithm(drawingBitmap, numCollors.toInt(), numPixelWidth.toInt(), numPixelHeight.toInt() )
+        drawingBitmap = algorithm.getOuput()?.copy(algorithm.outputImg?.config, true)
     }
 
     override fun resetInternalState() = Unit
