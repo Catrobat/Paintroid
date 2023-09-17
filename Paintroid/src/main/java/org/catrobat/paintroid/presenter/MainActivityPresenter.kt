@@ -97,6 +97,7 @@ import org.catrobat.paintroid.tools.implementation.CONSTANT_3
 import org.catrobat.paintroid.tools.implementation.ClippingTool
 import org.catrobat.paintroid.tools.implementation.LineTool
 import org.catrobat.paintroid.tools.implementation.DefaultToolPaint
+import org.catrobat.paintroid.tools.implementation.EraserTool
 import org.catrobat.paintroid.ui.LayerAdapter
 import java.io.File
 
@@ -573,7 +574,7 @@ open class MainActivityPresenter(
         if (view.isKeyboardShown) {
             view.hideKeyboard()
         } else {
-            if (commandManager.isLastColorCommandOnTop() || commandManager.getColorCommandCount() == 0) {
+            if (toolController.currentTool !is EraserTool && (commandManager.isLastColorCommandOnTop() || commandManager.getColorCommandCount() == 0)) {
                 toolController.currentTool?.changePaintColor(Color.BLACK)
                 setBottomNavigationColor(Color.BLACK)
             }
@@ -586,7 +587,11 @@ open class MainActivityPresenter(
                 if (toolController.currentTool is LineTool) {
                     (toolController.currentTool as LineTool).undoChangePaintColor(Color.BLACK, false)
                 } else {
-                    commandManager.undo()
+                    if (toolController.currentTool is EraserTool) {
+                        commandManager.undoIgnoringColorChanges()
+                    } else {
+                        commandManager.undo()
+                    }
                 }
             }
         }
