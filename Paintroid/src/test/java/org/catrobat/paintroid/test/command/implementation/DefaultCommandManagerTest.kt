@@ -29,6 +29,7 @@ import org.junit.Before
 import org.mockito.Mockito
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Color
 import org.catrobat.paintroid.command.Command
 import org.catrobat.paintroid.contract.LayerContracts
 import org.hamcrest.CoreMatchers
@@ -37,6 +38,9 @@ import org.junit.Test
 import org.mockito.junit.MockitoJUnitRunner
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.eq
+import org.catrobat.paintroid.MainActivity
+import org.catrobat.paintroid.command.implementation.ColorChangedCommand
+import org.catrobat.paintroid.tools.ToolReference
 
 @RunWith(MockitoJUnitRunner::class)
 class DefaultCommandManagerTest {
@@ -293,5 +297,25 @@ class DefaultCommandManagerTest {
         commandManager.reset()
         Assert.assertFalse(commandManager.isRedoAvailable)
         Assert.assertFalse(commandManager.isUndoAvailable)
+    }
+
+    @Test
+    fun testIsLastColorCommandUndone() {
+        val firstCommand = Mockito.mock(Command::class.java)
+        val secondCommand = ColorChangedCommand(Mockito.mock(ToolReference::class.java), MainActivity(), Color.BLUE)
+        val thirdCommand = Mockito.mock(Command::class.java)
+        val currentLayer = Mockito.mock(LayerContracts.Layer::class.java)
+
+        layerModel.currentLayer = currentLayer
+        layerModel.addLayerAt(0, currentLayer)
+        Mockito.`when`(currentLayer.bitmap).thenReturn(Mockito.mock(Bitmap::class.java))
+        Mockito.`when`(commonFactory.createCanvas()).thenReturn(Mockito.mock(Canvas::class.java))
+        commandManager.addCommand(firstCommand)
+        commandManager.addCommand(secondCommand)
+        commandManager.addCommand(thirdCommand)
+
+        Assert.assertFalse(commandManager.isLastColorCommandOnTop())
+        commandManager.undo()
+        Assert.assertTrue(commandManager.isLastColorCommandOnTop())
     }
 }

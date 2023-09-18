@@ -113,12 +113,12 @@ open class CursorTool(
         brushToolOptionsView.setStrokeCapButtonChecked(toolPaint.strokeCap)
     }
 
-    override fun changePaintColor(color: Int) {
-        super.changePaintColor(color)
+    override fun changePaintColor(color: Int, invalidate: Boolean) {
+        super.changePaintColor(color, invalidate)
         if (toolInDrawMode) {
             cursorToolSecondaryShapeColor = toolPaint.color
         }
-        brushToolOptionsView.invalidate()
+        if (invalidate) brushToolOptionsView.invalidate()
     }
 
     private fun hideToolOptions() {
