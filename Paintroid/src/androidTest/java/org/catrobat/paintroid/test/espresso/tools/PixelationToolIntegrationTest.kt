@@ -188,4 +188,17 @@ class PixelationToolIntegrationTest {
         val Results = Triple(129,110,100)
         assertEquals(meanCollor, Results)
     }
+    @Test
+    fun SLICOne()
+    {
+        var appContext =   InstrumentationRegistry.getInstrumentation().getTargetContext();
+        var drawable  = appContext.getResources().getDrawable(R.drawable.randomp2, null);
+        val bitmap = Bitmap.createBitmap( pixelTool.boxWidth.toInt(), pixelTool.boxHeight.toInt(), ARGB_8888)
+        val canvas = Canvas(bitmap)
+        drawable.setBounds(0, 0, pixelTool.boxWidth.toInt(), pixelTool.boxHeight.toInt())
+        drawable.draw(canvas)
+        val algoUnderTest : PixelPixelAlgorithm = PixelPixelAlgorithm(bitmap, pixelTool.numCollors.toInt(), pixelTool.numPixelWidth.toInt(), pixelTool.numPixelHeight.toInt())
+        algoUnderTest.innitSuperPixels(bitmap)
+        var i = 1
+    }
 }
