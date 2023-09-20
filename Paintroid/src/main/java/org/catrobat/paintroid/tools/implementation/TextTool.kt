@@ -443,8 +443,8 @@ class TextTool(
         }
     }
 
-    override fun changePaintColor(color: Int) {
-        super.changePaintColor(color)
+    override fun changePaintColor(color: Int, invalidate: Boolean) {
+        super.changePaintColor(color, invalidate)
         changeTextColor()
     }
 }

@@ -618,17 +618,19 @@ open class MainActivityPresenter(
         if (view.isKeyboardShown) {
             view.hideKeyboard()
         } else {
-            setBottomNavigationColor(Color.BLACK)
-            if (toolController.currentTool is LineTool) {
-                (toolController.currentTool as LineTool).undoChangePaintColor(Color.BLACK)
+            if (commandManager.isLastColorCommandOnTop() || commandManager.getColorCommandCount() == 0) {
+                toolController.currentTool?.changePaintColor(Color.BLACK)
+                setBottomNavigationColor(Color.BLACK)
+            }
+            if (toolController.currentTool is ClippingTool) {
+                val clippingTool = toolController.currentTool as ClippingTool
+                clippingToolPaint = clippingTool.drawPaint
+                commandManager.undo()
+                clippingToolInUseAndUndoRedoClicked = true
             } else {
-                if (toolController.currentTool is ClippingTool) {
-                    val clippingTool = toolController.currentTool as ClippingTool
-                    clippingToolPaint = clippingTool.drawPaint
-                    commandManager.undo()
-                    clippingToolInUseAndUndoRedoClicked = true
+                if (toolController.currentTool is LineTool) {
+                    (toolController.currentTool as LineTool).undoChangePaintColor(Color.BLACK, false)
                 } else {
-                    toolController.currentTool?.changePaintColor(Color.BLACK)
                     commandManager.undo()
                 }
             }

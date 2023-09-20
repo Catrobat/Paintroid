@@ -69,6 +69,10 @@ interface CommandManager {
 
     fun getUndoCommandCount(): Int
 
+    fun getColorCommandCount(): Int
+
+    fun isLastColorCommandOnTop(): Boolean
+
     interface CommandListener {
         fun commandPostExecute()
     }

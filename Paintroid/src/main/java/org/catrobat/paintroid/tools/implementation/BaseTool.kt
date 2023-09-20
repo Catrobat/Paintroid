@@ -81,7 +81,7 @@ abstract class BaseTool(
 
     override fun onRestoreInstanceState(bundle: Bundle?) = Unit
 
-    override fun changePaintColor(@ColorInt color: Int) {
+    override fun changePaintColor(@ColorInt color: Int, invalidate: Boolean) {
         toolPaint.color = color
     }
 
