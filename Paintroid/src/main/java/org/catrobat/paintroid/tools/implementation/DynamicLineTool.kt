@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PointF
 import android.view.View
+import androidx.annotation.ColorInt
 import androidx.test.espresso.idling.CountingIdlingResource
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.command.implementation.DynamicPathCommand
@@ -142,7 +143,7 @@ class DynamicLineTool(
     }
 
     fun setToolPaint(command: DynamicPathCommand) {
-        super.changePaintColor(command.paint.color)
+        super.changePaintColor(command.paint.color, false)
         super.changePaintStrokeCap(command.paint.strokeCap)
         super.changePaintStrokeWidth(command.paint.strokeWidth.toInt())
     }
@@ -324,8 +325,8 @@ class DynamicLineTool(
         }
     }
 
-    override fun changePaintColor(color: Int) {
-        super.changePaintColor(color)
+    override fun changePaintColor(@ColorInt color: Int, invalidate: Boolean) {
+        super.changePaintColor(color, false)
         if (vertexStack.isEmpty()) return
         vertexStack.last.ingoingPathCommand?.setPaintColor(toolPaint.color)
         commandManager.executeAllCommands()
@@ -417,7 +418,7 @@ class DynamicLineTool(
             paint.run {
                 style = Paint.Style.FILL
                 color = originalPaint.color
-                alpha = 128
+                alpha = GHOST_PAINT_ALPHA
                 strokeWidth = originalPaint.strokeWidth
                 strokeCap = originalPaint.strokeCap
             }

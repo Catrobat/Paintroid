@@ -600,6 +600,8 @@ open class MainActivityPresenter(
         idlingResource.increment()
         if (view.isKeyboardShown) {
             view.hideKeyboard()
+        } else if (toolController.currentTool is DynamicLineTool) {
+            commandManager.undo()
         } else {
             if (commandManager.isLastColorCommandOnTop() || commandManager.getColorCommandCount() == 0) {
                 toolController.currentTool?.changePaintColor(Color.BLACK)
