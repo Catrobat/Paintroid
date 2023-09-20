@@ -40,7 +40,7 @@ interface Tool {
 
     fun handleUp(coordinate: PointF?): Boolean
 
-    fun changePaintColor(color: Int)
+    fun changePaintColor(color: Int, invalidate: Boolean = true)
 
     fun changePaintStrokeWidth(strokeWidth: Int)
 

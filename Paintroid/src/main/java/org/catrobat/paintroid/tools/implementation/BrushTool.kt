@@ -213,9 +213,9 @@ open class BrushTool(
         previousEventCoordinate = null
     }
 
-    override fun changePaintColor(color: Int) {
-        super.changePaintColor(color)
-        brushToolOptionsView.invalidate()
+    override fun changePaintColor(color: Int, invalidate: Boolean) {
+        super.changePaintColor(color, invalidate)
+        if (invalidate) brushToolOptionsView.invalidate()
     }
 
     private fun eventCoordinatesAreNull(): Boolean =

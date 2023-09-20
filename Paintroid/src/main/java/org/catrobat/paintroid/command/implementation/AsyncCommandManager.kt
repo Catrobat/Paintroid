@@ -226,4 +226,12 @@ open class AsyncCommandManager(
     override fun getUndoCommandCount(): Int {
         synchronized(layerModel) { return commandManager.getUndoCommandCount() }
     }
+
+    override fun getColorCommandCount(): Int {
+        synchronized(layerModel) { return commandManager.getColorCommandCount() }
+    }
+
+    override fun isLastColorCommandOnTop(): Boolean {
+        synchronized(layerModel) { return commandManager.isLastColorCommandOnTop() }
+    }
 }

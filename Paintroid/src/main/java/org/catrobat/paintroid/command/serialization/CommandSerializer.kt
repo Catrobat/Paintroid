@@ -183,10 +183,10 @@ open class CommandSerializer(private val activityContext: Context, private val c
                 returnUri = Uri.fromFile(imageFile)
             }
 
-            val downloadManager = OpenRasterFileFormatConversion.mainActivity.baseContext.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+            val downloadManager = OpenRasterFileFormatConversion.mainActivity?.baseContext?.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
             val id = downloadManager.addCompletedDownload(fileName, fileName, true, "application/zip", imageFile.absolutePath, imageFile.length(), true)
-            val sharedPreferences = OpenRasterFileFormatConversion.mainActivity.getSharedPreferences(SPECIFIC_FILETYPE_SHARED_PREFERENCES_NAME, 0)
-            sharedPreferences.edit().putLong(imageFile.absolutePath, id).apply()
+            val sharedPreferences = OpenRasterFileFormatConversion.mainActivity?.getSharedPreferences(SPECIFIC_FILETYPE_SHARED_PREFERENCES_NAME, 0)
+            sharedPreferences?.edit()?.putLong(imageFile.absolutePath, id)?.apply()
         }
 
         return returnUri
@@ -209,10 +209,10 @@ open class CommandSerializer(private val activityContext: Context, private val c
         } else {
             val file = File(uri.path.toString())
             val isDeleted = file.delete()
-            val sharedPreferences = OpenRasterFileFormatConversion.mainActivity.getSharedPreferences(SPECIFIC_FILETYPE_SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
-            val id = sharedPreferences.getLong(uri.path, -1)
-            if (id > -1) {
-                val downloadManager = OpenRasterFileFormatConversion.mainActivity.baseContext.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+            val sharedPreferences = OpenRasterFileFormatConversion.mainActivity?.getSharedPreferences(SPECIFIC_FILETYPE_SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
+            val id = sharedPreferences?.getLong(uri.path, -1)
+            if (id != null && id > -1) {
+                val downloadManager = OpenRasterFileFormatConversion.mainActivity?.baseContext?.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
                 downloadManager.remove(id)
             }
             if (!isDeleted) {
