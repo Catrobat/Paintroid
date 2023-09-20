@@ -41,17 +41,23 @@ class DynamicLineTool(
 ) {
     private var ingoingStartCoordinate: PointF? = null
     private var ingoingEndCoordinate: PointF? = null
-    private var ingoingGhostPathColor: Int = Color.GRAY
-    private var outgoingGhostPathColor: Int = Color.GRAY
+
+    private var ingoingGhostPathPaint: Paint = Paint()
+    private var outgoingGhostPathPaint: Paint = Paint()
+
     private var outgoingStartCoordinate: PointF? = null
     private var outgoingEndCoordinate: PointF? = null
+
     override var toolType: ToolType = ToolType.DYNAMICLINE
-    private var undoRecentlyClicked = false
+
     var vertexStack: Deque<Vertex> = ArrayDeque()
+
     var movingVertex: Vertex? = null
     var predecessorVertex: Vertex? = null
     var successorVertex: Vertex? = null
+
     var addNewPath: Boolean = false
+    private var undoRecentlyClicked = false
 
     init {
         brushToolOptionsView.setBrushChangedListener(CommonBrushChangedListener(this))
@@ -96,18 +102,18 @@ class DynamicLineTool(
     override fun toolPositionCoordinates(coordinate: PointF): PointF = coordinate
 
     override fun draw(canvas: Canvas) {
-        drawGhostPath(ingoingStartCoordinate, ingoingEndCoordinate, canvas, workspace, ingoingGhostPathColor)
-        drawGhostPath(outgoingStartCoordinate, outgoingEndCoordinate, canvas, workspace, outgoingGhostPathColor)
+        drawGhostPath(ingoingStartCoordinate, ingoingEndCoordinate, canvas, workspace, ingoingGhostPathPaint)
+        drawGhostPath(outgoingStartCoordinate, outgoingEndCoordinate, canvas, workspace, outgoingGhostPathPaint)
         drawShape(canvas)
     }
 
-    private fun drawGhostPath(startCoordinate: PointF?, endCoordinate: PointF?, canvas: Canvas, workspace: Workspace, color: Int) {
+    private fun drawGhostPath(startCoordinate: PointF?, endCoordinate: PointF?, canvas: Canvas, workspace: Workspace, paint: Paint) {
         startCoordinate?.let { start ->
             endCoordinate?.let { end ->
                 canvas.run {
                     save()
                     clipRect(0, 0, workspace.width, workspace.height)
-                    drawLine(start.x, start.y, end.x, end.y, Vertex.getEdgePaint(color))
+                    drawLine(start.x, start.y, end.x, end.y, paint)
                     restore()
                 }
             }
@@ -193,7 +199,6 @@ class DynamicLineTool(
         val firstRedoCommand = commandManager.getFirstRedoCommand() ?: return
         if (firstRedoCommand is DynamicPathCommand &&
             firstRedoCommand.startPoint != vertexStack.last.vertexCenter) {
-            // a previous command was moved so redo has to be deactivated
             commandManager.clearRedoCommandList()
             undoRecentlyClicked = false
         }
@@ -222,10 +227,10 @@ class DynamicLineTool(
     private fun resetGhostPathCoordinates() {
         ingoingStartCoordinate = null
         ingoingEndCoordinate = null
-        ingoingGhostPathColor = Color.GRAY
+        ingoingGhostPathPaint = Paint()
         outgoingStartCoordinate = null
         outgoingEndCoordinate = null
-        outgoingGhostPathColor = Color.GRAY
+        outgoingGhostPathPaint = Paint()
     }
 
     private fun createSourceAndDestinationCommandAndVertices(coordinate: PointF) {
@@ -292,12 +297,12 @@ class DynamicLineTool(
             if (movingVertex?.ingoingPathCommand != null) {
                 ingoingStartCoordinate = predecessorVertex?.vertexCenter?.let { center -> copyPointF(center) }
                 ingoingEndCoordinate = copyPointF(coordinate)
-                ingoingGhostPathColor = movingVertex?.ingoingPathCommand?.paint?.color ?: Color.GRAY
+                ingoingGhostPathPaint = createGhostPathPaint(movingVertex?.ingoingPathCommand?.paint)
             }
             if (movingVertex?.outgoingPathCommand != null) {
                 outgoingStartCoordinate = copyPointF(coordinate)
                 outgoingEndCoordinate = successorVertex?.vertexCenter?.let { center -> copyPointF(center) }
-                outgoingGhostPathColor = movingVertex?.outgoingPathCommand?.paint?.color ?: Color.GRAY
+                outgoingGhostPathPaint = createGhostPathPaint(movingVertex?.outgoingPathCommand?.paint)
             }
         }
     }
@@ -406,8 +411,31 @@ class DynamicLineTool(
         }
     }
 
+    private fun createGhostPathPaint(originalPaint: Paint?): Paint {
+        val paint = Paint()
+        if (originalPaint != null) {
+            paint.run {
+                style = Paint.Style.FILL
+                color = originalPaint.color
+                alpha = 128
+                strokeWidth = originalPaint.strokeWidth
+                strokeCap = originalPaint.strokeCap
+            }
+        } else {
+            paint.run {
+                style = Paint.Style.FILL
+                color = Color.GRAY
+                alpha = GHOST_PAINT_ALPHA
+                strokeWidth = GHOST_STROKE_WIDTH
+            }
+        }
+        return paint
+    }
+
     companion object {
         var topBarViewHolder: TopBarViewHolder? = null
         const val TAG = "DynamicLineTool"
+        private const val GHOST_PAINT_ALPHA = 128
+        private const val GHOST_STROKE_WIDTH = 16f
     }
 }

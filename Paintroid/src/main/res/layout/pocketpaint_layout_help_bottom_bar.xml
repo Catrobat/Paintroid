@@ -293,10 +293,12 @@
             <ImageView
                 style="@style/PocketPaintToolSelectionButtonImageView"
                 android:src="@drawable/ic_pocketpaint_tool_dynamic_line"
-                android:contentDescription="@string/button_dynamic_line"/>
+                android:contentDescription="@string/button_dynamic_line"
+                app:tint="@color/pocketpaint_color_picker_white"/>
             <TextView
                 style="@style/PocketPaintToolSelectionButtonTextView"
-                android:text="@string/button_dynamic_line"/>
+                android:text="@string/button_dynamic_line"
+                android:textColor="@color/pocketpaint_color_picker_white"/>
         </LinearLayout>
     </TableRow>
 </TableLayout>
