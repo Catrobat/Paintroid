@@ -87,6 +87,15 @@ class DynamicPathCommand(var paint: Paint, path: Path, startPoint: PointF, endPo
         }
     }
 
+    fun setupVertexStackAfterRedo(mainActivity: MainActivity, command: DynamicPathCommand) {
+        mainActivity.runOnUiThread {
+            val currentTool = mainActivity.defaultToolController.currentTool as DynamicLineTool
+            currentTool.updateVertexStackAfterRedo(command)
+            currentTool.setToolPaint(command)
+            mainActivity.presenter.setBottomNavigationColor(command.paint.color)
+        }
+    }
+
     fun switchToDynamicLineTool(mainActivity: MainActivity) {
         mainActivity.runOnUiThread {
             mainActivity.presenter.switchToDynamicLineTool()

@@ -786,9 +786,7 @@ class DynamicLineToolIntegrationTest {
 
         TopBarViewInteraction.onTopBarView().performClickCheckmark()
 
-        ToolBarViewInteraction.onToolBarView()
-            .performSelectTool(ToolType.SPRAY)
-        Assert.assertEquals(ToolType.SPRAY, launchActivityRule.activity.defaultToolController.currentTool?.toolType)
+        switchTool(ToolType.SPRAY)
 
         touchAt(DrawingSurfaceLocationProvider.MIDDLE)
 
@@ -801,17 +799,13 @@ class DynamicLineToolIntegrationTest {
 
     @Test
     fun testRedoFromDifferentActiveToolSwitchesToDynamicLineToolAndRebuildsVertexStack() {
-        ToolBarViewInteraction.onToolBarView()
-            .performSelectTool(ToolType.SPRAY)
-        Assert.assertEquals(ToolType.SPRAY, launchActivityRule.activity.defaultToolController.currentTool?.toolType)
+        switchTool(ToolType.SPRAY)
 
         touchAt(DrawingSurfaceLocationProvider.HALFWAY_LEFT_MIDDLE)
         touchAt(DrawingSurfaceLocationProvider.MIDDLE)
         touchAt(DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE)
 
-        ToolBarViewInteraction.onToolBarView()
-            .performSelectTool(ToolType.DYNAMICLINE)
-        Assert.assertEquals(ToolType.DYNAMICLINE, launchActivityRule.activity.defaultToolController.currentTool?.toolType)
+        switchTool(ToolType.DYNAMICLINE)
 
         TopBarViewInteraction.onTopBarView().performClickCheckmark()
 
@@ -822,9 +816,7 @@ class DynamicLineToolIntegrationTest {
 
         performUndo(5)
 
-        ToolBarViewInteraction.onToolBarView()
-            .performSelectTool(ToolType.SPRAY)
-        Assert.assertEquals(ToolType.SPRAY, launchActivityRule.activity.defaultToolController.currentTool?.toolType)
+        switchTool(ToolType.SPRAY)
 
         performRedo(4)
 
@@ -952,6 +944,15 @@ class DynamicLineToolIntegrationTest {
         DrawingSurfaceInteraction.onDrawingSurfaceView()
             .perform(UiInteractions.swipe(from, to))
         touchAt(to)
+    }
+
+    private fun switchTool(toolType: ToolType) {
+        ToolBarViewInteraction.onToolBarView()
+            .performSelectTool(toolType)
+        runBlocking {
+            delay(500)
+        }
+        Assert.assertEquals(toolType, launchActivityRule.activity.defaultToolController.currentTool?.toolType)
     }
 
     private fun performUndo(times: Int) {

@@ -300,10 +300,7 @@ class DefaultCommandManager(
             if (command.isSourcePath) {
                 (currentTool as DynamicLineTool).clear()
             }
-            currentTool as DynamicLineTool
-            currentTool.updateVertexStackAfterRedo(command)
-            currentTool.setToolPaint(command) // here
-            mainActivity.presenter.setBottomNavigationColor(command.paint.color)
+            command.setupVertexStackAfterRedo(mainActivity, command)
         } else if (currentTool is DynamicLineTool) {
             currentTool.clear()
         }
