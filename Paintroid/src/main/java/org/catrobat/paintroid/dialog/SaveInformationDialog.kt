@@ -152,6 +152,7 @@ class SaveInformationDialog :
             .setPositiveButton(R.string.save_button_text) { _, _ ->
                 FileIO.filename = imageName.text.toString()
                 FileIO.storeImageUri = null
+                FileIO.storeImagePreviewUri = null
                 if (FileIO.checkFileExists(FileIO.fileType, FileIO.defaultFileName, requireContext().contentResolver)) {
                     presenter.showOverwriteDialog(permission, isExport)
                 } else {
