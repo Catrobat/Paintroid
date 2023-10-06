@@ -52,8 +52,10 @@ class FillCommandTest {
         bitmapUnderTest =
             Bitmap.createBitmap(INITIAL_WIDTH, INITIAL_HEIGHT, Bitmap.Config.ARGB_8888)
         layerModel = LayerModel()
-        val layer = Layer(bitmapUnderTest!!)
-        (layerModel as LayerModel).addLayerAt(0, layer)
+        val layer = bitmapUnderTest?.let { Layer(it) }
+        if (layer != null) {
+            (layerModel as LayerModel).addLayerAt(0, layer)
+        }
         (layerModel as LayerModel).currentLayer = layer
     }
 
@@ -64,14 +66,14 @@ class FillCommandTest {
         val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888).apply {
             eraseColor(Color.WHITE)
         }
-        layerModel!!.currentLayer!!.bitmap = bitmap
+        layerModel?.currentLayer?.bitmap = bitmap
         val clickedPixel = Point(width / 2, height / 2)
         val targetColor = Color.BLACK
         val paint = Paint().apply {
             color = targetColor
         }
         val fillCommand = FillCommand(JavaFillAlgorithmFactory(), clickedPixel, paint, NO_TOLERANCE)
-        fillCommand.run(Canvas(), layerModel!!)
+        layerModel?.let { fillCommand.run(Canvas(), it) }
         val pixels = getPixelsFromBitmap(bitmap)
         assertEquals("Wrong array size", height, pixels.size)
         assertEquals("Wrong array size", width, pixels[0].size)
@@ -90,7 +92,7 @@ class FillCommandTest {
         val targetColor = Color.GREEN
         val boundaryColor = Color.RED
         val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-        layerModel!!.currentLayer!!.bitmap = bitmap
+        layerModel?.currentLayer?.bitmap = bitmap
         val paint = Paint().apply {
             color = targetColor
         }
@@ -99,7 +101,7 @@ class FillCommandTest {
         pixels[1][0] = boundaryColor
         putPixelsToBitmap(bitmap, pixels)
         val fillCommand = FillCommand(JavaFillAlgorithmFactory(), clickedPixel, paint, NO_TOLERANCE)
-        fillCommand.run(Canvas(), layerModel!!)
+        layerModel?.let { fillCommand.run(Canvas(), it) }
         val updatedPixels = getPixelsFromBitmap(bitmap)
         assertEquals("Color of upper left pixel should not have been replaced", 0, updatedPixels[0][0])
         assertEquals("Boundary color should not have been replaced", boundaryColor, updatedPixels[0][1])
@@ -124,7 +126,7 @@ class FillCommandTest {
         val maxTolerancePerChannel = 0xFF
         val boundaryColor = Color.argb(maxTolerancePerChannel, maxTolerancePerChannel, maxTolerancePerChannel, maxTolerancePerChannel)
         val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-        layerModel!!.currentLayer!!.bitmap = bitmap
+        layerModel?.currentLayer?.bitmap = bitmap
         bitmap.eraseColor(replacementColor)
         val paint = Paint().apply {
             color = targetColor
@@ -134,7 +136,7 @@ class FillCommandTest {
         pixels[1][0] = boundaryColor
         putPixelsToBitmap(bitmap, pixels)
         val fillCommand = FillCommand(JavaFillAlgorithmFactory(), clickedPixel, paint, MAX_TOLERANCE)
-        fillCommand.run(Canvas(), layerModel!!)
+        layerModel?.let { fillCommand.run(Canvas(), it) }
         val updatedPixels = getPixelsFromBitmap(bitmap)
         for (row in 0 until height) {
             for (col in 0 until width) {
@@ -153,7 +155,7 @@ class FillCommandTest {
         val maxTolerancePerChannel = 0xFF
         val boundaryColor = Color.argb(maxTolerancePerChannel, maxTolerancePerChannel, maxTolerancePerChannel, maxTolerancePerChannel)
         val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-        layerModel!!.currentLayer!!.bitmap = bitmap
+        layerModel?.currentLayer?.bitmap = bitmap
         bitmap.eraseColor(replacementColor)
         val paint = Paint().apply {
             color = targetColor
@@ -163,7 +165,7 @@ class FillCommandTest {
         pixels[1][0] = boundaryColor
         putPixelsToBitmap(bitmap, pixels)
         val fillCommand = FillCommand(JavaFillAlgorithmFactory(), clickedPixel, paint, MAX_TOLERANCE - 1)
-        fillCommand.run(Canvas(), layerModel!!)
+        layerModel?.let { fillCommand.run(Canvas(), it) }
         val updatedPixels = getPixelsFromBitmap(bitmap)
         for (row in 0 until height) {
             for (col in 0 until width) {
@@ -183,7 +185,7 @@ class FillCommandTest {
         val clickedPixel = Point(width / 2, height / 2)
         val boundaryPixel = Point(width / 4, height / 4)
         val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-        layerModel!!.currentLayer!!.bitmap = bitmap
+        layerModel?.currentLayer?.bitmap = bitmap
         val targetColor = 0
         val boundaryColor = Color.argb(0xFF, 0xFF, 0xFF, 0xFF)
         bitmap.eraseColor(targetColor)
@@ -194,7 +196,7 @@ class FillCommandTest {
         pixels[boundaryPixel.x][boundaryPixel.y] = boundaryColor
         putPixelsToBitmap(bitmap, pixels)
         val fillCommand = FillCommand(JavaFillAlgorithmFactory(), clickedPixel, paint, HALF_TOLERANCE)
-        fillCommand.run(Canvas(), layerModel!!)
+        layerModel?.let { fillCommand.run(Canvas(), it) }
         val updatedPixels = getPixelsFromBitmap(bitmap)
         for (row in 0 until height) {
             for (col in 0 until width) {
@@ -216,7 +218,7 @@ class FillCommandTest {
         val width = 8
         val topLeftQuarterPixel = Point(width / 4, height / 4)
         val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-        layerModel!!.currentLayer!!.bitmap = bitmap
+        layerModel?.currentLayer?.bitmap = bitmap
         bitmap.eraseColor(replacementColor)
         val paint = Paint().apply {
             color = targetColor
@@ -229,7 +231,7 @@ class FillCommandTest {
         pixels[boundaryPixel.y][boundaryPixel.x] = boundaryColor
         putPixelsToBitmap(bitmap, pixels)
         val fillCommand = FillCommand(JavaFillAlgorithmFactory(), topLeftQuarterPixel, paint, HALF_TOLERANCE)
-        fillCommand.run(Canvas(), layerModel!!)
+        layerModel?.let { fillCommand.run(Canvas(), it) }
         val actualPixels = getPixelsFromBitmap(bitmap)
         for (row in 0 until height) {
             for (col in 0 until width) {
@@ -252,14 +254,14 @@ class FillCommandTest {
         val width = pixels[0].size
         val clickedPixel = Point(1, 1)
         val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-        layerModel!!.currentLayer!!.bitmap = bitmap
+        layerModel?.currentLayer?.bitmap = bitmap
         bitmap.eraseColor(replacementColor)
         val paint = Paint().apply {
             color = targetColor
         }
         putPixelsToBitmap(bitmap, pixels)
         val fillCommand = FillCommand(JavaFillAlgorithmFactory(), clickedPixel, paint, HALF_TOLERANCE)
-        fillCommand.run(Canvas(), layerModel!!)
+        layerModel?.let { fillCommand.run(Canvas(), it) }
         val actualPixels = getPixelsFromBitmap(bitmap)
         val expectedPixels = createPixelArrayAndDrawSpiral(targetColor, boundaryColor)
         for (row in 0 until height) {
@@ -283,11 +285,11 @@ class FillCommandTest {
         for (clickedPixel in clickedPixels) {
             val pixels = createPixelArrayForComplexTest(replacementColor, boundaryColor)
             val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-            layerModel!!.currentLayer!!.bitmap = bitmap
+            layerModel?.currentLayer?.bitmap = bitmap
             bitmap.eraseColor(replacementColor)
             putPixelsToBitmap(bitmap, pixels)
             val fillCommand = FillCommand(JavaFillAlgorithmFactory(), clickedPixel, paint, HALF_TOLERANCE)
-            fillCommand.run(Canvas(), layerModel!!)
+            layerModel?.let { fillCommand.run(Canvas(), it) }
             val actualPixels = getPixelsFromBitmap(bitmap)
             val expectedPixels = createPixelArrayForComplexTest(targetColor, boundaryColor)
             for (row in pixels.indices) {
@@ -311,11 +313,11 @@ class FillCommandTest {
         val height = pixels.size
         val width = pixels[0].size
         val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-        layerModel!!.currentLayer!!.bitmap = bitmap
+        layerModel?.currentLayer?.bitmap = bitmap
         bitmap.eraseColor(replacementColor)
         putPixelsToBitmap(bitmap, pixels)
         val fillCommand = FillCommand(JavaFillAlgorithmFactory(), clickedPixel, paint, HALF_TOLERANCE)
-        fillCommand.run(Canvas(), layerModel!!)
+        layerModel?.let { fillCommand.run(Canvas(), it) }
         val actualPixels = getPixelsFromBitmap(bitmap)
         val expectedPixels = createPixelArrayForSkipPixelTest(targetColor, boundaryColor)
         for (row in 0 until height) {
