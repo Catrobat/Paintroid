@@ -645,6 +645,7 @@ open class MainActivityPresenter(
                 }
             }
         }
+        checkIfClippingToolNeedsAdjustment()
         drawerLayoutViewHolder.openDrawer(Gravity.END)
         idlingResource.decrement()
     }
