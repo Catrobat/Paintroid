@@ -26,7 +26,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.viewpager.widget.PagerAdapter
 
-class IntroPageViewAdapter(private val layouts: IntArray) : PagerAdapter() {
+class IntroPageViewAdapter(val layouts: IntArray) : PagerAdapter() {
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val inflater = LayoutInflater.from(container.context)
