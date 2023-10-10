@@ -33,7 +33,7 @@ pipeline {
     agent {
          docker {
             image 'catrobat/catrobat-paintroid:stable'
-            args '--device /dev/kvm:/dev/kvm -v /var/local/container_shared/gradle_cache/$EXECUTOR_NUMBER:/home/user/.gradle -m=6.5G'
+            args '--device /dev/kvm:/dev/kvm -m=6.5G'
             label 'LimitedEmulator'
             alwaysPull true
         }
