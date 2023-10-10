@@ -54,9 +54,7 @@ class MediaGalleryWebViewClient(private val callback: WebClientCallback) : WebVi
         }
     }
 
-    override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
-        return false
-    }
+    override fun shouldOverrideUrlLoading(view: WebView, url: String) = false
 
     override fun onReceivedError(
         view: WebView,
