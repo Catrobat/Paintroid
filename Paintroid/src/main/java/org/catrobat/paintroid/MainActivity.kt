@@ -45,6 +45,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.appcompat.widget.TooltipCompat
 import androidx.core.widget.ContentLoadingProgressBar
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.multidex.BuildConfig
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.idling.CountingIdlingResource
@@ -170,7 +171,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             Class.forName("androidx.test.espresso.Espresso")
             true
         } catch (e: ClassNotFoundException) {
-            Log.e(TAG, "Application is not in test mode.")
+            Log.e(TAG, "Application is not in test mode.") 
             false
         }
     }

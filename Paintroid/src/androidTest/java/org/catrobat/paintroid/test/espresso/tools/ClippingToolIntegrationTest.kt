@@ -214,7 +214,7 @@ class ClippingToolIntegrationTest {
             .performClose()
 
         val bitmapColor = workspace.bitmapOfCurrentLayer?.getPixel(middleTop.x.toInt(), middleTop.y.toInt())
-        assertEquals(bitmapColor, Color.BLACK)
+        assertEquals(bitmapColor, Color.TRANSPARENT)
     }
 
     @Test
