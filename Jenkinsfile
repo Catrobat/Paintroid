@@ -115,6 +115,10 @@ pipeline {
 
                 stage('Device Tests') {
                     steps {
+                        sh '/home/user/android/sdk/platform-tools/adb start-server'
+                        sh '/home/user/android/sdk/platform-tools/adb shell settings put global window_animation_scale 0 &'
+                        sh '/home/user/android/sdk/platform-tools/adb shell settings put global transition_animation_scale 0 &'
+                        sh '/home/user/android/sdk/platform-tools/adb shell settings put global animator_duration_scale 0 &'
                         sh "echo no | avdmanager create avd --force --name android28 --package 'system-images;android-28;default;x86_64'"
                         sh "/home/user/android/sdk/emulator/emulator -no-window -no-boot-anim -noaudio -avd android28 > /dev/null 2>&1 &"
                         sh './gradlew -PenableCoverage -Pjenkins -Pemulator=android28 -Pci createDebugCoverageReport -i'
@@ -122,7 +126,7 @@ pipeline {
                     post {
                         always {
                             sh '/home/user/android/sdk/platform-tools/adb logcat -d > logcat.txt'
-                            sh './gradlew stopEmulator'
+                            sh '/home/user/android/sdk/platform-tools/adb kill-server'
                             junitAndCoverage "$reports/coverage/debug/report.xml", 'device', javaSrc
                             archiveArtifacts 'logcat.txt'
                         }
