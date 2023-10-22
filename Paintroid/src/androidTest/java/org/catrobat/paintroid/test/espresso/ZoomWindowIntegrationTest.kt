@@ -1,12 +1,12 @@
 package org.catrobat.paintroid.test.espresso
 
+import android.graphics.Color
 import android.os.Build
 import android.widget.RelativeLayout
 import androidx.test.espresso.Espresso.onView
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.ActivityTestRule
 import org.catrobat.paintroid.MainActivity
-import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction
 import org.catrobat.paintroid.tools.ToolType
 import org.junit.Before
 import org.junit.Rule
@@ -17,11 +17,16 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
 import androidx.test.espresso.matcher.ViewMatchers.withId
+import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider
+import org.catrobat.paintroid.test.espresso.util.UiInteractions
 import org.catrobat.paintroid.test.espresso.util.UiInteractions.PressAndReleaseActions.tearDownPressAndRelease
 import org.catrobat.paintroid.test.espresso.util.UiInteractions.PressAndReleaseActions.pressAction
 import org.catrobat.paintroid.test.espresso.util.UiInteractions.PressAndReleaseActions.releaseAction
 import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.Companion.onDrawingSurfaceView
+import org.catrobat.paintroid.test.espresso.util.wrappers.LayerMenuViewInteraction
+import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.Companion.onToolBarView
+import org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction
 import org.catrobat.paintroid.test.espresso.util.wrappers.ZoomWindowInteraction.Companion.onZoomWindow
 import org.junit.After
 
@@ -31,10 +36,11 @@ class ZoomWindowIntegrationTest {
     @get:Rule
     val launchActivityRule = ActivityTestRule(MainActivity::class.java)
 
+    private lateinit var mainActivity: MainActivity
     @Before
     fun setUp() {
-        ToolBarViewInteraction.onToolBarView()
-            .performSelectTool(ToolType.BRUSH)
+        mainActivity = launchActivityRule.activity
+        onToolBarView().performSelectTool(ToolType.BRUSH)
     }
 
     @After
@@ -98,5 +104,54 @@ class ZoomWindowIntegrationTest {
 
         onDrawingSurfaceView()
             .perform(releaseAction())
+    }
+
+    @Test
+    fun checkBackgroundOfZoomWindowOnlyOneLayer() {
+        onToolBarView().performSelectTool(ToolType.FILL)
+        ToolPropertiesInteraction.onToolProperties().checkMatchesColor(Color.BLACK)
+        onDrawingSurfaceView().perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
+        onDrawingSurfaceView().checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
+
+        onToolBarView().performSelectTool(ToolType.BRUSH)
+        onDrawingSurfaceView().perform(pressAction(DrawingSurfaceLocationProvider.MIDDLE))
+        onView(withId(R.id.pocketpaint_zoom_window))
+            .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+
+        val zoomWindowBitmap = mainActivity.zoomWindowController.getBitmap()
+        onZoomWindow().checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE, zoomWindowBitmap)
+
+        onDrawingSurfaceView().perform(releaseAction())
+    }
+
+    @Test
+    fun checkBackgroundOfZoomWindowWithMultipleLayers() {
+        LayerMenuViewInteraction.onLayerMenuView()
+            .checkLayerCount(1)
+            .performOpen()
+            .performAddLayer()
+            .checkLayerCount(2)
+            .performSelectLayer(0)
+            .performClose()
+
+        onToolBarView().performSelectTool(ToolType.FILL)
+        ToolPropertiesInteraction.onToolProperties().checkMatchesColor(Color.BLACK)
+        onDrawingSurfaceView().perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
+        onDrawingSurfaceView().checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
+
+        LayerMenuViewInteraction.onLayerMenuView()
+            .performOpen()
+            .performSelectLayer(1)
+            .performClose()
+
+        onToolBarView().performSelectTool(ToolType.BRUSH)
+        onDrawingSurfaceView().perform(pressAction(DrawingSurfaceLocationProvider.MIDDLE))
+        onView(withId(R.id.pocketpaint_zoom_window))
+            .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+
+        val zoomWindowBitmap = mainActivity.zoomWindowController.getBitmap()
+        onZoomWindow().checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE, zoomWindowBitmap)
+
+        onDrawingSurfaceView().perform(releaseAction())
     }
 }

@@ -47,10 +47,11 @@ import org.catrobat.paintroid.listener.DrawingSurfaceListener.DrawingSurfaceList
 import org.catrobat.paintroid.model.LayerModel
 import org.catrobat.paintroid.tools.Tool
 import org.catrobat.paintroid.tools.ToolReference
+import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 import org.catrobat.paintroid.ui.zoomwindow.ZoomWindowController
 import org.catrobat.paintroid.ui.viewholder.DrawerLayoutViewHolder
-import org.catrobat.paintroid.ui.zoomwindow.DefaultZoomWindowController
+import org.catrobat.paintroid.ui.zoomwindow.DefaultZoomWindowController.Constants
 
 open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
     private val canvasRect = Rect()
@@ -144,56 +145,53 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
     private fun doDraw(surfaceViewCanvas: Canvas) {
         synchronized(layerModel) {
             if (surfaceReady) {
-                canvasRect.set(0, 0, layerModel.width, layerModel.height)
-                perspective.applyToCanvas(surfaceViewCanvas)
+                prepareCanvas(surfaceViewCanvas)
+                drawBackground(surfaceViewCanvas)
+                val currentBitmap = drawLayers(surfaceViewCanvas)
+                handleZoomCompatibility(currentBitmap)
+            }
+        }
+    }
 
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-                    surfaceViewCanvas.drawColor(bgColor, PorterDuff.Mode.SRC)
-                } else {
-                    surfaceViewCanvas.save()
-                    surfaceViewCanvas.clipOutRect(canvasRect)
-                    surfaceViewCanvas.drawColor(bgColor, PorterDuff.Mode.SRC)
-                    surfaceViewCanvas.restore()
-                }
+    private fun prepareCanvas(surfaceViewCanvas: Canvas) {
+        canvasRect.set(0, 0, layerModel.width, layerModel.height)
+        perspective.applyToCanvas(surfaceViewCanvas)
+    }
 
-                surfaceViewCanvas.drawRect(canvasRect, checkeredPattern)
-                surfaceViewCanvas.drawRect(canvasRect, framePaint)
+    private fun drawBackground(surfaceViewCanvas: Canvas) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            surfaceViewCanvas.drawColor(bgColor, PorterDuff.Mode.SRC)
+        } else {
+            surfaceViewCanvas.save()
+            surfaceViewCanvas.clipOutRect(canvasRect)
+            surfaceViewCanvas.drawColor(bgColor, PorterDuff.Mode.SRC)
+            surfaceViewCanvas.restore()
+        }
+        surfaceViewCanvas.drawRect(canvasRect, checkeredPattern)
+        surfaceViewCanvas.drawRect(canvasRect, framePaint)
+    }
 
-                (layerModel as LayerModel).drawLayersOntoCanvas(surfaceViewCanvas)
+    private fun drawLayers(surfaceViewCanvas: Canvas): Bitmap? {
+        val currentTool = toolReference.tool
+        val bitmapOfDrawingBoard = Bitmap.createBitmap(layerModel.width, layerModel.height, Bitmap.Config.ARGB_8888)
+        val currentLayerIndex = layerModel.currentLayer?.let { layerModel.getLayerIndexOf(it) }
 
-                val tool = toolReference.tool
-                when (zoomController.checkIfToolCompatibleWithZoomWindow(tool)) {
-                    DefaultZoomWindowController.Constants.NOT_COMPATIBLE ->
-                        tool?.draw(surfaceViewCanvas)
+        if (currentTool?.toolType?.name.equals(ToolType.ERASER.name)) {
+            (layerModel as LayerModel).drawLayersOntoCanvas(surfaceViewCanvas)
+            surfaceViewCanvas.setBitmap(bitmapOfDrawingBoard)
+            (layerModel as LayerModel).drawLayersOntoCanvasCorrectOrderEraser(surfaceViewCanvas, currentLayerIndex, currentTool)
+        } else {
+            val drawingBoardCanvas = Canvas(bitmapOfDrawingBoard)
+            (layerModel as LayerModel).drawLayersOntoCanvasCorrectOrder(surfaceViewCanvas, currentLayerIndex, drawingBoardCanvas, currentTool)
+        }
+        return bitmapOfDrawingBoard
+    }
 
-                    DefaultZoomWindowController.Constants.COMPATIBLE_NEW -> {
-                        val bitmapOfDrawingBoard = Bitmap.createBitmap(
-                            layerModel.width, layerModel.height, Bitmap.Config.ARGB_8888)
-
-                        tool?.draw(surfaceViewCanvas)
-
-                        val canvas = Canvas(bitmapOfDrawingBoard)
-                        tool?.draw(canvas)
-
-                        handler.post(
-                            Runnable {
-                                zoomController.getBitmap(bitmapOfDrawingBoard)
-                            }
-                        )
-                    }
-                    DefaultZoomWindowController.Constants.COMPATIBLE_ALL -> {
-                        val bitmapOfDrawingBoard = layerModel.currentLayer?.bitmap
-                        surfaceViewCanvas.setBitmap(bitmapOfDrawingBoard)
-
-                        tool?.draw(surfaceViewCanvas)
-
-                        handler.post(
-                            Runnable {
-                                zoomController.getBitmap(bitmapOfDrawingBoard)
-                            }
-                        )
-                    }
-                }
+    private fun handleZoomCompatibility(currentBitmap: Bitmap?) {
+        val currentTool = toolReference.tool
+        if (zoomController.checkIfToolCompatibleWithZoomWindow(currentTool) == Constants.COMPATIBLE) {
+            handler.post {
+                zoomController.setBitmap(currentBitmap)
             }
         }
     }
