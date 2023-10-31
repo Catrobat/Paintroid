@@ -320,7 +320,7 @@ class ClippingToolIntegrationTest {
         val colorOutOfAreaAfterUndo = workspace.bitmapOfCurrentLayer?.getPixel(outOfAreaX, outOfAreaY)
         assertEquals(colorOutOfAreaAfterUndo, Color.BLACK)
 
-        while(mainActivity.commandManager.isRedoAvailable) {
+        while (mainActivity.commandManager.isRedoAvailable) {
             TopBarViewInteraction.onTopBarView().performRedo()
         }
 
