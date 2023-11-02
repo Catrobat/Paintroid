@@ -26,6 +26,7 @@ import org.catrobat.paintroid.UserPreferences
 import org.catrobat.paintroid.tools.Tool
 import org.catrobat.paintroid.tools.Tool.StateChange
 import org.catrobat.paintroid.tools.ToolType
+import org.catrobat.paintroid.tools.implementation.BrushTool
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 import org.catrobat.paintroid.ui.DrawingSurface
 import org.catrobat.paintroid.ui.zoomwindow.ZoomWindowController
@@ -96,50 +97,64 @@ open class DrawingSurfaceListener(
     }
 
     private fun handleActionMove(currentTool: Tool?, event: MotionEvent) {
+        if (event.pointerCount == 1) {
+            handleActionMoveOnePointer(currentTool, event)
+        } else {
+            handleActionMoveMultiplePointer(currentTool, event)
+        }
+    }
+
+    private fun handleActionMoveOnePointer(currentTool: Tool?, event: MotionEvent) {
+        currentTool ?: return
+
         val xOld: Float
         val yOld: Float
-        if (event.pointerCount == 1) {
-            currentTool ?: return
-            recentTouchEventsData.add(TouchEventData(event.eventTime, event.x, event.y))
-            removeObsoleteTouchEventsData(event.eventTime)
-            if (currentTool.handToolMode()) {
-                if (touchMode == TouchMode.PINCH) {
-                    xOld = 0f
-                    yOld = 0f
-                    touchMode = TouchMode.DRAW
-                } else {
-                    xOld = eventX
-                    yOld = eventY
-                }
-                newHandEvent(event.x, event.y)
-                if (xOld > 0 && eventX != xOld || yOld > 0 && eventY != yOld) {
-                    callback.translatePerspective(eventX - xOld, eventY - yOld)
-                }
-            } else if (touchMode != TouchMode.PINCH) {
+
+        recentTouchEventsData.add(TouchEventData(event.eventTime, event.x, event.y))
+        removeObsoleteTouchEventsData(event.eventTime)
+        if (currentTool.handToolMode()) {
+            if (touchMode == TouchMode.PINCH) {
+                xOld = 0f
+                yOld = 0f
                 touchMode = TouchMode.DRAW
+            } else {
+                xOld = eventX
+                yOld = eventY
+            }
+            newHandEvent(event.x, event.y)
+            if (xOld > 0 && eventX != xOld || yOld > 0 && eventY != yOld) {
+                callback.translatePerspective(eventX - xOld, eventY - yOld)
+            }
+        } else if (touchMode != TouchMode.PINCH) {
+            touchMode = TouchMode.DRAW
+            if (currentTool is BrushTool && currentTool.useEventDependentStrokeWidth) {
+                currentTool.handleMove(canvasTouchPoint, event)
+            } else {
                 currentTool.handleMove(canvasTouchPoint)
             }
-            handleZoomWindowOnMove(currentTool, event)
-        } else {
-            if (touchMode == TouchMode.DRAW) {
-                saveToolActionBeforeZoom(PointF(event.x, event.y))
-                currentTool?.resetInternalState(StateChange.MOVE_CANCELED)
-            }
-            touchMode = TouchMode.PINCH
-            val pointerDistanceOld = pointerDistance
-            pointerDistance = calculatePointerDistance(event)
-            if (pointerDistanceOld > 0 && pointerDistanceOld != pointerDistance) {
-                val scale = pointerDistance / pointerDistanceOld
-                callback.multiplyPerspectiveScale(scale)
-            }
-            xOld = xMidPoint
-            yOld = yMidPoint
-            calculateMidPoint(event)
-            if (xOld > 0 && xMidPoint != xOld || yOld > 0 && yMidPoint != yOld) {
-                callback.translatePerspective(xMidPoint - xOld, yMidPoint - yOld)
-            }
-            zoomController.dismissOnPinch()
         }
+        handleZoomWindowOnMove(currentTool, event)
+    }
+
+    private fun handleActionMoveMultiplePointer(currentTool: Tool?, event: MotionEvent) {
+        if (touchMode == TouchMode.DRAW) {
+            saveToolActionBeforeZoom(PointF(event.x, event.y))
+            currentTool?.resetInternalState(StateChange.MOVE_CANCELED)
+        }
+        touchMode = TouchMode.PINCH
+        val pointerDistanceOld = pointerDistance
+        pointerDistance = calculatePointerDistance(event)
+        if (pointerDistanceOld > 0 && pointerDistanceOld != pointerDistance) {
+            val scale = pointerDistance / pointerDistanceOld
+            callback.multiplyPerspectiveScale(scale)
+        }
+        val xOld: Float = xMidPoint
+        val yOld: Float = yMidPoint
+        calculateMidPoint(event)
+        if (xOld > 0 && xMidPoint != xOld || yOld > 0 && yMidPoint != yOld) {
+            callback.translatePerspective(xMidPoint - xOld, yMidPoint - yOld)
+        }
+        zoomController.dismissOnPinch()
     }
 
     private fun handleZoomWindowOnMove(currentTool: Tool, event: MotionEvent) {

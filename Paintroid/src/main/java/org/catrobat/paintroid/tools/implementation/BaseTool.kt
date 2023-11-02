@@ -24,6 +24,7 @@ import android.graphics.Paint.Cap
 import android.graphics.Point
 import android.graphics.PointF
 import android.os.Bundle
+import android.view.MotionEvent
 import androidx.annotation.ColorInt
 import androidx.test.espresso.idling.CountingIdlingResource
 import org.catrobat.paintroid.command.CommandFactory
@@ -49,7 +50,8 @@ abstract class BaseTool(
     @JvmField
     protected var idlingResource: CountingIdlingResource,
     @JvmField
-    protected var commandManager: CommandManager
+    protected var commandManager: CommandManager,
+    var useEventDependentStrokeWidth: Boolean = false
 ) : Tool {
     @JvmField
     protected val movedDistance: PointF
@@ -100,6 +102,9 @@ abstract class BaseTool(
         toolOptionsViewController.animateBottomAndTopNavigation(true)
         return true
     }
+
+    override fun handleMove(coordinate: PointF?, event: MotionEvent): Boolean = true
+
     override val drawPaint
         get() = Paint(toolPaint.paint)
 

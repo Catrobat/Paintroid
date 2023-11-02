@@ -24,6 +24,7 @@ import android.graphics.Paint.Cap
 import android.graphics.Point
 import android.graphics.PointF
 import android.os.Bundle
+import android.view.MotionEvent
 
 interface Tool {
     val toolType: ToolType
@@ -37,6 +38,8 @@ interface Tool {
     fun handleDown(coordinate: PointF?): Boolean
 
     fun handleMove(coordinate: PointF?): Boolean
+
+    fun handleMove(coordinate: PointF?, event: MotionEvent): Boolean
 
     fun handleUp(coordinate: PointF?): Boolean
 

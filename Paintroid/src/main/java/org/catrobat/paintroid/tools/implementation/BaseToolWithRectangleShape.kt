@@ -32,6 +32,7 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.DisplayMetrics
 import android.view.View
+import android.view.MotionEvent
 import androidx.annotation.ColorRes
 import androidx.annotation.VisibleForTesting
 import androidx.test.espresso.idling.CountingIdlingResource
@@ -308,6 +309,8 @@ abstract class BaseToolWithRectangleShape(
         }
         return true
     }
+
+    override fun handleMove(coordinate: PointF?, event: MotionEvent): Boolean = true
 
     override fun handleUp(coordinate: PointF?): Boolean {
         if (previousEventCoordinate == null) {
