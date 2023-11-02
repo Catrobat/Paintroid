@@ -203,8 +203,7 @@ class DefaultZoomWindowController
 
         canvas.drawBitmap(backgroundBitmap, Matrix(), null)
 
-        if (toolReference.tool?.toolType?.name.equals(ToolType.LINE.name) ||
-            toolReference.tool?.toolType?.name.equals(ToolType.CURSOR.name)) {
+        if (checkIfToolCompatibleWithZoomWindow(toolReference.tool) == Constants.COMPATIBLE_NEW) {
             layerModel.currentLayer?.bitmap?.let {
                 canvas.drawBitmap(it, zoomWindowDiameter / 2f, zoomWindowDiameter / 2f, null)
             }
@@ -229,12 +228,8 @@ class DefaultZoomWindowController
             ToolType.IMPORTPNG.name,
             ToolType.SHAPE.name,
             ToolType.TEXT.name -> Constants.NOT_COMPATIBLE
-            ToolType.LINE.name,
-            ToolType.CURSOR.name,
-            ToolType.WATERCOLOR.name,
-            ToolType.SPRAY.name,
-            ToolType.BRUSH.name -> Constants.COMPATIBLE_NEW
-            else -> Constants.COMPATIBLE_ALL
+            ToolType.ERASER.name -> Constants.COMPATIBLE_ALL
+            else -> Constants.COMPATIBLE_NEW
         }
     }
 
