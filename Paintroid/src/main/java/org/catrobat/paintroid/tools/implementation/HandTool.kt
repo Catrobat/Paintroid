@@ -61,7 +61,7 @@ class HandTool(
 
     override fun handleDown(coordinate: PointF?): Boolean = true
 
-    override fun handleMove(coordinate: PointF?): Boolean = true
+    override fun handleMove(coordinate: PointF?, shouldAnimate: Boolean): Boolean = true
 
     override fun handleUp(coordinate: PointF?): Boolean = true
 

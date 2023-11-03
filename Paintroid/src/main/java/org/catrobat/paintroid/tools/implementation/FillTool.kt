@@ -72,7 +72,7 @@ class FillTool(
 
     override fun handleDown(coordinate: PointF?): Boolean = false
 
-    override fun handleMove(coordinate: PointF?): Boolean = false
+    override fun handleMove(coordinate: PointF?, shouldAnimate: Boolean): Boolean = false
 
     override fun handleUp(coordinate: PointF?): Boolean {
         coordinate ?: return false

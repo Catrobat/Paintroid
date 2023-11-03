@@ -139,9 +139,11 @@ class SprayTool(
 
     override fun toolPositionCoordinates(coordinate: PointF): PointF = coordinate
 
-    override fun handleMove(coordinate: PointF?): Boolean {
-        hideToolOptions()
-        super.handleMove(coordinate)
+    override fun handleMove(coordinate: PointF?, shouldAnimate: Boolean): Boolean {
+        if (shouldAnimate) {
+            hideToolOptions()
+        }
+        super.handleMove(coordinate, shouldAnimate)
         currentCoordinate = coordinate
         return true
     }

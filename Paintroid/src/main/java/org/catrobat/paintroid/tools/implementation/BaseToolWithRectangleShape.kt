@@ -287,7 +287,7 @@ abstract class BaseToolWithRectangleShape(
         return true
     }
 
-    override fun handleMove(coordinate: PointF?): Boolean {
+    override fun handleMove(coordinate: PointF?, shouldAnimate: Boolean): Boolean {
         if (previousEventCoordinate == null || currentAction == null) {
             return false
         }

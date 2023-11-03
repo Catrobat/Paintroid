@@ -168,7 +168,7 @@ class SmudgeTool(
         return true
     }
 
-    override fun handleMove(coordinate: PointF?): Boolean {
+    override fun handleMove(coordinate: PointF?, shouldAnimate: Boolean): Boolean {
         coordinate ?: return false
 
         if (currentBitmap != null) {

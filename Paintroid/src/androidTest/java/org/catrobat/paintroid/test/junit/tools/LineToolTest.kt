@@ -191,7 +191,7 @@ class LineToolTest {
         val tap1 = PointF(7f, 7f)
         Mockito.`when`(toolOptionsViewController.isVisible).thenReturn(true)
         Mockito.`when`(viewMock.visibility).thenReturn(View.VISIBLE)
-        tool.handleMove(tap1)
+        tool.handleMove(tap1, true)
 
         Mockito.verify(toolOptionsViewController).slideUp(viewMock,
                                                           willHide = true,

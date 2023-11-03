@@ -227,11 +227,11 @@ class TransformTool(
         return true
     }
 
-    override fun handleMove(coordinate: PointF?): Boolean {
+    override fun handleMove(coordinate: PointF?, shouldAnimate: Boolean): Boolean {
         if (isSetCenter) {
             return false
         }
-        return super.handleMove(coordinate)
+        return super.handleMove(coordinate, true)
     }
 
     override fun drawToolSpecifics(canvas: Canvas, boxWidth: Float, boxHeight: Float) {
