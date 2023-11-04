@@ -25,15 +25,15 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:focusableInTouchMode="true"
         android:background="@android:color/white"
+        android:focusableInTouchMode="true"
         android:orientation="vertical">
 
         <TextView
             style="@style/PocketPaintToolSubtitle"
             android:text="@string/transform_tool_auto_crop_text" />
 
-        <View style="@style/PocketPaintToolSectionDivider"/>
+        <View style="@style/PocketPaintToolSectionDivider" />
 
         <LinearLayout style="@style/PocketPaintToolSection">
 
@@ -56,13 +56,13 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="4"
                 android:imeOptions="actionDone"
+                android:importantForAutofill="no"
                 android:inputType="number"
                 android:textAlignment="textEnd"
                 android:textColor="?attr/colorAccent"
                 android:textSize="14sp"
                 android:textStyle="bold"
-                tools:text="100"
-                android:importantForAutofill="no" />
+                tools:text="100" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -90,13 +90,13 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="4"
                 android:imeOptions="actionDone"
+                android:importantForAutofill="no"
                 android:inputType="number"
                 android:textAlignment="textEnd"
                 android:textColor="?attr/colorAccent"
                 android:textSize="14sp"
                 android:textStyle="bold"
-                tools:text="100"
-                android:importantForAutofill="no" />
+                tools:text="100" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -112,8 +112,8 @@
 
         <LinearLayout
             style="@style/PocketPaintToolSection"
-            android:gravity="center_horizontal"
-            android:layout_marginTop="5dp">
+            android:layout_marginTop="5dp"
+            android:gravity="center_horizontal">
 
             <Button
                 android:id="@+id/pocketpaint_transform_set_center_btn"
@@ -148,40 +148,42 @@
         <View style="@style/PocketPaintToolSectionDivider" />
 
         <LinearLayout style="@style/PocketPaintToolSection">
+
             <SeekBar
                 android:id="@+id/pocketpaint_transform_resize_seekbar"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:max="100"
-                android:progress="100"
-                android:minHeight="30dip" />
+                android:minHeight="30dip"
+                android:progress="100" />
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/pocketpaint_transform_resize_percentage_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:gravity="center"
+                android:imeOptions="actionDone"
+                android:importantForAutofill="no"
+                android:inputType="number"
+                android:layoutDirection="ltr"
                 android:saveEnabled="false"
                 android:textColor="?attr/colorAccent"
                 android:textSize="14sp"
                 android:textStyle="bold"
-                android:imeOptions="actionDone"
-                android:inputType="number"
-                android:layoutDirection="ltr"
-                android:gravity="center"
-                tools:text="100"
-                android:importantForAutofill="no" />
+                tools:text="100" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="%"
+                android:textColor="?attr/colorAccent"
                 android:textSize="14sp"
                 android:textStyle="bold"
-                android:textColor="?attr/colorAccent"
-                android:text="%"
-                tools:ignore="HardcodedText"/>
+                tools:ignore="HardcodedText" />
 
-            <Space style="@style/PocketPaintToolHorizontalSpace"
+            <Space
+                style="@style/PocketPaintToolHorizontalSpace"
                 android:layout_width="16dp" />
 
             <Button
@@ -189,26 +191,27 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:clickable="true"
-                android:text="@string/button_apply"
-                android:focusable="true" />
+                android:focusable="true"
+                android:text="@string/button_apply" />
         </LinearLayout>
 
         <TextView
             style="@style/PocketPaintToolSubtitle"
             android:text="@string/button_transform" />
 
-        <View style="@style/PocketPaintToolSectionDivider"/>
+        <View style="@style/PocketPaintToolSectionDivider" />
 
         <LinearLayout style="@style/PocketPaintToolSection">
+
             <ImageButton
                 android:id="@+id/pocketpaint_transform_rotate_left_btn"
                 style="?android:borderlessButtonStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:contentDescription="@string/transform_tool_rotate_left"
                 android:src="@drawable/ic_pocketpaint_tool_rotate_left"
-                android:theme="@style/PocketPaintHighlightColorTheme"
-                android:contentDescription="@string/transform_tool_rotate_left" />
+                android:theme="@style/PocketPaintHighlightColorTheme" />
 
             <ImageButton
                 android:id="@+id/pocketpaint_transform_rotate_right_btn"
@@ -216,9 +219,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:contentDescription="@string/transform_tool_rotate_right"
                 android:src="@drawable/ic_pocketpaint_rotate_right"
-                android:theme="@style/PocketPaintHighlightColorTheme"
-                android:contentDescription="@string/transform_tool_rotate_right" />
+                android:theme="@style/PocketPaintHighlightColorTheme" />
 
             <ImageButton
                 android:id="@+id/pocketpaint_transform_flip_vertical_btn"
@@ -226,9 +229,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:contentDescription="@string/transform_tool_flip_vertical"
                 android:src="@drawable/ic_pocketpaint_tool_flip_vertical"
-                android:theme="@style/PocketPaintHighlightColorTheme"
-                android:contentDescription="@string/transform_tool_flip_vertical" />
+                android:theme="@style/PocketPaintHighlightColorTheme" />
 
             <ImageButton
                 android:id="@+id/pocketpaint_transform_flip_horizontal_btn"
@@ -236,9 +239,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:contentDescription="@string/transform_tool_flip_horizontal"
                 android:src="@drawable/ic_pocketpaint_tool_flip_horizontal"
-                android:theme="@style/PocketPaintHighlightColorTheme"
-                android:contentDescription="@string/transform_tool_flip_horizontal" />
+                android:theme="@style/PocketPaintHighlightColorTheme" />
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

@@ -220,6 +220,7 @@ class DefaultZoomWindowController
     }
 
     override fun checkIfToolCompatibleWithZoomWindow(tool: Tool?): Constants {
+
         return when (tool?.toolType?.name) {
             ToolType.HAND.name,
             ToolType.FILL.name,
@@ -227,6 +228,7 @@ class DefaultZoomWindowController
             ToolType.TRANSFORM.name,
             ToolType.IMPORTPNG.name,
             ToolType.SHAPE.name,
+            ToolType.PIXEL.name,
             ToolType.TEXT.name -> Constants.NOT_COMPATIBLE
             ToolType.ERASER.name -> Constants.COMPATIBLE_ALL
             else -> Constants.COMPATIBLE_NEW

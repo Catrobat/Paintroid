@@ -196,6 +196,7 @@
     <TableRow
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp">
+
         <LinearLayout
             android:id="@+id/pocketpaint_tools_pipette"
             tools:ignore="UseCompoundDrawables"
@@ -247,5 +248,29 @@
                 style="@style/PocketPaintToolSelectionButtonTextView"
                 android:text="@string/button_clip"/>
         </LinearLayout>
+
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp">
+
+        <LinearLayout
+            android:id="@+id/pocketpaint_tools_pixel"
+            style="@style/PocketPaintToolSelectionButton"
+            tools:ignore="UseCompoundDrawables">
+
+            <ImageView
+                style="@style/PocketPaintToolSelectionButtonImageView"
+                android:contentDescription="@string/button_pixel"
+                android:src="@drawable/ic_pocketpaint_tool_pixel" />
+
+            <TextView
+                style="@style/PocketPaintToolSelectionButtonTextView"
+                android:text="@string/button_pixel" />
+        </LinearLayout>
+
     </TableRow>
 </TableLayout>
