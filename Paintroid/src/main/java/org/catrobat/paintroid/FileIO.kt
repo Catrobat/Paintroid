@@ -606,8 +606,7 @@ object FileIO {
             oldFile.delete()
         }
         if (newFile.exists()) {
-            val rename = File(internalMemoryPath, TEMP_IMAGE_PATH)
-            newFile.renameTo(rename)
+            newFile.renameTo(File(internalMemoryPath, TEMP_IMAGE_PATH))
         }
     }
 
@@ -617,7 +616,7 @@ object FileIO {
             return false
         }
         val file = File(internalMemoryPath, TEMP_IMAGE_PATH)
-        if (file.exists()){
+        if (file.exists()) {
             temporaryFilePath = file.path
             return true
         }
