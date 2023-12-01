@@ -10,7 +10,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SwitchCompat
 import com.google.android.material.slider.Slider
 import org.catrobat.paintroid.R
-import org.catrobat.paintroid.UserPreferences
+import org.catrobat.paintroid.preference.UserPreferences
 
 class ZoomWindowSettingsDialog(
         private val sharedPreferences: UserPreferences

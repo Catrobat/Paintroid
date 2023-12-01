@@ -16,26 +16,19 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.catrobat.paintroid
+package org.catrobat.paintroid.preference
 
 import android.content.SharedPreferences
 import org.catrobat.paintroid.common.IMAGE_NUMBER_SHARED_PREFERENCES_TAG
+import org.catrobat.paintroid.common.SHOW_INTRO_AFTER_INSTALL_PREFERENCES_TAG
 import org.catrobat.paintroid.common.SHOW_LIKE_US_DIALOG_SHARED_PREFERENCES_TAG
 import org.catrobat.paintroid.common.ZOOM_WINDOW_ENABLED_SHARED_PREFERENCES_TAG
 import org.catrobat.paintroid.common.ZOOM_WINDOW_ZOOM_PERCENTAGE_SHARED_PREFERENCES_TAG
+import org.catrobat.paintroid.preference.delegate.booleanUserPreference
+import org.catrobat.paintroid.preference.delegate.intUserPreference
 
 open class UserPreferences(var preferences: SharedPreferences) {
 
-    open val preferenceLikeUsDialogValue: Boolean
-        get() = preferences.getBoolean(SHOW_LIKE_US_DIALOG_SHARED_PREFERENCES_TAG, false)
-    open var preferenceImageNumber: Int
-        get() = preferences.getInt(IMAGE_NUMBER_SHARED_PREFERENCES_TAG, 0)
-        set(value) {
-            preferences
-                .edit()
-                .putInt(IMAGE_NUMBER_SHARED_PREFERENCES_TAG, value)
-                .apply()
-        }
     open var preferenceZoomWindowEnabled: Boolean
         get() = preferences.getBoolean(ZOOM_WINDOW_ENABLED_SHARED_PREFERENCES_TAG, true)
         set(value) {
@@ -57,12 +50,9 @@ open class UserPreferences(var preferences: SharedPreferences) {
                 .apply()
         }
 
-    open fun setPreferenceLikeUsDialogValue() {
-        preferences
-            .edit()
-            .putBoolean(SHOW_LIKE_US_DIALOG_SHARED_PREFERENCES_TAG, true)
-            .apply()
-    }
+    var likeUsDialogShown by booleanUserPreference(false, SHOW_LIKE_US_DIALOG_SHARED_PREFERENCES_TAG)
+    var appFirstOpenedAfterInstall by booleanUserPreference(true, SHOW_INTRO_AFTER_INSTALL_PREFERENCES_TAG)
+    var savedImagesNumber by intUserPreference(0, IMAGE_NUMBER_SHARED_PREFERENCES_TAG)
 
     companion object {
         const val initialZoomPercent: Int = 100

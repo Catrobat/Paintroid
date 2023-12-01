@@ -18,7 +18,7 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.R
-import org.catrobat.paintroid.UserPreferences
+import org.catrobat.paintroid.preference.UserPreferences
 import org.catrobat.paintroid.contract.LayerContracts
 import org.catrobat.paintroid.tools.Tool
 import org.catrobat.paintroid.tools.ToolReference

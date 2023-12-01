@@ -34,7 +34,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.ActivityTestRule
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.R
-import org.catrobat.paintroid.UserPreferences
+import org.catrobat.paintroid.preference.UserPreferences
 import org.catrobat.paintroid.command.CommandFactory
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.command.serialization.CommandSerializer

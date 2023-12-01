@@ -22,7 +22,7 @@ import android.graphics.PointF
 import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnTouchListener
-import org.catrobat.paintroid.UserPreferences
+import org.catrobat.paintroid.preference.UserPreferences
 import org.catrobat.paintroid.tools.Tool
 import org.catrobat.paintroid.tools.Tool.StateChange
 import org.catrobat.paintroid.tools.ToolType

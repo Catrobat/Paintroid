@@ -35,7 +35,7 @@ import com.nhaarman.mockitokotlin2.any
 import org.catrobat.paintroid.FileIO
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.R
-import org.catrobat.paintroid.UserPreferences
+import org.catrobat.paintroid.preference.UserPreferences
 import org.catrobat.paintroid.command.Command
 import org.catrobat.paintroid.command.CommandFactory
 import org.catrobat.paintroid.command.CommandManager
@@ -299,7 +299,7 @@ class MainActivityPresenterTest {
         Mockito.verify<MainActivityContracts.Navigator?>(navigator)
             .showSaveImageInformationDialogWhenStandalone(
                 PERMISSION_EXTERNAL_STORAGE_SAVE_COPY,
-                sharedPreferences!!.preferenceImageNumber,
+                sharedPreferences!!.savedImagesNumber,
                 false
             )
         presenter!!.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY)
@@ -317,7 +317,7 @@ class MainActivityPresenterTest {
         Mockito.verify<MainActivityContracts.Navigator?>(navigator)
             .showSaveImageInformationDialogWhenStandalone(
                 PERMISSION_EXTERNAL_STORAGE_SAVE,
-                sharedPreferences!!.preferenceImageNumber,
+                sharedPreferences!!.savedImagesNumber,
                 false
             )
         presenter!!.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE)
@@ -352,7 +352,7 @@ class MainActivityPresenterTest {
     fun testShowHelpClickedThenStartWelcomeActivity() {
         presenter!!.showHelpClicked()
         Mockito.verify<MainActivityContracts.Navigator?>(navigator)
-            .startWelcomeActivity(REQUEST_CODE_INTRO)
+            .startWelcomeActivity(REQUEST_CODE_INTRO, false)
         Mockito.verifyNoMoreInteractions(navigator)
     }
 
@@ -1232,7 +1232,7 @@ class MainActivityPresenterTest {
         Mockito.verify<MainActivityContracts.Navigator?>(navigator)
             .showSaveImageInformationDialogWhenStandalone(
                 PERMISSION_EXTERNAL_STORAGE_SAVE_COPY,
-                sharedPreferences!!.preferenceImageNumber,
+                sharedPreferences!!.savedImagesNumber,
                 false
             )
         presenter!!.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY)
@@ -1252,7 +1252,7 @@ class MainActivityPresenterTest {
         Mockito.verify<MainActivityContracts.Navigator?>(navigator)
             .showSaveImageInformationDialogWhenStandalone(
                 PERMISSION_EXTERNAL_STORAGE_SAVE_COPY,
-                sharedPreferences!!.preferenceImageNumber,
+                sharedPreferences!!.savedImagesNumber,
                 false
             )
         presenter!!.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY)
@@ -1278,7 +1278,7 @@ class MainActivityPresenterTest {
         Mockito.verify<MainActivityContracts.Navigator?>(navigator)
             .showSaveImageInformationDialogWhenStandalone(
                 PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH,
-                sharedPreferences!!.preferenceImageNumber,
+                sharedPreferences!!.savedImagesNumber,
                 false
             )
         presenter!!.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH)
@@ -1303,7 +1303,7 @@ class MainActivityPresenterTest {
         Mockito.verify<MainActivityContracts.Navigator?>(navigator)
             .showSaveImageInformationDialogWhenStandalone(
                 PERMISSION_EXTERNAL_STORAGE_SAVE_COPY,
-                sharedPreferences!!.preferenceImageNumber,
+                sharedPreferences!!.savedImagesNumber,
                 false
             )
         presenter!!.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY)
@@ -1320,7 +1320,7 @@ class MainActivityPresenterTest {
         Mockito.verify<MainActivityContracts.Navigator?>(navigator)
             .showSaveImageInformationDialogWhenStandalone(
                 PERMISSION_EXTERNAL_STORAGE_SAVE,
-                sharedPreferences!!.preferenceImageNumber,
+                sharedPreferences!!.savedImagesNumber,
                 false
             )
         presenter!!.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE)
@@ -1340,7 +1340,7 @@ class MainActivityPresenterTest {
         Mockito.verify<MainActivityContracts.Navigator?>(navigator)
             .showSaveImageInformationDialogWhenStandalone(
                 PERMISSION_EXTERNAL_STORAGE_SAVE,
-                sharedPreferences!!.preferenceImageNumber,
+                sharedPreferences!!.savedImagesNumber,
                 false
             )
         presenter!!.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE)
@@ -1357,7 +1357,7 @@ class MainActivityPresenterTest {
         Mockito.verify<MainActivityContracts.Navigator?>(navigator)
             .showSaveImageInformationDialogWhenStandalone(
                 PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH,
-                sharedPreferences!!.preferenceImageNumber,
+                sharedPreferences!!.savedImagesNumber,
                 false
             )
         presenter!!.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH)
@@ -1377,7 +1377,7 @@ class MainActivityPresenterTest {
         Mockito.verify<MainActivityContracts.Navigator?>(navigator)
             .showSaveImageInformationDialogWhenStandalone(
                 PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH,
-                sharedPreferences!!.preferenceImageNumber,
+                sharedPreferences!!.savedImagesNumber,
                 false
             )
         presenter!!.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH)
@@ -1394,7 +1394,7 @@ class MainActivityPresenterTest {
         Mockito.verify<MainActivityContracts.Navigator?>(navigator)
             .showSaveImageInformationDialogWhenStandalone(
                 PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY,
-                sharedPreferences!!.preferenceImageNumber,
+                sharedPreferences!!.savedImagesNumber,
                 false
             )
         presenter!!.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY)
@@ -1414,7 +1414,7 @@ class MainActivityPresenterTest {
         Mockito.verify<MainActivityContracts.Navigator?>(navigator)
             .showSaveImageInformationDialogWhenStandalone(
                 PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY,
-                sharedPreferences!!.preferenceImageNumber,
+                sharedPreferences!!.savedImagesNumber,
                 false
             )
         presenter!!.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY)
@@ -1431,7 +1431,7 @@ class MainActivityPresenterTest {
         Mockito.verify<MainActivityContracts.Navigator?>(navigator)
             .showSaveImageInformationDialogWhenStandalone(
                 PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW,
-                sharedPreferences!!.preferenceImageNumber,
+                sharedPreferences!!.savedImagesNumber,
                 false
             )
         presenter!!.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW)
@@ -1452,7 +1452,7 @@ class MainActivityPresenterTest {
         Mockito.verify<MainActivityContracts.Navigator?>(navigator)
                 .showSaveImageInformationDialogWhenStandalone(
                         PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW,
-                        sharedPreferences!!.preferenceImageNumber,
+                        sharedPreferences!!.savedImagesNumber,
                         false
                 )
         presenter!!.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW)

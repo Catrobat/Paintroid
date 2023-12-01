@@ -20,7 +20,7 @@ package org.catrobat.paintroid.test.listener
 
 import android.graphics.PointF
 import android.view.MotionEvent
-import org.catrobat.paintroid.UserPreferences
+import org.catrobat.paintroid.preference.UserPreferences
 import org.catrobat.paintroid.listener.DrawingSurfaceListener
 import org.catrobat.paintroid.listener.DrawingSurfaceListener.DrawingSurfaceListenerCallback
 import org.catrobat.paintroid.test.utils.PointFMatcher.Companion.pointFEquals

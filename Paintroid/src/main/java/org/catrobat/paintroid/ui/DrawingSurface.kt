@@ -40,7 +40,7 @@ import androidx.core.content.ContextCompat
 import androidx.test.espresso.idling.CountingIdlingResource
 import androidx.fragment.app.FragmentManager
 import org.catrobat.paintroid.R
-import org.catrobat.paintroid.UserPreferences
+import org.catrobat.paintroid.preference.UserPreferences
 import org.catrobat.paintroid.contract.LayerContracts
 import org.catrobat.paintroid.listener.DrawingSurfaceListener
 import org.catrobat.paintroid.listener.DrawingSurfaceListener.DrawingSurfaceListenerCallback

@@ -49,7 +49,7 @@ import androidx.test.espresso.idling.CountingIdlingResource
 import org.catrobat.paintroid.FileIO
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.R
-import org.catrobat.paintroid.UserPreferences
+import org.catrobat.paintroid.preference.UserPreferences
 import org.catrobat.paintroid.colorpicker.ColorHistory
 import org.catrobat.paintroid.command.CommandFactory
 import org.catrobat.paintroid.command.CommandManager
@@ -142,11 +142,11 @@ open class MainActivityPresenter(
 
     override val imageNumber: Int
         get() {
-            val imageNumber = sharedPreferences.preferenceImageNumber
+            val imageNumber = sharedPreferences.savedImagesNumber
             if (imageNumber == 0) {
                 countUpImageNumber()
             }
-            return sharedPreferences.preferenceImageNumber
+            return sharedPreferences.savedImagesNumber
         }
 
     var clippingToolInUseAndUndoRedoClicked = false
@@ -250,17 +250,17 @@ open class MainActivityPresenter(
     }
 
     private fun showLikeUsDialogIfFirstTimeSave() {
-        val dialogHasBeenShown = sharedPreferences.preferenceLikeUsDialogValue
+        val dialogHasBeenShown = sharedPreferences.likeUsDialogShown
         if (!dialogHasBeenShown && !model.isOpenedFromCatroid) {
             navigator.showLikeUsDialog()
-            sharedPreferences.setPreferenceLikeUsDialogValue()
+            sharedPreferences.likeUsDialogShown = true
         }
     }
 
     private fun countUpImageNumber() {
-        var imageNumber = sharedPreferences.preferenceImageNumber
+        var imageNumber = sharedPreferences.savedImagesNumber
         imageNumber++
-        sharedPreferences.preferenceImageNumber = imageNumber
+        sharedPreferences.savedImagesNumber = imageNumber
     }
 
     override fun enterHideButtonsClicked() {
@@ -731,6 +731,11 @@ open class MainActivityPresenter(
         view.initializeActionBar(model.isOpenedFromCatroid)
         if (commandManager.isBusy) {
             navigator.showIndeterminateProgressDialog()
+        }
+
+        if (sharedPreferences.appFirstOpenedAfterInstall && model.isOpenedFromCatroid) {
+            sharedPreferences.appFirstOpenedAfterInstall = false
+            navigator.startWelcomeActivity(REQUEST_CODE_INTRO, true)
         }
     }
 

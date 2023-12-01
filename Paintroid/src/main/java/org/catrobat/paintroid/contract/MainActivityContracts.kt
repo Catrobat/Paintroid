@@ -27,7 +27,7 @@ import android.util.DisplayMetrics
 import android.view.Menu
 import androidx.annotation.ColorInt
 import androidx.annotation.StringRes
-import org.catrobat.paintroid.UserPreferences
+import org.catrobat.paintroid.preference.UserPreferences
 import org.catrobat.paintroid.command.serialization.CommandSerializer
 import org.catrobat.paintroid.colorpicker.ColorHistory
 import org.catrobat.paintroid.common.MainActivityConstants.ActivityRequestCode
@@ -76,7 +76,7 @@ interface MainActivityContracts {
 
         fun sendFeedback()
 
-        fun startWelcomeActivity(@ActivityRequestCode requestCode: Int)
+        fun startWelcomeActivity(@ActivityRequestCode requestCode: Int, skipAnimation: Boolean = false)
 
         fun startShareImageActivity(bitmap: Bitmap?)
 

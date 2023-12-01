@@ -37,7 +37,7 @@ import androidx.fragment.app.Fragment
 import org.catrobat.paintroid.FileIO
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.R
-import org.catrobat.paintroid.UserPreferences
+import org.catrobat.paintroid.preference.UserPreferences
 import org.catrobat.paintroid.WelcomeActivity
 import org.catrobat.paintroid.colorpicker.ColorPickerDialog
 import org.catrobat.paintroid.colorpicker.OnColorPickedListener
@@ -259,10 +259,14 @@ class MainActivityNavigator(
         mainActivity.startActivityForResult(intent, requestCode)
     }
 
-    override fun startWelcomeActivity(@ActivityRequestCode requestCode: Int) {
+    override fun startWelcomeActivity(@ActivityRequestCode requestCode: Int, skipAnimation: Boolean) {
         val intent = Intent(mainActivity.applicationContext, WelcomeActivity::class.java)
         intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
         mainActivity.startActivityForResult(intent, requestCode)
+
+        if (skipAnimation) {
+            mainActivity.overridePendingTransition(0, 0)
+        }
     }
 
     override fun startShareImageActivity(bitmap: Bitmap?) {
