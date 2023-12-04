@@ -24,8 +24,6 @@ import org.catrobat.paintroid.common.SHOW_INTRO_AFTER_INSTALL_PREFERENCES_TAG
 import org.catrobat.paintroid.common.SHOW_LIKE_US_DIALOG_SHARED_PREFERENCES_TAG
 import org.catrobat.paintroid.common.ZOOM_WINDOW_ENABLED_SHARED_PREFERENCES_TAG
 import org.catrobat.paintroid.common.ZOOM_WINDOW_ZOOM_PERCENTAGE_SHARED_PREFERENCES_TAG
-import org.catrobat.paintroid.preference.delegate.booleanUserPreference
-import org.catrobat.paintroid.preference.delegate.intUserPreference
 
 open class UserPreferences(var preferences: SharedPreferences) {
 
@@ -50,11 +48,39 @@ open class UserPreferences(var preferences: SharedPreferences) {
                 .apply()
         }
 
-    var likeUsDialogShown by booleanUserPreference(false, SHOW_LIKE_US_DIALOG_SHARED_PREFERENCES_TAG)
-    var appFirstOpenedAfterInstall by booleanUserPreference(true, SHOW_INTRO_AFTER_INSTALL_PREFERENCES_TAG)
-    var savedImagesNumber by intUserPreference(0, IMAGE_NUMBER_SHARED_PREFERENCES_TAG)
+    open var likeUsDialogShown: Boolean
+        get() = preferences.getBoolean(SHOW_LIKE_US_DIALOG_SHARED_PREFERENCES_TAG, false)
+        set(value) {
+            preferences
+                .edit()
+                .putBoolean(SHOW_LIKE_US_DIALOG_SHARED_PREFERENCES_TAG, value)
+                .apply()
+        }
+
+    open var appFirstOpenedAfterInstall: Boolean
+        get() = preferences.getBoolean(SHOW_INTRO_AFTER_INSTALL_PREFERENCES_TAG, true)
+        set(value) {
+            preferences
+                .edit()
+                .putBoolean(SHOW_INTRO_AFTER_INSTALL_PREFERENCES_TAG, value)
+                .apply()
+        }
+
+    open var savedImagesNumber: Int
+        get() = preferences.getInt(
+            IMAGE_NUMBER_SHARED_PREFERENCES_TAG,
+            initialImageNumberTag
+        )
+        set(value) {
+            preferences
+                .edit()
+                .putInt(IMAGE_NUMBER_SHARED_PREFERENCES_TAG, value)
+                .apply()
+        }
 
     companion object {
         const val initialZoomPercent: Int = 100
+        const val initialImageNumberTag: Int = 0
     }
+
 }
