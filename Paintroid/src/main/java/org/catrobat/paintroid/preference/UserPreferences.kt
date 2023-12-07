@@ -82,5 +82,4 @@ open class UserPreferences(var preferences: SharedPreferences) {
         const val initialZoomPercent: Int = 100
         const val initialImageNumberTag: Int = 0
     }
-
 }
