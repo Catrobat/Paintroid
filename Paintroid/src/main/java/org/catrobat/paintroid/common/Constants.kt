@@ -61,10 +61,11 @@ const val TEMP_IMAGE_PATH = "$TEMP_IMAGE_DIRECTORY_NAME/$TEMP_IMAGE_NAME.$CATROB
 const val TEMP_IMAGE_TEMP_PATH = "$TEMP_IMAGE_DIRECTORY_NAME/${TEMP_IMAGE_NAME}1.$CATROBAT_IMAGE_ENDING"
 const val SPECIFIC_FILETYPE_SHARED_PREFERENCES_NAME = "Ownfiletypepreferences"
 const val ANIMATION_DURATION: Long = 250
+const val CATROBAT_IMAGE_STORAGE = "Android/media/org.catrobat.paintroid"
 
 object Constants {
     @JvmField
     val PICTURES_DIRECTORY = File(Environment.getExternalStorageDirectory(), Environment.DIRECTORY_PICTURES)
     @JvmField
-    val DOWNLOADS_DIRECTORY = File(Environment.getExternalStorageDirectory(), Environment.DIRECTORY_DOWNLOADS)
+    val ANDROID_DIRECTORY = File(Environment.getExternalStorageDirectory(), CATROBAT_IMAGE_STORAGE)
 }
