@@ -90,10 +90,11 @@ class DefaultZoomWindowController
         activity.findViewById(R.id.pocketpaint_zoom_window)
     private val zoomWindowImage: ImageView =
         activity.findViewById(R.id.pocketpaint_zoom_window_image)
+    private var zoomWindowBitmap: Bitmap? = null
     private var coordinates: PointF? = null
 
     override fun show(drawingSurfaceCoordinates: PointF, displayCoordinates: PointF) {
-        if (checkIfToolCompatibleWithZoomWindow(toolReference.tool) != Constants.NOT_COMPATIBLE &&
+        if (checkIfToolCompatibleWithZoomWindow(toolReference.tool) == Constants.COMPATIBLE &&
             isPointOnCanvas(drawingSurfaceCoordinates.x, drawingSurfaceCoordinates.y)) {
             setZoomWindowPosition(displayCoordinates)
             zoomWindow.visibility = View.VISIBLE
@@ -110,7 +111,7 @@ class DefaultZoomWindowController
     }
 
     override fun onMove(drawingSurfaceCoordinates: PointF, displayCoordinates: PointF) {
-        if (checkIfToolCompatibleWithZoomWindow(toolReference.tool) != Constants.NOT_COMPATIBLE) {
+        if (checkIfToolCompatibleWithZoomWindow(toolReference.tool) == Constants.COMPATIBLE) {
             setZoomWindowPosition(displayCoordinates)
             if (isPointOnCanvas(drawingSurfaceCoordinates.x, drawingSurfaceCoordinates.y)) {
                 if (zoomWindow.visibility == View.GONE) {
@@ -131,9 +132,12 @@ class DefaultZoomWindowController
         }
     }
 
-    override fun getBitmap(bitmap: Bitmap?) {
+    override fun setBitmap(bitmap: Bitmap?) {
         zoomWindowImage.setImageBitmap(coordinates?.let { cropBitmap(bitmap, it) })
+        zoomWindowBitmap = bitmap
     }
+
+    override fun getBitmap(): Bitmap? = zoomWindowBitmap
 
     private fun isPointOnCanvas(pointX: Float, pointY: Float): Boolean =
         pointX > 0 && pointX < layerModel.width && pointY > 0 && pointY < layerModel.height
@@ -203,13 +207,6 @@ class DefaultZoomWindowController
 
         canvas.drawBitmap(backgroundBitmap, Matrix(), null)
 
-        if (toolReference.tool?.toolType?.name.equals(ToolType.LINE.name) ||
-            toolReference.tool?.toolType?.name.equals(ToolType.CURSOR.name)) {
-            layerModel.currentLayer?.bitmap?.let {
-                canvas.drawBitmap(it, zoomWindowDiameter / 2f, zoomWindowDiameter / 2f, null)
-            }
-        }
-
         bitmap?.let { canvas.drawBitmap(it, zoomWindowDiameter / 2f, zoomWindowDiameter / 2f, null) }
 
         return bitmapOverlay
@@ -222,27 +219,23 @@ class DefaultZoomWindowController
 
     override fun checkIfToolCompatibleWithZoomWindow(tool: Tool?): Constants {
         return when (tool?.toolType?.name) {
-            ToolType.HAND.name,
-            ToolType.FILL.name,
-            ToolType.CLIPBOARD.name,
-            ToolType.TRANSFORM.name,
-            ToolType.IMPORTPNG.name,
-            ToolType.SHAPE.name,
-            ToolType.TEXT.name -> Constants.NOT_COMPATIBLE
             ToolType.LINE.name,
             ToolType.DYNAMICLINE.name,
             ToolType.CURSOR.name,
             ToolType.WATERCOLOR.name,
             ToolType.SPRAY.name,
-            ToolType.BRUSH.name -> Constants.COMPATIBLE_NEW
-            else -> Constants.COMPATIBLE_ALL
+            ToolType.BRUSH.name,
+            ToolType.ERASER.name,
+            ToolType.PIPETTE.name,
+            ToolType.CLIP.name,
+            ToolType.SMUDGE.name -> Constants.COMPATIBLE
+            else -> Constants.NOT_COMPATIBLE
         }
     }
 
     enum class Constants {
         NOT_COMPATIBLE,
-        COMPATIBLE_NEW,
-        COMPATIBLE_ALL
+        COMPATIBLE
     }
 
     companion object {

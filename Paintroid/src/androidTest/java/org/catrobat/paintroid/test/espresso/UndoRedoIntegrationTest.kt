@@ -453,4 +453,41 @@ class UndoRedoIntegrationTest {
             BitmapLocationProvider.HALFWAY_TOP_MIDDLE
         )
     }
+
+    @Test
+    fun testNoColorUndoInEraserMode() {
+        onToolBarView()
+                .performSelectTool(ToolType.FILL)
+        onDrawingSurfaceView()
+                .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
+        selectColorInDialog(0)
+        selectColorInDialog(1)
+        selectColorInDialog(2)
+        onToolBarView()
+                .performSelectTool(ToolType.ERASER)
+        onDrawingSurfaceView().perform(
+                UiInteractions.swipeAccurate(
+                        DrawingSurfaceLocationProvider.HALFWAY_TOP_MIDDLE,
+                        DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_MIDDLE
+                )
+        )
+        onTopBarView().performUndo()
+        onTopBarView().performUndo()
+        onToolBarView()
+                .performSelectTool(ToolType.BRUSH)
+        onDrawingSurfaceView().perform(
+                UiInteractions.swipeAccurate(
+                        DrawingSurfaceLocationProvider.HALFWAY_TOP_MIDDLE,
+                        DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_MIDDLE
+                )
+        )
+        onDrawingSurfaceView().perform(
+                UiInteractions.swipeAccurate(
+                        DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT,
+                        DrawingSurfaceLocationProvider.HALFWAY_TOP_RIGHT
+                )
+        )
+        onDrawingSurfaceView()
+                .checkPixelColor(Color.parseColor("#FF078707"), BitmapLocationProvider.HALFWAY_TOP_MIDDLE)
+    }
 }

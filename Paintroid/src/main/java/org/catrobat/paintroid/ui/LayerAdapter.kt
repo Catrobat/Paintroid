@@ -96,10 +96,7 @@ class LayerAdapter(
             get() = itemView
 
         override fun bindView() {
-            val layer = layerPresenter.getLayerItem(position)
-            if (layer == null) {
-                return
-            }
+            val layer = layerPresenter.getLayerItem(position) ?: return
             val isSelected = layer === layerPresenter.getSelectedLayer()
             setSelected(isSelected)
             setLayerVisibilityCheckbox(layer.isVisible)
@@ -145,8 +142,6 @@ class LayerAdapter(
                         opacitySeekBar.progress = opacityPercentage
                         layerPresenter.changeLayerOpacity(position, opacityPercentage)
                     }
-
-                    layer.opacityPercentage = opacityPercentage
                     layerPresenter.refreshDrawingSurface()
                 }
             })

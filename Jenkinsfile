@@ -65,7 +65,7 @@ pipeline {
                     params.BUILD_WITH_CATROID
                 }
             }
-            
+
             steps {
                 sh './gradlew publishToMavenLocal -Psnapshot'
                 sh 'rm -rf Catroid; mkdir Catroid'
