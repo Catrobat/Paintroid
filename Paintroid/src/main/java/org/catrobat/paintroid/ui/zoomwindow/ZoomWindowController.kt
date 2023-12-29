@@ -13,7 +13,9 @@ interface ZoomWindowController {
 
     fun onMove(drawingSurfaceCoordinates: PointF, displayCoordinates: PointF)
 
-    fun getBitmap(bitmap: Bitmap?)
+    fun setBitmap(bitmap: Bitmap?)
+
+    fun getBitmap(): Bitmap?
 
     fun checkIfToolCompatibleWithZoomWindow(tool: Tool?): DefaultZoomWindowController.Constants
 }

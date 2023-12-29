@@ -22,6 +22,7 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
 import org.catrobat.paintroid.contract.LayerContracts
+import org.catrobat.paintroid.tools.Tool
 
 open class LayerModel : LayerContracts.Model {
     override var currentLayer: LayerContracts.Layer? = null
@@ -88,6 +89,56 @@ open class LayerModel : LayerContracts.Model {
                     alpha = layer.getValueForOpacityPercentage()
                 }
                 canvas?.drawBitmap(layer.bitmap, 0f, 0f, alphaPaint)
+            }
+        }
+    }
+
+    fun drawLayersOntoCanvasCorrectOrder(
+        surfaceViewCanvas: Canvas?,
+        currentLayerIndex: Int?,
+        drawingBoardCanvas: Canvas?,
+        tool: Tool?
+    ) {
+        layers.asReversed().forEach { layer ->
+            val layerIndex = getLayerIndexOf(layer)
+            if (layer.isVisible) {
+                val alphaPaint = Paint().apply {
+                    isFilterBitmap = false
+                    alpha = layer.getValueForOpacityPercentage()
+                }
+                surfaceViewCanvas?.drawBitmap(layer.bitmap, 0f, 0f, alphaPaint)
+                drawingBoardCanvas?.drawBitmap(layer.bitmap, 0f, 0f, alphaPaint)
+                if (surfaceViewCanvas != null && layerIndex == currentLayerIndex) {
+                    tool?.draw(surfaceViewCanvas)
+                }
+                if (drawingBoardCanvas != null && layerIndex == currentLayerIndex) {
+                    tool?.draw(drawingBoardCanvas)
+                }
+            }
+        }
+    }
+
+    fun drawLayersOntoCanvasCorrectOrderEraser(
+        surfaceViewCanvas: Canvas?,
+        currentLayerIndex: Int?,
+        tool: Tool?
+    ) {
+        var bitmapWithEraseApplied: Bitmap?
+        var eraseAppliedCanvas: Canvas?
+        layers.asReversed().forEach { layer ->
+            val layerIndex = getLayerIndexOf(layer)
+            if (layer.isVisible) {
+                val alphaPaint = Paint().apply {
+                    isFilterBitmap = false
+                    alpha = layer.getValueForOpacityPercentage()
+                }
+                surfaceViewCanvas?.drawBitmap(layer.bitmap, 0f, 0f, alphaPaint)
+                if (surfaceViewCanvas != null && layerIndex == currentLayerIndex) {
+                    bitmapWithEraseApplied = currentLayer?.bitmap
+                    eraseAppliedCanvas = bitmapWithEraseApplied?.let { Canvas(it) }
+                    eraseAppliedCanvas?.let { tool?.draw(it) }
+                    bitmapWithEraseApplied?.let { surfaceViewCanvas.drawBitmap(it, 0f, 0f, alphaPaint) }
+                }
             }
         }
     }
