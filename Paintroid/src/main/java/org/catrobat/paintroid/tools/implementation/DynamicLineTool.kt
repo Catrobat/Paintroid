@@ -295,31 +295,83 @@ class DynamicLineTool(
     }
 
     private fun updateMovingGhostVertices(coordinate: PointF) {
+        var movingVertexCenter: PointF = getMovingVertexCenter(coordinate)
         if (movingVertex != null) {
-            movingVertex?.updateVertexCenter(copyPointF(coordinate))
+            movingVertex?.updateVertexCenter(copyPointF(movingVertexCenter))
             if (movingVertex?.ingoingPathCommand != null) {
                 ingoingStartCoordinate = predecessorVertex?.vertexCenter?.let { center -> copyPointF(center) }
-                ingoingEndCoordinate = copyPointF(coordinate)
+                ingoingEndCoordinate = copyPointF(movingVertexCenter)
                 ingoingGhostPathPaint = createGhostPathPaint(movingVertex?.ingoingPathCommand?.paint)
             }
             if (movingVertex?.outgoingPathCommand != null) {
-                outgoingStartCoordinate = copyPointF(coordinate)
+                outgoingStartCoordinate = copyPointF(movingVertexCenter)
                 outgoingEndCoordinate = successorVertex?.vertexCenter?.let { center -> copyPointF(center) }
                 outgoingGhostPathPaint = createGhostPathPaint(movingVertex?.outgoingPathCommand?.paint)
             }
         }
     }
 
+    private fun getMovingVertexCenter(coordinate: PointF): PointF {
+        var insidePoint: PointF? = getInsidePoint()
+        var outsidePoint = copyPointF(coordinate)
+        return calculateMovingVertexCenter(insidePoint, outsidePoint)
+    }
+
+    private fun calculateMovingVertexCenter(insidePoint: PointF?, outsidePoint: PointF): PointF {
+        if (insidePoint == null) return outsidePoint
+
+        var slope = (outsidePoint.y - insidePoint.y) / (outsidePoint.x - insidePoint.x)
+        val yIntercept = insidePoint.y - slope * insidePoint.x
+        val surfaceHeight = workspace.height.toFloat()
+        val surfaceWidth = workspace.width.toFloat()
+
+        if (outsidePoint.y < 0) {
+            val x = -yIntercept / slope
+            if (x in 0.0f..surfaceWidth) {
+                return PointF(x, 0f)
+            }
+        }
+
+        if (outsidePoint.y > surfaceHeight) {
+            val x = (surfaceHeight - yIntercept) / slope
+            if (x in 0.0f..surfaceWidth) {
+                return PointF(x, surfaceHeight)
+            }
+        }
+
+        if (outsidePoint.x < 0 && yIntercept in 0.0f..surfaceHeight) {
+                return PointF(0f, yIntercept)
+        }
+
+        if (outsidePoint.x > surfaceWidth) {
+            val y = slope * surfaceWidth + yIntercept
+            if (y in 0.0f..surfaceHeight) {
+                return PointF(surfaceWidth, y)
+            }
+        }
+
+        return outsidePoint
+    }
+
+    private fun getInsidePoint(): PointF? {
+        return if (predecessorVertex != null) {
+            predecessorVertex?.vertexCenter?.let { copyPointF(it) }
+        } else {
+            successorVertex?.vertexCenter?.let { copyPointF(it) }
+        }
+    }
+
     private fun updateMovingVertices(coordinate: PointF) {
+        var movingVertexCenter = getMovingVertexCenter(coordinate)
         if (movingVertex != null) {
-            movingVertex?.updateVertexCenter(copyPointF(coordinate))
+            movingVertex?.updateVertexCenter(copyPointF(movingVertexCenter))
             if (movingVertex?.ingoingPathCommand != null) {
                 val startPoint = predecessorVertex?.vertexCenter?.let { center -> copyPointF(center) }
-                val endPoint = copyPointF(coordinate)
+                val endPoint = copyPointF(movingVertexCenter)
                 updatePathCommand(startPoint, endPoint, movingVertex?.ingoingPathCommand)
             }
             if (movingVertex?.outgoingPathCommand != null) {
-                val startPoint = copyPointF(coordinate)
+                val startPoint = copyPointF(movingVertexCenter)
                 val endPoint = successorVertex?.vertexCenter?.let { center -> copyPointF(center) }
                 updatePathCommand(startPoint, endPoint, movingVertex?.outgoingPathCommand)
             }
