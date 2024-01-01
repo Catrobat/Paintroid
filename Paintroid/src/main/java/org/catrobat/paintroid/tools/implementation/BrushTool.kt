@@ -145,7 +145,6 @@ open class BrushTool(
     }
 
     override fun handleDownAnimations(coordinate: PointF?) {
-
         hideBrushSpecificLayoutOnHandleDown()
     }
 
@@ -154,12 +153,14 @@ open class BrushTool(
         super.handleUp(coordinate)
     }
 
-    override fun handleMove(coordinate: PointF?): Boolean {
+    override fun handleMove(coordinate: PointF?, shouldAnimate: Boolean): Boolean {
         if (eventCoordinatesAreNull() || coordinate == null) {
             return false
         }
-        super.handleMove(coordinate)
-        hideBrushSpecificLayoutOnHandleDown()
+        super.handleMove(coordinate, shouldAnimate)
+        if (shouldAnimate) {
+            hideBrushSpecificLayoutOnHandleDown()
+        }
         previousEventCoordinate?.let {
             pathToDraw.quadTo(it.x, it.y, coordinate.x, coordinate.y)
             pathToDraw.incReserve(1)
@@ -243,7 +244,6 @@ open class BrushTool(
             val pathNew = AdvancedSettingsAlgorithms.smoothingAlgorithm(pointArray)
             val command = commandFactory.createPathCommand(bitmapPaint, pathNew)
             commandManager.addCommand(command)
-            commandManager.executeAllCommands()
         }
 
         pointArray.clear()

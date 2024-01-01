@@ -237,10 +237,12 @@ class LineTool(
         return true
     }
 
-    override fun handleMove(coordinate: PointF?): Boolean {
+    override fun handleMove(coordinate: PointF?, shouldAnimate: Boolean): Boolean {
         coordinate ?: return false
-        hideToolOptions()
-        super.handleMove(coordinate)
+        super.handleMove(coordinate, shouldAnimate)
+        if (shouldAnimate) {
+            hideToolOptions()
+        }
         changeInitialCoordinateForHandleNormalLine = true
         if (startpointSet) {
             initialEventCoordinate = startPointToDraw?.let { PointF(it.x, it.y) }

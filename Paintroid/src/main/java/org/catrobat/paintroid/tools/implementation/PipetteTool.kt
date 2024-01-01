@@ -61,7 +61,7 @@ class PipetteTool(
 
     override fun handleDown(coordinate: PointF?): Boolean = setColor(coordinate)
 
-    override fun handleMove(coordinate: PointF?): Boolean = setColor(coordinate)
+    override fun handleMove(coordinate: PointF?, shouldAnimate: Boolean): Boolean = setColor(coordinate)
 
     override fun handleUp(coordinate: PointF?): Boolean = setColor(coordinate)
 
