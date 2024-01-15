@@ -42,6 +42,7 @@ private const val DEFAULT_OUTLINE_WIDTH = 25
 private const val BUNDLE_BASE_SHAPE = "BASE_SHAPE"
 private const val BUNDLE_SHAPE_DRAW_TYPE = "SHAPE_DRAW_TYPE"
 private const val BUNDLE_OUTLINE_WIDTH = "OUTLINE_WIDTH"
+private const val STROKE_MITER_MULTIPLICATOR: Int = 4
 
 class ShapeTool(
     shapeToolOptionsView: ShapeToolOptionsView,
@@ -168,6 +169,7 @@ class ShapeTool(
                 paint.strokeWidth = shapeOutlineWidth.toFloat()
                 paint.strokeCap = Paint.Cap.BUTT
                 paint.strokeJoin = Paint.Join.MITER
+                paint.strokeMiter *= STROKE_MITER_MULTIPLICATOR
                 val antiAlias = shapeOutlineWidth > 1
                 paint.isAntiAlias = antiAlias
             }
