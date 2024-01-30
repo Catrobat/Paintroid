@@ -64,7 +64,7 @@ abstract class BaseToolWithShape @SuppressLint("VisibleForTests") constructor(
         contextCallback.getColor(R.color.pocketpaint_main_rectangle_tool_primary_color)
 
     @JvmField
-    var secondaryShapeColor: Int = contextCallback.getColor(R.color.pocketpaint_colorAccent)
+    var secondaryShapeColor: Int = contextCallback.getColor(R.color.pocketpaint_colorAccentAlpha60)
 
     @JvmField
     val linePaint: Paint
