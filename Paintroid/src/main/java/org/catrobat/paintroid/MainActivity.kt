@@ -114,7 +114,7 @@ private const val MILLI_SEC_TO_SEC = 1000
 private const val TEMP_IMAGE_SAVE_INTERVAL = 60
 private const val TEMP_IMAGE_IDLE_INTERVAL = 2 * TEMP_IMAGE_COROUTINE_DELAY_MILLI_SEC
 
-class MainActivity : AppCompatActivity(), MainView, CommandListener {
+class zMainActivity : AppCompatActivity(), MainView, CommandListener {
     @VisibleForTesting
     lateinit var perspective: Perspective
 
