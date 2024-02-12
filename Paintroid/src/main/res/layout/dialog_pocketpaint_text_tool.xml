@@ -27,89 +27,158 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/TextFieldTheme"
+        <RelativeLayout
+            android:id="@+id/pocketpaint_text_button_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/TextFieldTheme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_margin="10dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/pocketpaint_font_size_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:background="@drawable/pocketpaint_round_rect_shape"
+                    android:gravity="center"
+                    android:imeOptions="actionDone"
+                    android:importantForAutofill="no"
+                    android:inputType="number"
+                    android:minEms="3"
+                    android:padding="4dp"
+                    android:saveEnabled="false"
+                    android:textColor="?attr/colorAccent"
+                    android:textStyle="bold"
+                    tools:ignore="LabelFor"
+                    tools:text="100" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_margin="10dp"
+                android:layout_marginTop="@dimen/toolbar_height"
+                tools:ignore="RelativeOverlap,RtlHardcoded">
+
+                <com.google.android.material.button.MaterialButtonToggleGroup
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/pocketpaint_text_tool_dialog_toggle_outline"
+                        style="@style/CircularToggleButtonStyle"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:padding="8dp"
+                        android:text="@string/text_tool_dialog_outline_shortcut"
+                        android:drawableLeft="@drawable/outline_button_selector" />
+                </com.google.android.material.button.MaterialButtonToggleGroup>
+
+                <Space style="@style/PocketPaintToolHorizontalSpace" />
+
+                <com.google.android.material.button.MaterialButtonToggleGroup
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/pocketpaint_text_tool_dialog_toggle_underlined"
+                        style="@style/CircularToggleButtonStyle"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:text="@string/text_tool_dialog_underline_shortcut"
+                        android:textSize="20sp" />
+                </com.google.android.material.button.MaterialButtonToggleGroup>
+
+                <Space style="@style/PocketPaintToolHorizontalSpace" />
+
+                <com.google.android.material.button.MaterialButtonToggleGroup
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/pocketpaint_text_tool_dialog_toggle_italic"
+                        style="@style/CircularToggleButtonStyle"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:text="@string/text_tool_dialog_italic_shortcut"
+                        android:textSize="20sp"
+                        android:textStyle="italic" />
+                </com.google.android.material.button.MaterialButtonToggleGroup>
+
+                <Space style="@style/PocketPaintToolHorizontalSpace" />
+
+                <com.google.android.material.button.MaterialButtonToggleGroup
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/pocketpaint_text_tool_dialog_toggle_bold"
+                        style="@style/CircularToggleButtonStyle"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:text="@string/text_tool_dialog_bold_shortcut"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+                </com.google.android.material.button.MaterialButtonToggleGroup>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_margin="10dp">
+            android:id="@+id/pocketpaint_outline_width_layout"
+            android:layout_below="@id/pocketpaint_text_button_layout">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/pocketpaint_font_size_text"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/pocketpaint_outline_width_text_layout"
+                style="@style/TextFieldTheme"
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:background="@drawable/pocketpaint_round_rect_shape"
-                android:gravity="center"
-                android:imeOptions="actionDone"
-                android:importantForAutofill="no"
-                android:inputType="number"
-                android:minEms="3"
-                android:padding="4dp"
-                android:saveEnabled="false"
-                android:textColor="?attr/colorAccent"
-                android:textStyle="bold"
-                tools:ignore="LabelFor"
-                tools:text="100" />
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_margin="10dp">
 
-        </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/pocketpaint_outline_width_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/pocketpaint_round_rect_shape"
+                    android:gravity="center"
+                    android:imeOptions="actionDone"
+                    android:importantForAutofill="no"
+                    android:inputType="number"
+                    android:layoutDirection="ltr"
+                    android:minEms="3"
+                    android:padding="4dp"
+                    android:saveEnabled="false"
+                    android:textColor="?attr/colorAccent"
+                    android:textStyle="bold"
+                    tools:ignore="LabelFor"
+                    tools:text="100" />
 
+            </com.google.android.material.textfield.TextInputLayout>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:layout_margin="10dp"
-            android:layout_marginTop="@dimen/toolbar_height"
-            tools:ignore="RelativeOverlap,RtlHardcoded">
-
-            <com.google.android.material.button.MaterialButtonToggleGroup
+            <SeekBar
+                android:id="@+id/pocketpaint_outline_width_seek_bar"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/pocketpaint_text_tool_dialog_toggle_underlined"
-                    style="@style/CircularToggleButtonStyle"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:text="@string/text_tool_dialog_underline_shortcut"
-                    android:textSize="20sp" />
-            </com.google.android.material.button.MaterialButtonToggleGroup>
-
-            <Space style="@style/PocketPaintToolHorizontalSpace" />
-
-            <com.google.android.material.button.MaterialButtonToggleGroup
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/pocketpaint_text_tool_dialog_toggle_italic"
-                    style="@style/CircularToggleButtonStyle"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:text="@string/text_tool_dialog_italic_shortcut"
-                    android:textSize="20sp"
-                    android:textStyle="italic" />
-            </com.google.android.material.button.MaterialButtonToggleGroup>
-
-            <Space style="@style/PocketPaintToolHorizontalSpace" />
-
-            <com.google.android.material.button.MaterialButtonToggleGroup
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/pocketpaint_text_tool_dialog_toggle_bold"
-                    style="@style/CircularToggleButtonStyle"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:text="@string/text_tool_dialog_bold_shortcut"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-            </com.google.android.material.button.MaterialButtonToggleGroup>
-        </LinearLayout>
-
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/pocketpaint_outline_width_text_layout"
+                android:layout_alignBottom="@id/pocketpaint_outline_width_text_layout"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="10dp"
+                android:layout_toEndOf="@+id/pocketpaint_outline_width_text_layout"
+                android:max="100"
+                android:minHeight="30dip" />
+        </RelativeLayout>
     </RelativeLayout>
 
     <RelativeLayout

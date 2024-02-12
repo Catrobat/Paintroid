@@ -190,7 +190,9 @@ class CommandSerializationTest {
             underline = false,
             italic = true,
             textSize = 25f,
-            textSkewX = -0.25f
+            textSkewX = -0.25f,
+            outlined = false,
+            outlineWidth = 25
         )
 
         expectedModel.commands.add(

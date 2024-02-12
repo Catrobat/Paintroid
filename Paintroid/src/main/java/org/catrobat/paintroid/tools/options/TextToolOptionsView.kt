@@ -26,9 +26,11 @@ interface TextToolOptionsView {
         bold: Boolean,
         italic: Boolean,
         underlined: Boolean,
+        outlined: Boolean,
         text: String,
         textSize: Int,
-        fontType: FontType
+        fontType: FontType,
+        outlineWidth: Int
     )
 
     fun setCallback(listener: Callback)
@@ -52,8 +54,12 @@ interface TextToolOptionsView {
 
         fun setBold(bold: Boolean)
 
+        fun setOutline(outlined: Boolean)
+
         fun setTextSize(size: Int)
 
         fun hideToolOptions()
+
+        fun onOutlineWidthChanged(outlineWidth: Int)
     }
 }

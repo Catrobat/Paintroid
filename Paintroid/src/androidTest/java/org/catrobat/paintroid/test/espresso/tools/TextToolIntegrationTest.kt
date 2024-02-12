@@ -27,7 +27,9 @@ import android.graphics.Paint
 import android.graphics.PointF
 import android.graphics.Typeface
 import android.widget.EditText
+import android.widget.RelativeLayout
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
@@ -61,6 +63,7 @@ import org.catrobat.paintroid.tools.FontType
 import org.catrobat.paintroid.tools.ToolReference
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.implementation.BOX_OFFSET
+import org.catrobat.paintroid.tools.implementation.DEFAULT_TEXT_OUTLINE_WIDTH
 import org.catrobat.paintroid.tools.implementation.MARGIN_TOP
 import org.catrobat.paintroid.tools.implementation.TEXT_SIZE_MAGNIFICATION_FACTOR
 import org.catrobat.paintroid.tools.implementation.TextTool
@@ -90,6 +93,8 @@ class TextToolIntegrationTest {
     private var underlinedToggleButton: MaterialButton? = null
     private var italicToggleButton: MaterialButton? = null
     private var boldToggleButton: MaterialButton? = null
+    private var outlineToggleButton: MaterialButton? = null
+    private var outlineWidthLayout: RelativeLayout? = null
     private var textSize: EditText? = null
     private var layerModel: LayerContracts.Model? = null
     private lateinit var activity: MainActivity
@@ -116,6 +121,8 @@ class TextToolIntegrationTest {
             activity.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_underlined)
         italicToggleButton = activity.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_italic)
         boldToggleButton = activity.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_bold)
+        outlineToggleButton = activity.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_outline)
+        outlineWidthLayout = activity.findViewById(R.id.pocketpaint_outline_width_layout)
         textSize = activity.findViewById(R.id.pocketpaint_font_size_text)
         textTool?.resetBoxPosition()
     }
@@ -125,6 +132,7 @@ class TextToolIntegrationTest {
         selectFormatting(FormattingOptions.ITALIC)
         selectFormatting(FormattingOptions.BOLD)
         selectFormatting(FormattingOptions.UNDERLINE)
+        selectFormatting(FormattingOptions.OUTLINE)
         enterTestText()
         onView(withId(R.id.pocketpaint_text_tool_dialog_input_text)).perform(click())
         onView(withId(R.id.pocketpaint_text_tool_dialog_input_text)).perform(
@@ -135,12 +143,14 @@ class TextToolIntegrationTest {
         italicToggleButton?.let { Assert.assertTrue(it.isChecked) }
         boldToggleButton?.let { Assert.assertTrue(it.isChecked) }
         underlinedToggleButton?.let { Assert.assertTrue(it.isChecked) }
+        outlineToggleButton?.let { Assert.assertTrue(it.isChecked) }
         Assert.assertEquals(TEST_TEXT_ADVANCED, textEditText?.text?.toString())
         onView(withId(R.id.pocketpaint_text_tool_dialog_input_text)).check(matches(isDisplayed()))
         onView(withId(R.id.pocketpaint_text_tool_dialog_list_font)).check(matches(isDisplayed()))
         onView(withId(R.id.pocketpaint_text_tool_dialog_toggle_underlined)).check(matches(isDisplayed()))
         onView(withId(R.id.pocketpaint_text_tool_dialog_toggle_italic)).check(matches(isDisplayed()))
         onView(withId(R.id.pocketpaint_text_tool_dialog_toggle_bold)).check(matches(isDisplayed()))
+        onView(withId(R.id.pocketpaint_text_tool_dialog_toggle_outline)).check(matches(isDisplayed()))
         onView(withId(R.id.pocketpaint_font_size_text)).check(matches(isDisplayed()))
     }
 
@@ -149,6 +159,7 @@ class TextToolIntegrationTest {
         selectFormatting(FormattingOptions.ITALIC)
         selectFormatting(FormattingOptions.BOLD)
         selectFormatting(FormattingOptions.UNDERLINE)
+        selectFormatting(FormattingOptions.OUTLINE)
         enterTestText()
         onDrawingSurfaceView()
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
@@ -156,6 +167,7 @@ class TextToolIntegrationTest {
         italicToggleButton?.let { Assert.assertTrue(it.isChecked) }
         boldToggleButton?.let { Assert.assertTrue(it.isChecked) }
         underlinedToggleButton?.let { Assert.assertTrue(it.isChecked) }
+        outlineToggleButton?.let { Assert.assertTrue(it.isChecked) }
         Assert.assertEquals(TEST_TEXT, textEditText?.text?.toString())
         onView(withId(R.id.pocketpaint_text_tool_dialog_input_text))
             .check(matches(not(isDisplayed())))
@@ -166,6 +178,8 @@ class TextToolIntegrationTest {
         onView(withId(R.id.pocketpaint_text_tool_dialog_toggle_italic))
             .check(matches(not(isDisplayed())))
         onView(withId(R.id.pocketpaint_text_tool_dialog_toggle_bold))
+            .check(matches(not(isDisplayed())))
+        onView(withId(R.id.pocketpaint_text_tool_dialog_toggle_outline))
             .check(matches(not(isDisplayed())))
         onView(withId(R.id.pocketpaint_font_size_text))
             .check(matches(not(isDisplayed())))
@@ -247,6 +261,8 @@ class TextToolIntegrationTest {
         textTool?.let { Assert.assertFalse(it.underlined) }
         textTool?.let { Assert.assertFalse(it.italic) }
         textTool?.let { Assert.assertFalse(it.bold) }
+        textTool?.let { Assert.assertFalse(it.outlined) }
+        outlineWidthLayout?.let { Assert.assertFalse(it.isVisible) }
     }
 
     @Test
@@ -292,6 +308,20 @@ class TextToolIntegrationTest {
         Assert.assertFalse(toolMemberBold)
         boldToggleButton?.let { Assert.assertFalse(it.isChecked) }
         Assert.assertEquals(getFormattingOptionAsString(FormattingOptions.BOLD), boldToggleButton?.text.toString())
+        selectFormatting(FormattingOptions.OUTLINE)
+        textTool?.let { Assert.assertTrue(it.outlined) }
+        outlineToggleButton?.let { Assert.assertTrue(it.isChecked) }
+        Assert.assertEquals(
+            getFormattingOptionAsString(FormattingOptions.OUTLINE),
+            outlineToggleButton?.text.toString()
+        )
+        selectFormatting(FormattingOptions.OUTLINE)
+        textTool?.let { Assert.assertFalse(it.outlined) }
+        outlineToggleButton?.let { Assert.assertFalse(it.isChecked) }
+        Assert.assertEquals(
+            getFormattingOptionAsString(FormattingOptions.OUTLINE),
+            outlineToggleButton?.text.toString()
+        )
     }
 
     @Test
@@ -301,6 +331,7 @@ class TextToolIntegrationTest {
         selectFormatting(FormattingOptions.UNDERLINE)
         selectFormatting(FormattingOptions.ITALIC)
         selectFormatting(FormattingOptions.BOLD)
+        selectFormatting(FormattingOptions.OUTLINE)
         onToolBarView().performCloseToolOptionsView()
 
         val oldBoxWidth = toolMemberBoxWidth
@@ -318,6 +349,7 @@ class TextToolIntegrationTest {
         underlinedToggleButton?.let { Assert.assertTrue(it.isChecked) }
         italicToggleButton?.let { Assert.assertTrue(it.isChecked) }
         boldToggleButton?.let { Assert.assertTrue(it.isChecked) }
+        outlineToggleButton?.let { Assert.assertTrue(it.isChecked) }
         Assert.assertTrue(oldBoxWidth == toolMemberBoxWidth && oldBoxHeight == toolMemberBoxHeight)
     }
 
@@ -328,6 +360,7 @@ class TextToolIntegrationTest {
         selectFormatting(FormattingOptions.UNDERLINE)
         selectFormatting(FormattingOptions.ITALIC)
         selectFormatting(FormattingOptions.BOLD)
+        selectFormatting(FormattingOptions.OUTLINE)
 
         val toolMemberBoxPosition = toolMemberBoxPosition
         val expectedPosition = toolMemberBoxPosition?.y?.let { PointF(toolMemberBoxPosition.x, it) }
@@ -344,6 +377,7 @@ class TextToolIntegrationTest {
         underlinedToggleButton?.let { Assert.assertTrue(it.isChecked) }
         italicToggleButton?.let { Assert.assertTrue(it.isChecked) }
         boldToggleButton?.let { Assert.assertTrue(it.isChecked) }
+        outlineToggleButton?.let { Assert.assertTrue(it.isChecked) }
         Assert.assertEquals(expectedPosition, toolMemberBoxPosition)
         Assert.assertEquals(oldBoxWidth.toDouble(), toolMemberBoxWidth.toDouble(), EQUALS_DELTA)
         Assert.assertEquals(oldBoxHeight.toDouble(), toolMemberBoxHeight.toDouble(), EQUALS_DELTA)
@@ -750,6 +784,7 @@ class TextToolIntegrationTest {
                 selectFormatting(FormattingOptions.ITALIC)
                 selectFormatting(FormattingOptions.BOLD)
                 selectFormatting(FormattingOptions.UNDERLINE)
+                selectFormatting(FormattingOptions.OUTLINE)
             }
             val boxWidth = toolMemberBoxWidth
             val boxHeight = toolMemberBoxHeight
@@ -759,7 +794,117 @@ class TextToolIntegrationTest {
             selectFormatting(FormattingOptions.ITALIC)
             selectFormatting(FormattingOptions.BOLD)
             selectFormatting(FormattingOptions.UNDERLINE)
+            selectFormatting(FormattingOptions.OUTLINE)
             Assert.assertTrue(boxWidth < toolMemberBoxWidth && boxHeight < toolMemberBoxHeight)
+        }
+    }
+
+    @Test
+    fun testTextOutlineMode() {
+        enterTestText()
+        val canvasPoint = centerBox()
+        onTopBarView().performClickCheckmark()
+        val surfaceBitmapWidth = layerModel?.width
+        val pixelsDrawingSurface = surfaceBitmapWidth?.let { IntArray(it) }
+        if (surfaceBitmapWidth != null && canvasPoint != null) {
+            layerModel?.currentLayer?.bitmap?.getPixels(
+                pixelsDrawingSurface, 0, surfaceBitmapWidth, 0,
+                canvasPoint.y.toInt(), surfaceBitmapWidth, 1
+            )
+        }
+        val blackPixelAmountNoOutline = pixelsDrawingSurface?.let { countPixelsWithColor(it, Color.BLACK) }
+        val whitePixelAmountNoOutline = pixelsDrawingSurface?.let { countPixelsWithColor(it, Color.WHITE) }
+        onTopBarView().performUndo()
+
+        selectFormatting(FormattingOptions.OUTLINE)
+        textTool?.let { Assert.assertTrue(it.outlined) }
+
+        onTopBarView().performClickCheckmark()
+
+        if (surfaceBitmapWidth != null && canvasPoint != null) {
+            layerModel?.currentLayer?.bitmap?.getPixels(
+                pixelsDrawingSurface, 0, surfaceBitmapWidth, 0,
+                canvasPoint.y.toInt(), surfaceBitmapWidth, 1
+            )
+        }
+
+        val blackPixelAmountWithOutline = pixelsDrawingSurface?.let { countPixelsWithColor(it, Color.BLACK) }
+        if (blackPixelAmountNoOutline != null && blackPixelAmountWithOutline != null) {
+            assert(blackPixelAmountNoOutline > blackPixelAmountWithOutline)
+            assert(blackPixelAmountWithOutline > 0)
+        }
+
+        val whitePixelAmountWithOutline = pixelsDrawingSurface?.let { countPixelsWithColor(it, Color.WHITE) }
+        if (whitePixelAmountNoOutline != null && whitePixelAmountWithOutline != null) {
+            assert(whitePixelAmountNoOutline < whitePixelAmountWithOutline)
+        }
+    }
+
+    @Test
+    fun testTextOutlineWidth() {
+        val canvasPoint = centerBox()
+        selectFormatting(FormattingOptions.OUTLINE)
+        textTool?.let { Assert.assertTrue(it.outlined) }
+        outlineWidthLayout?.let { Assert.assertTrue(it.isVisible) }
+        val outlineWidthInput = onView(withId(R.id.pocketpaint_outline_width_text))
+        val outlineWidthSeekbar = onView(withId(R.id.pocketpaint_outline_width_seek_bar))
+        outlineWidthInput.check(matches(ViewMatchers.withText(DEFAULT_TEXT_OUTLINE_WIDTH.toString())))
+        outlineWidthSeekbar.check(matches(UiMatcher.withProgress(DEFAULT_TEXT_OUTLINE_WIDTH)))
+
+        enterTestText()
+
+        var testOutlineWidthText = "1"
+
+        outlineWidthInput.perform(
+            ViewActions.replaceText(testOutlineWidthText),
+            ViewActions.closeSoftKeyboard()
+        )
+        outlineWidthInput.check(matches(ViewMatchers.withText(testOutlineWidthText)))
+        outlineWidthSeekbar.check(matches(UiMatcher.withProgress(testOutlineWidthText.toInt())))
+
+        onTopBarView().performClickCheckmark()
+        val surfaceBitmapWidth = layerModel?.width
+        val pixelsDrawingSurface = surfaceBitmapWidth?.let { IntArray(it) }
+        if (surfaceBitmapWidth != null && canvasPoint != null) {
+            layerModel?.currentLayer?.bitmap?.getPixels(
+                pixelsDrawingSurface, 0, surfaceBitmapWidth, 0,
+                canvasPoint.y.toInt(), surfaceBitmapWidth, 1
+            )
+        }
+        val blackPixelAmountThinOutline = pixelsDrawingSurface?.let { countPixelsWithColor(it, Color.BLACK) }
+        val whitePixelAmountThinOutline = pixelsDrawingSurface?.let { countPixelsWithColor(it, Color.WHITE) }
+        onTopBarView().performUndo()
+
+        testOutlineWidthText = "60"
+
+        outlineWidthInput.perform(
+            ViewActions.replaceText(testOutlineWidthText),
+            ViewActions.closeSoftKeyboard()
+        )
+        outlineWidthInput.check(matches(ViewMatchers.withText(testOutlineWidthText)))
+        outlineWidthSeekbar.check(matches(UiMatcher.withProgress(testOutlineWidthText.toInt())))
+
+        onTopBarView().performClickCheckmark()
+
+        if (surfaceBitmapWidth != null && canvasPoint != null) {
+            layerModel?.currentLayer?.bitmap?.getPixels(
+                pixelsDrawingSurface, 0, surfaceBitmapWidth, 0,
+                canvasPoint.y.toInt(), surfaceBitmapWidth, 1
+            )
+        }
+
+        val blackPixelAmountThickOutline = pixelsDrawingSurface?.let { countPixelsWithColor(it, Color.BLACK) }
+        if (blackPixelAmountThinOutline != null && blackPixelAmountThickOutline != null) {
+            assert(blackPixelAmountThinOutline > 0)
+            assert(blackPixelAmountThickOutline > 0)
+            assert(blackPixelAmountThickOutline > blackPixelAmountThinOutline)
+        }
+
+        val whitePixelAmountThickOutline = pixelsDrawingSurface?.let { countPixelsWithColor(it, Color.WHITE) }
+        if (whitePixelAmountThinOutline != null && whitePixelAmountThickOutline != null) {
+            assert(whitePixelAmountThinOutline > 0)
+            assert(whitePixelAmountThickOutline > 0)
+            assert(whitePixelAmountThickOutline < whitePixelAmountThinOutline)
         }
     }
 
@@ -892,6 +1037,7 @@ class TextToolIntegrationTest {
             FormattingOptions.UNDERLINE -> activity.getString(R.string.text_tool_dialog_underline_shortcut)
             FormattingOptions.ITALIC -> activity.getString(R.string.text_tool_dialog_italic_shortcut)
             FormattingOptions.BOLD -> activity.getString(R.string.text_tool_dialog_bold_shortcut)
+            FormattingOptions.OUTLINE -> activity.getString(R.string.text_tool_dialog_outline_shortcut)
         }
     }
 
@@ -921,7 +1067,7 @@ class TextToolIntegrationTest {
     private val toolMemberMultilineText: Array<String>
         get() = textTool!!.multilineText
 
-    private enum class FormattingOptions { UNDERLINE, ITALIC, BOLD }
+    private enum class FormattingOptions { UNDERLINE, ITALIC, BOLD, OUTLINE }
 
     companion object {
         private const val TEST_TEXT = "123 www 123"
