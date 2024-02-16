@@ -46,14 +46,14 @@ import org.catrobat.paintroid.FileIO.FileType
 import org.catrobat.paintroid.PaintroidApplication
 import org.catrobat.paintroid.R
 import java.util.Locale
-import org.catrobat.paintroid.dialog.FileType
+
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 
 
 
-//import com.example.library.AnimatedGifEncoder
+
 
 
 

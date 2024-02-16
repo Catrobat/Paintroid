@@ -45,13 +45,13 @@ class AnimatedGifEncoder {
 
         try {
             if (!firstFrame) {
-                writeByte(0x21) // extension
-                writeByte(0xF9) // graphic control extension
-                writeByte(4) // length
-                writeByte((dispose shl 2) or 0x01) // packed fields
-                writeShort(delay) // delay x 1/100 sec
-                writeByte(transIndex) // transparent color index
-                writeByte(0) // block terminator
+                writeByte(0x21)
+                writeByte(0xF9)
+                writeByte(4)
+                writeByte((dispose shl 2) or 0x01)
+                writeShort(delay)
+                writeByte(transIndex)
+                writeByte(0)
             }
             val transparent = -1
             val width = image.width
