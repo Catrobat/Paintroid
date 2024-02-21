@@ -8,7 +8,7 @@ import java.io.BufferedOutputStream
 import java.io.FileOutputStream
 import java.io.IOException
 
-class AnimatedGifEncoder {
+class AnimatedGifEncoder { 
 
     private var width: Int = 0
     private var height: Int = 0
