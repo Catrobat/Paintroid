@@ -60,6 +60,16 @@ class DefaultShapeToolOptionsView(rootView: ViewGroup) : ShapeToolOptionsView {
     private val triangleButton: AppCompatImageButton
     private val pentagonButton: AppCompatImageButton
     private val hexagonButton: AppCompatImageButton
+    private val octagonButton: AppCompatImageButton
+    private val arrowButton: AppCompatImageButton
+    private val crossButton: AppCompatImageButton
+    private val tickButton: AppCompatImageButton
+    private val moonButton: AppCompatImageButton
+    private val lightningButton: AppCompatImageButton
+    private val speechButton: AppCompatImageButton
+
+
+
 
     init {
         val inflater = LayoutInflater.from(rootView.context)
@@ -80,6 +90,13 @@ class DefaultShapeToolOptionsView(rootView: ViewGroup) : ShapeToolOptionsView {
             triangleButton = findViewById(R.id.pocketpaint_shapes_triangle_btn)
             pentagonButton = findViewById(R.id.pocketpaint_shapes_pentagon_btn)
             hexagonButton = findViewById(R.id.pocketpaint_shapes_hexagon_btn)
+            octagonButton = findViewById(R.id.pocketpaint_shapes_octagon_btn)
+            arrowButton = findViewById(R.id.pocketpaint_shapes_arrow_btn)
+            crossButton = findViewById(R.id.pocketpaint_shapes_cross_btn)
+            tickButton = findViewById(R.id.pocketpaint_shapes_tick_btn)
+            moonButton = findViewById(R.id.pocketpaint_shapes_moon_btn)
+            lightningButton = findViewById(R.id.pocketpaint_shapes_lightning_btn)
+            speechButton = findViewById(R.id.pocketpaint_shapes_speech_btn)
         }
         outlineWidthEditText.filters =
             arrayOf<InputFilter>(DefaultNumberRangeFilter(MIN_VAL, MAX_VAL))
@@ -98,6 +115,14 @@ class DefaultShapeToolOptionsView(rootView: ViewGroup) : ShapeToolOptionsView {
         triangleButton.setOnClickListener { onShapeClicked(DrawableShape.TRIANGLE) }
         pentagonButton.setOnClickListener { onShapeClicked(DrawableShape.PENTAGON) }
         hexagonButton.setOnClickListener { onShapeClicked(DrawableShape.HEXAGON) }
+        octagonButton.setOnClickListener { onShapeClicked(DrawableShape.OCTAGON) }
+        arrowButton.setOnClickListener { onShapeClicked(DrawableShape.ARROW) }
+        crossButton.setOnClickListener { onShapeClicked(DrawableShape.CROSS) }
+        tickButton.setOnClickListener { onShapeClicked(DrawableShape.TICK) }
+        moonButton.setOnClickListener { onShapeClicked(DrawableShape.MOON) }
+        lightningButton.setOnClickListener { onShapeClicked(DrawableShape.LIGHTNING) }
+        speechButton.setOnClickListener { onShapeClicked(DrawableShape.SPEECH) }
+
 
         fillButton.setOnClickListener { onDrawTypeClicked(DrawableStyle.FILL) }
         outlineButton.setOnClickListener { onDrawTypeClicked(DrawableStyle.STROKE) }
@@ -159,7 +184,14 @@ class DefaultShapeToolOptionsView(rootView: ViewGroup) : ShapeToolOptionsView {
             starButton,
             triangleButton,
             pentagonButton,
-            hexagonButton
+            hexagonButton,
+            octagonButton,
+            arrowButton,
+            crossButton,
+            tickButton,
+            moonButton,
+            lightningButton,
+            speechButton
         )
         for (button in buttons) {
             button.isSelected = false
@@ -206,6 +238,34 @@ class DefaultShapeToolOptionsView(rootView: ViewGroup) : ShapeToolOptionsView {
                 hexagonButton.isSelected = true
                 setShapeToolDialogTitle(R.string.shape_tool_dialog_hexagon_title)
             }
+            DrawableShape.OCTAGON -> {
+                pentagonButton.isSelected = true
+                setShapeToolDialogTitle(R.string.shape_tool_dialog_octagon_title)
+            }
+            DrawableShape.ARROW -> {
+                pentagonButton.isSelected = true
+                setShapeToolDialogTitle(R.string.shape_tool_dialog_arrow_title)
+            }
+            DrawableShape.CROSS -> {
+                pentagonButton.isSelected = true
+                setShapeToolDialogTitle(R.string.shape_tool_dialog_cross_title)
+            }
+            DrawableShape.TICK -> {
+                pentagonButton.isSelected = true
+                setShapeToolDialogTitle(R.string.shape_tool_dialog_tick_title)
+            }
+            DrawableShape.MOON -> {
+                pentagonButton.isSelected = true
+                setShapeToolDialogTitle(R.string.shape_tool_dialog_moon_title)
+            }
+            DrawableShape.LIGHTNING -> {
+                pentagonButton.isSelected = true
+                setShapeToolDialogTitle(R.string.shape_tool_dialog_lightning_title)
+            }
+            DrawableShape.SPEECH -> {
+                pentagonButton.isSelected = true
+                setShapeToolDialogTitle(R.string.shape_tool_dialog_speech_title)
+            }
         }
     }
 
@@ -218,6 +278,14 @@ class DefaultShapeToolOptionsView(rootView: ViewGroup) : ShapeToolOptionsView {
         triangleButtonResource: Int,
         pentagonButtonResource: Int,
         hexagonButtonResource: Int,
+        octagonButtonResource: Int,
+        arrowButtonResource: Int,
+        crossButtonResource: Int,
+        tickButtonResource: Int,
+        moonButtonResource: Int,
+        lightningButtonResource: Int,
+        speechButtonResource: Int,
+
 
         visibility: Int
     ) {
@@ -229,6 +297,13 @@ class DefaultShapeToolOptionsView(rootView: ViewGroup) : ShapeToolOptionsView {
         triangleButton.setImageResource(triangleButtonResource)
         pentagonButton.setImageResource(pentagonButtonResource)
         hexagonButton.setImageResource(hexagonButtonResource)
+        octagonButton.setImageResource(octagonButtonResource)
+        arrowButton.setImageResource(arrowButtonResource)
+        crossButton.setImageResource(crossButtonResource)
+        tickButton.setImageResource(tickButtonResource)
+        moonButton.setImageResource(moonButtonResource)
+        lightningButton.setImageResource(lightningButtonResource)
+        speechButton.setImageResource(speechButtonResource)
 
         outlineWidthSeekBar.visibility = visibility
         outlineWidthEditText.visibility = visibility
@@ -250,6 +325,14 @@ class DefaultShapeToolOptionsView(rootView: ViewGroup) : ShapeToolOptionsView {
                     R.drawable.ic_pocketpaint_triangle,
                     R.drawable.ic_pocketpaint_pentagon,
                     R.drawable.ic_pocketpaint_hexagon,
+                    R.drawable.ic_pocketpaint_octagon,
+                    R.drawable.ic_pocketpaint_arrow,
+                    R.drawable.ic_pocketpaint_cross,
+                    R.drawable.ic_pocketpaint_tick,
+                    R.drawable.ic_pocketpaint_moon,
+                    R.drawable.ic_pocketpaint_lightning,
+                    R.drawable.ic_pocketpaint_speech,
+
                     View.GONE
                 )
             }
@@ -264,6 +347,14 @@ class DefaultShapeToolOptionsView(rootView: ViewGroup) : ShapeToolOptionsView {
                     R.drawable.ic_pocketpaint_triangle_out,
                     R.drawable.ic_pocketpaint_pentagon_out,
                     R.drawable.ic_pocketpaint_hexagon_out,
+                    R.drawable.ic_pocketpaint_octagon_out,
+                    R.drawable.ic_pocketpaint_arrow_out,
+                    R.drawable.ic_pocketpaint_cross_out,
+                    R.drawable.ic_pocketpaint_tick_out,
+                    R.drawable.ic_pocketpaint_moon_out,
+                    R.drawable.ic_pocketpaint_lightning_out,
+                    R.drawable.ic_pocketpaint_speech_out,
+
                     View.VISIBLE
                 )
             }

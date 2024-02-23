@@ -128,9 +128,16 @@
     <string name="shape_tool_dialog_ellipse_title">Ellipse</string>
     <string name="shape_tool_dialog_star_title">Star</string>
     <string name="shape_tool_dialog_heart_title">Heart</string>
+    <string name="shape_tool_dialog_cross_title">Cross</string>
+    <string name="shape_tool_dialog_octagon_title">Octagon</string>
+    <string name="shape_tool_dialog_arrow_title">Arrow</string>
     <string name="shape_tool_dialog_triangle_title" translatable="false">Triangle</string>
     <string name="shape_tool_dialog_pentagon_title" translatable="false">Pentagon</string>
     <string name="shape_tool_dialog_hexagon_title" translatable="false">Hexagon</string>
+    <string name="shape_tool_dialog_tick_title">Tick</string>
+    <string name="shape_tool_dialog_moon_title">Moon</string>
+    <string name="shape_tool_dialog_lightning_title">Lightning</string>
+    <string name="shape_tool_dialog_speech_title">Speech</string>
     <string name="shape_tool_dialog_fill_title">Fill</string>
     <string name="shape_tool_dialog_outline_title">Outline</string>
 

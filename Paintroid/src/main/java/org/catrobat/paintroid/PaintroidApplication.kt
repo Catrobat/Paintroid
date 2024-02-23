@@ -18,10 +18,8 @@
  */
 package org.catrobat.paintroid
 
+
 import android.graphics.Bitmap
-import org.catrobat.paintroid.ui.DrawingSurface
-import java.io.File
-import java.lang.IllegalArgumentException
 
 @SuppressWarnings("ThrowingExceptionsWithoutMessageOrCause")
 class PaintroidApplication() {
@@ -37,12 +35,4 @@ class PaintroidApplication() {
 
 
 
-//@JvmStatic
-//        var cacheDir: File? = null
-//    }
-//
-//
-//    init {
-//        throw IllegalArgumentException()
-//    }
-//}
+
