@@ -64,16 +64,20 @@ class ToolBarViewInteraction :
         get() = EspressoUtils.mainActivity.toolReference.tool!!.toolType
 
     fun performOpenToolOptionsView(): ToolBarViewInteraction {
-        onToolOptionsView()
-            .check(ViewAssertions.matches(Matchers.not(ViewMatchers.isDisplayed())))
+        if (currentToolType != ToolType.TEXT) {
+            onToolOptionsView()
+                .check(ViewAssertions.matches(Matchers.not(ViewMatchers.isDisplayed())))
+        }
         onBottomNavigationView()
             .onCurrentClicked()
         return this
     }
 
     fun performCloseToolOptionsView(): ToolBarViewInteraction {
-        onToolOptionsView()
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        if (currentToolType != ToolType.TEXT) {
+            onToolOptionsView()
+                .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        }
         onBottomNavigationView()
             .onCurrentClicked()
         return this

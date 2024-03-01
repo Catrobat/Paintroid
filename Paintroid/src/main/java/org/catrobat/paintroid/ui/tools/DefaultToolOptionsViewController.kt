@@ -140,7 +140,7 @@ class DefaultToolOptionsViewController(
         hideButtonsEnabled = false
     }
 
-    override fun slideUp(view: View, willHide: Boolean, showOptionsView: Boolean) {
+    override fun slideUp(view: View, willHide: Boolean, showOptionsView: Boolean, setViewGone: Boolean) {
         if (!enabled || !hideButtonsEnabled) {
             return
         }
@@ -169,7 +169,7 @@ class DefaultToolOptionsViewController(
         animation.duration = ANIMATION_DURATION
         view.startAnimation(animation)
         if (willHide) {
-            view.visibility = View.INVISIBLE
+            view.visibility = if (setViewGone) View.GONE else View.INVISIBLE
             toolOptionsShown = showOptionsView
             notifyHide()
         } else {
@@ -177,7 +177,7 @@ class DefaultToolOptionsViewController(
         }
     }
 
-    override fun slideDown(view: View, willHide: Boolean, showOptionsView: Boolean) {
+    override fun slideDown(view: View, willHide: Boolean, showOptionsView: Boolean, setViewGone: Boolean) {
         if (!enabled || !hideButtonsEnabled) {
             return
         }
@@ -201,7 +201,7 @@ class DefaultToolOptionsViewController(
         animation.duration = ANIMATION_DURATION
         view.startAnimation(animation)
         if (willHide) {
-            view.visibility = View.INVISIBLE
+            view.visibility = if (setViewGone) View.GONE else View.INVISIBLE
             toolOptionsShown = showOptionsView
             notifyHide()
         } else {

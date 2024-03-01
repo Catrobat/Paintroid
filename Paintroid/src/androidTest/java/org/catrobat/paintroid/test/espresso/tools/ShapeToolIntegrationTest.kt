@@ -23,6 +23,9 @@ package org.catrobat.paintroid.test.espresso.tools
 
 import android.graphics.Color
 import android.graphics.Paint
+import androidx.test.espresso.Espresso
+import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.ActivityTestRule
 import org.catrobat.paintroid.MainActivity
@@ -43,6 +46,7 @@ import org.catrobat.paintroid.tools.drawable.DrawableShape
 import org.catrobat.paintroid.tools.drawable.DrawableStyle
 import org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShape
 import org.catrobat.paintroid.tools.implementation.ShapeTool
+import org.hamcrest.Matchers
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
@@ -207,6 +211,32 @@ class ShapeToolIntegrationTest {
                 mainActivity.perspective.surfaceCenterY - mainActivity.perspective.surfaceTranslationY
             )
     }
+
+    @Test
+    fun testShapeToolSizeDisplay() {
+        val shapeTool = toolReference?.tool as ShapeTool
+
+        Espresso.onView(
+            Matchers.allOf(ViewMatchers.withParent(ViewMatchers.withId(R.id.pocketpaint_layout_shape_tool_options_view_shape_size)),
+            ViewMatchers.withId(R.id.pocketpaint_fill_shape_size_text)))
+            .check(ViewAssertions.matches(ViewMatchers.withText(getShapeSizeText(shapeTool))))
+
+        onDrawingSurfaceView()
+            .perform(
+                UiInteractions.swipe(
+                    DrawingSurfaceLocationProvider.TOOL_POSITION,
+                    DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT
+                )
+            )
+
+        Espresso.onView(
+            Matchers.allOf(ViewMatchers.withParent(ViewMatchers.withId(R.id.pocketpaint_layout_shape_tool_options_view_shape_size)),
+            ViewMatchers.withId(R.id.pocketpaint_fill_shape_size_text)))
+            .check(ViewAssertions.matches(ViewMatchers.withText(getShapeSizeText(shapeTool))))
+    }
+
+    private fun getShapeSizeText(shapeTool: ShapeTool): String =
+        "${shapeTool.boxWidth.toInt()} x ${shapeTool.boxHeight.toInt()} px"
 
     private fun drawShape() {
         onToolBarView().performCloseToolOptionsView()

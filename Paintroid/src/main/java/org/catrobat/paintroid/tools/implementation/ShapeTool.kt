@@ -54,7 +54,7 @@ class ShapeTool(
     override var drawTime: Long
 ) : BaseToolWithRectangleShape(
     contextCallback, toolOptionsViewController, toolPaint, workspace, idlingResource, commandManager
-) {
+), BaseToolWithRectangleShape.ShapeSizeChangedListener {
     private val shapeToolOptionsView: ShapeToolOptionsView
     private val shapePreviewPaint = Paint()
     private val shapePreviewRect = RectF()
@@ -99,6 +99,8 @@ class ShapeTool(
                 }
             })
         toolOptionsViewController.showDelayed()
+        setShapeSizeChangedListener(this)
+        createAndSetShapeSizeText(boxWidth, boxHeight)
     }
 
     fun getBaseShape(): DrawableShape = baseShape
@@ -190,5 +192,17 @@ class ShapeTool(
             commandManager.addCommand(command)
             highlightBox()
         }
+    }
+
+    fun changeShapeToolLayoutVisibility(willHide: Boolean, disabled: Boolean = false) {
+        changeToolLayoutVisibility(shapeToolOptionsView.getShapeToolOptionsLayout(), willHide, disabled)
+    }
+
+    override fun onShapeSizeChanged(shapeText: String) {
+        shapeToolOptionsView.setShapeSizeText(shapeText)
+    }
+
+    override fun onToggleVisibility(isVisible: Boolean) {
+        shapeToolOptionsView.toggleShapeSizeVisibility(isVisible)
     }
 }
