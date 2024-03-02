@@ -758,6 +758,7 @@ open class MainActivityPresenter(
     private fun enterHideButtons() {
         if (toolController.toolOptionsViewVisible()) {
             toolOptionsViewWasShown = true
+            toolController.hideToolOptionsView()
         }
         view.hideKeyboard()
         view.enterHideButtons()
