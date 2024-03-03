@@ -139,32 +139,7 @@
                 android:layout_weight="1"
                 android:contentDescription="@string/shape_tool_dialog_star_title"
                 android:src="@drawable/ic_pocketpaint_star" />
-            <ImageButton
-                android:id="@+id/pocketpaint_shapes_triangle_btn"
-                style="@style/PocketPaintSelectableButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:contentDescription="@string/shape_tool_dialog_triangle_title"
-                android:src="@drawable/ic_pocketpaint_triangle" />
 
-            <ImageButton
-                android:id="@+id/pocketpaint_shapes_pentagon_btn"
-                style="@style/PocketPaintSelectableButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:contentDescription="@string/shape_tool_dialog_pentagon_title"
-                android:src="@drawable/ic_pocketpaint_pentagon" />
-
-            <ImageButton
-                android:id="@+id/pocketpaint_shapes_hexagon_btn"
-                style="@style/PocketPaintSelectableButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:contentDescription="@string/shape_tool_dialog_star_title"
-                android:src="@drawable/ic_pocketpaint_hexagon" />
 
         </LinearLayout>
     </LinearLayout>

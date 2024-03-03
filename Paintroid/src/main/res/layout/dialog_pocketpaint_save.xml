@@ -98,20 +98,7 @@
         android:clipChildren="false"
         android:clipToPadding="false" />
 
-    <SeekBar
-        android:id="@+id/pocketpaint_gif_delay_seekbar_save_info"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:max="100"
-        android:progress="50" />
 
-    <!-- TextView to display delay -->
-    <TextView
-        android:id="@+id/pocketpaint_gif_delay_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Delay: 500 ms" />
-    <!-- strings.xml -->
 
 
 
