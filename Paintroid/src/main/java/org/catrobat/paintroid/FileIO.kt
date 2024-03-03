@@ -104,7 +104,7 @@ object FileIO {
         PNG("png"),
         JPG("jpg"),
         ORA("ora"),
-        CATROBAT("catrobat-image"),
+        CATROBAT("catrobat-image");
 
 
         fun toExtension(): String = ".$value"
@@ -133,7 +133,7 @@ object FileIO {
     }
 
     @Throws(IOException::class)
-    fun  saveBitmapToUri(uri: Uri, bitmap: Bitmap?, context: Context): Uri {
+    fun saveBitmapToUri(uri: Uri, bitmap: Bitmap?, context: Context): Uri {
         val uid = UUID.randomUUID()
         val cachedImageUri = saveBitmapToCache(bitmap, context as MainActivity, uid.toString())
         var cachedFile: File? = null

@@ -19,5 +19,5 @@
 package org.catrobat.paintroid.tools.drawable
 
 enum class DrawableShape {
-    RECTANGLE, OVAL, HEART, STAR , PENTAGON, TRIANGLE, HEXAGON
+    RECTANGLE, OVAL, HEART, STAR
 }

@@ -25,9 +25,7 @@ class DrawableFactory {
             DrawableShape.OVAL -> OvalDrawable()
             DrawableShape.HEART -> HeartDrawable()
             DrawableShape.STAR -> StarDrawable()
-            DrawableShape.PENTAGON -> PentagonDrawable()
-            DrawableShape.TRIANGLE -> TriangleDrawable()
-            DrawableShape.HEXAGON -> HexagonDrawable()
+
         }
     }
 }

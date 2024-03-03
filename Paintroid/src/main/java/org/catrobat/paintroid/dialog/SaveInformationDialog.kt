@@ -22,7 +22,6 @@ import android.annotation.SuppressLint
 import android.app.Dialog
 import android.graphics.Bitmap
 import android.os.Bundle
-import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -42,13 +41,11 @@ import org.catrobat.paintroid.FileIO.FileType.PNG
 import org.catrobat.paintroid.FileIO.FileType.JPG
 import org.catrobat.paintroid.FileIO.FileType.CATROBAT
 import org.catrobat.paintroid.FileIO.FileType.ORA
-import org.catrobat.paintroid.PaintroidApplication
+
 
 
 import org.catrobat.paintroid.R
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
+
 import java.util.Locale
 
 
@@ -194,7 +191,7 @@ class SaveInformationDialog :
                 JPG -> presenter.showJpgInformationDialog()
                 ORA -> presenter.showOraInformationDialog()
                 CATROBAT -> presenter.showCatrobatInformationDialog()
-                FileType.GIF -> presenter.showGifInformationDialog()
+
                 else -> presenter.showPngInformationDialog()
             }
         }
