@@ -44,6 +44,8 @@ interface ToolController {
 
     fun hideToolOptionsView()
 
+    fun hideToolOptionsViewForShapeTools()
+
     fun showToolOptionsView()
 
     fun toolOptionsViewVisible(): Boolean

@@ -115,6 +115,15 @@ class DefaultToolController(
         }
     }
 
+    override fun hideToolOptionsViewForShapeTools() {
+        when (toolReference.tool?.toolType) {
+            ToolType.TEXT -> (toolReference.tool as TextTool).hideTextToolLayout()
+            ToolType.SHAPE -> (toolReference.tool as ShapeTool).changeShapeToolLayoutVisibility(true, true)
+            ToolType.CLIPBOARD -> (toolReference.tool as ClipboardTool).changeClipboardToolLayoutVisibility(true, true)
+            else -> {}
+        }
+    }
+
     override fun showToolOptionsView() {
         toolOptionsViewController.show()
         when (toolReference.tool?.toolType) {
