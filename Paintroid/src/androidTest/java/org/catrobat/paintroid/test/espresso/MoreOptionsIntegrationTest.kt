@@ -256,12 +256,14 @@ class MoreOptionsIntegrationTest {
 
     @Test
     fun testOnOffSmoothOptions() {
+        OptionsMenuViewInteraction.onOptionsMenu().swipeUp()
         Espresso.onView(withText(R.string.menu_advanced)).perform(ViewActions.click())
         Espresso.onView(withId(R.id.pocketpaint_smoothing)).perform(ViewActions.click())
         Espresso.onView(withText(R.string.pocketpaint_ok)).perform(ViewActions.click())
         Assert.assertFalse("Smoothing is still on!", AdvancedSettingsAlgorithms.smoothing)
         TopBarViewInteraction.onTopBarView()
             .performOpenMoreOptions()
+        OptionsMenuViewInteraction.onOptionsMenu().swipeUp()
         Espresso.onView(withText(R.string.menu_advanced)).perform(ViewActions.click())
         Espresso.onView(withId(R.id.pocketpaint_smoothing)).perform(ViewActions.click())
         Espresso.onView(withText(R.string.pocketpaint_ok)).perform(ViewActions.click())
@@ -270,6 +272,7 @@ class MoreOptionsIntegrationTest {
 
     @Test
     fun testNoChangeOnSmoothingWhenCancel() {
+        OptionsMenuViewInteraction.onOptionsMenu().swipeUp()
         Espresso.onView(withText(R.string.menu_advanced)).perform(ViewActions.click())
         Espresso.onView(withId(R.id.pocketpaint_smoothing)).perform(ViewActions.click())
         Espresso.onView(withText(R.string.cancel_button_text)).perform(ViewActions.click())

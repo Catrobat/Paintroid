@@ -32,7 +32,9 @@
         android:layout_height="wrap_content"
         android:theme="@style/PocketPaintTheme"
         app:popupTheme="@style/DropdownMenu"
-        app:title="@string/pocketpaint_app_name">
+        app:title="@string/pocketpaint_app_name"
+        app:subtitle=""
+        app:subtitleTextAppearance="@style/SubtitleTextAppearance">
 
         <LinearLayout
             android:layout_width="wrap_content"

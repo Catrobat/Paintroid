@@ -25,12 +25,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
-import android.widget.ArrayAdapter
+import android.widget.ImageButton
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.Spinner
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageButton
@@ -42,6 +44,7 @@ import org.catrobat.paintroid.FileIO.FileType.JPG
 import org.catrobat.paintroid.FileIO.FileType.CATROBAT
 import org.catrobat.paintroid.FileIO.FileType.ORA
 import org.catrobat.paintroid.R
+import org.catrobat.paintroid.common.PERMISSION_EXTERNAL_STORAGE_SAVE_PROJECT
 import java.util.Locale
 
 private const val STANDARD_FILE_NAME = "image"
@@ -70,10 +73,9 @@ class SaveInformationDialog :
             isStandard: Boolean,
             isExport: Boolean
         ): SaveInformationDialog {
-            if (isStandard) {
-                FileIO.filename = STANDARD_FILE_NAME
-                FileIO.compressFormat = Bitmap.CompressFormat.PNG
-                FileIO.fileType = PNG
+            when {
+                permissionCode == PERMISSION_EXTERNAL_STORAGE_SAVE_PROJECT -> setFileProperties(STANDARD_FILE_NAME, Bitmap.CompressFormat.PNG, CATROBAT)
+                isStandard -> setFileProperties(STANDARD_FILE_NAME, Bitmap.CompressFormat.PNG, PNG)
             }
             return SaveInformationDialog().apply {
                 arguments = Bundle().apply {
@@ -86,6 +88,12 @@ class SaveInformationDialog :
                     putBoolean(IS_EXPORT, isExport)
                 }
             }
+        }
+
+        private fun setFileProperties(filename: String, compressFormat: Bitmap.CompressFormat, fileType: FileType) {
+            FileIO.filename = filename
+            FileIO.compressFormat = compressFormat
+            FileIO.fileType = fileType
         }
     }
 
@@ -102,20 +110,49 @@ class SaveInformationDialog :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViews(view)
+        handlePermission(view)
         setSpinnerSelection()
+    }
+
+    private fun handlePermission(view: View) {
+        if (permission == PERMISSION_EXTERNAL_STORAGE_SAVE_PROJECT) {
+            hideImageFormatViews(view)
+        } else {
+            showImageFormatViews()
+        }
+    }
+
+    private fun hideImageFormatViews(view: View) {
+        val imageFormatTitle = view.findViewById<TextView>(R.id.pocketpaint_image_format_title)
+        val imageFormatSaveInfo = view.findViewById<ImageButton>(R.id.pocketpaint_btn_save_info)
+        val imageFormatSaveDivider = view.findViewById<View>(R.id.pocketpaint_view_save_divider)
+        imageFormatTitle.visibility = View.GONE
+        imageFormatSaveInfo.visibility = View.GONE
+        imageFormatSaveDivider.visibility = View.GONE
+        spinner.visibility = View.GONE
+    }
+
+    private fun showImageFormatViews() {
+        spinner.visibility = View.VISIBLE
     }
 
     @SuppressLint("InflateParams")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         inflater = requireActivity().layoutInflater
         val customLayout = inflater.inflate(R.layout.dialog_pocketpaint_save, null)
+        val dialogTitle = if (permission == PERMISSION_EXTERNAL_STORAGE_SAVE_PROJECT) {
+            R.string.dialog_save_project_title
+        } else {
+            R.string.dialog_save_image_title
+        }
         onViewCreated(customLayout, savedInstanceState)
         return AlertDialog.Builder(requireContext(), R.style.PocketPaintAlertDialog)
-            .setTitle(R.string.dialog_save_image_title)
+            .setTitle(dialogTitle)
             .setView(customLayout)
             .setPositiveButton(R.string.save_button_text) { _, _ ->
                 FileIO.filename = imageName.text.toString()
                 FileIO.storeImageUri = null
+                FileIO.storeImagePreviewUri = null
                 if (FileIO.checkFileExists(FileIO.fileType, FileIO.defaultFileName, requireContext().contentResolver)) {
                     presenter.showOverwriteDialog(permission, isExport)
                 } else {

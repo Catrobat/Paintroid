@@ -124,14 +124,14 @@ abstract class BaseToolWithShape @SuppressLint("VisibleForTests") constructor(
         pointY: Float,
         screenWidth: Int,
         screenHeight: Int
-    ): Point {
+    ): Point? {
         val surfaceToolPosition = workspace.getSurfacePointFromCanvasPoint(toolPosition)
-        return scrollBehavior.getScrollDirection(
+        return scrollBehavior?.getScrollDirection(
             surfaceToolPosition.x,
             surfaceToolPosition.y,
             screenWidth,
             screenHeight
-        )
+        ) ?: null
     }
 
     abstract fun onClickOnButton()

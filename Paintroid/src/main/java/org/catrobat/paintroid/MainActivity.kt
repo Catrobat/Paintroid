@@ -43,6 +43,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.appcompat.widget.TooltipCompat
+import androidx.core.net.toUri
 import androidx.core.widget.ContentLoadingProgressBar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -53,7 +54,9 @@ import com.google.android.material.navigation.NavigationView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.launch
+import org.catrobat.paintroid.LandingPageActivity.Companion.PROJECT_ACTION
 import org.catrobat.paintroid.colorpicker.ColorHistory
 import org.catrobat.paintroid.command.CommandFactory
 import org.catrobat.paintroid.command.CommandManager
@@ -63,9 +66,19 @@ import org.catrobat.paintroid.command.implementation.DefaultCommandFactory
 import org.catrobat.paintroid.command.implementation.DefaultCommandManager
 import org.catrobat.paintroid.command.implementation.LayerOpacityCommand
 import org.catrobat.paintroid.command.serialization.CommandSerializer
-import org.catrobat.paintroid.common.CommonFactory
 import org.catrobat.paintroid.common.PAINTROID_PICTURE_NAME
 import org.catrobat.paintroid.common.PAINTROID_PICTURE_PATH
+import org.catrobat.paintroid.common.REQUEST_CODE_LOAD_PICTURE
+import org.catrobat.paintroid.common.PERMISSION_EXTERNAL_STORAGE_SAVE_PROJECT
+import org.catrobat.paintroid.common.CommonFactory
+import org.catrobat.paintroid.common.CATROBAT_IMAGE_ENDING
+import org.catrobat.paintroid.common.NEW_PROJECT
+import org.catrobat.paintroid.common.LOAD_NEW_IMAGE
+import org.catrobat.paintroid.common.LOAD_IMAGE
+import org.catrobat.paintroid.common.LOAD_PROJECT
+import org.catrobat.paintroid.common.PROJECT_NAME
+import org.catrobat.paintroid.common.PROJECT_URI
+import org.catrobat.paintroid.common.PROJECT_IMAGE_PREVIEW_URI
 import org.catrobat.paintroid.contract.LayerContracts
 import org.catrobat.paintroid.contract.MainActivityContracts
 import org.catrobat.paintroid.contract.MainActivityContracts.MainView
@@ -187,6 +200,13 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         private const val APP_FRAGMENT_KEY = "customActivityState"
         private const val SHARED_PREFS_NAME = "preferences"
         private const val FIRST_LAUNCH_AFTER_INSTALL = "firstLaunchAfterInstall"
+        var projectName: String? = null
+        var projectUri: String? = null
+        var projectImagePreviewUri: String? = null
+        var downloadManagerIdRemoved: Boolean = true
+        var isHomePressed: Boolean = false
+
+        const val DOWNLOAD_MANAGER_ID_DELAY = 100L
     }
 
     override val presenter: MainActivityContracts.Presenter
@@ -308,23 +328,29 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
                 workspace.resetPerspective()
                 presenterMain.initializeFromCleanState(null, null)
             }
-            savedInstanceState == null -> {
-                val intent = intent
-                val picturePath = intent.getStringExtra(PAINTROID_PICTURE_PATH)
-                val pictureName = intent.getStringExtra(PAINTROID_PICTURE_NAME)
-                presenterMain.initializeFromCleanState(picturePath, pictureName)
-
-                if (!model.isOpenedFromCatroid && presenterMain.checkForTemporaryFile() && (!isRunningEspressoTests || isTemporaryFileSavingTest)) {
-                    val workspaceReturnValue = presenterMain.openTemporaryFile()
-                    commandManager.loadCommandsCatrobatImage(workspaceReturnValue?.commandManagerModel)
-                    model.colorHistory = workspaceReturnValue?.colorHistory ?: ColorHistory()
-                    model.colorHistory.colors.lastOrNull()?.let {
-                        toolReference.tool?.changePaintColor(it)
-                        presenterMain.setBottomNavigationColor(it)
+            savedInstanceState == null ->
+                when (receivedIntent.getStringExtra(PROJECT_ACTION)) {
+                    NEW_PROJECT -> presenterMain.onNewImage()
+                    LOAD_NEW_IMAGE -> presenterMain.onNewImage()
+                    LOAD_IMAGE -> presenterMain.replaceImageClicked()
+                    LOAD_PROJECT -> loadProject(receivedIntent)
+                    else -> {
+                    val intent = intent
+                    val picturePath = intent.getStringExtra(PAINTROID_PICTURE_PATH)
+                    val pictureName = intent.getStringExtra(PAINTROID_PICTURE_NAME)
+                    presenterMain.initializeFromCleanState(picturePath, pictureName)
+                        if (!model.isOpenedFromCatroid && presenterMain.checkForTemporaryFile() && (!isRunningEspressoTests || isTemporaryFileSavingTest)) {
+                            val workspaceReturnValue = presenterMain.openTemporaryFile()
+                            commandManager.loadCommandsCatrobatImage(workspaceReturnValue?.commandManagerModel)
+                            model.colorHistory = workspaceReturnValue?.colorHistory ?: ColorHistory()
+                            model.colorHistory.colors.lastOrNull()?.let {
+                                toolReference.tool?.changePaintColor(it)
+                                presenterMain.setBottomNavigationColor(it)
+                            }
+                        }
+                        workspace.perspective.setBitmapDimensions(layerModel.width, layerModel.height)
                     }
                 }
-                workspace.perspective.setBitmapDimensions(layerModel.width, layerModel.height)
-            }
             else -> {
                 val isFullscreen = savedInstanceState.getBoolean(IS_FULLSCREEN_KEY, false)
                 val isSaved = savedInstanceState.getBoolean(IS_SAVED_KEY, false)
@@ -358,6 +384,15 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         }
     }
 
+    private fun loadProject(receivedIntent: Intent) {
+        projectName = receivedIntent.getStringExtra(PROJECT_NAME)
+        projectUri = receivedIntent.getStringExtra(PROJECT_URI)
+        projectImagePreviewUri = receivedIntent.getStringExtra(PROJECT_IMAGE_PREVIEW_URI)
+        val projectNameText = findViewById<Toolbar>(R.id.pocketpaint_toolbar)
+        projectNameText.subtitle = projectName?.substringBefore(".$CATROBAT_IMAGE_ENDING")
+        presenterMain.loadScaledImage(projectUri?.toUri(), REQUEST_CODE_LOAD_PICTURE)
+    }
+
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
         if (!hasFocus) {
@@ -380,6 +415,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         when (item.itemId) {
             R.id.pocketpaint_options_export -> presenterMain.saveCopyClicked(true)
             R.id.pocketpaint_options_save_image -> presenterMain.saveImageClicked()
+            R.id.pocketpaint_options_save_project -> presenterMain.saveProjectClicked()
             R.id.pocketpaint_options_save_duplicate -> presenterMain.saveCopyClicked(false)
             R.id.pocketpaint_replace_image -> presenterMain.replaceImageClicked()
             R.id.pocketpaint_add_to_current_layer -> presenterMain.addImageToCurrentLayerClicked()
@@ -399,7 +435,27 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
                     UserPreferences(getPreferences(MODE_PRIVATE))
                 )
             R.id.pocketpaint_advanced_settings -> presenterMain.showAdvancedSettingsClicked()
-            android.R.id.home -> presenterMain.backToPocketCodeClicked()
+            android.R.id.home ->
+                if (projectName?.let {
+                        FileIO.checkFileExists(FileIO.FileType.CATROBAT,
+                            it, this.contentResolver)
+                    } == true) {
+                    isHomePressed = true
+                    downloadManagerIdRemoved = true
+                    FileIO.filename = projectName?.removeSuffix(".$CATROBAT_IMAGE_ENDING").toString()
+                    FileIO.storeImageUri = Uri.parse(projectUri)
+                    FileIO.storeImagePreviewUri = Uri.parse(projectImagePreviewUri)
+                    presenterMain.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_PROJECT, false)
+                    if (VERSION.SDK_INT <= Build.VERSION_CODES.M) {
+                        while (downloadManagerIdRemoved) {
+                            runBlocking {
+                                delay(DOWNLOAD_MANAGER_ID_DELAY)
+                            }
+                        }
+                    }
+                } else {
+                    presenterMain.backToPocketCodeClicked()
+                }
             else -> return false
         }
         return true
@@ -638,7 +694,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         setSupportActionBar(toolbar)
         supportActionBar?.apply {
             setDisplayShowTitleEnabled(!isOpenedFromCatroid)
-            setDisplayHomeAsUpEnabled(isOpenedFromCatroid)
+            setDisplayHomeAsUpEnabled(true)
             setHomeButtonEnabled(true)
             setDisplayShowHomeEnabled(false)
         }
@@ -683,9 +739,24 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
     override fun onBackPressed() {
         if (supportFragmentManager.isStateSaved) {
             super.onBackPressed()
+        } else if (projectName?.let {
+                FileIO.checkFileExists(FileIO.FileType.CATROBAT,
+                    it, this.contentResolver)
+            } == true) {
+            FileIO.storeImageUri = Uri.parse(projectUri)
+            FileIO.storeImagePreviewUri = Uri.parse(projectImagePreviewUri)
+            presenterMain.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_PROJECT, false)
+            presenterMain.finishActivity()
+            launchLandingPageActivity()
+            projectName = null
         } else if (!supportFragmentManager.popBackStackImmediate()) {
             presenterMain.onBackPressed()
         }
+    }
+
+    private fun launchLandingPageActivity() {
+        val intent = Intent(this, LandingPageActivity::class.java)
+        startActivity(intent)
     }
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

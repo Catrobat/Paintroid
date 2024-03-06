@@ -35,6 +35,9 @@ import android.provider.MediaStore
 import com.esotericsoftware.kryo.Kryo
 import com.esotericsoftware.kryo.io.Input
 import com.esotericsoftware.kryo.io.Output
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
+import org.catrobat.paintroid.MainActivity.Companion.downloadManagerIdRemoved
 import org.catrobat.paintroid.colorpicker.ColorHistory
 import org.catrobat.paintroid.command.Command
 import org.catrobat.paintroid.command.CommandManager
@@ -84,6 +87,7 @@ open class CommandSerializer(private val activityContext: Context, private val c
     companion object {
         const val CURRENT_IMAGE_VERSION = 2
         const val MAGIC_VALUE = "CATROBAT"
+        const val DOWNLOAD_MANAGER_DELAY_TIME = 1000L
     }
 
     val kryo = Kryo()
@@ -211,7 +215,13 @@ open class CommandSerializer(private val activityContext: Context, private val c
             val id = sharedPreferences?.getLong(uri.path, -1)
             if (id != null && id > -1) {
                 val downloadManager = OpenRasterFileFormatConversion.mainActivity?.baseContext?.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-                downloadManager.remove(id)
+                runBlocking {
+                    downloadManager.remove(id)
+                    if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
+                        delay(DOWNLOAD_MANAGER_DELAY_TIME)
+                        downloadManagerIdRemoved = false
+                    }
+                }
             }
             if (!isDeleted) {
                 throw AssertionError("No file to delete was found!")

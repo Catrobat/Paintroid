@@ -32,6 +32,7 @@ import org.catrobat.paintroid.iotasks.LoadImage
 import org.catrobat.paintroid.iotasks.LoadImage.LoadImageCallback
 import org.catrobat.paintroid.iotasks.SaveImage
 import org.catrobat.paintroid.iotasks.SaveImage.SaveImageCallback
+import org.catrobat.paintroid.model.SaveImageOptions
 
 class MainActivityInteractor(private val idlingResource: CountingIdlingResource) : Interactor {
     private val scopeIO = CoroutineScope(Dispatchers.IO)
@@ -44,7 +45,18 @@ class MainActivityInteractor(private val idlingResource: CountingIdlingResource)
         uri: Uri?,
         context: Context
     ) {
-        SaveImage(callback, requestCode, layerModel, commandSerializer, uri, true, context, scopeIO, idlingResource).execute()
+        val saveImageOptions = SaveImageOptions(null, saveAsCopy = true, saveProject = false)
+        SaveImage(
+            callback,
+            requestCode,
+            layerModel,
+            commandSerializer,
+            uri,
+            saveImageOptions,
+            context,
+            scopeIO,
+            idlingResource
+        ).execute()
     }
 
     override fun createFile(callback: CreateFileCallback, requestCode: Int, filename: String) {
@@ -59,7 +71,41 @@ class MainActivityInteractor(private val idlingResource: CountingIdlingResource)
         uri: Uri?,
         context: Context
     ) {
-        SaveImage(callback, requestCode, layerModel, commandSerializer, uri, false, context, scopeIO, idlingResource).execute()
+        val saveImageOptions = SaveImageOptions(null, saveAsCopy = false, saveProject = false)
+        SaveImage(
+            callback,
+            requestCode,
+            layerModel,
+            commandSerializer,
+            uri,
+            saveImageOptions,
+            context,
+            scopeIO,
+            idlingResource
+        ).execute()
+    }
+
+    override fun saveProject(
+        callback: SaveImageCallback,
+        requestCode: Int,
+        layerModel: LayerContracts.Model,
+        commandSerializer: CommandSerializer,
+        uri: Uri?,
+        imagePreviewUri: Uri?,
+        context: Context
+    ) {
+        val saveImageOptions = SaveImageOptions(imagePreviewUri, saveAsCopy = false, saveProject = true)
+        SaveImage(
+            callback,
+            requestCode,
+            layerModel,
+            commandSerializer,
+            uri,
+            saveImageOptions,
+            context,
+            scopeIO,
+            idlingResource
+        ).execute()
     }
 
     override fun loadFile(

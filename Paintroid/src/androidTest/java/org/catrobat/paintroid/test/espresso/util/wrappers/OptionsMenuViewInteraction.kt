@@ -4,6 +4,7 @@ import androidx.annotation.StringRes
 import androidx.appcompat.widget.MenuPopupWindow.MenuDropDownListView
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.ViewInteraction
+import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions
 import org.catrobat.paintroid.test.espresso.util.UiMatcher
 import org.hamcrest.CoreMatchers
@@ -25,6 +26,11 @@ class OptionsMenuViewInteraction private constructor() {
 
     fun checkItemDoesNotExist(@StringRes item: Int): OptionsMenuViewInteraction {
         optionsMenu.check(ViewAssertions.matches(Matchers.not(UiMatcher.withAdaptedData(item))))
+        return this
+    }
+
+    fun swipeUp(): OptionsMenuViewInteraction {
+        optionsMenu.perform(ViewActions.swipeUp())
         return this
     }
 

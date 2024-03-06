@@ -55,7 +55,7 @@ interface Tool {
         pointY: Float,
         screenWidth: Int,
         screenHeight: Int
-    ): Point
+    ): Point?
 
     fun handleUpAnimations(coordinate: PointF?)
     fun handleDownAnimations(coordinate: PointF?)

@@ -21,6 +21,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.hiya.jacoco-android'
 apply plugin: 'com.getkeepsafe.dexcount'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'org.catrobat.gradle.androidemulators'
 apply plugin: 'maven-publish'
 
@@ -151,6 +152,10 @@ dependencies {
     androidTestImplementation "androidx.test.uiautomator:uiautomator:2.2.0"
     testImplementation "androidx.test:core-ktx:1.4.0"
     implementation 'com.android.support.test.espresso:espresso-idling-resource:3.1.0'
+
+    def room_version = "2.3.0"
+    implementation "androidx.room:room-ktx:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
 }
 
 tasks.withType(Javadoc).all {
