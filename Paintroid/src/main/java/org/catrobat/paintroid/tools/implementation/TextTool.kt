@@ -19,6 +19,7 @@
 package org.catrobat.paintroid.tools.implementation
 
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PointF
 import android.graphics.Typeface
@@ -38,6 +39,7 @@ import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.Workspace
 import org.catrobat.paintroid.tools.options.TextToolOptionsView
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
+import java.lang.Float.max
 import kotlin.Exception
 import kotlin.math.abs
 
@@ -50,17 +52,23 @@ const val BOX_OFFSET = 20
 @VisibleForTesting
 const val MARGIN_TOP = 200f
 
+@VisibleForTesting
+const val DEFAULT_TEXT_OUTLINE_WIDTH = 25
+
 private const val ROTATION_ENABLED = true
 private const val RESIZE_POINTS_VISIBLE = true
 private const val ITALIC_TEXT_SKEW = -0.25f
 private const val DEFAULT_TEXT_SKEW = 0.0f
 private const val DEFAULT_TEXT_SIZE = 20
+const val OUTLINED_FONT_WIDTH_ADJUSTMENT = 350f
 private const val BUNDLE_TOOL_UNDERLINED = "BUNDLE_TOOL_UNDERLINED"
 private const val BUNDLE_TOOL_ITALIC = "BUNDLE_TOOL_ITALIC"
 private const val BUNDLE_TOOL_BOLD = "BUNDLE_TOOL_BOLD"
+private const val BUNDLE_TOOL_OUTLINED = "BUNDLE_TOOL_OUTLINED"
 private const val BUNDLE_TOOL_TEXT = "BUNDLE_TOOL_TEXT"
 private const val BUNDLE_TOOL_TEXT_SIZE = "BUNDLE_TOOL_TEXT_SIZE"
 private const val BUNDLE_TOOL_FONT = "BUNDLE_TOOL_FONT"
+private const val BUNDLE_TOOL_TEXT_OUTLINE_WIDTH = "BUNDLE_TOOL_TEXT_OUTLINE_WIDTH"
 private const val TAG = "Can't set custom font"
 
 class TextTool(
@@ -104,12 +112,17 @@ class TextTool(
     @JvmField
     var bold = false
 
+    @VisibleForTesting
+    @JvmField
+    var outlined = false
+
     private var textSize = DEFAULT_TEXT_SIZE
     private val stc: Typeface?
     private val dubai: Typeface?
     private var oldBoxWidth = 0f
     private var oldBoxHeight = 0f
     private var oldToolPosition: PointF? = null
+    private var outlineWidth = DEFAULT_TEXT_OUTLINE_WIDTH
 
     @get:VisibleForTesting
     val multilineText: Array<String>
@@ -191,6 +204,14 @@ class TextTool(
                 applyAttributes()
             }
 
+            override fun setOutline(outlined: Boolean) {
+                this@TextTool.outlined = outlined
+                storeAttributes()
+                resetPreview()
+                workspace.invalidate()
+                applyAttributes()
+            }
+
             override fun setTextSize(size: Int) {
                 textSize = size
                 textPaint.textSize = textSize * TEXT_SIZE_MAGNIFICATION_FACTOR
@@ -200,6 +221,10 @@ class TextTool(
 
             override fun hideToolOptions() {
                 this@TextTool.toolOptionsViewController.hide()
+            }
+
+            override fun onOutlineWidthChanged(outlineWidth: Int) {
+                updateOutlineWidth(outlineWidth)
             }
         }
         textToolOptionsView.setCallback(callback)
@@ -303,13 +328,29 @@ class TextTool(
         val scaledBoxWidth = boxWidth / widthScaling
         val scaledBoxHeight = boxHeight / heightScaling
 
+        val fillPaint = Paint(textPaint)
+        if (outlined) fillPaint.color = Color.WHITE
         multilineText.forEachIndexed { index, textLine ->
             canvas.drawText(
                 textLine,
                 scaledWidthOffset - scaledBoxWidth / 2 / if (italic) ITALIC_FONT_BOX_ADJUSTMENT else 1f,
                 -(scaledBoxHeight / 2) + scaledHeightOffset - textAscent + lineHeight * index,
-                textPaint
+                fillPaint
             )
+        }
+        if (outlined) {
+            val outlinePaint = Paint(textPaint)
+            val adjustedStrokeWidth = if (outlineWidth == 0) 0f else max(textPaint.textSize / TEXT_SIZE_MAGNIFICATION_FACTOR * (outlineWidth / OUTLINED_FONT_WIDTH_ADJUSTMENT), 1f)
+            outlinePaint.style = Paint.Style.STROKE
+            outlinePaint.strokeWidth = adjustedStrokeWidth
+            multilineText.forEachIndexed { index, textLine ->
+                canvas.drawText(
+                    textLine,
+                    scaledWidthOffset - scaledBoxWidth / 2 / if (italic) ITALIC_FONT_BOX_ADJUSTMENT else 1f,
+                    -(scaledBoxHeight / 2) + scaledHeightOffset - textAscent + lineHeight * index,
+                    outlinePaint
+                )
+            }
         }
         canvas.restore()
     }
@@ -350,9 +391,11 @@ class TextTool(
             putBoolean(BUNDLE_TOOL_UNDERLINED, underlined)
             putBoolean(BUNDLE_TOOL_ITALIC, italic)
             putBoolean(BUNDLE_TOOL_BOLD, bold)
+            putBoolean(BUNDLE_TOOL_OUTLINED, outlined)
             putString(BUNDLE_TOOL_TEXT, text)
             putInt(BUNDLE_TOOL_TEXT_SIZE, textSize)
             putString(BUNDLE_TOOL_FONT, font.name)
+            putInt(BUNDLE_TOOL_TEXT_OUTLINE_WIDTH, outlineWidth)
         }
     }
 
@@ -362,11 +405,13 @@ class TextTool(
             underlined = getBoolean(BUNDLE_TOOL_UNDERLINED, underlined)
             italic = getBoolean(BUNDLE_TOOL_ITALIC, italic)
             bold = getBoolean(BUNDLE_TOOL_BOLD, bold)
+            outlined = getBoolean(BUNDLE_TOOL_OUTLINED, outlined)
             text = getString(BUNDLE_TOOL_TEXT, text)
             textSize = getInt(BUNDLE_TOOL_TEXT_SIZE, textSize)
             font = FontType.valueOf(getString(BUNDLE_TOOL_FONT, font.name))
+            outlineWidth = getInt(BUNDLE_TOOL_TEXT_OUTLINE_WIDTH, outlineWidth)
         }
-        textToolOptionsView.setState(bold, italic, underlined, text, textSize, font)
+        textToolOptionsView.setState(bold, italic, underlined, outlined, text, textSize, font, outlineWidth)
         textPaint.isUnderlineText = underlined
         textPaint.isFakeBoldText = bold
         updateTypeface()
@@ -419,7 +464,9 @@ class TextTool(
             underlined,
             italic,
             textPaint.textSize,
-            textPaint.textSkewX
+            textPaint.textSkewX,
+            outlined,
+            outlineWidth
         )
 
         val command = commandFactory.createTextToolCommand(
@@ -446,5 +493,10 @@ class TextTool(
     override fun changePaintColor(color: Int, invalidate: Boolean) {
         super.changePaintColor(color, invalidate)
         changeTextColor()
+    }
+
+    fun updateOutlineWidth(outlineWidth: Int) {
+        this.outlineWidth = outlineWidth
+        workspace.invalidate()
     }
 }

@@ -21,7 +21,9 @@ package org.catrobat.paintroid.ui.tools
 import android.content.Context
 import android.graphics.Paint
 import android.text.Editable
+import android.text.InputFilter
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnFocusChangeListener
@@ -29,17 +31,24 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Checkable
 import android.widget.EditText
+import android.widget.RelativeLayout
+import android.widget.SeekBar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.tools.FontType
+import org.catrobat.paintroid.tools.helper.DefaultNumberRangeFilter
 import org.catrobat.paintroid.tools.options.TextToolOptionsView
+import java.util.Locale
 
 private const val DEFAULT_TEXTSIZE = "20"
 private const val MAX_TEXTSIZE = "300"
 private const val MIN_FONT_SIZE = 1
 private const val MAX_FONT_SIZE = 300
+private const val DEFAULT_OUTLINE_WIDTH = "25"
+private const val MIN_OUTLINE_THICKNESS = 0
+private const val MAX_OUTLINE_THICKNESS = 100
 
 class DefaultTextToolOptionsView(rootView: ViewGroup) : TextToolOptionsView {
     private val context: Context = rootView.context
@@ -50,9 +59,13 @@ class DefaultTextToolOptionsView(rootView: ViewGroup) : TextToolOptionsView {
     private val underlinedToggleButton: MaterialButton
     private val italicToggleButton: MaterialButton
     private val boldToggleButton: MaterialButton
+    private val outlineToggleButton: MaterialButton
     private val fontTypes: List<FontType>
     private val topLayout: View
     private val bottomLayout: View
+    private val outlineWidthLayout: RelativeLayout
+    private val outlineWidthText: EditText
+    private val outlineWidthSeekBar: SeekBar
 
     init {
         val inflater = LayoutInflater.from(context)
@@ -66,12 +79,45 @@ class DefaultTextToolOptionsView(rootView: ViewGroup) : TextToolOptionsView {
         italicToggleButton =
             textToolView.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_italic)
         boldToggleButton = textToolView.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_bold)
+        outlineToggleButton = textToolView.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_outline)
         fontSizeText = textToolView.findViewById(R.id.pocketpaint_font_size_text)
+        outlineWidthLayout = textToolView.findViewById(R.id.pocketpaint_outline_width_layout)
+        outlineWidthText = textToolView.findViewById(R.id.pocketpaint_outline_width_text)
+        outlineWidthSeekBar = textToolView.findViewById(R.id.pocketpaint_outline_width_seek_bar)
         fontSizeText.setText(DEFAULT_TEXTSIZE)
         underlinedToggleButton.paintFlags =
             underlinedToggleButton.paintFlags or Paint.UNDERLINE_TEXT_FLAG
         @Suppress("SpreadOperator")
         fontTypes = FontType.values().toList()
+        outlineWidthLayout.visibility = View.GONE
+        outlineWidthText.filters = arrayOf<InputFilter>(DefaultNumberRangeFilter(MIN_OUTLINE_THICKNESS, MAX_OUTLINE_THICKNESS))
+        outlineWidthSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+                if (fromUser) {
+                    setOutlineWidthText(progress)
+                }
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar) = Unit
+
+            override fun onStopTrackingTouch(seekBar: SeekBar) = Unit
+        })
+
+        outlineWidthText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) =
+                Unit
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) = Unit
+            override fun afterTextChanged(s: Editable) {
+                try {
+                    val outlineWidthInPercent = s.toString().toInt()
+                    outlineWidthSeekBar.progress = outlineWidthInPercent
+                    updateOutlineWidth(outlineWidthInPercent)
+                } catch (e: java.lang.NumberFormatException) {
+                    Log.e("Error parsing outline", "result was null")
+                }
+            }
+        })
+        outlineWidthText.setText(DEFAULT_OUTLINE_WIDTH)
         initializeListeners()
         textEditText.requestFocus()
     }
@@ -108,6 +154,11 @@ class DefaultTextToolOptionsView(rootView: ViewGroup) : TextToolOptionsView {
         boldToggleButton.setOnClickListener { v ->
             val bold = (v as Checkable).isChecked
             notifyBoldChanged(bold)
+            hideKeyboard()
+        }
+        outlineToggleButton.setOnClickListener { v ->
+            val outline = (v as Checkable).isChecked
+            notifyOutlineChanged(outline)
             hideKeyboard()
         }
         fontSizeText.addTextChangedListener(object : TextWatcher {
@@ -149,6 +200,15 @@ class DefaultTextToolOptionsView(rootView: ViewGroup) : TextToolOptionsView {
         callback?.setBold(bold)
     }
 
+    private fun notifyOutlineChanged(outlined: Boolean) {
+        if (outlined) {
+            outlineWidthLayout.visibility = View.VISIBLE
+        } else {
+            outlineWidthLayout.visibility = View.GONE
+        }
+        callback?.setOutline(outlined)
+    }
+
     private fun notifyTextSizeChanged(textSize: Int) {
         callback?.setTextSize(textSize)
     }
@@ -161,16 +221,21 @@ class DefaultTextToolOptionsView(rootView: ViewGroup) : TextToolOptionsView {
         bold: Boolean,
         italic: Boolean,
         underlined: Boolean,
+        outlined: Boolean,
         text: String,
         textSize: Int,
-        fontType: FontType
+        fontType: FontType,
+        outlineWidth: Int
     ) {
         boldToggleButton.isChecked = bold
         italicToggleButton.isChecked = italic
         underlinedToggleButton.isChecked = underlined
+        outlineToggleButton.isChecked = outlined
+        notifyOutlineChanged(outlined)
         textEditText.setText(text)
         (fontList.adapter as FontListAdapter).setSelectedIndex(fontTypes.indexOf(fontType))
         fontSizeText.setText(DEFAULT_TEXTSIZE)
+        outlineWidthText.setText(outlineWidth.toString())
     }
 
     override fun setCallback(listener: TextToolOptionsView.Callback) {
@@ -190,4 +255,12 @@ class DefaultTextToolOptionsView(rootView: ViewGroup) : TextToolOptionsView {
     override fun getTopLayout(): View = topLayout
 
     override fun getBottomLayout(): View = bottomLayout
+
+    private fun setOutlineWidthText(widthInPercent: Int) {
+        outlineWidthText.setText(String.format(Locale.getDefault(), "%d", widthInPercent))
+    }
+
+    private fun updateOutlineWidth(outlineWidth: Int) {
+        callback?.onOutlineWidthChanged(outlineWidth)
+    }
 }

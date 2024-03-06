@@ -20,12 +20,16 @@
 package org.catrobat.paintroid.command.implementation
 
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PointF
 import org.catrobat.paintroid.command.Command
 import org.catrobat.paintroid.command.serialization.SerializableTypeface
 import org.catrobat.paintroid.common.ITALIC_FONT_BOX_ADJUSTMENT
 import org.catrobat.paintroid.contract.LayerContracts
+import org.catrobat.paintroid.tools.implementation.OUTLINED_FONT_WIDTH_ADJUSTMENT
+
+const val TEXT_SIZE_MAGNIFICATION_FACTOR = 3f
 
 class TextToolCommand(
     multilineText: Array<String>,
@@ -74,13 +78,29 @@ class TextToolCommand(
             val scaledBoxWidth = boxWidth / widthScaling
             val scaledBoxHeight = boxHeight / heightScaling
 
+            val fillPaint = Paint(textPaint)
+            if (typeFaceInfo.outlined) fillPaint.color = Color.WHITE
             multilineText.forEachIndexed { index, textLine ->
                 canvas.drawText(
                     textLine,
                     scaledWidthOffset - scaledBoxWidth / 2 / if (typeFaceInfo.italic) ITALIC_FONT_BOX_ADJUSTMENT else 1f,
                     -(scaledBoxHeight / 2) + scaledHeightOffset - textAscent + lineHeight * index,
-                    textPaint
+                    fillPaint
                 )
+            }
+            if (typeFaceInfo.outlined) {
+                val outlinePaint = Paint(textPaint)
+                val adjustedStrokeWidth = if (typeFaceInfo.outlineWidth == 0) 0f else java.lang.Float.max(textPaint.textSize / TEXT_SIZE_MAGNIFICATION_FACTOR * (typeFaceInfo.outlineWidth / OUTLINED_FONT_WIDTH_ADJUSTMENT), 1f)
+                outlinePaint.style = Paint.Style.STROKE
+                outlinePaint.strokeWidth = adjustedStrokeWidth
+                multilineText.forEachIndexed { index, textLine ->
+                    canvas.drawText(
+                        textLine,
+                        scaledWidthOffset - scaledBoxWidth / 2 / if (typeFaceInfo.italic) ITALIC_FONT_BOX_ADJUSTMENT else 1f,
+                        -(scaledBoxHeight / 2) + scaledHeightOffset - textAscent + lineHeight * index,
+                        outlinePaint
+                    )
+                }
             }
             restore()
         }
