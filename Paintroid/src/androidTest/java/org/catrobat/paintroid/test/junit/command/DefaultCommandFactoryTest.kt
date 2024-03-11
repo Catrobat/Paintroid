@@ -139,7 +139,7 @@ class DefaultCommandFactoryTest {
     fun testCreateColorChangedCommand() {
         val toolReference: ToolReference = DefaultToolReference()
         MockitoAnnotations.initMocks(this)
-        val command = commandFactory!!.createColorChangedCommand(toolReference, context!!, Color.WHITE)
+        val command = commandFactory!!.createColorChangedCommand(toolReference.tool, context!!, Color.WHITE)
         Assert.assertThat(command, CoreMatchers.`is`(CoreMatchers.instanceOf(ColorChangedCommand::class.java)))
     }
 }

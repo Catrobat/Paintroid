@@ -24,35 +24,35 @@ import android.graphics.Canvas
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.command.Command
 import org.catrobat.paintroid.contract.LayerContracts
-import org.catrobat.paintroid.tools.ToolReference
+import org.catrobat.paintroid.tools.Tool
 import org.catrobat.paintroid.tools.implementation.EraserTool
 import org.catrobat.paintroid.tools.implementation.LineTool
 
-class ColorChangedCommand(toolReference: ToolReference, context: Context, color: Int) : Command {
+class ColorChangedCommand(tool: Tool?, context: Context, color: Int) : Command {
 
-    var toolReference = toolReference; private set
+    var tool = tool; private set
     var context = context; private set
     var color = color; private set
     var firstTime = true
 
     override fun run(canvas: Canvas, layerModel: LayerContracts.Model) {
-        if (toolReference.tool !is LineTool) {
+        if (tool !is LineTool) {
             (context as MainActivity).runOnUiThread {
-                toolReference.tool?.changePaintColor(color)
+                tool?.changePaintColor(color)
             }
         } else {
-            if (toolReference.tool is LineTool && !firstTime) {
+            if (tool is LineTool && !firstTime) {
                 (context as MainActivity).runOnUiThread {
-                    (toolReference.tool as LineTool).undoColorChangedCommand(color)
+                    (tool as LineTool).undoColorChangedCommand(color)
                 }
             } else {
                 (context as MainActivity).runOnUiThread {
-                    toolReference.tool?.changePaintColor(color)
+                    tool?.changePaintColor(color)
                 }
                 firstTime = false
             }
         }
-        if (toolReference.tool !is EraserTool) {
+        if (tool !is EraserTool) {
             (context as MainActivity).runOnUiThread {
                 (context as MainActivity).bottomNavigationViewHolder.setColorButtonColor(color)
             }
@@ -60,18 +60,18 @@ class ColorChangedCommand(toolReference: ToolReference, context: Context, color:
     }
 
      fun runInUndoMode() {
-        if (toolReference.tool !is LineTool) {
+        if (tool !is LineTool) {
             (context as MainActivity).runOnUiThread {
-                toolReference.tool?.changePaintColor(color, false)
+                tool?.changePaintColor(color, false)
             }
         } else {
-            if (toolReference.tool is LineTool && !firstTime) {
+            if (tool is LineTool && !firstTime) {
                 (context as MainActivity).runOnUiThread {
-                    (toolReference.tool as LineTool).undoColorChangedCommand(color, false)
+                    (tool as LineTool).undoColorChangedCommand(color, false)
                 }
             } else {
                 (context as MainActivity).runOnUiThread {
-                    toolReference.tool?.changePaintColor(color, false)
+                    tool?.changePaintColor(color, false)
                 }
                 firstTime = false
             }

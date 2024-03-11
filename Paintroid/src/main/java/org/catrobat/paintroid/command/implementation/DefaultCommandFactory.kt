@@ -31,8 +31,8 @@ import org.catrobat.paintroid.command.implementation.RotateCommand.RotateDirecti
 import org.catrobat.paintroid.command.serialization.SerializablePath
 import org.catrobat.paintroid.command.serialization.SerializableTypeface
 import org.catrobat.paintroid.common.CommonFactory
-import org.catrobat.paintroid.tools.ToolReference
 import org.catrobat.paintroid.contract.LayerContracts
+import org.catrobat.paintroid.tools.Tool
 import org.catrobat.paintroid.tools.drawable.ShapeDrawable
 import org.catrobat.paintroid.tools.helper.JavaFillAlgorithmFactory
 import org.catrobat.paintroid.tools.helper.toPoint
@@ -197,9 +197,9 @@ class DefaultCommandFactory : CommandFactory {
     ): Command = CutCommand(toPoint(toolPosition), boxWidth, boxHeight, boxRotation)
 
     override fun createColorChangedCommand(
-        toolReference: ToolReference,
+        tool: Tool?,
         context: Context,
         color: Int
     ): Command =
-        ColorChangedCommand(toolReference, context, color)
+        ColorChangedCommand(tool, context, color)
 }
