@@ -18,8 +18,6 @@
  */
 package org.catrobat.paintroid.ui.tools
 
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.text.InputFilter
 import android.text.TextWatcher
@@ -35,7 +33,6 @@ import androidx.appcompat.widget.AppCompatSeekBar
 import androidx.appcompat.widget.AppCompatTextView
 import com.google.android.material.chip.Chip
 import org.catrobat.paintroid.R
-import org.catrobat.paintroid.common.ANIMATION_DURATION
 import org.catrobat.paintroid.tools.drawable.DrawableShape
 import org.catrobat.paintroid.tools.drawable.DrawableStyle
 import org.catrobat.paintroid.tools.helper.DefaultNumberRangeFilter
@@ -254,10 +251,7 @@ class DefaultShapeToolOptionsView(rootView: ViewGroup) : ShapeToolOptionsView {
 
     override fun toggleShapeSizeVisibility(isVisible: Boolean) {
         if (isVisible && !changeSizeShapeSizeChipVisible && shapeToolOptionsView.visibility == View.INVISIBLE) {
-            val handler = Handler(Looper.getMainLooper())
-            handler.postDelayed({
-                changeSizeShapeSizeChip.visibility = View.VISIBLE
-            }, ANIMATION_DURATION)
+            changeSizeShapeSizeChip.visibility = View.VISIBLE
         } else {
             if (isVisible && shapeToolOptionsView.visibility == View.GONE) changeSizeShapeSizeChip.visibility = View.VISIBLE
             if (!isVisible) changeSizeShapeSizeChip.visibility = View.GONE

@@ -18,15 +18,12 @@
  */
 package org.catrobat.paintroid.ui.tools
 
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import com.google.android.material.chip.Chip
 import org.catrobat.paintroid.R
-import org.catrobat.paintroid.common.ANIMATION_DURATION
 import org.catrobat.paintroid.tools.options.ClipboardToolOptionsView
 
 class DefaultClipboardToolOptionsView(rootView: ViewGroup) : ClipboardToolOptionsView {
@@ -64,10 +61,7 @@ class DefaultClipboardToolOptionsView(rootView: ViewGroup) : ClipboardToolOption
 
     override fun toggleShapeSizeVisibility(isVisible: Boolean) {
         if (isVisible && !changeSizeShapeSizeChipVisible && clipboardToolOptionsView.visibility == View.INVISIBLE) {
-            val handler = Handler(Looper.getMainLooper())
-            handler.postDelayed({
-                changeSizeShapeSizeChip.visibility = View.VISIBLE
-            }, ANIMATION_DURATION)
+            changeSizeShapeSizeChip.visibility = View.VISIBLE
         } else {
             if (isVisible && clipboardToolOptionsView.visibility == View.GONE) changeSizeShapeSizeChip.visibility = View.VISIBLE
             if (!isVisible) changeSizeShapeSizeChip.visibility = View.GONE
