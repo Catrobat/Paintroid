@@ -184,7 +184,9 @@ class DefaultToolController(
     }
 
     override fun disableToolOptionsView() {
-        toolOptionsViewController.disable()
+        if (toolType != ToolType.IMPORTPNG) {
+            toolOptionsViewController.disable()
+        }
     }
 
     override fun enableToolOptionsView() {
@@ -202,7 +204,9 @@ class DefaultToolController(
     }
 
     override fun disableHideOption() {
-        toolOptionsViewController.disableHide()
+        if (toolType != ToolType.IMPORTPNG) {
+            toolOptionsViewController.disableHide()
+        }
     }
 
     override fun createTool() {
