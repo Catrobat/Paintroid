@@ -62,7 +62,9 @@ interface ToolController {
 
     fun enableToolOptionsView()
 
-    fun createTool(isFullScreen: Boolean = false)
+    fun createTool()
+
+    fun adaptLayoutForFullScreen()
 
     fun toggleToolOptionsView()
 

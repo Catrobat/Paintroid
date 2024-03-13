@@ -785,10 +785,13 @@ open class MainActivityPresenter(
         model.cameraImageUri = cameraImageUri
         navigator.restoreFragmentListeners()
         toolController.resetToolInternalStateOnImageLoaded()
+        if (model.isFullscreen) {
+            toolController.adaptLayoutForFullScreen()
+        }
     }
 
     override fun onCreateTool() {
-        toolController.createTool(model.isFullscreen)
+        toolController.createTool()
     }
 
     private fun refreshTopBarButtons() {

@@ -67,7 +67,7 @@ class DefaultToolController(
     override val toolType: ToolType?
         get() = toolReference.tool?.toolType
 
-    private fun createAndSetupTool(toolType: ToolType, isFullScreen: Boolean = false): Tool {
+    private fun createAndSetupTool(toolType: ToolType): Tool {
         if (toolType != ToolType.HAND) {
             toolOptionsViewController.removeToolViews()
         } else if (toolType != ToolType.CLIP) {
@@ -93,7 +93,7 @@ class DefaultToolController(
         )
         if (toolType != ToolType.HAND) {
             toolOptionsViewController.resetToOrigin()
-            toolOptionsViewController.show(isFullScreen)
+            toolOptionsViewController.show()
         }
         return tool
     }
@@ -191,6 +191,11 @@ class DefaultToolController(
         toolOptionsViewController.enable()
     }
 
+    override fun adaptLayoutForFullScreen() {
+        if(toolReference.tool?.toolType != ToolType.HAND)
+        toolOptionsViewController.show(true)
+    }
+
     override fun enableHideOption() {
         toolOptionsViewController.enableHide()
     }
@@ -199,14 +204,14 @@ class DefaultToolController(
         toolOptionsViewController.disableHide()
     }
 
-    override fun createTool(isFullScreen: Boolean) {
+    override fun createTool() {
         val currentTool = toolReference.tool
         if (currentTool == null) {
             toolReference.tool = createAndSetupTool(ToolType.BRUSH)
         } else {
             val bundle = Bundle()
             toolReference.tool?.onSaveInstanceState(bundle)
-            toolReference.tool = createAndSetupTool(currentTool.toolType, isFullScreen)
+            toolReference.tool = createAndSetupTool(currentTool.toolType)
             toolReference.tool?.onRestoreInstanceState(bundle)
         }
         workspace.invalidate()

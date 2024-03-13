@@ -293,6 +293,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         onCreateMainView()
         onCreateLayerMenu()
         onCreateDrawingSurface()
+        presenterMain.onCreateTool()
         OpenRasterFileFormatConversion.mainActivity = this
 
         val receivedIntent = intent
@@ -339,7 +340,6 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
                 )
             }
         }
-        presenterMain.onCreateTool()
 
         commandManager.addCommandListener(this)
         lastInteractionTime = System.currentTimeMillis()
