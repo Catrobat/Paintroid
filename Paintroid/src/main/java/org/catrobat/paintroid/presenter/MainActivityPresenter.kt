@@ -788,7 +788,7 @@ open class MainActivityPresenter(
     }
 
     override fun onCreateTool() {
-        toolController.createTool()
+        toolController.createTool(model.isFullscreen)
     }
 
     private fun refreshTopBarButtons() {

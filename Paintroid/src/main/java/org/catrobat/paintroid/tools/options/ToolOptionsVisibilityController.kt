@@ -25,7 +25,7 @@ interface ToolOptionsVisibilityController {
 
     fun setCallback(callback: Callback)
 
-    fun show()
+    fun show(isFullScreen: Boolean = false)
 
     fun showDelayed()
 

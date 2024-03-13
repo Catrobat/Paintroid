@@ -95,7 +95,7 @@ class DefaultToolOptionsViewController(
         enabled = true
     }
 
-    override fun show() {
+    override fun show(isFullScreen: Boolean) {
         if (!enabled || !hideButtonsEnabled) {
             return
         }
@@ -103,7 +103,8 @@ class DefaultToolOptionsViewController(
         toolOptionsShown = true
         mainToolOptions.visibility = View.INVISIBLE
         mainToolOptions.post {
-            val yPos = bottomNavigation.y - mainToolOptions.height
+            val yDifference = if (isFullScreen) bottomNavigation.height else mainToolOptions.height
+            val yPos = bottomNavigation.y - yDifference
             mainToolOptions.animate().y(yPos)
             mainToolOptions.visibility = View.VISIBLE
         }
