@@ -192,8 +192,9 @@ class DefaultToolController(
     }
 
     override fun adaptLayoutForFullScreen() {
-        if(toolReference.tool?.toolType != ToolType.HAND)
-        toolOptionsViewController.show(true)
+        if (toolReference.tool?.toolType != ToolType.HAND) {
+            toolOptionsViewController.show(true)
+        }
     }
 
     override fun enableHideOption() {
