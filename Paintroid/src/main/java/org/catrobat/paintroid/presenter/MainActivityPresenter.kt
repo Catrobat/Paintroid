@@ -99,6 +99,7 @@ import org.catrobat.paintroid.tools.implementation.ClippingTool
 import org.catrobat.paintroid.tools.implementation.LineTool
 import org.catrobat.paintroid.tools.implementation.DefaultToolPaint
 import org.catrobat.paintroid.tools.implementation.EraserTool
+import org.catrobat.paintroid.tools.implementation.ImportTool
 import org.catrobat.paintroid.ui.LayerAdapter
 import java.io.File
 
@@ -128,6 +129,7 @@ open class MainActivityPresenter(
     private var resetPerspectiveAfterNextCommand = false
     private var isExport = false
     private var wasImageLoaded = false
+    private var toolTypeToSwitch: ToolType? = null
     private val isImageUnchanged: Boolean
         get() = !commandManager.isUndoAvailable
 
@@ -805,23 +807,29 @@ open class MainActivityPresenter(
 
     override fun toolClicked(toolType: ToolType) {
         idlingResource.increment()
+        toolTypeToSwitch = toolType
         bottomBarViewHolder.hide()
         if (toolController.toolType === toolType && toolController.hasToolOptionsView()) {
             toolController.toggleToolOptionsView()
         } else {
-            checkForImplicitToolApplication()
-            switchTool(toolType)
+            if (checkForImplicitToolApplication()) {
+                switchTool(toolType)
+            }
         }
         idlingResource.decrement()
     }
 
-    private fun checkForImplicitToolApplication() {
+    private fun checkForImplicitToolApplication(): Boolean {
         val currentTool = toolController.currentTool
         val currentToolType = currentTool?.toolType
+        if (currentToolType == ToolType.IMPORTPNG) {
+            return (currentTool as ImportTool).onClickOnButtonImplicit()
+        }
         if (toolController.toolList.contains(currentToolType)) {
             val toolToApply = currentTool as BaseToolWithShape
             toolToApply.onClickOnButton()
         } else if (currentToolType == ToolType.CLIP) (currentTool as ClippingTool).onClickOnButton()
+        return true
     }
 
     private fun switchTool(type: ToolType) {
@@ -847,6 +855,7 @@ open class MainActivityPresenter(
                 }
             }
         }.start()
+        toolTypeToSwitch = null
     }
 
     private fun setTool(toolType: ToolType) {
@@ -1136,6 +1145,38 @@ open class MainActivityPresenter(
         }
         toolController.currentTool?.changePaintColor(newPaintColor)
         setBottomNavigationColor(newPaintColor)
+    }
+
+    override fun truncateImportImage() {
+        if (toolController.currentTool is ImportTool) {
+            val importTool = toolController.currentTool as ImportTool
+            importTool.addImageToCanvas()
+        } else {
+            Log.e(
+                MainActivity.TAG,
+                "truncateImportImage: Current tool is no ImportTool as required"
+            )
+        }
+    }
+
+    override fun enlargeCanvasImportImage(): Boolean {
+        var switchTool = false
+        if (toolController.currentTool is ImportTool) {
+            val importTool = toolController.currentTool as ImportTool
+            switchTool = importTool.enlargeCanvas()
+        } else {
+            Log.e(
+                MainActivity.TAG,
+                "enlargeCanvasImportImage: Current tool is no ImportTool as required"
+            )
+        }
+        return switchTool
+    }
+
+    override fun checkSwitchingTool() {
+        toolTypeToSwitch?.let {
+            switchTool(it)
+        }
     }
 
     fun checkIfClippingToolNeedsAdjustment() {

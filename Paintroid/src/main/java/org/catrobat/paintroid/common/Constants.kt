@@ -49,6 +49,7 @@ const val ZOOM_WINDOW_ZOOM_PERCENTAGE_SHARED_PREFERENCES_TAG = "zoomwindowzoompe
 const val IMAGE_NUMBER_SHARED_PREFERENCES_TAG = "imagenumbertag"
 const val SCALE_IMAGE_FRAGMENT_TAG = "showscaleimagedialog"
 const val INDETERMINATE_PROGRESS_DIALOG_TAG = "indeterminateprogressdialogfragment"
+const val ENLARGE_CANVAS_DIALOG_TAG = "enlargecanvasdialogfragment"
 const val INVALID_RESOURCE_ID = 0
 const val MAX_LAYERS = 100
 const val MEGABYTE_IN_BYTE = 1_048_576L

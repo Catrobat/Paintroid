@@ -59,6 +59,9 @@ const val MAXIMUM_BORDER_RATIO = 2f
 @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
 const val MINIMAL_BOX_SIZE = 3
 
+@VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
+const val MAXIMUM_BITMAP_SIZE_FACTOR = 4f
+
 const val DEFAULT_BOX_RESIZE_MARGIN = 20
 
 const val DEFAULT_ANTIALIASING_ON = true
