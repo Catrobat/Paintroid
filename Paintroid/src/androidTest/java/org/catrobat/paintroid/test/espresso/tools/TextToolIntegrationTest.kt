@@ -32,10 +32,12 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.pressBack
+import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
+import androidx.test.espresso.idling.CountingIdlingResource
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withHint
@@ -67,6 +69,7 @@ import org.catrobat.paintroid.tools.implementation.TextTool
 import org.catrobat.paintroid.ui.tools.FontListAdapter
 import org.hamcrest.CoreMatchers.not
 import org.junit.Assert
+import org.junit.After
 import org.junit.Before
 import org.junit.Ignore
 import org.junit.Rule
@@ -99,6 +102,7 @@ class TextToolIntegrationTest {
     private val pixelsDrawingSurface = surfaceBitmapHeight?.let { IntArray(it) }
     private val canvasPoint = centerBox()
     private var pixelAmountBefore = pixelsDrawingSurface?.let { countPixelsWithColor(it, Color.BLACK) }
+    private lateinit var idlingResource: CountingIdlingResource
 
     @Before
     fun setUp() {
@@ -118,6 +122,13 @@ class TextToolIntegrationTest {
         boldToggleButton = activity.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_bold)
         textSize = activity.findViewById(R.id.pocketpaint_font_size_text)
         textTool?.resetBoxPosition()
+        idlingResource = activity.idlingResource
+        IdlingRegistry.getInstance().register(idlingResource)
+    }
+
+    @After
+    fun tearDown() {
+        IdlingRegistry.getInstance().unregister(idlingResource)
     }
 
     @Test
@@ -710,6 +721,9 @@ class TextToolIntegrationTest {
     @Test
     fun testTextToolBoxIsPlacedCorrectlyWhenZoomedIn() {
         onToolBarView().performSelectTool(ToolType.TEXT)
+        runBlocking {
+            delay(1500)
+        }
         enterTestText()
 
         val initialPosition = toolMemberBoxPosition
