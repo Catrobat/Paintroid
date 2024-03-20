@@ -308,6 +308,12 @@ interface MainActivityContracts {
         fun checkForTemporaryFile(): Boolean
 
         fun setColorHistoryAfterLoadImage(colorHistory: ColorHistory?)
+
+        fun truncateImportImage()
+
+        fun enlargeCanvasImportImage(): Boolean
+
+        fun checkSwitchingTool()
     }
 
     interface Model {

@@ -49,8 +49,6 @@ import kotlin.math.floor
 import kotlin.math.max
 import kotlin.math.min
 
-@VisibleForTesting
-const val MAXIMUM_BITMAP_SIZE_FACTOR = 4.0f
 private const val START_ZOOM_FACTOR = 0.95f
 private const val SIDES = 4
 private const val CONSTANT_1 = 10

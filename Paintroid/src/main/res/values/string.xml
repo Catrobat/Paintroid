@@ -231,6 +231,8 @@
     <string name="pocketpaint_cancel">Cancel</string>
     <string name="pocketpaint_not_now">Not now</string>
     <string name="pocketpaint_rate_us_title">Rate Pocket Paint</string>
+    <string name="pocketpaint_truncate">Truncate</string>
+    <string name="pocketpaint_enlarge">Enlarge</string>
 
     <string name="bottom_navigation_tools">Tools</string>
     <string name="bottom_navigation_current">Current</string>
@@ -250,4 +252,7 @@
 
     <string name="zoom_window_description">Used to display a zoomed in part of the drawing surface</string>
 
+    <string name="dialog_import_image_enlarge_image">The imported image will be truncated. Do you want instead to enlarge the canvas so that the whole image is imported?</string>
+
+    <string name="dialog_import_image_canvas_too_large">Enlarging the canvas to fit the image would exceed the maximum canvas size. Do you want instead to truncate the image?</string>
 </resources>
