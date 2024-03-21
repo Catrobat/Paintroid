@@ -29,7 +29,7 @@ import org.catrobat.paintroid.command.implementation.RotateCommand.RotateDirecti
 import org.catrobat.paintroid.command.serialization.SerializablePath
 import org.catrobat.paintroid.command.serialization.SerializableTypeface
 import org.catrobat.paintroid.contract.LayerContracts
-import org.catrobat.paintroid.tools.ToolReference
+import org.catrobat.paintroid.tools.Tool
 import org.catrobat.paintroid.tools.drawable.ShapeDrawable
 
 interface CommandFactory {
@@ -117,7 +117,7 @@ interface CommandFactory {
         boxRotation: Float
     ): Command
 
-    fun createColorChangedCommand(toolReference: ToolReference, context: Context, color: Int): Command
+    fun createColorChangedCommand(tool: Tool?, context: Context, color: Int): Command
 
     fun createClippingCommand(
         bitmap: Bitmap,
