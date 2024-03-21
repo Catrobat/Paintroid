@@ -18,6 +18,7 @@
  */
 package org.catrobat.paintroid.tools.options
 
+import android.view.View
 import org.catrobat.paintroid.tools.drawable.DrawableShape
 import org.catrobat.paintroid.tools.drawable.DrawableStyle
 
@@ -29,6 +30,12 @@ interface ShapeToolOptionsView {
     fun setShapeOutlineWidth(outlineWidth: Int)
 
     fun setCallback(callback: Callback)
+
+    fun setShapeSizeText(shapeSize: String)
+
+    fun toggleShapeSizeVisibility(isVisible: Boolean)
+
+    fun getShapeToolOptionsLayout(): View
 
     interface Callback {
         fun setToolType(shape: DrawableShape)

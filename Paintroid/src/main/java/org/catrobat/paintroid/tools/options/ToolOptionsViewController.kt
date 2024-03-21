@@ -40,9 +40,9 @@ interface ToolOptionsViewController : ToolOptionsVisibilityController {
 
     fun hideCheckmark()
 
-    fun slideUp(view: View, willHide: Boolean, showOptionsView: Boolean)
+    fun slideUp(view: View, willHide: Boolean, showOptionsView: Boolean, setViewGone: Boolean = false)
 
-    fun slideDown(view: View, willHide: Boolean, showOptionsView: Boolean)
+    fun slideDown(view: View, willHide: Boolean, showOptionsView: Boolean, setViewGone: Boolean = false)
 
     fun animateBottomAndTopNavigation(hide: Boolean)
 }

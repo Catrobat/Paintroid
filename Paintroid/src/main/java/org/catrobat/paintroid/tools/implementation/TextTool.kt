@@ -79,7 +79,7 @@ class TextTool(
     workspace,
     idlingResource,
     commandManager
-) {
+), BaseToolWithRectangleShape.ShapeSizeChangedListener {
     @VisibleForTesting
     @JvmField
     val textPaint: Paint
@@ -134,6 +134,7 @@ class TextTool(
         resizePointsVisible = RESIZE_POINTS_VISIBLE
         stc = contextCallback.getFont(R.font.stc_regular)
         dubai = contextCallback.getFont(R.font.dubai)
+        setShapeSizeChangedListener(this)
         textPaint = Paint()
         initializePaint()
         resetPreview()
@@ -324,6 +325,7 @@ class TextTool(
         }
         boxHeight = textHeight * multilineText.size + 2 * BOX_OFFSET
         boxWidth = maxTextWidth + 2 * BOX_OFFSET
+        createAndSetShapeSizeText(boxWidth, boxHeight)
     }
 
     private fun storeAttributes(italic: Boolean = false) {
@@ -342,6 +344,7 @@ class TextTool(
         } else {
             resetBoxPosition()
         }
+        createAndSetShapeSizeText(boxWidth, boxHeight)
     }
 
     override fun onSaveInstanceState(bundle: Bundle?) {
@@ -446,5 +449,13 @@ class TextTool(
     override fun changePaintColor(color: Int, invalidate: Boolean) {
         super.changePaintColor(color, invalidate)
         changeTextColor()
+    }
+
+    override fun onShapeSizeChanged(shapeText: String) {
+        textToolOptionsView.setShapeSizeText(shapeText)
+    }
+
+    override fun onToggleVisibility(isVisible: Boolean) {
+        textToolOptionsView.toggleShapeSizeVisibility(isVisible)
     }
 }

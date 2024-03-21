@@ -41,6 +41,7 @@ import org.catrobat.paintroid.ui.Perspective
 import android.graphics.Bitmap
 import org.catrobat.paintroid.tools.implementation.DEFAULT_BOX_RESIZE_MARGIN
 import org.catrobat.paintroid.tools.implementation.MAXIMUM_BORDER_RATIO
+import org.catrobat.paintroid.tools.options.ImportToolOptionsView
 import org.junit.After
 import org.junit.Assert
 import org.junit.Rule
@@ -63,6 +64,9 @@ class ImportToolTest {
 
     @Mock
     private lateinit var contextCallback: ContextCallback
+
+    @Mock
+    private val importToolOptionsView: ImportToolOptionsView? = null
 
     @Mock
     private val displayMetrics: DisplayMetrics? = null
@@ -90,7 +94,7 @@ class ImportToolTest {
         Mockito.`when`(workspace.height).thenReturn(30)
         Mockito.`when`(workspace.scale).thenReturn(1f)
         Mockito.`when`(workspace.perspective).thenReturn(Perspective(20, 30))
-        tool = ImportTool(contextCallback, toolOptionsViewController, toolPaint, workspace,
+        tool = ImportTool(importToolOptionsView!!, contextCallback, toolOptionsViewController, toolPaint, workspace,
                           idlingResource, commandManager, 0)
     }
 

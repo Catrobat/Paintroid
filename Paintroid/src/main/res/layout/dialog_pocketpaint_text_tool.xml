@@ -117,7 +117,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-    <androidx.recyclerview.widget.RecyclerView
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:layout_above="@id/pocketpaint_text_tool_dialog_list_font">
+
+            <include
+                android:id="@+id/pocketpaint_layout_text_tool_options_view_shape_size"
+                layout="@layout/pocketpaint_layout_shape_size_template"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/pocketpaint_text_tool_dialog_list_font"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -149,4 +163,18 @@
         </RelativeLayout>
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/pocketpaint_text_reshape_size_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:padding="10dp" >
+
+        <include
+            android:id="@+id/pocketpaint_layout_text_tool_change_size_shape_size"
+            layout="@layout/pocketpaint_layout_shape_size_template"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
     </RelativeLayout>
+</RelativeLayout>
