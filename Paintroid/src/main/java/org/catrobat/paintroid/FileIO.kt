@@ -41,7 +41,7 @@ import androidx.exifinterface.media.ExifInterface
 import id.zelory.compressor.Compressor
 import org.catrobat.paintroid.command.serialization.CommandSerializer
 import org.catrobat.paintroid.common.CATROBAT_IMAGE_ENDING
-import org.catrobat.paintroid.common.Constants.DOWNLOADS_DIRECTORY
+import org.catrobat.paintroid.common.Constants.ANDROID_DIRECTORY
 import org.catrobat.paintroid.common.Constants.PICTURES_DIRECTORY
 import org.catrobat.paintroid.common.MAX_LAYERS
 import org.catrobat.paintroid.common.TEMP_IMAGE_DIRECTORY_NAME
@@ -437,7 +437,7 @@ object FileIO {
             val contentUri = MediaStore.Downloads.EXTERNAL_CONTENT_URI
             getUriForFilename(contentUri, filename, resolver)
         } else {
-            val file = File(DOWNLOADS_DIRECTORY, filename)
+            val file = File(ANDROID_DIRECTORY, filename)
             return if (file.exists()) {
                 Uri.fromFile(file)
             } else {
