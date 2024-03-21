@@ -596,18 +596,17 @@ object FileIO {
 
             val stream = FileOutputStream("$tempPath/$newFileName")
             commandSerializer.writeToInternalMemory(stream)
-            temporaryFilePath = TEMP_IMAGE_TEMP_PATH
+            stream.close()
         } catch (e: IOException) {
             Log.e("Cannot write", "Can't write to stream", e)
         }
         val oldFile = File(internalMemoryPath, TEMP_IMAGE_PATH)
-        if (oldFile.exists()) {
+        val newFile = File(internalMemoryPath, TEMP_IMAGE_TEMP_PATH)
+        if (oldFile.exists() && newFile.exists()) {
             oldFile.delete()
         }
-        val newFile = File(internalMemoryPath, TEMP_IMAGE_TEMP_PATH)
         if (newFile.exists()) {
             newFile.renameTo(File(internalMemoryPath, TEMP_IMAGE_PATH))
-            temporaryFilePath = TEMP_IMAGE_PATH
         }
     }
 
@@ -616,26 +615,12 @@ object FileIO {
         if (!tempPath.exists()) {
             return false
         }
-        val fileList = tempPath.listFiles()
-        if (fileList != null && fileList.isNotEmpty()) {
-            if (fileList.size == 2) {
-                if (fileList[1].lastModified() > fileList[0].lastModified()) {
-                    reorganizeTempFiles(fileList[1], fileList[0], internalMemoryPath)
-                } else {
-                    reorganizeTempFiles(fileList[0], fileList[1], internalMemoryPath)
-                }
-            } else {
-                temporaryFilePath = fileList[0].path
-            }
+        val file = File(internalMemoryPath, TEMP_IMAGE_PATH)
+        if (file.exists()) {
+            temporaryFilePath = file.path
             return true
         }
         return false
-    }
-
-    private fun reorganizeTempFiles(file1: File, file2: File, internalMemoryPath: File) {
-        file2.delete()
-        file1.renameTo(File(internalMemoryPath, TEMP_IMAGE_PATH))
-        temporaryFilePath = TEMP_IMAGE_PATH
     }
 
     fun openTemporaryPictureFile(commandSerializer: CommandSerializer): WorkspaceReturnValue? {
@@ -643,7 +628,9 @@ object FileIO {
         if (temporaryFilePath != null) {
             try {
                 val stream = FileInputStream(temporaryFilePath)
+                if (stream.available() == 0) throw IOException("FileInputStream not available!")
                 workspaceReturnValue = commandSerializer.readFromInternalMemory(stream)
+                stream.close()
             } catch (e: IOException) {
                 Log.e("Cannot read", "Can't read from stream", e)
             }
