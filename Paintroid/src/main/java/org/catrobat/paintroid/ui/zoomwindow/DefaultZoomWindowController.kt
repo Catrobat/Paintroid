@@ -13,6 +13,7 @@ import android.graphics.Shader
 import android.graphics.Matrix
 import android.graphics.PointF
 import android.graphics.RectF
+import android.os.Build
 import android.view.View
 import android.widget.ImageView
 import android.widget.RelativeLayout
@@ -75,9 +76,11 @@ class DefaultZoomWindowController
         backgroundCanvas?.drawRect(canvasRect, framePaint)
 
         val greyBackgroundCanvas = Canvas(greyBackgroundBitmap)
-        greyBackgroundCanvas.drawColor(
-            activity.resources.getColor(R.color.pocketpaint_main_drawing_surface_background)
-        )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            greyBackgroundCanvas.drawColor(
+                activity.resources.getColor(R.color.pocketpaint_main_drawing_surface_background,activity.theme)
+            )
+        }
 
         val canvasBackground = Canvas(backgroundBitmap)
 
