@@ -18,17 +18,31 @@
  */
 package org.catrobat.paintroid
 
+import android.graphics.Bitmap
+import org.catrobat.paintroid.ui.DrawingSurface
 import java.io.File
 import java.lang.IllegalArgumentException
 
 @SuppressWarnings("ThrowingExceptionsWithoutMessageOrCause")
-class PaintroidApplication private constructor() {
-    companion object {
-        @JvmStatic
-        var cacheDir: File? = null
-    }
+class PaintroidApplication() {
+    object  DrawingSurface {
+        fun copyBitmap(): Bitmap {
 
-    init {
-        throw IllegalArgumentException()
+            return Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888)
+        }
     }
 }
+
+
+
+
+
+//@JvmStatic
+//        var cacheDir: File? = null
+//    }
+//
+//
+//    init {
+//        throw IllegalArgumentException()
+//    }
+//}
