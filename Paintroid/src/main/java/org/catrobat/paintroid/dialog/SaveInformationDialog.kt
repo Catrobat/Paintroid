@@ -22,6 +22,7 @@ import android.annotation.SuppressLint
 import android.app.Dialog
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,18 +37,35 @@ import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
 import org.catrobat.paintroid.FileIO
-import org.catrobat.paintroid.FileIO.FileType
+
+
 import org.catrobat.paintroid.FileIO.FileType.PNG
 import org.catrobat.paintroid.FileIO.FileType.JPG
 import org.catrobat.paintroid.FileIO.FileType.CATROBAT
 import org.catrobat.paintroid.FileIO.FileType.ORA
+import org.catrobat.paintroid.PaintroidApplication
+
 import org.catrobat.paintroid.R
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 import java.util.Locale
+
+
+
+
+
+
+
+
 
 private const val STANDARD_FILE_NAME = "image"
 private const val SET_NAME = "setName"
 private const val PERMISSION = "permission"
 private const val IS_EXPORT = "isExport"
+
+
+
 
 class SaveInformationDialog :
     MainActivityDialogFragment(),
@@ -57,6 +75,7 @@ class SaveInformationDialog :
     private lateinit var inflater: LayoutInflater
     private lateinit var specificFormatLayout: ViewGroup
     private lateinit var jpgView: View
+
     private lateinit var percentage: AppCompatTextView
     private lateinit var imageName: AppCompatEditText
     private lateinit var fileName: String
@@ -73,7 +92,7 @@ class SaveInformationDialog :
             if (isStandard) {
                 FileIO.filename = STANDARD_FILE_NAME
                 FileIO.compressFormat = Bitmap.CompressFormat.PNG
-                FileIO.fileType = PNG
+
             }
             return SaveInformationDialog().apply {
                 arguments = Bundle().apply {
@@ -118,8 +137,9 @@ class SaveInformationDialog :
                 FileIO.storeImageUri = null
                 if (FileIO.checkFileExists(FileIO.fileType, FileIO.defaultFileName, requireContext().contentResolver)) {
                     presenter.showOverwriteDialog(permission, isExport)
+
                 } else {
-                    presenter.switchBetweenVersions(permission, isExport)
+
                 }
                 dismiss()
             }
@@ -127,8 +147,11 @@ class SaveInformationDialog :
             .create()
     }
 
+
     private fun initViews(customLayout: View) {
         initSpecificFormatLayout(customLayout)
+
+
         initJpgView()
         initSeekBar()
         initPercentage()
@@ -140,6 +163,10 @@ class SaveInformationDialog :
     private fun initSpecificFormatLayout(view: View) {
         specificFormatLayout = view.findViewById(R.id.pocketpaint_save_format_specific_options)
     }
+
+
+
+
 
     private fun initJpgView() {
         jpgView = inflater.inflate(
@@ -168,16 +195,19 @@ class SaveInformationDialog :
                 JPG -> presenter.showJpgInformationDialog()
                 ORA -> presenter.showOraInformationDialog()
                 CATROBAT -> presenter.showCatrobatInformationDialog()
+                FileType.GIF -> presenter.showGifInformationDialog()
                 else -> presenter.showPngInformationDialog()
             }
         }
     }
 
+
+
     private fun initSpinner(view: View) {
         spinner = view.findViewById(R.id.pocketpaint_save_dialog_spinner)
         val spinnerArray = FileType.values().map { it.value }
         val adapter = ArrayAdapter(spinner.context, android.R.layout.simple_spinner_item, spinnerArray)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)   //xml file
         spinner.adapter = adapter
         spinner.onItemSelectedListener = this
     }
@@ -204,6 +234,7 @@ class SaveInformationDialog :
             JPG -> spinner.setSelection(JPG.ordinal)
             ORA -> spinner.setSelection(ORA.ordinal)
             CATROBAT -> spinner.setSelection(CATROBAT.ordinal)
+            
             else -> spinner.setSelection(PNG.ordinal)
         }
     }
@@ -212,8 +243,10 @@ class SaveInformationDialog :
         when (parent?.getItemAtPosition(position).toString().toLowerCase(Locale.getDefault())) {
             JPG.value -> setFileDetails(Bitmap.CompressFormat.JPEG, JPG)
             PNG.value -> setFileDetails(Bitmap.CompressFormat.PNG, PNG)
+
             ORA.value -> setFileDetails(Bitmap.CompressFormat.PNG, ORA)
             CATROBAT.value -> setFileDetails(Bitmap.CompressFormat.PNG, CATROBAT)
+
         }
     }
 
@@ -226,3 +259,6 @@ class SaveInformationDialog :
     override fun onStartTrackingTouch(seekBar: SeekBar) = Unit
     override fun onStopTrackingTouch(seekBar: SeekBar) = Unit
 }
+
+
+

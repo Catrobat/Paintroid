@@ -60,7 +60,7 @@ class SaveImage(
             val imageUri = FileIO.saveBitmapToFile(filename, bitmap, callback.contentResolver, context)
             imageUri
         } else {
-            uri?.let { FileIO.saveBitmapToUri(it, bitmap, context) }
+            uri?.let { FileIO.saveBitmapToUri<Any>(it, bitmap, context) }
         }
     }
 

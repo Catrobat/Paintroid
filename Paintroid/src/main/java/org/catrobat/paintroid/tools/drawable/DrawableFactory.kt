@@ -25,6 +25,18 @@ class DrawableFactory {
             DrawableShape.OVAL -> OvalDrawable()
             DrawableShape.HEART -> HeartDrawable()
             DrawableShape.STAR -> StarDrawable()
+            DrawableShape.PENTAGON -> PentagonDrawable()
+            DrawableShape.TRIANGLE -> TriangleDrawable()
+            DrawableShape.HEXAGON -> HexagonDrawable()
+            DrawableShape.OCTAGON -> OctagonDrawable()
+            DrawableShape.ARROW -> ArrowDrawable()
+            DrawableShape.CROSS -> ArrowDrawable()
+            DrawableShape.TICK -> ArrowDrawable()
+            DrawableShape.MOON -> ArrowDrawable()
+            DrawableShape.LIGHTNING -> ArrowDrawable()
+            DrawableShape.SPEECH -> ArrowDrawable()
+
+
         }
     }
 }
