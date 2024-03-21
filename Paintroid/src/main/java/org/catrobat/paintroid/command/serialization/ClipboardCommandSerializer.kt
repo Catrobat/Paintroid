@@ -27,6 +27,7 @@ import com.esotericsoftware.kryo.io.Input
 import com.esotericsoftware.kryo.io.Output
 import org.catrobat.paintroid.FileIO
 import org.catrobat.paintroid.command.implementation.ClipboardCommand
+import java.io.IOException
 
 class ClipboardCommandSerializer(version: Int) : VersionSerializer<ClipboardCommand>(version) {
 
@@ -61,6 +62,7 @@ class ClipboardCommandSerializer(version: Int) : VersionSerializer<ClipboardComm
                 val width = readFloat()
                 val height = readFloat()
                 val rotation = readFloat()
+                if (bitmap == null) throw IOException("Bitmap is null! Can not create ClipboardCommand.")
                 ClipboardCommand(bitmap, coordinates, width, height, rotation)
             }
         }
