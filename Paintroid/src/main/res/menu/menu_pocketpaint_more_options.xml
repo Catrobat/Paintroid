@@ -32,20 +32,8 @@
         android:id="@+id/pocketpaint_options_fullscreen_mode"
         android:title="@string/menu_hide_menu" />
     <item
-        android:id="@+id/pocketpaint_options_rate_us"
-        android:title="@string/menu_rate_us" />
-    <item
-        android:id="@+id/pocketpaint_options_help"
-        android:title="@string/help_title" />
-    <item
-        android:id="@+id/pocketpaint_options_about"
-        android:title="@string/pocketpaint_menu_about" />
-    <item
         android:id="@+id/pocketpaint_share_image_button"
         android:title="@string/share_image_menu" />
-    <item
-        android:id="@+id/pocketpaint_options_feedback"
-        android:title="@string/menu_feedback" />
     <item
         android:id="@+id/pocketpaint_zoom_window_settings"
         android:title="@string/menu_zoom_settings" />

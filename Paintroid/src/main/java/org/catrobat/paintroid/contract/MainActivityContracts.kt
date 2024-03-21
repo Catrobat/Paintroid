@@ -52,8 +52,6 @@ interface MainActivityContracts {
 
         fun startImportImageActivity(@ActivityRequestCode requestCode: Int)
 
-        fun showAboutDialog()
-
         fun showLikeUsDialog()
 
         fun showRateUsDialog()
@@ -73,10 +71,6 @@ interface MainActivityContracts {
         fun showOraInformationDialog()
 
         fun showCatrobatInformationDialog()
-
-        fun sendFeedback()
-
-        fun startWelcomeActivity(@ActivityRequestCode requestCode: Int)
 
         fun startShareImageActivity(bitmap: Bitmap?)
 
@@ -215,10 +209,6 @@ interface MainActivityContracts {
 
         fun backToPocketCodeClicked()
 
-        fun showHelpClicked()
-
-        fun showAboutClicked()
-
         fun showZoomWindowSettingsClicked(sharedPreferences: UserPreferences)
 
         fun showAdvancedSettingsClicked()
@@ -236,8 +226,6 @@ interface MainActivityContracts {
         fun showOraInformationDialog()
 
         fun showCatrobatInformationDialog()
-
-        fun sendFeedback()
 
         fun onNewImage()
 

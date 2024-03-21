@@ -22,18 +22,9 @@ package org.catrobat.paintroid.test.espresso
 
 import android.app.Activity
 import android.content.Context
-import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.Espresso.pressBack
-import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
-import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.ActivityTestRule
 import org.catrobat.paintroid.MainActivity
-import org.catrobat.paintroid.R
 import org.catrobat.paintroid.UserPreferences
 import org.catrobat.paintroid.command.CommandFactory
 import org.catrobat.paintroid.command.CommandManager
@@ -43,7 +34,6 @@ import org.catrobat.paintroid.contract.MainActivityContracts.Interactor
 import org.catrobat.paintroid.contract.MainActivityContracts.MainView
 import org.catrobat.paintroid.controller.ToolController
 import org.catrobat.paintroid.presenter.MainActivityPresenter
-import org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.Companion.onTopBarView
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule
 import org.catrobat.paintroid.tools.Workspace
 import org.junit.Before
@@ -135,32 +125,6 @@ class MainActivityIntegrationTest {
                 )
             }
         }
-    }
-
-    @Test
-    fun testMoreOptionsMenuAboutTextIsCorrect() {
-        onTopBarView()
-            .performOpenMoreOptions()
-        onView(withText(R.string.pocketpaint_menu_about))
-            .perform(click())
-        val context: Context = InstrumentationRegistry.getInstrumentation().targetContext
-        val aboutTextExpected: String = context.getString(
-            R.string.pocketpaint_about_content,
-            context.getString(R.string.pocketpaint_about_license)
-        )
-        onView(withText(aboutTextExpected))
-            .check(matches(isDisplayed()))
-    }
-
-    @Test
-    fun testMoreOptionsMenuAboutClosesMoreOptions() {
-        onTopBarView()
-            .performOpenMoreOptions()
-        onView(withText(R.string.pocketpaint_menu_about))
-            .perform(click())
-        pressBack()
-        onView(withText(R.string.pocketpaint_menu_about))
-            .check(doesNotExist())
     }
 
     @Test
