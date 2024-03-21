@@ -18,6 +18,8 @@
  */
 package org.catrobat.paintroid
 
+
+
 import java.io.File
 import java.lang.IllegalArgumentException
 
@@ -28,7 +30,14 @@ class PaintroidApplication private constructor() {
         var cacheDir: File? = null
     }
 
-    init {
-        throw IllegalArgumentException()
+        init {
+            throw IllegalArgumentException()
+        }
     }
-}
+
+
+
+
+
+
+

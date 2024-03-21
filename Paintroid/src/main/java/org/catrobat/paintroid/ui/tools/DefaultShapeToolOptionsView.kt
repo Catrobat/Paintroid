@@ -58,6 +58,7 @@ class DefaultShapeToolOptionsView(rootView: ViewGroup) : ShapeToolOptionsView {
     private val shapeToolDialogTitle: AppCompatTextView
     private val shapeToolFillOutline: AppCompatTextView
 
+
     init {
         val inflater = LayoutInflater.from(rootView.context)
         val shapeToolView = inflater.inflate(R.layout.dialog_pocketpaint_shapes, rootView)
@@ -74,6 +75,7 @@ class DefaultShapeToolOptionsView(rootView: ViewGroup) : ShapeToolOptionsView {
             outlineTextView = findViewById(R.id.pocketpaint_outline_view_text_view)
             outlineWidthSeekBar = findViewById(R.id.pocketpaint_shape_stroke_width_seek_bar)
             outlineWidthEditText = findViewById(R.id.pocketpaint_shape_outline_edit)
+
         }
         outlineWidthEditText.filters =
             arrayOf<InputFilter>(DefaultNumberRangeFilter(MIN_VAL, MAX_VAL))
@@ -89,6 +91,8 @@ class DefaultShapeToolOptionsView(rootView: ViewGroup) : ShapeToolOptionsView {
         circleButton.setOnClickListener { onShapeClicked(DrawableShape.OVAL) }
         heartButton.setOnClickListener { onShapeClicked(DrawableShape.HEART) }
         starButton.setOnClickListener { onShapeClicked(DrawableShape.STAR) }
+
+
         fillButton.setOnClickListener { onDrawTypeClicked(DrawableStyle.FILL) }
         outlineButton.setOnClickListener { onDrawTypeClicked(DrawableStyle.STROKE) }
         outlineWidthSeekBar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
@@ -141,7 +145,9 @@ class DefaultShapeToolOptionsView(rootView: ViewGroup) : ShapeToolOptionsView {
     }
 
     private fun resetShapeActivated() {
-        val buttons = arrayOf<View>(squareButton, circleButton, heartButton, starButton)
+        val buttons = arrayOf<View>(squareButton, circleButton, heartButton, starButton,)
+
+
         for (button in buttons) {
             button.isSelected = false
         }
@@ -175,6 +181,7 @@ class DefaultShapeToolOptionsView(rootView: ViewGroup) : ShapeToolOptionsView {
                 starButton.isSelected = true
                 setShapeToolDialogTitle(R.string.shape_tool_dialog_star_title)
             }
+
         }
     }
 
@@ -184,6 +191,8 @@ class DefaultShapeToolOptionsView(rootView: ViewGroup) : ShapeToolOptionsView {
         circleButtonResource: Int,
         heartButtonResource: Int,
         starButtonResource: Int,
+
+
         visibility: Int
     ) {
         shapeToolFillOutline.setText(fillTitle)
@@ -191,6 +200,8 @@ class DefaultShapeToolOptionsView(rootView: ViewGroup) : ShapeToolOptionsView {
         circleButton.setImageResource(circleButtonResource)
         heartButton.setImageResource(heartButtonResource)
         starButton.setImageResource(starButtonResource)
+
+
         outlineWidthSeekBar.visibility = visibility
         outlineWidthEditText.visibility = visibility
         outlineView.visibility = visibility
@@ -208,6 +219,7 @@ class DefaultShapeToolOptionsView(rootView: ViewGroup) : ShapeToolOptionsView {
                     R.drawable.ic_pocketpaint_circle,
                     R.drawable.ic_pocketpaint_heart,
                     R.drawable.ic_pocketpaint_star,
+
                     View.GONE
                 )
             }
@@ -219,6 +231,7 @@ class DefaultShapeToolOptionsView(rootView: ViewGroup) : ShapeToolOptionsView {
                     R.drawable.ic_pocketpaint_circle_out,
                     R.drawable.ic_pocketpaint_heart_out,
                     R.drawable.ic_pocketpaint_star_out,
+
                     View.VISIBLE
                 )
             }

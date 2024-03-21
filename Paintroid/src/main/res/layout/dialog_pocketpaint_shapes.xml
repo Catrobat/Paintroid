@@ -139,6 +139,8 @@
                 android:layout_weight="1"
                 android:contentDescription="@string/shape_tool_dialog_star_title"
                 android:src="@drawable/ic_pocketpaint_star" />
+
+
         </LinearLayout>
     </LinearLayout>
 </ScrollView>
