@@ -42,13 +42,23 @@ class FontListAdapter internal constructor(
     private val serif = Typeface.create(Typeface.SERIF, Typeface.NORMAL)
     private val dubai = ResourcesCompat.getFont(context, R.font.dubai)
     private val stc = ResourcesCompat.getFont(context, R.font.stc_regular)
+    private val roboto = ResourcesCompat.getFont(context, R.font.roboto_regular)
+    private val lato = ResourcesCompat.getFont(context, R.font.lato_regular)
+    private val montserrat = ResourcesCompat.getFont(context, R.font.montserrat_regular)
+    private val opensans = ResourcesCompat.getFont(context, R.font.opensans_regular)
+    private val oswald = ResourcesCompat.getFont(context, R.font.oswald_regular)
 
     private val typeFaces = arrayOf(
         sansSerif,
         monospace,
         serif,
         dubai,
-        stc
+        stc,
+        roboto,
+        lato,
+        montserrat,
+        opensans,
+        oswald
     )
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
