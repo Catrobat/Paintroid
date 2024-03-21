@@ -244,6 +244,10 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
         drawingThread?.stop()
     }
 
+    fun copyBitmap() {
+
+    }
+
     private inner class DrawLoop : Runnable {
         val holder: SurfaceHolder = getHolder()
         override fun run() {
