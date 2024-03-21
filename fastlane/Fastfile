@@ -41,6 +41,23 @@ platform :android do
             check_superseded_tracks:    'false',
         )
     end
+
+    desc "upload Paintroid AAB to alpha track"
+        lane :upload_AAB_Paintroid do
+            # ...
+            upload_to_play_store(
+                package_name:               'org.catrobat.paintroid',
+                track:                      'alpha',
+                json_key_data:              ENV['googlePlayJsonKey'],
+                aab:                        './app/build/outputs/bundle/signedRelease/paintroid-signedRelease.aab',
+                skip_upload_apk:            'true',
+                skip_upload_metadata:       'true',
+                skip_upload_images:         'true',
+                skip_upload_screenshots:    'true',
+                validate_only:              'false',
+                check_superseded_tracks:    'false',
+            )
+        end
 	
 	desc "upload Paintroid screenshots"
 	lane :upload_Screenshots_Paintroid do
