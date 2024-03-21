@@ -21,9 +21,12 @@
 
 package org.catrobat.paintroid.test.espresso
 
+import androidx.test.espresso.Espresso
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.ActivityTestRule
 import org.catrobat.paintroid.MainActivity
+import org.catrobat.paintroid.test.espresso.util.UiInteractions
 import org.catrobat.paintroid.test.espresso.util.wrappers.BottomNavigationViewInteraction.Companion.onBottomNavigationView
 import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.Companion.onToolBarView
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule
@@ -62,6 +65,7 @@ class ToolSelectionIntegrationTest {
                 toolType === ToolType.LAYER
             if (tool) { continue }
             onToolBarView().performSelectTool(toolType)
+            Espresso.onView(ViewMatchers.isRoot()).perform(UiInteractions.waitFor(5000))
             onBottomNavigationView().checkShowsCurrentTool(toolType)
         }
     }

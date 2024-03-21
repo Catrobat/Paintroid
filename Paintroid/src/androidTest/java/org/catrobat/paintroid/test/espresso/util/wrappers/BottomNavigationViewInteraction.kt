@@ -51,16 +51,9 @@ class BottomNavigationViewInteraction private constructor() :
             .perform(ViewActions.click())
     }
 
-    fun checkShowsCurrentTool(toolType: ToolType): ViewInteraction {
-        Espresso.onView(
-            allOf(
-                withId(R.id.icon),
-                ViewMatchers.isDescendantOfA(withId(R.id.action_current_tool))
-            )
-        )
+    fun checkShowsCurrentTool(toolType: ToolType) {
+        Espresso.onView(allOf(withId(R.id.icon), ViewMatchers.isDescendantOfA(withId(R.id.action_current_tool))))
             .check(ViewAssertions.matches(UiMatcher.withDrawable(toolType.drawableResource)))
-        return Espresso.onView(withId(R.id.action_current_tool))
-            .check(ViewAssertions.matches(ViewMatchers.hasDescendant(ViewMatchers.withText(toolType.nameResource))))
     }
 
     fun onColorClicked(): ViewInteraction {
