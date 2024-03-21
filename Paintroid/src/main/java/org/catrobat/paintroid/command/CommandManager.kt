@@ -33,6 +33,8 @@ interface CommandManager {
 
     fun addCommand(command: Command?)
 
+    fun executeCommand(command: Command?)
+
     fun addCommandWithoutUndo(command: Command?)
 
     fun setInitialStateCommand(command: Command)
@@ -60,6 +62,10 @@ interface CommandManager {
     fun adjustUndoListForClippingTool()
 
     fun undoInClippingTool()
+
+    fun getFirstRedoCommand(): Command?
+
+    fun clearRedoCommandList()
 
     fun popFirstCommandInUndo()
 

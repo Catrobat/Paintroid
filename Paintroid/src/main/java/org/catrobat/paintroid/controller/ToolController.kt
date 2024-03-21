@@ -35,7 +35,8 @@ interface ToolController {
             ToolType.TRANSFORM,
             ToolType.IMPORTPNG,
             ToolType.SHAPE,
-            ToolType.LINE
+            ToolType.LINE,
+            ToolType.DYNAMICLINE
         )
 
     fun setOnColorPickedListener(onColorPickedListener: OnColorPickedListener)
