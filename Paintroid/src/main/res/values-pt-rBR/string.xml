@@ -26,7 +26,7 @@
     <string name="button_undo">Desfazer</string>
     <string name="button_redo">Refazer</string>
     <string name="button_info">Informações</string>
-    <string name="button_clipboard">Clipboard</string>
+    <string name="button_clipboard">Área de Transferência</string>
     <string name="button_import_image">Importar imagem</string>
     <string name="button_eraser">Borracha</string>
     <string name="button_transform">Transformar</string>
@@ -92,7 +92,7 @@
     <string name="menu_export">Exportar</string>
     <string name="menu_feedback">Comentário</string>
     <string name="menu_advanced">Configurações avançadas</string>
-    <string name="menu_zoom_settings">Zoom window settings</string>
+    <string name="menu_zoom_settings">Configurações de ampliação da janela</string>
     <string name="saved_to">Imagem salva em\n</string>
     <string name="saved">Imagem salva</string>
     <string name="copy_to">Cópia salva em\n</string>
@@ -149,7 +149,7 @@
     <string name="dialog_save_image_format">Formato da imagem</string>
     <string name="dialog_antialiasing">Antisserrilhado</string>
     <string name="dialog_smoothing">Alisamento</string>
-    <string name="dialog_zoom_window_enabled">Enabled</string>
+    <string name="dialog_zoom_window_enabled">Ativado</string>
     <string name="dialog_save_jpg_option_quality">Qualidade:</string>
     <string name="pocketpaint_jpg_message_dialog">Ocupa <b>espaço mínimo no armazenamento</b>. <b>A transparência</b> não é salva </string>
     <string name="pocketpaint_png_message_dialog">Compressão sem perdas. A transparência é preservada.</string>
