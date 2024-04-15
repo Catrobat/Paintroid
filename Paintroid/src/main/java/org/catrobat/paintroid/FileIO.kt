@@ -106,6 +106,7 @@ object FileIO {
         ORA("ora"),
         CATROBAT("catrobat-image");
 
+
         fun toExtension(): String = ".$value"
     }
 

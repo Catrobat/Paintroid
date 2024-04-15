@@ -308,6 +308,7 @@ interface MainActivityContracts {
         fun checkForTemporaryFile(): Boolean
 
         fun setColorHistoryAfterLoadImage(colorHistory: ColorHistory?)
+
     }
 
     interface Model {
