@@ -141,7 +141,7 @@ class MainActivityNavigator(
     private fun setupColorPickerDialogListeners(dialog: ColorPickerDialog) {
         dialog.addOnColorPickedListener(object : OnColorPickedListener {
             override fun colorChanged(color: Int) {
-                val command = commandFactory.createColorChangedCommand(toolReference, mainActivity, color)
+                val command = commandFactory.createColorChangedCommand(toolReference.tool, mainActivity, color)
                 mainActivity.model.colorHistory.addColor(color)
 
                 if (toolReference.tool?.toolType != ToolType.CLIP) {

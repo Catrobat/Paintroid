@@ -40,7 +40,7 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.eq
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.command.implementation.ColorChangedCommand
-import org.catrobat.paintroid.tools.ToolReference
+import org.catrobat.paintroid.tools.Tool
 
 @RunWith(MockitoJUnitRunner::class)
 class DefaultCommandManagerTest {
@@ -302,7 +302,7 @@ class DefaultCommandManagerTest {
     @Test
     fun testIsLastColorCommandUndone() {
         val firstCommand = Mockito.mock(Command::class.java)
-        val secondCommand = ColorChangedCommand(Mockito.mock(ToolReference::class.java), MainActivity(), Color.BLUE)
+        val secondCommand = ColorChangedCommand(Mockito.mock(Tool::class.java), MainActivity(), Color.BLUE)
         val thirdCommand = Mockito.mock(Command::class.java)
         val currentLayer = Mockito.mock(LayerContracts.Layer::class.java)
 

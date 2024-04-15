@@ -36,6 +36,7 @@ import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction
 import org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction.Companion.onToolProperties
 import org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule
+import org.catrobat.paintroid.test.utils.TestUtils.Companion.selectColorInDialog
 import org.catrobat.paintroid.tools.ToolType
 import org.junit.Before
 import org.junit.Rule
@@ -244,6 +245,7 @@ class PipetteToolIntegrationTest {
         onDrawingSurfaceView().perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
         onToolProperties().checkMatchesColor(Color.BLACK)
         TopBarViewInteraction.onTopBarView().performUndo()
+        TopBarViewInteraction.onTopBarView().performUndo()
         onDrawingSurfaceView().perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
         onToolProperties().checkMatchesColor(Color.TRANSPARENT)
     }
@@ -258,5 +260,22 @@ class PipetteToolIntegrationTest {
         TopBarViewInteraction.onTopBarView().performRedo()
         onDrawingSurfaceView().perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
         onToolProperties().checkMatchesColor(Color.BLACK)
+    }
+
+    @Test
+    fun testPipetteColorChangesCanBeUndone() {
+        onDrawingSurfaceView().perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT))
+        selectColorInDialog(1)
+        onDrawingSurfaceView().perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
+        selectColorInDialog(2)
+        onToolBarView().performSelectTool(ToolType.PIPETTE)
+        onDrawingSurfaceView().perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT))
+        onToolProperties().checkMatchesColor(Color.BLACK)
+        onToolBarView().performSelectTool(ToolType.BRUSH)
+        onDrawingSurfaceView().perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_LEFT))
+        TopBarViewInteraction.onTopBarView().performUndo()
+        onToolProperties().checkMatchesColor(Color.BLACK)
+        TopBarViewInteraction.onTopBarView().performUndo()
+        onToolProperties().checkMatchesColor(Color.parseColor("#FF078707"))
     }
 }

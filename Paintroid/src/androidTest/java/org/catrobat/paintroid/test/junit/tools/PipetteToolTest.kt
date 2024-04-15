@@ -66,12 +66,14 @@ class PipetteToolTest {
     private val contextCallback: ContextCallback? = null
     private var toolToTest: PipetteTool? = null
     private var idlingResource: CountingIdlingResource? = null
+    private var mainActivity: MainActivity? = null
 
     @Rule
     @JvmField
     var launchActivityRule = ActivityTestRule(MainActivity::class.java)
     @Before
     fun setUp() {
+        mainActivity = launchActivityRule.activity
         idlingResource = launchActivityRule.activity.idlingResource
         IdlingRegistry.getInstance().register(idlingResource)
         val bitmap = Bitmap.createBitmap(10, 10, Bitmap.Config.ARGB_8888)
@@ -84,7 +86,8 @@ class PipetteToolTest {
             val argument = invocation.getArgument<PointF>(0)
             argument.x >= 0 && argument.y >= 0 && argument.x < 10 && argument.y < 10
         }
-        toolToTest = PipetteTool(contextCallback!!, toolOptionsViewController!!, toolPaint!!, workspace, idlingResource!!, commandManager!!, listener!!)
+        toolToTest = PipetteTool(contextCallback!!, toolOptionsViewController!!, toolPaint!!,
+            workspace, idlingResource!!, commandManager!!, listener!!, mainActivity!!)
     }
 
     @After
