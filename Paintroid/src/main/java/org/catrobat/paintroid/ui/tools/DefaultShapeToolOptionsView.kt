@@ -49,6 +49,9 @@ class DefaultShapeToolOptionsView(rootView: ViewGroup) : ShapeToolOptionsView {
     private val circleButton: AppCompatImageButton
     private val heartButton: AppCompatImageButton
     private val starButton: AppCompatImageButton
+    private val triangleButton: AppCompatImageButton
+    private val pentagonButton: AppCompatImageButton
+    private val hexagonButton: AppCompatImageButton
     private val fillButton: AppCompatImageButton
     private val outlineButton: AppCompatImageButton
     private val outlineView: View
@@ -66,6 +69,9 @@ class DefaultShapeToolOptionsView(rootView: ViewGroup) : ShapeToolOptionsView {
             circleButton = findViewById(R.id.pocketpaint_shapes_circle_btn)
             heartButton = findViewById(R.id.pocketpaint_shapes_heart_btn)
             starButton = findViewById(R.id.pocketpaint_shapes_star_btn)
+            triangleButton = findViewById(R.id.pocketpaint_shapes_triangle_btn)
+            pentagonButton = findViewById(R.id.pocketpaint_shapes_pentagon_btn)
+            hexagonButton = findViewById(R.id.pocketpaint_shapes_hexagon_btn)
             fillButton = findViewById(R.id.pocketpaint_shape_ibtn_fill)
             outlineButton = findViewById(R.id.pocketpaint_shape_ibtn_outline)
             shapeToolDialogTitle = findViewById(R.id.pocketpaint_shape_tool_dialog_title)
@@ -89,6 +95,9 @@ class DefaultShapeToolOptionsView(rootView: ViewGroup) : ShapeToolOptionsView {
         circleButton.setOnClickListener { onShapeClicked(DrawableShape.OVAL) }
         heartButton.setOnClickListener { onShapeClicked(DrawableShape.HEART) }
         starButton.setOnClickListener { onShapeClicked(DrawableShape.STAR) }
+        triangleButton.setOnClickListener { onShapeClicked(DrawableShape.TRIANGLE) }
+        pentagonButton.setOnClickListener { onShapeClicked(DrawableShape.PENTAGON) }
+        hexagonButton.setOnClickListener { onShapeClicked(DrawableShape.HEXAGON) }
         fillButton.setOnClickListener { onDrawTypeClicked(DrawableStyle.FILL) }
         outlineButton.setOnClickListener { onDrawTypeClicked(DrawableStyle.STROKE) }
         outlineWidthSeekBar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
@@ -141,7 +150,15 @@ class DefaultShapeToolOptionsView(rootView: ViewGroup) : ShapeToolOptionsView {
     }
 
     private fun resetShapeActivated() {
-        val buttons = arrayOf<View>(squareButton, circleButton, heartButton, starButton)
+        val buttons = arrayOf<View>(
+            squareButton,
+            circleButton,
+            heartButton,
+            starButton,
+            triangleButton,
+            pentagonButton,
+            hexagonButton
+        )
         for (button in buttons) {
             button.isSelected = false
         }
@@ -175,6 +192,18 @@ class DefaultShapeToolOptionsView(rootView: ViewGroup) : ShapeToolOptionsView {
                 starButton.isSelected = true
                 setShapeToolDialogTitle(R.string.shape_tool_dialog_star_title)
             }
+            DrawableShape.TRIANGLE -> {
+                triangleButton.isSelected = true
+                setShapeToolDialogTitle(R.string.shape_tool_dialog_triangle_title)
+            }
+            DrawableShape.PENTAGON -> {
+                pentagonButton.isSelected = true
+                setShapeToolDialogTitle(R.string.shape_tool_dialog_pentagon_title)
+            }
+            DrawableShape.HEXAGON -> {
+                hexagonButton.isSelected = true
+                setShapeToolDialogTitle(R.string.shape_tool_dialog_hexagon_title)
+            }
         }
     }
 
@@ -184,6 +213,9 @@ class DefaultShapeToolOptionsView(rootView: ViewGroup) : ShapeToolOptionsView {
         circleButtonResource: Int,
         heartButtonResource: Int,
         starButtonResource: Int,
+        triangleButtonResource: Int,
+        pentagonButtonResource: Int,
+        hexagonButtonResource: Int,
         visibility: Int
     ) {
         shapeToolFillOutline.setText(fillTitle)
@@ -191,6 +223,9 @@ class DefaultShapeToolOptionsView(rootView: ViewGroup) : ShapeToolOptionsView {
         circleButton.setImageResource(circleButtonResource)
         heartButton.setImageResource(heartButtonResource)
         starButton.setImageResource(starButtonResource)
+        triangleButton.setImageResource(triangleButtonResource)
+        pentagonButton.setImageResource(pentagonButtonResource)
+        hexagonButton.setImageResource(hexagonButtonResource)
         outlineWidthSeekBar.visibility = visibility
         outlineWidthEditText.visibility = visibility
         outlineView.visibility = visibility
@@ -208,6 +243,9 @@ class DefaultShapeToolOptionsView(rootView: ViewGroup) : ShapeToolOptionsView {
                     R.drawable.ic_pocketpaint_circle,
                     R.drawable.ic_pocketpaint_heart,
                     R.drawable.ic_pocketpaint_star,
+                    R.drawable.ic_pocketpaint_triangle,
+                    R.drawable.ic_pocketpaint_pentagon,
+                    R.drawable.ic_pocketpaint_hexagon,
                     View.GONE
                 )
             }
@@ -219,6 +257,9 @@ class DefaultShapeToolOptionsView(rootView: ViewGroup) : ShapeToolOptionsView {
                     R.drawable.ic_pocketpaint_circle_out,
                     R.drawable.ic_pocketpaint_heart_out,
                     R.drawable.ic_pocketpaint_star_out,
+                    R.drawable.ic_pocketpaint_triangle_out,
+                    R.drawable.ic_pocketpaint_pentagon_out,
+                    R.drawable.ic_pocketpaint_hexagon_out,
                     View.VISIBLE
                 )
             }
