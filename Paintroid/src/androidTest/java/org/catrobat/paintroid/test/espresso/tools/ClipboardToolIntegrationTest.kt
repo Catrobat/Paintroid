@@ -25,11 +25,14 @@ import android.content.pm.ActivityInfo
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.PointF
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.matcher.ViewMatchers.isRoot
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.ActivityTestRule
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider
 import org.catrobat.paintroid.test.espresso.util.UiInteractions
+import org.catrobat.paintroid.test.espresso.util.UiInteractions.waitFor
 import org.catrobat.paintroid.test.espresso.util.wrappers.ClipboardToolViewInteraction.Companion.onClipboardToolViewInteraction
 import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.Companion.onDrawingSurfaceView
 import org.catrobat.paintroid.test.espresso.util.wrappers.LayerMenuViewInteraction
@@ -79,6 +82,7 @@ class ClipboardToolIntegrationTest {
             .performSelectShapeDrawType(DrawableStyle.STROKE)
         onTopBarView().performClickCheckmark()
         onToolBarView().performSelectTool(ToolType.CLIPBOARD)
+        onView(isRoot()).perform(waitFor(500))
         val stampTool = toolReference?.tool as ClipboardTool?
         if (stampTool != null) {
             stampTool.boxHeight = stampTool.boxHeight.minus(25f)
