@@ -22,7 +22,7 @@ import androidx.test.espresso.Espresso
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions
-import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.test.espresso.util.EspressoUtils
@@ -65,7 +65,7 @@ class ToolBarViewInteraction :
 
     fun performOpenToolOptionsView(): ToolBarViewInteraction {
         onToolOptionsView()
-            .check(ViewAssertions.matches(Matchers.not(ViewMatchers.isDisplayed())))
+            .check(ViewAssertions.matches(Matchers.not(isDisplayed())))
         onBottomNavigationView()
             .onCurrentClicked()
         return this
@@ -73,7 +73,7 @@ class ToolBarViewInteraction :
 
     fun performCloseToolOptionsView(): ToolBarViewInteraction {
         onToolOptionsView()
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+            .check(ViewAssertions.matches(isDisplayed()))
         onBottomNavigationView()
             .onCurrentClicked()
         return this
