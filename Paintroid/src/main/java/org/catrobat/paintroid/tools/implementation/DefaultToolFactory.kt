@@ -81,7 +81,8 @@ class DefaultToolFactory(var mainActivity: MainActivity) : ToolFactory {
                 workspace,
                 idlingResource,
                 commandManager,
-                DRAW_TIME_INIT
+                DRAW_TIME_INIT,
+                mainActivity.supportFragmentManager
             )
             ToolType.PIPETTE -> PipetteTool(
                 contextCallback,

@@ -39,6 +39,7 @@ import androidx.test.espresso.IdlingRegistry
 import org.mockito.Mockito
 import org.catrobat.paintroid.ui.Perspective
 import android.graphics.Bitmap
+import androidx.fragment.app.FragmentManager
 import org.catrobat.paintroid.tools.implementation.DEFAULT_BOX_RESIZE_MARGIN
 import org.catrobat.paintroid.tools.implementation.MAXIMUM_BORDER_RATIO
 import org.junit.After
@@ -66,6 +67,9 @@ class ImportToolTest {
 
     @Mock
     private val displayMetrics: DisplayMetrics? = null
+
+    @Mock
+    private lateinit var fragmentManager: FragmentManager
     private var drawingSurfaceWidth = 0
     private var drawingSurfaceHeight = 0
     private lateinit var tool: ImportTool
@@ -91,7 +95,7 @@ class ImportToolTest {
         Mockito.`when`(workspace.scale).thenReturn(1f)
         Mockito.`when`(workspace.perspective).thenReturn(Perspective(20, 30))
         tool = ImportTool(contextCallback, toolOptionsViewController, toolPaint, workspace,
-                          idlingResource, commandManager, 0)
+                          idlingResource, commandManager, 0, fragmentManager)
     }
 
     @After
