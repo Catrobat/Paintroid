@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2022 The Catrobat Team
+ *  Copyright (C) 2010-2024 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,24 +18,10 @@
  */
 package org.catrobat.paintroid.tools.options
 
-import android.view.View
-
-interface ClipboardToolOptionsView {
-    fun setCallback(callback: Callback)
-
-    fun enablePaste(enable: Boolean)
-
+interface ImportToolOptionsView {
     fun setShapeSizeText(shapeSize: String)
 
+    fun setShapeSizeInvisble()
+
     fun toggleShapeSizeVisibility(isVisible: Boolean)
-
-    fun getClipboardToolOptionsLayout(): View
-
-    interface Callback {
-        fun copyClicked()
-
-        fun cutClicked()
-
-        fun pasteClicked()
-    }
 }

@@ -47,7 +47,7 @@ class ClipboardTool(
     override var drawTime: Long
 ) : BaseToolWithRectangleShape(
     contextCallback, toolOptionsViewController, toolPaint, workspace, idlingResource, commandManager
-) {
+), BaseToolWithRectangleShape.ShapeSizeChangedListener {
     private val clipboardToolOptionsView: ClipboardToolOptionsView
     private var readyForPaste = false
     private val isDrawingBitmapReusable: Boolean
@@ -96,6 +96,8 @@ class ClipboardTool(
         }
         clipboardToolOptionsView.setCallback(callback)
         toolOptionsViewController.showDelayed()
+        setShapeSizeChangedListener(this)
+        createAndSetShapeSizeText(boxWidth, boxHeight)
     }
 
     fun copyBoxContent() {
@@ -160,5 +162,16 @@ class ClipboardTool(
             drawingBitmap = getParcelable(BUNDLE_TOOL_DRAWING_BITMAP)
         }
         clipboardToolOptionsView.enablePaste(readyForPaste)
+    }
+    override fun onShapeSizeChanged(shapeText: String) {
+        clipboardToolOptionsView.setShapeSizeText(shapeText)
+    }
+
+    override fun onToggleVisibility(isVisible: Boolean) {
+        clipboardToolOptionsView.toggleShapeSizeVisibility(isVisible)
+    }
+
+    fun changeClipboardToolLayoutVisibility(willHide: Boolean, disabled: Boolean = false) {
+        changeToolLayoutVisibility(clipboardToolOptionsView.getClipboardToolOptionsLayout(), willHide, disabled)
     }
 }

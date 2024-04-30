@@ -33,10 +33,12 @@ import org.catrobat.paintroid.tools.ToolPaint
 import org.catrobat.paintroid.tools.ToolReference
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.Workspace
+import org.catrobat.paintroid.tools.implementation.ClipboardTool
 import org.catrobat.paintroid.tools.implementation.ClippingTool
 import org.catrobat.paintroid.tools.implementation.EraserTool
 import org.catrobat.paintroid.tools.implementation.ImportTool
 import org.catrobat.paintroid.tools.implementation.LineTool
+import org.catrobat.paintroid.tools.implementation.ShapeTool
 import org.catrobat.paintroid.tools.implementation.SprayTool
 import org.catrobat.paintroid.tools.implementation.TextTool
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
@@ -105,16 +107,30 @@ class DefaultToolController(
     }
 
     override fun hideToolOptionsView() {
-        toolOptionsViewController.hide()
-        if (toolReference.tool?.toolType == ToolType.TEXT) {
-            (toolReference.tool as TextTool).hideTextToolLayout()
+        when (toolReference.tool?.toolType) {
+            ToolType.TEXT -> (toolReference.tool as TextTool).hideTextToolLayout()
+            ToolType.SHAPE -> (toolReference.tool as ShapeTool).changeShapeToolLayoutVisibility(true, true)
+            ToolType.CLIPBOARD -> (toolReference.tool as ClipboardTool).changeClipboardToolLayoutVisibility(true, true)
+            else -> toolOptionsViewController.hide()
+        }
+    }
+
+    override fun hideToolOptionsViewForShapeTools() {
+        when (toolReference.tool?.toolType) {
+            ToolType.TEXT -> (toolReference.tool as TextTool).hideTextToolLayout()
+            ToolType.SHAPE -> (toolReference.tool as ShapeTool).changeShapeToolLayoutVisibility(true, true)
+            ToolType.CLIPBOARD -> (toolReference.tool as ClipboardTool).changeClipboardToolLayoutVisibility(true, true)
+            else -> {}
         }
     }
 
     override fun showToolOptionsView() {
         toolOptionsViewController.show()
-        if (toolReference.tool?.toolType == ToolType.TEXT) {
-            (toolReference.tool as TextTool).showTextToolLayout()
+        when (toolReference.tool?.toolType) {
+            ToolType.TEXT -> (toolReference.tool as TextTool).showTextToolLayout()
+            ToolType.SHAPE -> (toolReference.tool as ShapeTool).changeShapeToolLayoutVisibility(false, true)
+            ToolType.CLIPBOARD -> (toolReference.tool as ClipboardTool).changeClipboardToolLayoutVisibility(false, true)
+            else -> {}
         }
     }
 
@@ -168,11 +184,19 @@ class DefaultToolController(
     }
 
     override fun disableToolOptionsView() {
-        toolOptionsViewController.disable()
+        if (toolType != ToolType.IMPORTPNG) {
+            toolOptionsViewController.disable()
+        }
     }
 
     override fun enableToolOptionsView() {
         toolOptionsViewController.enable()
+    }
+
+    override fun adaptLayoutForFullScreen() {
+        if (toolReference.tool?.toolType != ToolType.HAND) {
+            toolOptionsViewController.show(true)
+        }
     }
 
     override fun enableHideOption() {
@@ -180,7 +204,9 @@ class DefaultToolController(
     }
 
     override fun disableHideOption() {
-        toolOptionsViewController.disableHide()
+        if (toolType != ToolType.IMPORTPNG) {
+            toolOptionsViewController.disableHide()
+        }
     }
 
     override fun createTool() {

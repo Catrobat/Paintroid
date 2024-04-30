@@ -28,6 +28,7 @@ import org.catrobat.paintroid.tools.ContextCallback
 import org.catrobat.paintroid.tools.ToolPaint
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.Workspace
+import org.catrobat.paintroid.tools.options.ImportToolOptionsView
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 import kotlin.math.max
 import kotlin.math.min
@@ -35,6 +36,7 @@ import kotlin.math.min
 private const val BUNDLE_TOOL_DRAWING_BITMAP = "BUNDLE_TOOL_DRAWING_BITMAP"
 
 class ImportTool(
+    importToolOptionsView: ImportToolOptionsView,
     contextCallback: ContextCallback,
     toolOptionsViewController: ToolOptionsViewController,
     toolPaint: ToolPaint,
@@ -44,8 +46,9 @@ class ImportTool(
     override var drawTime: Long
 ) : BaseToolWithRectangleShape(
     contextCallback, toolOptionsViewController, toolPaint, workspace, idlingResource, commandManager
-) {
+), BaseToolWithRectangleShape.ShapeSizeChangedListener {
 
+    private val importToolOptionsView: ImportToolOptionsView
     override val toolType: ToolType
         get() = ToolType.IMPORTPNG
 
@@ -60,7 +63,10 @@ class ImportTool(
     override fun toolPositionCoordinates(coordinate: PointF): PointF = coordinate
 
     init {
+        this.importToolOptionsView = importToolOptionsView
         rotationEnabled = true
+        setShapeSizeChangedListener(this)
+        importToolOptionsView.setShapeSizeInvisble()
     }
 
     override fun drawShape(canvas: Canvas) {
@@ -101,5 +107,14 @@ class ImportTool(
         val minimumSize = DEFAULT_BOX_RESIZE_MARGIN.toFloat()
         boxWidth = max(minimumSize, min(maximumBorderRatioWidth, bitmap.width.toFloat()))
         boxHeight = max(minimumSize, min(maximumBorderRatioHeight, bitmap.height.toFloat()))
+        createAndSetShapeSizeText(boxWidth, boxHeight)
+    }
+
+    override fun onShapeSizeChanged(shapeText: String) {
+        importToolOptionsView.setShapeSizeText(shapeText)
+    }
+
+    override fun onToggleVisibility(isVisible: Boolean) {
+        if (isVisible) hideToolSpecificLayout(isVisible) else showToolSpecificLayout()
     }
 }

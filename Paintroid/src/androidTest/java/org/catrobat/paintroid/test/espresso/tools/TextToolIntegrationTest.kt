@@ -68,6 +68,7 @@ import org.catrobat.paintroid.tools.implementation.TEXT_SIZE_MAGNIFICATION_FACTO
 import org.catrobat.paintroid.tools.implementation.TextTool
 import org.catrobat.paintroid.ui.tools.FontListAdapter
 import org.hamcrest.CoreMatchers.not
+import org.hamcrest.Matchers
 import org.junit.Assert
 import org.junit.After
 import org.junit.Before
@@ -776,6 +777,41 @@ class TextToolIntegrationTest {
             Assert.assertTrue(boxWidth < toolMemberBoxWidth && boxHeight < toolMemberBoxHeight)
         }
     }
+
+    @Test
+    fun testTextToolSizeDisplay() {
+        onToolBarView().performSelectTool(ToolType.TEXT)
+
+        onView(
+            Matchers.allOf(ViewMatchers.withParent(withId(R.id.pocketpaint_layout_text_tool_options_view_shape_size)),
+            withId(R.id.pocketpaint_fill_shape_size_text)))
+            .check(matches(ViewMatchers.withText(getShapeSizeText())))
+
+        enterMultilineTestText()
+
+        onView(
+            Matchers.allOf(ViewMatchers.withParent(withId(R.id.pocketpaint_layout_text_tool_options_view_shape_size)),
+            withId(R.id.pocketpaint_fill_shape_size_text)))
+            .check(matches(ViewMatchers.withText(getShapeSizeText())))
+
+        onView(withId(R.id.pocketpaint_font_size_text))
+            .perform(ViewActions.replaceText("100"))
+
+        onView(
+            Matchers.allOf(ViewMatchers.withParent(withId(R.id.pocketpaint_layout_text_tool_options_view_shape_size)),
+            withId(R.id.pocketpaint_fill_shape_size_text)))
+            .check(matches(ViewMatchers.withText(getShapeSizeText())))
+
+        selectFontType(FontType.STC)
+
+        onView(
+            Matchers.allOf(ViewMatchers.withParent(withId(R.id.pocketpaint_layout_text_tool_options_view_shape_size)),
+            withId(R.id.pocketpaint_fill_shape_size_text)))
+            .check(matches(ViewMatchers.withText(getShapeSizeText())))
+    }
+
+    private fun getShapeSizeText(): String =
+        "${toolMemberBoxWidth.toInt()} x ${toolMemberBoxHeight.toInt()} px"
 
     private fun centerBox(): PointF? {
         val screenPoint =

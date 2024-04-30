@@ -29,9 +29,11 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Checkable
 import android.widget.EditText
+import android.widget.LinearLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.chip.Chip
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.tools.FontType
 import org.catrobat.paintroid.tools.options.TextToolOptionsView
@@ -53,6 +55,8 @@ class DefaultTextToolOptionsView(rootView: ViewGroup) : TextToolOptionsView {
     private val fontTypes: List<FontType>
     private val topLayout: View
     private val bottomLayout: View
+    private val textToolOptionsViewShapeSizeChip: Chip
+    private val changeSizeShapeSizeChip: Chip
 
     init {
         val inflater = LayoutInflater.from(context)
@@ -74,6 +78,13 @@ class DefaultTextToolOptionsView(rootView: ViewGroup) : TextToolOptionsView {
         fontTypes = FontType.values().toList()
         initializeListeners()
         textEditText.requestFocus()
+        val viewShapeSizeLayout =
+            textToolView.findViewById<LinearLayout>(R.id.pocketpaint_layout_text_tool_options_view_shape_size)
+        textToolOptionsViewShapeSizeChip = viewShapeSizeLayout.findViewById(R.id.pocketpaint_fill_shape_size_text)
+        val changeShapeSizeLayout =
+            textToolView.findViewById<LinearLayout>(R.id.pocketpaint_layout_text_tool_change_size_shape_size)
+        changeSizeShapeSizeChip = changeShapeSizeLayout.findViewById(R.id.pocketpaint_fill_shape_size_text)
+        toggleShapeSizeVisibility(false)
     }
 
     private fun initializeListeners() {
@@ -190,4 +201,12 @@ class DefaultTextToolOptionsView(rootView: ViewGroup) : TextToolOptionsView {
     override fun getTopLayout(): View = topLayout
 
     override fun getBottomLayout(): View = bottomLayout
+    override fun setShapeSizeText(shapeSize: String) {
+        textToolOptionsViewShapeSizeChip.setText(shapeSize)
+        changeSizeShapeSizeChip.setText(shapeSize)
+    }
+
+    override fun toggleShapeSizeVisibility(isVisible: Boolean) {
+        changeSizeShapeSizeChip.visibility = if (isVisible) View.VISIBLE else View.GONE
+    }
 }

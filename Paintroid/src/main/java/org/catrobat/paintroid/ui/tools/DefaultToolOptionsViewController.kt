@@ -95,7 +95,7 @@ class DefaultToolOptionsViewController(
         enabled = true
     }
 
-    override fun show() {
+    override fun show(isFullScreen: Boolean) {
         if (!enabled || !hideButtonsEnabled) {
             return
         }
@@ -103,7 +103,8 @@ class DefaultToolOptionsViewController(
         toolOptionsShown = true
         mainToolOptions.visibility = View.INVISIBLE
         mainToolOptions.post {
-            val yPos = bottomNavigation.y - mainToolOptions.height
+            val yDifference = if (isFullScreen) bottomNavigation.height else mainToolOptions.height
+            val yPos = bottomNavigation.y - yDifference
             mainToolOptions.animate().y(yPos)
             mainToolOptions.visibility = View.VISIBLE
         }
@@ -140,7 +141,7 @@ class DefaultToolOptionsViewController(
         hideButtonsEnabled = false
     }
 
-    override fun slideUp(view: View, willHide: Boolean, showOptionsView: Boolean) {
+    override fun slideUp(view: View, willHide: Boolean, showOptionsView: Boolean, setViewGone: Boolean) {
         if (!enabled || !hideButtonsEnabled) {
             return
         }
@@ -169,7 +170,7 @@ class DefaultToolOptionsViewController(
         animation.duration = ANIMATION_DURATION
         view.startAnimation(animation)
         if (willHide) {
-            view.visibility = View.INVISIBLE
+            view.visibility = if (setViewGone) View.GONE else View.INVISIBLE
             toolOptionsShown = showOptionsView
             notifyHide()
         } else {
@@ -177,7 +178,7 @@ class DefaultToolOptionsViewController(
         }
     }
 
-    override fun slideDown(view: View, willHide: Boolean, showOptionsView: Boolean) {
+    override fun slideDown(view: View, willHide: Boolean, showOptionsView: Boolean, setViewGone: Boolean) {
         if (!enabled || !hideButtonsEnabled) {
             return
         }
@@ -201,7 +202,7 @@ class DefaultToolOptionsViewController(
         animation.duration = ANIMATION_DURATION
         view.startAnimation(animation)
         if (willHide) {
-            view.visibility = View.INVISIBLE
+            view.visibility = if (setViewGone) View.GONE else View.INVISIBLE
             toolOptionsShown = showOptionsView
             notifyHide()
         } else {
