@@ -237,10 +237,12 @@ class LineTool(
         return true
     }
 
-    override fun handleMove(coordinate: PointF?): Boolean {
+    override fun handleMove(coordinate: PointF?, shouldAnimate: Boolean): Boolean {
         coordinate ?: return false
-        hideToolOptions()
-        super.handleMove(coordinate)
+        super.handleMove(coordinate, shouldAnimate)
+        if (shouldAnimate) {
+            hideToolOptions()
+        }
         changeInitialCoordinateForHandleNormalLine = true
         if (startpointSet) {
             initialEventCoordinate = startPointToDraw?.let { PointF(it.x, it.y) }
@@ -393,8 +395,8 @@ class LineTool(
         }
     }
 
-    override fun changePaintColor(color: Int) {
-        super.changePaintColor(color)
+    override fun changePaintColor(color: Int, invalidate: Boolean) {
+        super.changePaintColor(color, invalidate)
         if (startpointSet && endpointSet) {
             val startX = startPointToDraw?.x
             val startY = startPointToDraw?.y
@@ -418,13 +420,13 @@ class LineTool(
                 }
             }
         }
-        brushToolOptionsView.invalidate()
+        if (invalidate) brushToolOptionsView.invalidate()
     }
 
-    fun undoChangePaintColor(color: Int) {
+    fun undoChangePaintColor(color: Int, invalidate: Boolean) {
         handleStateBeforeUndo()
-        super.changePaintColor(color)
-        brushToolOptionsView.invalidate()
+        super.changePaintColor(color, invalidate)
+        if (invalidate) brushToolOptionsView.invalidate()
         if (connectedLines) {
             commandManager.undoInConnectedLinesMode()
         } else {
@@ -441,9 +443,9 @@ class LineTool(
         }
     }
 
-    fun undoColorChangedCommand(color: Int) {
-        super.changePaintColor(color)
-        brushToolOptionsView.invalidate()
+    fun undoColorChangedCommand(color: Int, invalidate: Boolean = true) {
+        super.changePaintColor(color, invalidate)
+        if (invalidate) brushToolOptionsView.invalidate()
     }
 
     override fun changePaintStrokeWidth(strokeWidth: Int) {

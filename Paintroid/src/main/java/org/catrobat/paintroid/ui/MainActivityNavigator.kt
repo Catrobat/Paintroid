@@ -44,51 +44,51 @@ import org.catrobat.paintroid.colorpicker.OnColorPickedListener
 import org.catrobat.paintroid.command.CommandFactory
 import org.catrobat.paintroid.command.implementation.DefaultCommandFactory
 import org.catrobat.paintroid.common.ABOUT_DIALOG_FRAGMENT_TAG
-import org.catrobat.paintroid.common.ADVANCED_SETTINGS_DIALOG_FRAGMENT_TAG
-import org.catrobat.paintroid.common.CATROBAT_INFORMATION_DIALOG_TAG
 import org.catrobat.paintroid.common.CATROID_MEDIA_GALLERY_FRAGMENT_TAG
 import org.catrobat.paintroid.common.COLOR_PICKER_DIALOG_TAG
-import org.catrobat.paintroid.common.FEEDBACK_DIALOG_FRAGMENT_TAG
-import org.catrobat.paintroid.common.INDETERMINATE_PROGRESS_DIALOG_TAG
-import org.catrobat.paintroid.common.JPG_INFORMATION_DIALOG_TAG
 import org.catrobat.paintroid.common.LIKE_US_DIALOG_FRAGMENT_TAG
-import org.catrobat.paintroid.common.LOAD_DIALOG_FRAGMENT_TAG
-import org.catrobat.paintroid.common.MainActivityConstants.ActivityRequestCode
-import org.catrobat.paintroid.common.ORA_INFORMATION_DIALOG_TAG
-import org.catrobat.paintroid.common.OVERWRITE_INFORMATION_DIALOG_TAG
-import org.catrobat.paintroid.common.PAINTROID_PICTURE_PATH
-import org.catrobat.paintroid.common.PERMISSION_DIALOG_FRAGMENT_TAG
-import org.catrobat.paintroid.common.PERMISSION_EXTERNAL_STORAGE_SAVE_COPY
-import org.catrobat.paintroid.common.PNG_INFORMATION_DIALOG_TAG
 import org.catrobat.paintroid.common.RATE_US_DIALOG_FRAGMENT_TAG
+import org.catrobat.paintroid.common.FEEDBACK_DIALOG_FRAGMENT_TAG
+import org.catrobat.paintroid.common.ZOOM_WINDOW_SETTINGS_DIALOG_FRAGMENT_TAG
+import org.catrobat.paintroid.common.ADVANCED_SETTINGS_DIALOG_FRAGMENT_TAG
+import org.catrobat.paintroid.common.OVERWRITE_INFORMATION_DIALOG_TAG
+import org.catrobat.paintroid.common.PNG_INFORMATION_DIALOG_TAG
+import org.catrobat.paintroid.common.JPG_INFORMATION_DIALOG_TAG
+import org.catrobat.paintroid.common.ORA_INFORMATION_DIALOG_TAG
+import org.catrobat.paintroid.common.CATROBAT_INFORMATION_DIALOG_TAG
+import org.catrobat.paintroid.common.INDETERMINATE_PROGRESS_DIALOG_TAG
+import org.catrobat.paintroid.common.PAINTROID_PICTURE_PATH
 import org.catrobat.paintroid.common.SAVE_DIALOG_FRAGMENT_TAG
-import org.catrobat.paintroid.common.SAVE_INFORMATION_DIALOG_TAG
+import org.catrobat.paintroid.common.LOAD_DIALOG_FRAGMENT_TAG
+import org.catrobat.paintroid.common.PERMISSION_DIALOG_FRAGMENT_TAG
 import org.catrobat.paintroid.common.SAVE_QUESTION_FRAGMENT_TAG
 import org.catrobat.paintroid.common.SCALE_IMAGE_FRAGMENT_TAG
-import org.catrobat.paintroid.common.ZOOM_WINDOW_SETTINGS_DIALOG_FRAGMENT_TAG
+import org.catrobat.paintroid.common.PERMISSION_EXTERNAL_STORAGE_SAVE_COPY
+import org.catrobat.paintroid.common.SAVE_INFORMATION_DIALOG_TAG
+import org.catrobat.paintroid.common.MainActivityConstants.ActivityRequestCode
 import org.catrobat.paintroid.contract.MainActivityContracts
-import org.catrobat.paintroid.dialog.AboutDialog
-import org.catrobat.paintroid.dialog.AdvancedSettingsDialog
-import org.catrobat.paintroid.dialog.CatrobatImageInfoDialog
 import org.catrobat.paintroid.dialog.FeedbackDialog
+import org.catrobat.paintroid.dialog.ZoomWindowSettingsDialog
+import org.catrobat.paintroid.dialog.AdvancedSettingsDialog
+import org.catrobat.paintroid.dialog.OverwriteDialog
+import org.catrobat.paintroid.dialog.PngInfoDialog
+import org.catrobat.paintroid.dialog.JpgInfoDialog
+import org.catrobat.paintroid.dialog.OraInfoDialog
+import org.catrobat.paintroid.dialog.CatrobatImageInfoDialog
 import org.catrobat.paintroid.dialog.ImportImageDialog
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog
 import org.catrobat.paintroid.dialog.InfoDialog
-import org.catrobat.paintroid.dialog.JpgInfoDialog
-import org.catrobat.paintroid.dialog.LikeUsDialog
-import org.catrobat.paintroid.dialog.OraInfoDialog
-import org.catrobat.paintroid.dialog.OverwriteDialog
-import org.catrobat.paintroid.dialog.PermanentDenialPermissionInfoDialog
 import org.catrobat.paintroid.dialog.PermissionInfoDialog
-import org.catrobat.paintroid.dialog.PermissionInfoDialog.PermissionType
-import org.catrobat.paintroid.dialog.PngInfoDialog
-import org.catrobat.paintroid.dialog.RateUsDialog
+import org.catrobat.paintroid.dialog.PermanentDenialPermissionInfoDialog
 import org.catrobat.paintroid.dialog.SaveBeforeFinishDialog
-import org.catrobat.paintroid.dialog.SaveBeforeLoadImageDialog
 import org.catrobat.paintroid.dialog.SaveBeforeNewImageDialog
-import org.catrobat.paintroid.dialog.SaveInformationDialog
+import org.catrobat.paintroid.dialog.SaveBeforeLoadImageDialog
 import org.catrobat.paintroid.dialog.ScaleImageOnLoadDialog
-import org.catrobat.paintroid.dialog.ZoomWindowSettingsDialog
+import org.catrobat.paintroid.dialog.AboutDialog
+import org.catrobat.paintroid.dialog.LikeUsDialog
+import org.catrobat.paintroid.dialog.PermissionInfoDialog.PermissionType
+import org.catrobat.paintroid.dialog.RateUsDialog
+import org.catrobat.paintroid.dialog.SaveInformationDialog
 import org.catrobat.paintroid.tools.ToolReference
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.ui.fragments.CatroidMediaGalleryFragment
@@ -104,6 +104,10 @@ class MainActivityNavigator(
     override val isSdkAboveOrEqualQ: Boolean
         @SuppressLint("AnnotateVersionCheck")
         get() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
+
+    override val isSdkAboveOrEqualT: Boolean
+        @SuppressLint("AnnotateVersionCheck")
+        get() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
 
     private var commandFactory: CommandFactory = DefaultCommandFactory()
 
@@ -190,7 +194,7 @@ class MainActivityNavigator(
             val queryCursor = mainActivity.contentResolver.query(uri, null, null, null, null)
             queryCursor.use { cursor ->
                 if (cursor != null && cursor.moveToFirst()) {
-                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
+                    result = cursor.getString(cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME))
                 }
             }
         }

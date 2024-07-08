@@ -42,7 +42,7 @@ import kotlinx.coroutines.runBlocking
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.contract.LayerContracts
-import org.catrobat.paintroid.iotasks.OpenRasterFileFormatConversion.mainActivity
+import org.catrobat.paintroid.iotasks.OpenRasterFileFormatConversion.Companion.mainActivity
 import org.catrobat.paintroid.model.MAX_LAYER_OPACITY_PERCENTAGE
 import org.catrobat.paintroid.tools.helper.DefaultNumberRangeFilter
 
@@ -96,7 +96,7 @@ class LayerAdapter(
             get() = itemView
 
         override fun bindView() {
-            val layer = layerPresenter.getLayerItem(position)
+            val layer = layerPresenter.getLayerItem(position) ?: return
             val isSelected = layer === layerPresenter.getSelectedLayer()
             setSelected(isSelected)
             setLayerVisibilityCheckbox(layer.isVisible)
@@ -120,9 +120,9 @@ class LayerAdapter(
                 true
             }
 
-            opacitySeekBar.progress = layerPresenter.getLayerItem(position).opacityPercentage
+            opacitySeekBar.progress = layer.opacityPercentage
             opacityEditText.filters = arrayOf<InputFilter>(DefaultNumberRangeFilter(MIN_VAL, MAX_VAL))
-            opacityEditText.setText(layerPresenter.getLayerItem(position).opacityPercentage.toString())
+            opacityEditText.setText(layer.opacityPercentage.toString())
             opacityEditText.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
@@ -142,8 +142,6 @@ class LayerAdapter(
                         opacitySeekBar.progress = opacityPercentage
                         layerPresenter.changeLayerOpacity(position, opacityPercentage)
                     }
-
-                    layerPresenter.getLayerItem(position).opacityPercentage = opacityPercentage
                     layerPresenter.refreshDrawingSurface()
                 }
             })
@@ -231,27 +229,27 @@ class LayerAdapter(
     companion object {
         private val TAG = LayerAdapter::class.java.simpleName
 
-        fun getSingleBackground(): Drawable? {
-            var background = ContextCompat.getDrawable(mainActivity, R.drawable.layer_item_single_selected)
+        fun getSingleBackground(): Drawable {
+            val background = mainActivity?.let { ContextCompat.getDrawable(it, R.drawable.layer_item_single_selected) }
             (background as GradientDrawable).cornerRadii = getRadius(BackgroundType.SINGLE)
             return background
         }
 
-        fun getTopBackground(isSelected: Boolean): Drawable? {
-            var background = if (isSelected) {
-                ContextCompat.getDrawable(mainActivity, R.drawable.layer_item_top_selected)
+        fun getTopBackground(isSelected: Boolean): Drawable {
+            val background = if (isSelected) {
+                mainActivity?.let { ContextCompat.getDrawable(it, R.drawable.layer_item_top_selected) }
             } else {
-                ContextCompat.getDrawable(mainActivity, R.drawable.layer_item_top_unselected)
+                mainActivity?.let { ContextCompat.getDrawable(it, R.drawable.layer_item_top_unselected) }
             }
             (background as GradientDrawable).cornerRadii = getRadius(BackgroundType.TOP)
             return background
         }
 
-        fun getBottomBackground(isSelected: Boolean): Drawable? {
-            var background = if (isSelected) {
-                ContextCompat.getDrawable(mainActivity, R.drawable.layer_item_bottom_selected)
+        fun getBottomBackground(isSelected: Boolean): Drawable {
+            val background = if (isSelected) {
+                mainActivity?.let { ContextCompat.getDrawable(it, R.drawable.layer_item_bottom_selected) }
             } else {
-                ContextCompat.getDrawable(mainActivity, R.drawable.layer_item_bottom_unselected)
+                mainActivity?.let { ContextCompat.getDrawable(it, R.drawable.layer_item_bottom_unselected) }
             }
             (background as GradientDrawable).cornerRadii = getRadius(BackgroundType.BOTTOM)
             return background
@@ -259,15 +257,15 @@ class LayerAdapter(
 
         fun getCenterBackground(isSelected: Boolean): Drawable? {
             return if (isSelected) {
-                ContextCompat.getDrawable(mainActivity, R.drawable.layer_item_center_selected)
+                mainActivity?.let { ContextCompat.getDrawable(it, R.drawable.layer_item_center_selected) }
             } else {
-                ContextCompat.getDrawable(mainActivity, R.drawable.layer_item_center_unselected)
+                mainActivity?.let { ContextCompat.getDrawable(it, R.drawable.layer_item_center_unselected) }
             }
         }
 
         private fun getRadius(backgroundType: BackgroundType): FloatArray {
-            val isRTL = mainActivity.resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_RTL
-            val cornerRadius = CORNER_RADIUS * mainActivity.resources.displayMetrics.density
+            val isRTL = mainActivity?.resources?.configuration?.layoutDirection == View.LAYOUT_DIRECTION_RTL
+            val cornerRadius = mainActivity?.let { CORNER_RADIUS * it.resources.displayMetrics.density } ?: 0f
 
             return when (backgroundType) {
                 BackgroundType.TOP -> if (isRTL) {

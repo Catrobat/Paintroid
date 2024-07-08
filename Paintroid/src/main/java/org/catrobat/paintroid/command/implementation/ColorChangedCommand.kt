@@ -25,6 +25,7 @@ import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.command.Command
 import org.catrobat.paintroid.contract.LayerContracts
 import org.catrobat.paintroid.tools.ToolReference
+import org.catrobat.paintroid.tools.implementation.EraserTool
 import org.catrobat.paintroid.tools.implementation.LineTool
 
 class ColorChangedCommand(toolReference: ToolReference, context: Context, color: Int) : Command {
@@ -51,8 +52,29 @@ class ColorChangedCommand(toolReference: ToolReference, context: Context, color:
                 firstTime = false
             }
         }
-        (context as MainActivity).runOnUiThread {
-            (context as MainActivity).bottomNavigationViewHolder.setColorButtonColor(color)
+        if (toolReference.tool !is EraserTool) {
+            (context as MainActivity).runOnUiThread {
+                (context as MainActivity).bottomNavigationViewHolder.setColorButtonColor(color)
+            }
+        }
+    }
+
+     fun runInUndoMode() {
+        if (toolReference.tool !is LineTool) {
+            (context as MainActivity).runOnUiThread {
+                toolReference.tool?.changePaintColor(color, false)
+            }
+        } else {
+            if (toolReference.tool is LineTool && !firstTime) {
+                (context as MainActivity).runOnUiThread {
+                    (toolReference.tool as LineTool).undoColorChangedCommand(color, false)
+                }
+            } else {
+                (context as MainActivity).runOnUiThread {
+                    toolReference.tool?.changePaintColor(color, false)
+                }
+                firstTime = false
+            }
         }
     }
 

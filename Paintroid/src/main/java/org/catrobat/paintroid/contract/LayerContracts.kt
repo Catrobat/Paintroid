@@ -48,7 +48,7 @@ interface LayerContracts {
 
         fun disableVisibilityAndOpacityButtons()
 
-        fun getLayerItem(position: Int): Layer
+        fun getLayerItem(position: Int): Layer?
 
         fun getLayerItemId(position: Int): Long
 

@@ -257,10 +257,10 @@ class TextTool(
          }
     }
 
-    override fun handleMove(coordinate: PointF?): Boolean {
+    override fun handleMove(coordinate: PointF?, shouldAnimate: Boolean): Boolean {
         textToolOptionsView.hideKeyboard()
         hideTextToolLayout()
-        return super.handleMove(coordinate)
+        return super.handleMove(coordinate, false)
     }
 
     override fun handleUp(coordinate: PointF?): Boolean {
@@ -443,8 +443,8 @@ class TextTool(
         }
     }
 
-    override fun changePaintColor(color: Int) {
-        super.changePaintColor(color)
+    override fun changePaintColor(color: Int, invalidate: Boolean) {
+        super.changePaintColor(color, invalidate)
         changeTextColor()
     }
 }

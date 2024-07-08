@@ -52,7 +52,7 @@ class FillAlgorithmTest {
         assertEquals("Wrong array size", height, algorithmPixels.size)
         assertEquals("Wrong array size", width, algorithmPixels[0].size)
         val algorithmTargetColor = fillAlgorithm.targetColor
-        val algorithmReplacementColor = fillAlgorithm.replacementColor
+        val algorithmReplacementColor = fillAlgorithm.colorToBeReplaced
         val algorithmColorTolerance = fillAlgorithm.colorToleranceThresholdSquared.toFloat()
         assertEquals(
             "Wrong target color",

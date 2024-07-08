@@ -36,11 +36,11 @@ import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider
 import org.catrobat.paintroid.test.espresso.util.MainActivityHelper
 import org.catrobat.paintroid.test.espresso.util.UiInteractions
 import org.catrobat.paintroid.test.espresso.util.UiMatcher
-import org.catrobat.paintroid.test.espresso.util.wrappers.ColorPickerViewInteraction.onColorPickerView
-import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView
-import org.catrobat.paintroid.test.espresso.util.wrappers.LayerMenuViewInteraction.onLayerMenuView
-import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView
-import org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView
+import org.catrobat.paintroid.test.espresso.util.wrappers.ColorPickerViewInteraction.Companion.onColorPickerView
+import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.Companion.onDrawingSurfaceView
+import org.catrobat.paintroid.test.espresso.util.wrappers.LayerMenuViewInteraction.Companion.onLayerMenuView
+import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.Companion.onToolBarView
+import org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.Companion.onTopBarView
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule
 import org.catrobat.paintroid.test.utils.TestUtils.Companion.selectColorInDialog
 import org.catrobat.paintroid.tools.ToolType
@@ -452,5 +452,42 @@ class UndoRedoIntegrationTest {
             Color.parseColor("#FF0074CD"),
             BitmapLocationProvider.HALFWAY_TOP_MIDDLE
         )
+    }
+
+    @Test
+    fun testNoColorUndoInEraserMode() {
+        onToolBarView()
+                .performSelectTool(ToolType.FILL)
+        onDrawingSurfaceView()
+                .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
+        selectColorInDialog(0)
+        selectColorInDialog(1)
+        selectColorInDialog(2)
+        onToolBarView()
+                .performSelectTool(ToolType.ERASER)
+        onDrawingSurfaceView().perform(
+                UiInteractions.swipeAccurate(
+                        DrawingSurfaceLocationProvider.HALFWAY_TOP_MIDDLE,
+                        DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_MIDDLE
+                )
+        )
+        onTopBarView().performUndo()
+        onTopBarView().performUndo()
+        onToolBarView()
+                .performSelectTool(ToolType.BRUSH)
+        onDrawingSurfaceView().perform(
+                UiInteractions.swipeAccurate(
+                        DrawingSurfaceLocationProvider.HALFWAY_TOP_MIDDLE,
+                        DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_MIDDLE
+                )
+        )
+        onDrawingSurfaceView().perform(
+                UiInteractions.swipeAccurate(
+                        DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT,
+                        DrawingSurfaceLocationProvider.HALFWAY_TOP_RIGHT
+                )
+        )
+        onDrawingSurfaceView()
+                .checkPixelColor(Color.parseColor("#FF078707"), BitmapLocationProvider.HALFWAY_TOP_MIDDLE)
     }
 }

@@ -19,6 +19,7 @@
 package org.catrobat.paintroid.presenter
 
 import android.Manifest
+import android.annotation.TargetApi
 import android.app.Activity
 import android.content.ContentResolver
 import android.content.ContentUris
@@ -97,6 +98,7 @@ import org.catrobat.paintroid.tools.implementation.CONSTANT_3
 import org.catrobat.paintroid.tools.implementation.ClippingTool
 import org.catrobat.paintroid.tools.implementation.LineTool
 import org.catrobat.paintroid.tools.implementation.DefaultToolPaint
+import org.catrobat.paintroid.tools.implementation.EraserTool
 import org.catrobat.paintroid.ui.LayerAdapter
 import java.io.File
 
@@ -386,7 +388,22 @@ open class MainActivityPresenter(
             )
             return
         }
-        if (navigator.isSdkAboveOrEqualQ) {
+
+        @TargetApi(Build.VERSION_CODES.TIRAMISU)
+        if (navigator.isSdkAboveOrEqualT) {
+            if (!navigator.doIHavePermission(Manifest.permission.READ_MEDIA_IMAGES)) {
+                navigator.askForPermission(
+                        arrayOf(Manifest.permission.READ_MEDIA_IMAGES),
+                        requestCode
+                )
+            } else {
+                handleRequestPermissionsResult(
+                        requestCode,
+                        arrayOf(Manifest.permission.READ_MEDIA_IMAGES),
+                        intArrayOf(PackageManager.PERMISSION_GRANTED)
+                )
+            }
+        } else if (navigator.isSdkAboveOrEqualQ) {
             if (!navigator.doIHavePermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
                 navigator.askForPermission(
                     arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
@@ -472,7 +489,9 @@ open class MainActivityPresenter(
         permissions: Array<String>,
         grantResults: IntArray
     ) {
-        if (permissions.size == 1 && (permissions[0] == Manifest.permission.READ_EXTERNAL_STORAGE || permissions[0] == Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+        if (permissions.size == 1 && (permissions[0] == Manifest.permission.READ_EXTERNAL_STORAGE ||
+                        permissions[0] == Manifest.permission.WRITE_EXTERNAL_STORAGE ||
+                        permissions[0] == Manifest.permission.READ_MEDIA_IMAGES)) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 when (requestCode) {
                     PERMISSION_EXTERNAL_STORAGE_SAVE -> {
@@ -573,18 +592,24 @@ open class MainActivityPresenter(
         if (view.isKeyboardShown) {
             view.hideKeyboard()
         } else {
-            setBottomNavigationColor(Color.BLACK)
-            if (toolController.currentTool is LineTool) {
-                (toolController.currentTool as LineTool).undoChangePaintColor(Color.BLACK)
+            if (toolController.currentTool !is EraserTool && (commandManager.isLastColorCommandOnTop() || commandManager.getColorCommandCount() == 0)) {
+                toolController.currentTool?.changePaintColor(Color.BLACK)
+                setBottomNavigationColor(Color.BLACK)
+            }
+            if (toolController.currentTool is ClippingTool) {
+                val clippingTool = toolController.currentTool as ClippingTool
+                clippingToolPaint = clippingTool.drawPaint
+                commandManager.undo()
+                clippingToolInUseAndUndoRedoClicked = true
             } else {
-                if (toolController.currentTool is ClippingTool) {
-                    val clippingTool = toolController.currentTool as ClippingTool
-                    clippingToolPaint = clippingTool.drawPaint
-                    commandManager.undo()
-                    clippingToolInUseAndUndoRedoClicked = true
+                if (toolController.currentTool is LineTool) {
+                    (toolController.currentTool as LineTool).undoChangePaintColor(Color.BLACK, false)
                 } else {
-                    toolController.currentTool?.changePaintColor(Color.BLACK)
-                    commandManager.undo()
+                    if (toolController.currentTool is EraserTool) {
+                        commandManager.undoIgnoringColorChanges()
+                    } else {
+                        commandManager.undo()
+                    }
                 }
             }
         }
@@ -615,15 +640,17 @@ open class MainActivityPresenter(
     override fun showLayerMenuClicked() {
         idlingResource.increment()
         layerAdapter?.apply {
-            for (i in 0 until itemCount) {
-                val currentHolder = getViewHolderAt(i)
+            for (position in 0 until itemCount) {
+                val currentHolder = getViewHolderAt(position)
                 currentHolder?.let {
-                    if (it.bitmap != null) {
-                        it.updateImageView(presenter.getLayerItem(i))
+                    val layer = presenter.getLayerItem(position)
+                    if (it.bitmap != null && layer != null) {
+                        it.updateImageView(layer)
                     }
                 }
             }
         }
+        checkIfClippingToolNeedsAdjustment()
         drawerLayoutViewHolder.openDrawer(Gravity.END)
         idlingResource.decrement()
     }
@@ -1019,7 +1046,8 @@ open class MainActivityPresenter(
         if (bottomBarViewHolder.isVisible) {
             bottomBarViewHolder.hide()
         } else {
-            if (layerAdapter?.presenter?.getLayerItem(workspace.currentLayerIndex)?.isVisible == false) {
+            val layer = layerAdapter?.presenter?.getLayerItem(workspace.currentLayerIndex)
+            if (layer != null && !layer.isVisible) {
                 navigator.showToast(R.string.no_tools_on_hidden_layer, Toast.LENGTH_SHORT)
                 return
             }
@@ -1050,7 +1078,7 @@ open class MainActivityPresenter(
             val cursor = fileActivity?.contentResolver?.query(uri, null, null, null, null)
             cursor?.use {
                 if (it.moveToFirst()) {
-                    result = it.getString(it.getColumnIndex(OpenableColumns.DISPLAY_NAME))
+                    result = it.getString(it.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME))
                 }
             }
         }

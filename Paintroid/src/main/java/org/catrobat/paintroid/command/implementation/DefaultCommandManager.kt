@@ -156,15 +156,23 @@ class DefaultCommandManager(
 
         initialStateCommand?.run(canvas, layerModel)
 
+        val colorCommandCount = getColorCommandCount()
+
+        var currentColorCommandCount = 0
         val iterator = undoCommandList.descendingIterator()
+
         while (iterator.hasNext()) {
-            var nextCommand = iterator.next()
+            val nextCommand = iterator.next()
             if (nextCommand is ColorChangedCommand && ignoreColorCommand) {
                 continue
             }
             val currentLayer = layerModel.currentLayer
             canvas.setBitmap(currentLayer?.bitmap)
-            nextCommand.run(canvas, layerModel)
+            if (nextCommand is ColorChangedCommand && ++currentColorCommandCount < colorCommandCount) {
+                nextCommand.runInUndoMode()
+            } else {
+                nextCommand.run(canvas, layerModel)
+            }
         }
 
         if (!currentCommandName.matches(mergeLayerCommandRegex)) {
@@ -172,7 +180,35 @@ class DefaultCommandManager(
         }
     }
 
-    private fun executeAllCommands() {
+    override fun getColorCommandCount(): Int {
+        val commandIterator = undoCommandList.iterator()
+        var counter = 0
+        while (commandIterator.hasNext()) {
+            val nextCommand = commandIterator.next()
+            if (nextCommand is ColorChangedCommand) {
+                counter++
+            }
+        }
+        return counter
+    }
+
+    override fun isLastColorCommandOnTop(): Boolean {
+        var retVal = false
+        if (undoCommandList.first is ColorChangedCommand) {
+            val commandIterator = undoCommandList.iterator()
+            var counter = 0
+            while (commandIterator.hasNext()) {
+                val nextCommand = commandIterator.next()
+                if (nextCommand is ColorChangedCommand) {
+                    counter++
+                }
+            }
+            retVal = counter == 1
+        }
+        return retVal
+    }
+
+    override fun executeAllCommands() {
         val layerCount = layerModel.layerCount
         val checkBoxes: MutableList<Boolean> = ArrayList(Collections.nCopies(layerCount, true))
 
@@ -250,11 +286,10 @@ class DefaultCommandManager(
     override fun undoInConnectedLinesMode() {
         val colorCommandList = removeColorCommands()
         if (undoCommandList.isNotEmpty()) {
-            val commandForUndo: Command
-            if (colorCommandList.isNotEmpty()) {
-                commandForUndo = colorCommandList.pop()
+            val commandForUndo: Command = if (colorCommandList.isNotEmpty()) {
+                colorCommandList.pop()
             } else {
-                commandForUndo = undoCommandList.pop()
+                undoCommandList.pop()
             }
             redoCommandList.addFirst(commandForUndo)
             handleUndo(commandForUndo)
@@ -381,6 +416,8 @@ class DefaultCommandManager(
     override fun setInitialStateCommand(command: Command) {
         initialStateCommand = command
     }
+
+    override fun getUndoCommandCount(): Int = undoCommandList.size
 
     private fun notifyCommandExecuted() {
         for (listener in commandListeners) {

@@ -113,12 +113,12 @@ open class CursorTool(
         brushToolOptionsView.setStrokeCapButtonChecked(toolPaint.strokeCap)
     }
 
-    override fun changePaintColor(color: Int) {
-        super.changePaintColor(color)
+    override fun changePaintColor(color: Int, invalidate: Boolean) {
+        super.changePaintColor(color, invalidate)
         if (toolInDrawMode) {
             cursorToolSecondaryShapeColor = toolPaint.color
         }
-        brushToolOptionsView.invalidate()
+        if (invalidate) brushToolOptionsView.invalidate()
     }
 
     private fun hideToolOptions() {
@@ -174,10 +174,12 @@ open class CursorTool(
         return true
     }
 
-    override fun handleMove(coordinate: PointF?): Boolean {
+    override fun handleMove(coordinate: PointF?, shouldAnimate: Boolean): Boolean {
         if (coordinate != null) {
-            hideToolOptions()
-            super.handleMove(coordinate)
+            if (shouldAnimate) {
+                hideToolOptions()
+            }
+            super.handleMove(coordinate, shouldAnimate)
             previousEventCoordinate?.let {
                 val deltaX = coordinate.x - it.x
                 val deltaY = coordinate.y - it.y

@@ -44,6 +44,7 @@ interface MainActivityContracts {
     interface Navigator {
         val isSdkAboveOrEqualM: Boolean
         val isSdkAboveOrEqualQ: Boolean
+        val isSdkAboveOrEqualT: Boolean
 
         fun showColorPickerDialog()
 
@@ -400,6 +401,8 @@ interface MainActivityContracts {
         fun hide()
 
         fun showCurrentTool(toolType: ToolType?)
+
+        fun enableColorItemView(show: Boolean)
 
         fun setColorButtonColor(@ColorInt color: Int)
     }

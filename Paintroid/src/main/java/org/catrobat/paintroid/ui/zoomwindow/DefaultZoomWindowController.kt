@@ -90,10 +90,11 @@ class DefaultZoomWindowController
         activity.findViewById(R.id.pocketpaint_zoom_window)
     private val zoomWindowImage: ImageView =
         activity.findViewById(R.id.pocketpaint_zoom_window_image)
+    private var zoomWindowBitmap: Bitmap? = null
     private var coordinates: PointF? = null
 
     override fun show(drawingSurfaceCoordinates: PointF, displayCoordinates: PointF) {
-        if (checkIfToolCompatibleWithZoomWindow(toolReference.tool) != Constants.NOT_COMPATIBLE &&
+        if (checkIfToolCompatibleWithZoomWindow(toolReference.tool) == Constants.COMPATIBLE &&
             isPointOnCanvas(drawingSurfaceCoordinates.x, drawingSurfaceCoordinates.y)) {
             setZoomWindowPosition(displayCoordinates)
             zoomWindow.visibility = View.VISIBLE
@@ -110,7 +111,7 @@ class DefaultZoomWindowController
     }
 
     override fun onMove(drawingSurfaceCoordinates: PointF, displayCoordinates: PointF) {
-        if (checkIfToolCompatibleWithZoomWindow(toolReference.tool) != Constants.NOT_COMPATIBLE) {
+        if (checkIfToolCompatibleWithZoomWindow(toolReference.tool) == Constants.COMPATIBLE) {
             setZoomWindowPosition(displayCoordinates)
             if (isPointOnCanvas(drawingSurfaceCoordinates.x, drawingSurfaceCoordinates.y)) {
                 if (zoomWindow.visibility == View.GONE) {
@@ -131,9 +132,12 @@ class DefaultZoomWindowController
         }
     }
 
-    override fun getBitmap(bitmap: Bitmap?) {
+    override fun setBitmap(bitmap: Bitmap?) {
         zoomWindowImage.setImageBitmap(coordinates?.let { cropBitmap(bitmap, it) })
+        zoomWindowBitmap = bitmap
     }
+
+    override fun getBitmap(): Bitmap? = zoomWindowBitmap
 
     private fun isPointOnCanvas(pointX: Float, pointY: Float): Boolean =
         pointX > 0 && pointX < layerModel.width && pointY > 0 && pointY < layerModel.height
@@ -203,13 +207,6 @@ class DefaultZoomWindowController
 
         canvas.drawBitmap(backgroundBitmap, Matrix(), null)
 
-        if (toolReference.tool?.toolType?.name.equals(ToolType.LINE.name) ||
-            toolReference.tool?.toolType?.name.equals(ToolType.CURSOR.name)) {
-            layerModel.currentLayer?.bitmap?.let {
-                canvas.drawBitmap(it, zoomWindowDiameter / 2f, zoomWindowDiameter / 2f, null)
-            }
-        }
-
         bitmap?.let { canvas.drawBitmap(it, zoomWindowDiameter / 2f, zoomWindowDiameter / 2f, null) }
 
         return bitmapOverlay
@@ -221,34 +218,23 @@ class DefaultZoomWindowController
     }
 
     override fun checkIfToolCompatibleWithZoomWindow(tool: Tool?): Constants {
-        if (
-            tool?.toolType?.name.equals(ToolType.HAND.name) ||
-            tool?.toolType?.name.equals(ToolType.FILL.name) ||
-            tool?.toolType?.name.equals(ToolType.CLIPBOARD.name) ||
-            tool?.toolType?.name.equals(ToolType.TRANSFORM.name)
-        ) {
-            return Constants.NOT_COMPATIBLE
-        } else if (
-            tool?.toolType?.name.equals(ToolType.IMPORTPNG.name) ||
-            tool?.toolType?.name.equals(ToolType.SHAPE.name) ||
-            tool?.toolType?.name.equals(ToolType.TEXT.name)
-        ) {
-            return Constants.NOT_COMPATIBLE
-        } else if (
-            tool?.toolType?.name.equals(ToolType.LINE.name) ||
-            tool?.toolType?.name.equals(ToolType.CURSOR.name) ||
-            tool?.toolType?.name.equals(ToolType.WATERCOLOR.name)
-        ) {
-            return Constants.COMPATIBLE_NEW
-        } else {
-            return Constants.COMPATIBLE_ALL
+        return when (tool?.toolType?.name) {
+            ToolType.LINE.name,
+            ToolType.CURSOR.name,
+            ToolType.WATERCOLOR.name,
+            ToolType.SPRAY.name,
+            ToolType.BRUSH.name,
+            ToolType.ERASER.name,
+            ToolType.PIPETTE.name,
+            ToolType.CLIP.name,
+            ToolType.SMUDGE.name -> Constants.COMPATIBLE
+            else -> Constants.NOT_COMPATIBLE
         }
     }
 
     enum class Constants {
         NOT_COMPATIBLE,
-        COMPATIBLE_NEW,
-        COMPATIBLE_ALL
+        COMPATIBLE
     }
 
     companion object {

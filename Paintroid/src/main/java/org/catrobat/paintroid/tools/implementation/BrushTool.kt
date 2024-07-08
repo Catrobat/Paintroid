@@ -145,7 +145,6 @@ open class BrushTool(
     }
 
     override fun handleDownAnimations(coordinate: PointF?) {
-
         hideBrushSpecificLayoutOnHandleDown()
     }
 
@@ -154,12 +153,14 @@ open class BrushTool(
         super.handleUp(coordinate)
     }
 
-    override fun handleMove(coordinate: PointF?): Boolean {
+    override fun handleMove(coordinate: PointF?, shouldAnimate: Boolean): Boolean {
         if (eventCoordinatesAreNull() || coordinate == null) {
             return false
         }
-        super.handleMove(coordinate)
-        hideBrushSpecificLayoutOnHandleDown()
+        super.handleMove(coordinate, shouldAnimate)
+        if (shouldAnimate) {
+            hideBrushSpecificLayoutOnHandleDown()
+        }
         previousEventCoordinate?.let {
             pathToDraw.quadTo(it.x, it.y, coordinate.x, coordinate.y)
             pathToDraw.incReserve(1)
@@ -213,9 +214,9 @@ open class BrushTool(
         previousEventCoordinate = null
     }
 
-    override fun changePaintColor(color: Int) {
-        super.changePaintColor(color)
-        brushToolOptionsView.invalidate()
+    override fun changePaintColor(color: Int, invalidate: Boolean) {
+        super.changePaintColor(color, invalidate)
+        if (invalidate) brushToolOptionsView.invalidate()
     }
 
     private fun eventCoordinatesAreNull(): Boolean =

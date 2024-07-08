@@ -195,4 +195,31 @@ open class AsyncCommandManager(
             }
         }
     }
+
+    override fun executeAllCommands() {
+        CoroutineScope(Dispatchers.Default).launch {
+            mutex.withLock {
+                if (!shuttingDown) {
+                    synchronized(layerModel) {
+                        commandManager.executeAllCommands()
+                    }
+                }
+                withContext(Dispatchers.Main) {
+                    notifyCommandPostExecute()
+                }
+            }
+        }
+    }
+
+    override fun getUndoCommandCount(): Int {
+        synchronized(layerModel) { return commandManager.getUndoCommandCount() }
+    }
+
+    override fun getColorCommandCount(): Int {
+        synchronized(layerModel) { return commandManager.getColorCommandCount() }
+    }
+
+    override fun isLastColorCommandOnTop(): Boolean {
+        synchronized(layerModel) { return commandManager.isLastColorCommandOnTop() }
+    }
 }

@@ -139,9 +139,11 @@ class SprayTool(
 
     override fun toolPositionCoordinates(coordinate: PointF): PointF = coordinate
 
-    override fun handleMove(coordinate: PointF?): Boolean {
-        hideToolOptions()
-        super.handleMove(coordinate)
+    override fun handleMove(coordinate: PointF?, shouldAnimate: Boolean): Boolean {
+        if (shouldAnimate) {
+            hideToolOptions()
+        }
+        super.handleMove(coordinate, shouldAnimate)
         currentCoordinate = coordinate
         return true
     }
@@ -192,6 +194,13 @@ class SprayTool(
         sprayToolScope.launch {
             while (true) {
                 repeat(sprayRadius / DEFAULT_RADIUS) {
+                    if (sprayedPoints.isEmpty()) {
+                        val midPoint = createMidPoint()
+                        if (workspace.contains(midPoint)) {
+                            previewCanvas.drawPoint(midPoint.x, midPoint.y, drawPaint)
+                            sprayedPoints.add(midPoint)
+                        }
+                    }
                     val point = createRandomPointInCircle()
                     if (workspace.contains(point)) {
                         previewCanvas.drawPoint(point.x, point.y, drawPaint)
@@ -219,6 +228,14 @@ class SprayTool(
         point.x = radius * cos(theta).toFloat() + (currentCoordinate?.x ?: 0f)
         point.y = radius * sin(theta).toFloat() + (currentCoordinate?.y ?: 0f)
         return point
+    }
+
+    private fun createMidPoint(): PointF {
+        val pointM = PointF()
+
+        pointM.x = currentCoordinate?.x ?: 0f
+        pointM.y = currentCoordinate?.y ?: 0f
+        return pointM
     }
 
     fun resetRadiusToStrokeWidth() {
