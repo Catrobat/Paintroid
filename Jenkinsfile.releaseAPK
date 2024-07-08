@@ -52,9 +52,9 @@ pipeline {
                             set +x
                             ./gradlew assembleSignedRelease \
                             -PsigningKeystore=${SIGNING_KEYSTORE} \
-                            -PsigningKeystorePassword=$signingKeystorePassword \
-                            -PsigningKeyAlias=$signingKeyAlias \
-                            -PsigningKeyPassword=$signingKeyPassword
+                            -PsigningKeystorePassword=${signingKeystorePassword} \
+                            -PsigningKeyAlias=${signingKeyAlias} \
+                            -PsigningKeyPassword=${signingKeyPassword}
                         '''
                     }
                 }
