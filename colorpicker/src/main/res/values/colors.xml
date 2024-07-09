@@ -37,6 +37,7 @@
     <color name="pocketpaint_color_picker_red1">#FFC5060E</color>
     <color name="pocketpaint_color_picker_orange1">#FFEB4618</color>
     <color name="pocketpaint_color_picker_orange2">#FFF9921C</color>
+    <color name="pocketpaint_color_picker_orange3">#FFAB08</color>
     <color name="pocketpaint_color_picker_yellow">#FFF3D605</color>
     <color name="pocketpaint_color_picker_black">#FF000000</color>
     <color name="pocketpaint_color_picker_gray">#FFA3A3A3</color>

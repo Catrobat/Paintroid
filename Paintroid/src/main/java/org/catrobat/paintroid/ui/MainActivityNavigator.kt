@@ -20,7 +20,6 @@ package org.catrobat.paintroid.ui
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
@@ -38,7 +37,6 @@ import org.catrobat.paintroid.FileIO
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.UserPreferences
-import org.catrobat.paintroid.WelcomeActivity
 import org.catrobat.paintroid.colorpicker.ColorPickerDialog
 import org.catrobat.paintroid.colorpicker.OnColorPickedListener
 import org.catrobat.paintroid.command.CommandFactory
@@ -84,7 +82,6 @@ import org.catrobat.paintroid.dialog.SaveBeforeFinishDialog
 import org.catrobat.paintroid.dialog.SaveBeforeNewImageDialog
 import org.catrobat.paintroid.dialog.SaveBeforeLoadImageDialog
 import org.catrobat.paintroid.dialog.ScaleImageOnLoadDialog
-import org.catrobat.paintroid.dialog.AboutDialog
 import org.catrobat.paintroid.dialog.LikeUsDialog
 import org.catrobat.paintroid.dialog.PermissionInfoDialog.PermissionType
 import org.catrobat.paintroid.dialog.RateUsDialog
@@ -93,6 +90,7 @@ import org.catrobat.paintroid.tools.ToolReference
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.ui.fragments.CatroidMediaGalleryFragment
 import org.catrobat.paintroid.ui.fragments.CatroidMediaGalleryFragment.MediaGalleryListener
+import org.catrobat.paintroid.web.PlayStore
 
 class MainActivityNavigator(
     private val mainActivity: MainActivity,
@@ -171,22 +169,6 @@ class MainActivityNavigator(
         })
     }
 
-    @SuppressWarnings("SwallowedException")
-    private fun openPlayStore(applicationId: String) {
-        val uriPlayStore = Uri.parse("market://details?id=$applicationId")
-        val openPlayStore = Intent(Intent.ACTION_VIEW, uriPlayStore)
-        try {
-            mainActivity.startActivity(openPlayStore)
-        } catch (e: ActivityNotFoundException) {
-            val uriNoPlayStore = Uri.parse("http://play.google.com/store/apps/details?id=$applicationId")
-            val noPlayStoreInstalled = Intent(Intent.ACTION_VIEW, uriNoPlayStore)
-
-            runCatching {
-                mainActivity.startActivity(noPlayStoreInstalled)
-            }
-        }
-    }
-
     private fun getFileName(uri: Uri?): String? {
         uri ?: return null
         var result: String? = null
@@ -259,12 +241,6 @@ class MainActivityNavigator(
         mainActivity.startActivityForResult(intent, requestCode)
     }
 
-    override fun startWelcomeActivity(@ActivityRequestCode requestCode: Int) {
-        val intent = Intent(mainActivity.applicationContext, WelcomeActivity::class.java)
-        intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
-        mainActivity.startActivityForResult(intent, requestCode)
-    }
-
     override fun startShareImageActivity(bitmap: Bitmap?) {
         val uri = FileIO.saveBitmapToCache(bitmap, mainActivity, "image") ?: return
         val shareIntent = Intent().apply {
@@ -275,11 +251,6 @@ class MainActivityNavigator(
         }
         val chooserTitle = mainActivity.resources.getString(R.string.share_image_via_text)
         mainActivity.startActivity(Intent.createChooser(shareIntent, chooserTitle))
-    }
-
-    override fun showAboutDialog() {
-        val about = AboutDialog()
-        about.show(mainActivity.supportFragmentManager, ABOUT_DIALOG_FRAGMENT_TAG)
     }
 
     override fun showLikeUsDialog() {
@@ -362,13 +333,6 @@ class MainActivityNavigator(
             mainActivity.supportFragmentManager,
             CATROBAT_INFORMATION_DIALOG_TAG
         )
-    }
-
-    override fun sendFeedback() {
-        val intent = Intent(Intent.ACTION_SENDTO)
-        val data = Uri.parse("mailto:support-paintroid@catrobat.org")
-        intent.data = data
-        mainActivity.startActivity(intent)
     }
 
     override fun showImageImportDialog() {
@@ -536,7 +500,7 @@ class MainActivityNavigator(
     }
 
     override fun rateUsClicked() {
-        openPlayStore(mainActivity.packageName)
+        PlayStore().openPlayStore(mainActivity, mainActivity.packageName)
     }
 
     override fun setAntialiasingOnToolPaint() {

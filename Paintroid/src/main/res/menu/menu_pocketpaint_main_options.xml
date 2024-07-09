@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/pocketpaint_options_rate_us"
+        android:title="@string/menu_rate_us" />
+    <item
+        android:id="@+id/pocketpaint_options_help"
+        android:title="@string/help_title" />
+    <item
+        android:id="@+id/pocketpaint_options_about"
+        android:title="@string/pocketpaint_menu_about" />
+    <item
+        android:id="@+id/pocketpaint_options_feedback"
+        android:title="@string/menu_feedback" />
+</menu>
