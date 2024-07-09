@@ -32,6 +32,7 @@ import android.provider.MediaStore
 import android.util.Log
 import org.catrobat.paintroid.FileIO.enableAlpha
 import org.catrobat.paintroid.MainActivity
+import org.catrobat.paintroid.common.CATROBAT_IMAGE_STORAGE
 import org.catrobat.paintroid.contract.LayerContracts
 import org.catrobat.paintroid.model.Layer
 import java.io.ByteArrayOutputStream
@@ -93,11 +94,11 @@ class OpenRasterFileFormatConversion private constructor() {
             val bitmapThumbArray = bosThumb.toByteArray()
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 contentValues.put(MediaStore.Files.FileColumns.DISPLAY_NAME, fileName)
-                contentValues.put(MediaStore.Files.FileColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
+                contentValues.put(MediaStore.Files.FileColumns.RELATIVE_PATH, CATROBAT_IMAGE_STORAGE)
                 contentValues.put(MediaStore.Files.FileColumns.MIME_TYPE, "application/applefile")
                 imageUri = resolver?.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)
             } else {
-                val imageRoot = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+                val imageRoot = Environment.getExternalStoragePublicDirectory(CATROBAT_IMAGE_STORAGE)
                 if (!imageRoot.exists() && !imageRoot.mkdirs()) {
                     imageRoot.mkdirs()
                 }
