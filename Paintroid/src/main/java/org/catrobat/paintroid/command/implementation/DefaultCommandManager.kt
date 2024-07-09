@@ -19,21 +19,25 @@
 package org.catrobat.paintroid.command.implementation
 
 import android.graphics.Color
+import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.command.Command
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.command.CommandManager.CommandListener
 import org.catrobat.paintroid.common.CommonFactory
 import org.catrobat.paintroid.contract.LayerContracts
 import org.catrobat.paintroid.model.CommandManagerModel
-import java.util.Deque
+import org.catrobat.paintroid.tools.Tool
+import org.catrobat.paintroid.tools.implementation.DynamicLineTool
 import java.util.ArrayDeque
 import java.util.Collections
+import java.util.Deque
 
 const val FIVE = 5
 
 class DefaultCommandManager(
     private val commonFactory: CommonFactory,
-    private val layerModel: LayerContracts.Model
+    private val layerModel: LayerContracts.Model,
+    private val mainActivity: MainActivity?
 ) : CommandManager {
     private val commandListeners: MutableList<CommandListener> = ArrayList()
     private val redoCommandList: Deque<Command> = ArrayDeque()
@@ -88,7 +92,7 @@ class DefaultCommandManager(
         notifyCommandExecuted()
     }
 
-    private fun executeCommand(command: Command?) {
+    override fun executeCommand(command: Command?) {
         val currentLayer = layerModel.currentLayer
         val canvas = commonFactory.createCanvas()
         canvas.setBitmap(currentLayer?.bitmap)
@@ -107,12 +111,51 @@ class DefaultCommandManager(
     override fun undo() {
         if (isUndoAvailable) {
             val command = undoCommandList.pop()
+
+            if (command is DynamicPathCommand) {
+                val switchedTool = handleUndoForDynamicLineTool(command)
+                if (switchedTool) return
+            }
             redoCommandList.addFirst(command)
 
             handleUndo(command)
 
             notifyCommandExecuted()
         }
+    }
+
+    private fun handleUndoForDynamicLineTool(command: DynamicPathCommand): Boolean {
+        if (mainActivity == null) return false
+        val currentTool = mainActivity.defaultToolController.currentTool
+        if (currentTool is DynamicLineTool && currentTool.vertexStack.isNotEmpty()) {
+            currentTool.updateVertexStackAfterUndo()
+            currentTool.setToolPaint(command)
+            mainActivity.presenter.setBottomNavigationColor(command.paint.color)
+            return false
+        }
+        undoCommandList.addFirst(command)
+        val vertexStackCommands: Deque<DynamicPathCommand> = createDynamicPathsSequence()
+        command.setupVertexStackAfterUndo(mainActivity, vertexStackCommands)
+        return true
+    }
+
+    private fun createDynamicPathsSequence(): Deque<DynamicPathCommand> {
+        val vertexStackCommands: Deque<DynamicPathCommand> = ArrayDeque()
+        for (command in undoCommandList) {
+            if (command is DynamicPathCommand) {
+                vertexStackCommands.addFirst(command)
+                if (command.isSourcePath) {
+                    break
+                }
+            }
+        }
+        return vertexStackCommands
+    }
+
+    override fun getFirstRedoCommand(): Command? = redoCommandList.firstOrNull()
+
+    override fun clearRedoCommandList() {
+        redoCommandList.clear()
     }
 
     private fun handleUndo(command: Command, ignoreColorCommand: Boolean = false) {
@@ -232,6 +275,9 @@ class DefaultCommandManager(
     override fun redo() {
         if (isRedoAvailable) {
             val command = redoCommandList.pop()
+
+            handleRedoForDynamicLineTool(command)
+
             undoCommandList.addFirst(command)
 
             val currentLayer = layerModel.currentLayer
@@ -242,6 +288,31 @@ class DefaultCommandManager(
 
             command.run(canvas, layerModel)
             notifyCommandExecuted()
+        }
+    }
+
+    private fun handleRedoForDynamicLineTool(command: Command) {
+        if (mainActivity == null) return
+        var currentTool = mainActivity.defaultToolController.currentTool
+        if (command is DynamicPathCommand) {
+            switchToDynamicLineToolIfNeeded(currentTool, command)
+            currentTool = mainActivity.defaultToolController.currentTool
+            if (command.isSourcePath) {
+                (currentTool as DynamicLineTool).clear()
+            }
+            command.setupVertexStackAfterRedo(mainActivity, command)
+        } else if (currentTool is DynamicLineTool) {
+            currentTool.clear()
+        }
+    }
+
+    private fun switchToDynamicLineToolIfNeeded(currentTool: Tool?, command: DynamicPathCommand) {
+        if (mainActivity == null) return
+        if (currentTool !is DynamicLineTool) {
+            command.switchToDynamicLineTool(mainActivity)
+            while (mainActivity.defaultToolController.currentTool !is DynamicLineTool) {
+                // do nothing
+            }
         }
     }
 

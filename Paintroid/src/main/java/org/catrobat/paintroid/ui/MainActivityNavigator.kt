@@ -144,7 +144,9 @@ class MainActivityNavigator(
                 val command = commandFactory.createColorChangedCommand(toolReference.tool, mainActivity, color)
                 mainActivity.model.colorHistory.addColor(color)
 
-                if (toolReference.tool?.toolType != ToolType.CLIP) {
+                if (toolReference.tool?.toolType == ToolType.DYNAMICLINE) {
+                    mainActivity.commandManager.executeCommand(command)
+                } else if (toolReference.tool?.toolType != ToolType.CLIP) {
                     mainActivity.commandManager.addCommand(command)
                 } else {
                     mainActivity.commandManager.addCommandWithoutUndo(command)

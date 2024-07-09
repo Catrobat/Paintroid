@@ -91,6 +91,7 @@ import org.catrobat.paintroid.tools.implementation.DefaultToolReference
 import org.catrobat.paintroid.tools.implementation.DefaultWorkspace
 import org.catrobat.paintroid.tools.implementation.LineTool
 import org.catrobat.paintroid.tools.implementation.TransformTool
+import org.catrobat.paintroid.tools.implementation.DynamicLineTool
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 import org.catrobat.paintroid.ui.DrawingSurface
 import org.catrobat.paintroid.ui.KeyboardListener
@@ -427,7 +428,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         if (currentCommandManager == null) {
             val metrics = resources.displayMetrics
             val synchronousCommandManager: CommandManager =
-                DefaultCommandManager(CommonFactory(), layerModel)
+                DefaultCommandManager(CommonFactory(), layerModel, this)
             commandManager = AsyncCommandManager(synchronousCommandManager, layerModel)
             val initCommand =
                 commandFactory.createInitCommand(metrics.widthPixels, metrics.heightPixels)
@@ -630,10 +631,18 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             idlingResource.decrement()
         }
         topBar.plusButton.setOnClickListener {
-            val tool = toolReference.tool as LineTool
-            tool.onClickOnPlus()
+            if (toolReference.tool?.toolType == ToolType.LINE) {
+                val tool = toolReference.tool as LineTool
+                tool.onClickOnPlus()
+            }
+            if (toolReference.tool?.toolType == ToolType.DYNAMICLINE) {
+                val tool = toolReference.tool as DynamicLineTool
+                tool.onClickOnPlus()
+            }
         }
+
         LineTool.topBarViewHolder = topBar
+        DynamicLineTool.topBarViewHolder = topBar
     }
 
     private fun setBottomBarListeners(viewHolder: BottomBarViewHolder) {

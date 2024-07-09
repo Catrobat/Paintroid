@@ -273,6 +273,8 @@ interface MainActivityContracts {
 
         fun toolClicked(toolType: ToolType)
 
+        fun switchToDynamicLineTool()
+
         fun saveBeforeLoadImage()
 
         fun saveBeforeNewImage()

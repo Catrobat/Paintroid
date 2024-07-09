@@ -281,4 +281,24 @@
                 android:textColor="@color/pocketpaint_color_picker_white"/>
         </LinearLayout>
     </TableRow>
+
+    <TableRow
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp">
+
+        <LinearLayout
+            android:id="@+id/pocketpaint_tools_dynamic_line"
+            tools:ignore="UseCompoundDrawables"
+            style="@style/PocketPaintToolSelectionButton">
+            <ImageView
+                style="@style/PocketPaintToolSelectionButtonImageView"
+                android:src="@drawable/ic_pocketpaint_tool_dynamic_line"
+                android:contentDescription="@string/button_dynamic_line"
+                app:tint="@color/pocketpaint_color_picker_white"/>
+            <TextView
+                style="@style/PocketPaintToolSelectionButtonTextView"
+                android:text="@string/button_dynamic_line"
+                android:textColor="@color/pocketpaint_color_picker_white"/>
+        </LinearLayout>
+    </TableRow>
 </TableLayout>
