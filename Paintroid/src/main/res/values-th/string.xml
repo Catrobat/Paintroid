@@ -26,7 +26,7 @@
     <string name="button_undo">เลิกทำ</string>
     <string name="button_redo">ทำซ้ำ</string>
     <string name="button_info">ข้อมูล</string>
-    <string name="button_clipboard">Clipboard</string>
+    <string name="button_clipboard">คลิปบอร์ด</string>
     <string name="button_import_image">นำเข้ารูปภาพ</string>
     <string name="button_eraser">ยางลบ</string>
     <string name="button_transform">แปลง</string>
@@ -43,10 +43,10 @@
     <string name="button_checkmark">เครื่องหมายถูก</string>
     <string name="done">เสร็จสิ้น</string>
     <string name="gallery">คลังภาพ</string>
-    <string name="no_connection_sticker">Stickers not available, check your internet connection.</string>
-    <string name="clipboard_tool_paste">Paste</string>
+    <string name="no_connection_sticker">ไม่มีสติกเกอร์ โปรดตรวจสอบการเชื่อมต่ออินเทอร์เน็ตของคุณ</string>
+    <string name="clipboard_tool_paste">วาง</string>
     <string name="clipboard_tool_copy">คัด​ลอก</string>
-    <string name="clipboard_tool_cut">Cut</string>
+    <string name="clipboard_tool_cut">ตัด</string>
     <string name="stickers">สติกเกอร์</string>
     <string name="dialog_tools_title">เครื่องมือ</string>
     <string name="dialog_error_save_title">เกิดข้อผิดพลาดในการโหลด / บันทึกไฟล์</string>
@@ -63,7 +63,7 @@
     <string name="help_content_fill">แตะรูปภาพเพื่อเติมพื้นที่ ด้วยสีที่เลือก</string>
     <string name="help_content_cursor">วางเคอร์เซอร์ในตำแหน่งที่ต้องการวาด เคาะเพื่อเปิดใช้เคอร์เซอร์ เลื่อนนิ้วเพื่อวาด เคาะอีกครั้งเพื่อปิดการใช้งาน</string>
     <string name="help_content_transform">ใช้สำหรับแปลงภาพ</string>
-    <string name="help_content_clipboard">Move and resize the rectangle to cover the area you want to stamp. Tap on copy or cut to select the area. Move it, then tap on paste to stamp.</string>
+    <string name="help_content_clipboard">ย้ายและปรับขนาดสี่เหลี่ยมเพื่อให้ครอบคลุมพื้นที่ที่คุณต้องการประทับตรา แตะคัดลอกหรือตัดเพื่อเลือกพื้นที่ ย้ายแล้วแตะวางเพื่อประทับตรา</string>
     <string name="help_content_import_png">นำเข้ารูปภาพจากเกเลอร์รีไปยังเครื่องมือประทับตรา</string>
     <string name="help_content_line">วาดเส้นตรง</string>
     <string name="help_content_text">เขียนข้อความและจัดรูปแบบมัน ปรับขนาดกล่องข้อความหลังจากนั้น แตะเพื่อแทรกข้อความบนภาพ</string>
@@ -92,7 +92,7 @@
     <string name="menu_export">ส่งออก</string>
     <string name="menu_feedback">คำติชม</string>
     <string name="menu_advanced">ตั้งค่าขั้นสูง</string>
-    <string name="menu_zoom_settings">Zoom window settings</string>
+    <string name="menu_zoom_settings">การตั้งค่าหน้าต่างซูม</string>
     <string name="saved_to">บันทึกภาพไปที่ \n</string>
     <string name="saved">บันทึกภาพแล้ว</string>
     <string name="copy_to">คัดลอกและบันทึกไปที่ \n</string>
@@ -134,14 +134,14 @@
     <string name="transform_auto_crop_text">อัตโนมัติ</string>
     <string name="transform_set_center_text">ตั้งศูนย์</string>
     <string name="pixel">พิกเซล</string>
-    <string name="clipboard_tool_copy_hint">Tap on copy to copy content</string>
+    <string name="clipboard_tool_copy_hint">แตะที่คัดลอกเพื่อคัดลอกเนื้อหา</string>
     <string name="layers_title">เลเยอร์</string>
     <string name="layer_new">เลเยอร์ใหม่</string>
     <string name="layer_delete">ลบเลเยอร์</string>
     <string name="layer_too_many_layers">เลเยอร์มากเกินไป</string>
     <string name="layer_merged">รวมเลเยอร์</string>
     <string name="layer_background">เลเยอร์พื้นกลัง</string>
-    <string name="layer_preview">Layer preview</string>
+    <string name="layer_preview">การแสดงตัวอย่างเลเยอร์</string>
     <string name="dialog_loading_image_failed_title">ข้อผิดพลาดในการโหลดภาพ</string>
     <string name="dialog_loading_image_failed_text">ไม่ใช่รูปภาพที่ถูกต้อง</string>
     <string name="dialog_settings">การตั้งค่า</string>
@@ -149,7 +149,7 @@
     <string name="dialog_save_image_format">รูปแบบรูปภาพ</string>
     <string name="dialog_antialiasing">การลบรอยหยัก</string>
     <string name="dialog_smoothing">ปรับให้เรียบ</string>
-    <string name="dialog_zoom_window_enabled">Enabled</string>
+    <string name="dialog_zoom_window_enabled">เปิดการใช้งาน</string>
     <string name="dialog_save_jpg_option_quality">คุณภาพ:</string>
     <string name="pocketpaint_jpg_message_dialog">ใช้ <b> พื้นที่จัดเก็บน้อยที่สุด </b> <b> ไม่มีความโปร่งใส </b> เป็นที่จดจำ</string>
     <string name="pocketpaint_png_message_dialog">การบีบอัดแบบไม่สูญเสีย ความโปร่งใสจะถูกรักษาไว้</string>
@@ -202,5 +202,5 @@
     <string name="pocketpaint_tool_icon_description">ไอคอนเครื่องมือปัจจุบัน</string>
     <string name="dialog_scale_title">รูปภาพใหญ่เกินไปที่จะโหลด</string>
     <string name="dialog_scale_message">รูปภาพใหญ่เกินไปที่จะโหลด คลิกตกลงเพื่อย่อขนาดภาพโดยอัตโนมัติ</string>
-    <string name="zoom_window_description">Used to display a zoomed in part of the drawing surface</string>
+    <string name="zoom_window_description">ใช้เพื่อแสดงส่วนที่ซูมเข้าของพื้นผิวการวาดภาพ</string>
 </resources>
