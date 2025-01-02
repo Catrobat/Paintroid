@@ -18,7 +18,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -->
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
     <string name="pocketpaint_app_name">Pocket Paint</string>
     <string name="button_brush">Pinsel</string>
     <string name="button_cursor">Eingabezeiger</string>
@@ -26,7 +26,7 @@
     <string name="button_undo">Rückgängig</string>
     <string name="button_redo">Wiederholen</string>
     <string name="button_info">Information</string>
-    <string name="button_clipboard">Clipboard</string>
+    <string name="button_clipboard">Zwischenablage</string>
     <string name="button_import_image">Bild importieren</string>
     <string name="button_eraser">Radiergummi</string>
     <string name="button_transform">Transformieren</string>
@@ -37,8 +37,8 @@
     <string name="button_hand">Hand</string>
     <string name="button_watercolor">Wasserfarben</string>
     <string name="button_spray_can">Sprühdose</string>
-    <string name="button_smudge">Smudge</string>
-    <string name="button_clip">Clip area</string>
+    <string name="button_smudge">Verschmieren</string>
+    <string name="button_clip">Ausschneiden</string>
     <string name="button_apply">Anwenden</string>
     <string name="button_checkmark">Häkchen</string>
     <string name="done">Fertig</string>
@@ -203,4 +203,5 @@
     <string name="dialog_scale_title">Bild ist zu groß zum laden</string>
     <string name="dialog_scale_message">Das Bild ist zu groß zum Laden. Klicke auf OK, um das Bild automatisch zu verkleinern.</string>
     <string name="zoom_window_description">Used to display a zoomed in part of the drawing surface</string>
+    <string name="color_picker_history_recently_used" tools:ignore="MissingTranslation">zuletzt verwendet</string>
 </resources>
