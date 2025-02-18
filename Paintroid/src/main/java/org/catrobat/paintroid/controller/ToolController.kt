@@ -29,7 +29,7 @@ interface ToolController {
     val toolType: ToolType?
     val toolColor: Int?
     val currentTool: Tool?
-    val toolList: HashSet<ToolType>
+    val toolsThatUseCheckmark: HashSet<ToolType>
         get() = hashSetOf(
             ToolType.TEXT,
             ToolType.TRANSFORM,

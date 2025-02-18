@@ -95,6 +95,7 @@ import org.catrobat.paintroid.tools.Workspace
 import org.catrobat.paintroid.tools.implementation.BaseToolWithShape
 import org.catrobat.paintroid.tools.implementation.CLICK_TIMEOUT_MILLIS
 import org.catrobat.paintroid.tools.implementation.CONSTANT_3
+import org.catrobat.paintroid.tools.implementation.ClipboardTool
 import org.catrobat.paintroid.tools.implementation.ClippingTool
 import org.catrobat.paintroid.tools.implementation.LineTool
 import org.catrobat.paintroid.tools.implementation.DefaultToolPaint
@@ -813,7 +814,7 @@ open class MainActivityPresenter(
         if (toolController.toolType === toolType && toolController.hasToolOptionsView()) {
             toolController.toggleToolOptionsView()
         } else {
-            checkForImplicitToolApplication()
+            if (autoSave) checkForImplicitToolApplication()
             switchTool(toolType)
         }
         idlingResource.decrement()
@@ -822,7 +823,7 @@ open class MainActivityPresenter(
     private fun checkForImplicitToolApplication() {
         val currentTool = toolController.currentTool
         val currentToolType = currentTool?.toolType
-        if (toolController.toolList.contains(currentToolType)) {
+        if (toolController.toolsThatUseCheckmark.contains(currentToolType) || currentTool is ClipboardTool) {
             val toolToApply = currentTool as BaseToolWithShape
             toolToApply.onClickOnButton()
         } else if (currentToolType == ToolType.CLIP) (currentTool as ClippingTool).onClickOnButton()
@@ -833,7 +834,7 @@ open class MainActivityPresenter(
         view.hideKeyboard()
         downTimer = object :
             CountDownTimer(
-                if (toolController.toolList.contains(toolController.currentTool?.toolType)) CLICK_TIMEOUT_MILLIS else 0L,
+                if (toolController.toolsThatUseCheckmark.contains(toolController.currentTool?.toolType)) CLICK_TIMEOUT_MILLIS else 0L,
                 CLICK_TIMEOUT_MILLIS / CONSTANT_3
             ) {
             override fun onTick(millisUntilFinished: Long) {
@@ -1172,6 +1173,8 @@ open class MainActivityPresenter(
     }
 
     companion object {
+        var autoSave = false
+
         @JvmStatic
         fun getPathFromUri(context: Context, uri: Uri): String {
             if (DocumentsContract.isDocumentUri(context, uri)) {
