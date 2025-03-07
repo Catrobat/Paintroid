@@ -394,7 +394,7 @@ class TextToolIntegrationTest {
             testVariablesInIfStatementsWithSurfacseBitmap()
             testSurfacseBitmapAndPixelAmountAfter()
 
-            if (surfaceBitmapHeight != null && canvasPoint != null) {
+            if (surfaceBitmapHeight != null && canvasPoint != null && pixelsDrawingSurface != null) {
                 layerModel?.currentLayer?.bitmap?.getPixels(
                     pixelsDrawingSurface, 0, 1,
                     canvasPoint.x.toInt(), 0, 1, surfaceBitmapHeight
@@ -412,7 +412,7 @@ class TextToolIntegrationTest {
     }
 
     private fun testSurfacseBitmapAndPixelAmountAfter() {
-        if (surfaceBitmapHeight != null && canvasPoint != null) {
+        if (surfaceBitmapHeight != null && canvasPoint != null && pixelsDrawingSurface != null) {
             layerModel?.currentLayer?.bitmap?.getPixels(
                 pixelsDrawingSurface, 0, 1,
                 canvasPoint.x.toInt(), 0, 1, surfaceBitmapHeight
@@ -452,7 +452,7 @@ class TextToolIntegrationTest {
 
         layerModel?.currentLayer?.bitmap?.eraseColor(Color.TRANSPARENT)
         onTopBarView().performClickCheckmark()
-        if (surfaceBitmapHeight != null && canvasPoint != null) {
+        if (surfaceBitmapHeight != null && canvasPoint != null && pixelsDrawingSurface != null) {
             layerModel?.currentLayer?.bitmap?.getPixels(
                 pixelsDrawingSurface, 0, 1,
                 canvasPoint.x.toInt(), 0, 1, surfaceBitmapHeight
@@ -461,7 +461,7 @@ class TextToolIntegrationTest {
     }
 
     private fun testVariablesInIfStatementsWithSurfacseBitmap() {
-        if (surfaceBitmapHeight != null && canvasPoint != null) {
+        if (surfaceBitmapHeight != null && canvasPoint != null && pixelsDrawingSurface != null) {
             layerModel?.currentLayer?.bitmap?.getPixels(
                 pixelsDrawingSurface, 0, 1,
                 canvasPoint.x.toInt(), 0, 1, surfaceBitmapHeight
@@ -543,7 +543,7 @@ class TextToolIntegrationTest {
         val surfaceBitmapWidth = layerModel?.width
         val pixelsDrawingSurface = surfaceBitmapWidth?.let { IntArray(it) }
 
-        if (surfaceBitmapWidth != null && canvasPoint != null) {
+        if (surfaceBitmapWidth != null && canvasPoint != null && pixelsDrawingSurface != null) {
             layerModel?.currentLayer?.bitmap?.getPixels(
                 pixelsDrawingSurface, 0, surfaceBitmapWidth, 0,
                 canvasPoint.y.toInt(), surfaceBitmapWidth, 1
@@ -555,7 +555,7 @@ class TextToolIntegrationTest {
             assert(pixelAmount > 0)
         }
         onTopBarView().performUndo()
-        if (surfaceBitmapWidth != null && canvasPoint != null) {
+        if (surfaceBitmapWidth != null && canvasPoint != null && pixelsDrawingSurface != null) {
             layerModel?.currentLayer?.bitmap?.getPixels(
                 pixelsDrawingSurface, 0, surfaceBitmapWidth, 0,
                 canvasPoint.y.toInt(), surfaceBitmapWidth, 1
@@ -568,7 +568,7 @@ class TextToolIntegrationTest {
         )
         onTopBarView().performRedo()
 
-        if (surfaceBitmapWidth != null && canvasPoint != null) {
+        if (surfaceBitmapWidth != null && canvasPoint != null && pixelsDrawingSurface != null) {
             layerModel?.currentLayer?.bitmap?.getPixels(
                 pixelsDrawingSurface, 0, surfaceBitmapWidth, 0,
                 canvasPoint.y.toInt(), surfaceBitmapWidth, 1
@@ -599,7 +599,7 @@ class TextToolIntegrationTest {
         val surfaceBitmapWidth = layerModel?.width
         val pixelsDrawingSurface = surfaceBitmapWidth?.let { IntArray(it) }
 
-        if (surfaceBitmapWidth != null && canvasPoint != null) {
+        if (surfaceBitmapWidth != null && canvasPoint != null && pixelsDrawingSurface != null) {
             layerModel?.currentLayer?.bitmap?.getPixels(
                 pixelsDrawingSurface, 0, surfaceBitmapWidth, 0,
                 canvasPoint.y.toInt(), surfaceBitmapWidth, 1
@@ -617,7 +617,7 @@ class TextToolIntegrationTest {
 
         Assert.assertEquals(Color.BLACK.toLong(), selectedColor?.toLong())
         onTopBarView().performClickCheckmark()
-        if (surfaceBitmapWidth != null && canvasPoint != null) {
+        if (surfaceBitmapWidth != null && canvasPoint != null && pixelsDrawingSurface != null) {
             layerModel?.currentLayer?.bitmap?.getPixels(
                 pixelsDrawingSurface, 0, surfaceBitmapWidth, 0,
                 canvasPoint.y.toInt(), surfaceBitmapWidth, 1
@@ -665,10 +665,12 @@ class TextToolIntegrationTest {
 
         if (surfaceBitmapWidth != null) {
             textTool?.toolPosition?.y?.let {
-                layerModel?.currentLayer?.bitmap?.getPixels(
-                    pixelsDrawingSurface, 0, surfaceBitmapWidth, 0,
-                    it.toInt(), surfaceBitmapWidth, 1
-                )
+                if (pixelsDrawingSurface != null) {
+                    layerModel?.currentLayer?.bitmap?.getPixels(
+                        pixelsDrawingSurface, 0, surfaceBitmapWidth, 0,
+                        it.toInt(), surfaceBitmapWidth, 1
+                    )
+                }
             }
         }
 
@@ -688,10 +690,12 @@ class TextToolIntegrationTest {
 
         if (surfaceBitmapWidth != null) {
             textTool?.toolPosition?.y?.let {
-                layerModel?.currentLayer?.bitmap?.getPixels(
-                    pixelsDrawingSurface, 0, surfaceBitmapWidth, 0,
-                    it.toInt(), surfaceBitmapWidth, 1
-                )
+                if (pixelsDrawingSurface != null) {
+                    layerModel?.currentLayer?.bitmap?.getPixels(
+                        pixelsDrawingSurface, 0, surfaceBitmapWidth, 0,
+                        it.toInt(), surfaceBitmapWidth, 1
+                    )
+                }
             }
         }
 

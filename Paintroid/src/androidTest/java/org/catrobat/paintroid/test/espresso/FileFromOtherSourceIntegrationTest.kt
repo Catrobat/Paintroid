@@ -124,16 +124,13 @@ class FileFromOtherSourceIntegrationTest {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             contentValues.put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
         }
-        val imageUri =
-            resolver?.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+        val imageUri = resolver?.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
         try {
-            val requireNonNull = Objects.requireNonNull(imageUri)
-            val fos = requireNonNull.let {
-                it?.let { it1 -> resolver?.openOutputStream(it1) }
+            val fos = imageUri?.let {
+                resolver?.openOutputStream(it)
             }
-            Assert.assertTrue(bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos))
-            assert(fos != null)
-            fos!!.close()
+            Assert.assertTrue(bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos!!))
+            fos.close()
         } catch (e: IOException) {
             throw AssertionError("Picture file could not be created.", e)
         }

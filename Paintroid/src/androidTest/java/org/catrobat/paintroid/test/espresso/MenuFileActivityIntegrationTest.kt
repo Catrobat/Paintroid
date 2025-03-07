@@ -24,6 +24,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.net.Uri
 import android.os.Build
@@ -75,6 +76,7 @@ import org.hamcrest.core.IsNot
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNotSame
 import org.junit.Assert.assertTrue
@@ -116,9 +118,9 @@ class MenuFileActivityIntegrationTest {
 
     @After
     fun tearDown() {
-        for (file in deletionFileList) {
-            if (file != null && file.exists()) {
-                assertTrue(file.delete())
+        for (uri in deletionFileList) {
+            if (uri != null && uri.exists()) {
+                assertTrue(uri.delete())
             }
         }
         IdlingRegistry.getInstance().unregister(idlingResource)
@@ -126,16 +128,18 @@ class MenuFileActivityIntegrationTest {
 
     @Test
     fun testNewEmptyDrawingWithSave() {
+        FileIO.fileType = FileIO.FileType.PNG
         onDrawingSurfaceView().perform(touchAt(MIDDLE))
         onDrawingSurfaceView().checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
         onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_new_image)).perform(click())
         onView(withText(R.string.save_button_text)).perform(click())
-        onView(isRoot()).perform(waitFor(100))
+        val fileName = "test987654"
         onView(withId(R.id.pocketpaint_image_name_save_text))
-            .perform(replaceText("test987654"))
+            .perform(replaceText(fileName))
         onView(withText(R.string.save_button_text)).perform(click())
-        onView(isRoot()).perform(waitFor(100))
+        onView(isRoot()).perform(waitFor(500))
+        addFileToDeletionFileList(fileName, "png", Environment.DIRECTORY_PICTURES)
         onDrawingSurfaceView().checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE)
     }
 
@@ -239,7 +243,6 @@ class MenuFileActivityIntegrationTest {
         onView(withId(R.id.pocketpaint_image_name_save_text))
             .perform(replaceText("test98765"))
         onView(withText(R.string.save_button_text)).perform(click())
-        onView(isRoot()).perform(waitFor(100))
         assertNotNull(activity.model.savedPictureUri)
         addUriToDeletionFileList(activity.model.savedPictureUri)
         assertTrue(activity.model.isSaved)
@@ -268,12 +271,14 @@ class MenuFileActivityIntegrationTest {
             .edit()
             .clear()
             .commit()
+
         onDrawingSurfaceView().perform(touchAt(MIDDLE))
         onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_save_image)).perform(click())
         onView(withId(R.id.pocketpaint_image_name_save_text))
             .perform(replaceText("testSaveCopy"))
         onView(withText(R.string.save_button_text)).perform(click())
+
         assertNotNull(activity.model.savedPictureUri)
         if (!activity.model.isOpenedFromCatroid) {
             assertNotSame(
@@ -281,8 +286,16 @@ class MenuFileActivityIntegrationTest {
                 MainActivityPresenter.getPathFromUri(activity, activity.model.savedPictureUri!!)
             )
         }
+
         addUriToDeletionFileList(activity.model.savedPictureUri)
-        val oldFile = File(activity.model.savedPictureUri.toString())
+        val savedImageFile =
+            activity.model.savedPictureUri?.let {
+                MainActivityPresenter.getPathFromUri(
+                    activity,
+                    it
+                )
+            }
+                ?.let { File(it) }
         onView(withText(R.string.pocketpaint_no)).perform(click())
         onView(withText(R.string.pocketpaint_ok)).perform(click())
         onDrawingSurfaceView().perform(touchAt(HALFWAY_BOTTOM_MIDDLE))
@@ -291,17 +304,13 @@ class MenuFileActivityIntegrationTest {
         onView(withId(R.id.pocketpaint_image_name_save_text))
             .perform(replaceText("copy1"))
         onView(withText(R.string.save_button_text)).perform(click())
-        onView(isRoot()).perform(waitFor(100))
-        val newFile = File(activity.model.savedPictureUri.toString())
-        assertNotSame("Changes to saved", oldFile, newFile)
-        assertNotNull(activity.model.savedPictureUri)
-        if (!activity.model.isOpenedFromCatroid) {
-            assertNotSame(
-                "null",
-                MainActivityPresenter.getPathFromUri(activity, activity.model.savedPictureUri!!)
-            )
-        }
-        addUriToDeletionFileList(activity.model.savedPictureUri)
+
+        val savedCopyFile = createFileFromFileName("copy1", "png", Environment.DIRECTORY_PICTURES)
+        val bitmap1 = BitmapFactory.decodeFile(savedImageFile?.absolutePath)
+        val bitmap2 = BitmapFactory.decodeFile(savedCopyFile.absolutePath)
+        assertNotEquals("Bitmaps should not be the same", bitmap1, bitmap2)
+
+        addFileToDeletionFileList("copy1", "png", Environment.DIRECTORY_PICTURES)
     }
 
     @Test
@@ -328,13 +337,12 @@ class MenuFileActivityIntegrationTest {
         onView(withId(R.id.pocketpaint_image_name_save_text))
             .perform(replaceText("12345test12345"))
         onView(withText(R.string.save_button_text)).perform(click())
-        onView(isRoot()).perform(waitFor(100))
+        onView(isRoot()).perform(waitFor(300))
         assertNotNull(activity.model.savedPictureUri)
         addUriToDeletionFileList(activity.model.savedPictureUri)
         onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_save_image)).perform(click())
         onView(withText(R.string.save_button_text)).perform(click())
-        onView(isRoot()).perform(waitFor(100))
         onView(withText(R.string.overwrite_button_text)).check(matches(isDisplayed()))
     }
 
@@ -351,7 +359,6 @@ class MenuFileActivityIntegrationTest {
         onDrawingSurfaceView().perform(touchAt(MIDDLE))
         onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_save_image)).perform(click())
-        onView(isRoot()).perform(waitFor(200))
         val newImageNumber = launchActivityRule.activity.presenter.imageNumber
         assertEquals((imageNumber + 1).toLong(), newImageNumber.toLong())
     }
@@ -365,7 +372,6 @@ class MenuFileActivityIntegrationTest {
         onView(withId(R.id.pocketpaint_image_name_save_text))
             .perform(replaceText("test9876"))
         onView(withText(R.string.save_button_text)).perform(click())
-        onView(isRoot()).perform(waitFor(100))
         assertNotNull(activity.model.savedPictureUri)
         addUriToDeletionFileList(activity.model.savedPictureUri)
         val newImageNumber = launchActivityRule.activity.presenter.imageNumber
@@ -386,7 +392,6 @@ class MenuFileActivityIntegrationTest {
         onView(withId(R.id.pocketpaint_image_name_save_text))
             .perform(replaceText(defaultFileName))
         onView(withText(R.string.save_button_text)).perform(click())
-        onView(isRoot()).perform(waitFor(100))
         assertNotNull(activity.model.savedPictureUri)
         addUriToDeletionFileList(activity.model.savedPictureUri)
         val oldFile = File(activity.model.savedPictureUri.toString())
@@ -398,7 +403,6 @@ class MenuFileActivityIntegrationTest {
         onView(withId(R.id.pocketpaint_image_name_save_text))
             .perform(replaceText(defaultFileName))
         onView(withText(R.string.save_button_text)).perform(click())
-        onView(isRoot()).perform(waitFor(100))
         assertNotNull(activity.model.savedPictureUri)
         addUriToDeletionFileList(activity.model.savedPictureUri)
         val newFile = File(activity.model.savedPictureUri.toString())
@@ -450,7 +454,6 @@ class MenuFileActivityIntegrationTest {
         onData(allOf(`is`(instanceOf<Any>(String::class.java)), `is`("png")))
             .inRoot(RootMatchers.isPlatformPopup()).perform(click())
         onView(withText(R.string.save_button_text)).perform(click())
-        onView(isRoot()).perform(waitFor(100))
         assertNotNull(activity.model.savedPictureUri)
         addUriToDeletionFileList(activity.model.savedPictureUri)
         onTopBarView().performOpenMoreOptions()
@@ -472,6 +475,7 @@ class MenuFileActivityIntegrationTest {
             .inRoot(RootMatchers.isPlatformPopup()).perform(click())
         onView(withText(R.string.save_button_text)).perform(click())
         onView(isRoot()).perform(waitFor(100))
+        addFileToDeletionFileList("image$imageNumber", "png", Environment.DIRECTORY_PICTURES)
         onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_save_copy)).perform(click())
         imageNumber = launchActivityRule.activity.presenter.imageNumber
@@ -498,14 +502,14 @@ class MenuFileActivityIntegrationTest {
         val imageUri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
         try {
             val fos = imageUri?.let { resolver.openOutputStream(it) }
-            assertTrue(bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos))
+            fos?.let { bitmap.compress(Bitmap.CompressFormat.JPEG, 100, it) }
+                ?.let { assertTrue(it) }
             assert(fos != null)
             fos?.close()
         } catch (e: IOException) {
             throw AssertionError("Picture file could not be created.", e)
         }
-        val imageFile = File(imageUri?.path, "testfile.jpg")
-        deletionFileList.add(imageFile)
+        addUriToDeletionFileList(imageUri)
         return imageUri
     }
 
@@ -534,15 +538,14 @@ class MenuFileActivityIntegrationTest {
         onView(withText(R.string.menu_save_image)).perform(click())
         onView(withText(R.string.save_button_text)).perform(click())
         onView(isRoot()).perform(waitFor(200))
+        addUriToDeletionFileList(activity.model.savedPictureUri)
         val uri = activity.model.savedPictureUri
         onDrawingSurfaceView().perform(touchAt(MIDDLE))
         onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_save_image)).perform(click())
         onView(withText(R.string.save_button_text)).perform(click())
-        onView(isRoot()).perform(waitFor(100))
         onView(withText(R.string.overwrite_button_text)).check(matches(isDisplayed()))
         onView(withText(R.string.overwrite_button_text)).perform(click())
-        onView(isRoot()).perform(waitFor(500))
 
         val oldFileName = uri?.path?.let { File(it).name }
         val newFileName = activity.model.savedPictureUri?.path?.let { File(it).name }
@@ -561,12 +564,14 @@ class MenuFileActivityIntegrationTest {
         onView(withText(R.string.menu_save_image)).perform(click())
         onView(withText(R.string.save_button_text)).perform(click())
         onView(isRoot()).perform(waitFor(200))
+        addUriToDeletionFileList(activity.model.savedPictureUri)
         val uri = activity.model.savedPictureUri
         onDrawingSurfaceView().perform(touchAt(MIDDLE))
         onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_save_image)).perform(click())
         onView(withText(R.string.save_button_text)).perform(click())
         onView(isRoot()).perform(waitFor(100))
+        addUriToDeletionFileList(activity.model.savedPictureUri)
         onView(withText(R.string.overwrite_button_text)).check(matches(isDisplayed()))
         onView(withText(R.string.overwrite_button_text)).perform(click())
         onView(isRoot()).perform(waitFor(500))
@@ -645,21 +650,35 @@ class MenuFileActivityIntegrationTest {
         assertEquals(oldFileName, newFileName)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            addFileToDeletionFileList(name, FileIO.fileType.value)
+            addFileToDeletionFileList(name, FileIO.fileType.value, Environment.DIRECTORY_DOWNLOADS)
         } else {
             addUriToDeletionFileList(activity.model.savedPictureUri)
         }
     }
 
     private fun addUriToDeletionFileList(uri: Uri?) {
-        uri?.path?.let {
-            deletionFileList.add(File(it))
+        uri?.let {
+            val path = MainActivityPresenter.getPathFromUri(activity, it)
+            deletionFileList.add(File(path))
         }
     }
 
-    private fun addFileToDeletionFileList(fileName: String?, extension: String?) {
-        val dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-        val file = File(dir, "$fileName.$extension")
+    private fun addFileToDeletionFileList(
+        fileName: String?,
+        extension: String?,
+        directory: String
+    ) {
+        val file = createFileFromFileName(fileName, extension, directory)
         deletionFileList.add(file)
+    }
+
+    private fun createFileFromFileName(
+        fileName: String?,
+        extension: String?,
+        directory: String
+    ): File {
+        val dir = Environment.getExternalStoragePublicDirectory(directory)
+        val file = File(dir, "$fileName.$extension")
+        return file
     }
 }
