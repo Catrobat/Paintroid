@@ -49,7 +49,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN apt-get update
 RUN apt-get install -y python2
 RUN apt-get install -y --no-install-recommends \
-        openjdk-11-jdk-headless \
+        openjdk-17-jdk-headless \
         #ruby-full \
         rubygems \
         ruby-dev \
