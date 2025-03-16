@@ -4,7 +4,7 @@ FROM debian:bullseye
 # Adapt the paramters below to change the dependencies.
 #
 
-ARG ANDROID_API_LEVEL=28
+ARG ANDROID_API_LEVEL=34
 ARG ANDROID_BUILD_TOOLS_LEVEL=30.0.3
 ARG ANDROID_NDK_VERSION=21.1.6352462
 ARG ANDROID_CLI_TOOLS_URL="https://dl.google.com/android/repository/commandlinetools-linux-8512546_latest.zip"
