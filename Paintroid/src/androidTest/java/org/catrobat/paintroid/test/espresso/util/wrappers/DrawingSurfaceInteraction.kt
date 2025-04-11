@@ -18,6 +18,7 @@
  */
 package org.catrobat.paintroid.test.espresso.util.wrappers
 
+import android.graphics.Color
 import android.view.View
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
@@ -57,6 +58,24 @@ class DrawingSurfaceInteraction private constructor() :
                 val actualColor =
                     currentBitmap!!.getPixel(coordinates[0].toInt(), coordinates[1].toInt())
                 return expectedColor == actualColor
+            }
+        }))
+        return this
+    }
+
+    fun checkPixelColorIsNotTransparent(coordinateProvider: CoordinatesProvider): DrawingSurfaceInteraction {
+        check(ViewAssertions.matches(object : TypeSafeMatcher<View?>() {
+            override fun describeTo(description: Description) {
+                description.appendText("Color at coordinates is not transparent ")
+            }
+
+            override fun matchesSafely(view: View?): Boolean {
+                val activity = MainActivityHelper.getMainActivityFromView(view!!)
+                val currentBitmap = activity.layerModel.getBitmapOfAllLayers()
+                val coordinates = coordinateProvider.calculateCoordinates(view)
+                val actualColor =
+                        currentBitmap!!.getPixel(coordinates[0].toInt(), coordinates[1].toInt())
+                return Color.TRANSPARENT != actualColor
             }
         }))
         return this
