@@ -118,10 +118,9 @@ class OraFileIntentTest {
         }
         val imageUri = resolver!!.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
         try {
-            val fos = Objects.requireNonNull(imageUri)?.let { resolver!!.openOutputStream(it) }
-            Assert.assertTrue(bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos))
-            assert(fos != null)
-            fos!!.close()
+            val fos = imageUri?.let { resolver?.openOutputStream(it) }
+            Assert.assertTrue(bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos!!))
+            fos.close()
         } catch (e: IOException) {
             throw AssertionError("Picture file could not be created.", e)
         }

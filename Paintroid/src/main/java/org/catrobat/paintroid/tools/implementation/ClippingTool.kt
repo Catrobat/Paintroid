@@ -96,7 +96,11 @@ class ClippingTool(
 
     fun copyBitmapOfCurrentLayer() {
         if (workspace.bitmapOfCurrentLayer != null) {
-            newBitmap = workspace.bitmapOfCurrentLayer?.copy(workspace.bitmapOfCurrentLayer?.config, true)
+            newBitmap = workspace.bitmapOfCurrentLayer?.config?.let {
+                workspace.bitmapOfCurrentLayer?.copy(
+                    it, true
+                )
+            }
         }
     }
 

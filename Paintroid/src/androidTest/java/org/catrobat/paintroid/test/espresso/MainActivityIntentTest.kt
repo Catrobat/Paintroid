@@ -31,7 +31,6 @@ import org.junit.runner.RunWith
 import org.mockito.MockitoAnnotations
 import java.io.File
 import java.io.IOException
-import java.util.Objects
 
 @RunWith(AndroidJUnit4::class)
 class MainActivityIntentTest {
@@ -78,7 +77,7 @@ class MainActivityIntentTest {
         Intents.release()
     }
 
-    private fun createTestImageFile(): Uri? {
+    private fun createTestImageFile(): Uri {
         val bitmap = Bitmap.createBitmap(400, 400, Bitmap.Config.ARGB_8888)
         val contentValues = ContentValues()
         contentValues.put(MediaStore.Images.Media.DISPLAY_NAME, "testfile.jpeg")
@@ -89,15 +88,13 @@ class MainActivityIntentTest {
         val imageUri =
             contentResolver?.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
         try {
-            val fos = Objects.requireNonNull(imageUri)
-                ?.let { contentResolver?.openOutputStream(it) }
-            Assert.assertTrue(bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos))
-            assert(fos != null)
-            fos?.close()
+            val fos = imageUri?.let { contentResolver?.openOutputStream(it) }
+            Assert.assertTrue(bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos!!))
+            fos.close()
         } catch (e: IOException) {
             throw AssertionError("Picture file could not be created.", e)
         }
-        val imageFile = File(imageUri?.path, "testfile.jpeg")
+        val imageFile = File(imageUri.path, "testfile.jpeg")
         deletionFileList.add(imageFile)
         return imageUri
     }

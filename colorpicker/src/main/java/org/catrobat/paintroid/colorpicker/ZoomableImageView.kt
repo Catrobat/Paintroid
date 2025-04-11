@@ -361,7 +361,7 @@ class ZoomableImageView :
     override fun onDown(motionEvent: MotionEvent) = false
     override fun onShowPress(motionEvent: MotionEvent) = Unit
     override fun onSingleTapUp(motionEvent: MotionEvent) = true
-    override fun onScroll(mE: MotionEvent, mE1: MotionEvent, v: Float, v1: Float) = false
+    override fun onScroll(e1: MotionEvent?, mE: MotionEvent, v: Float, v1: Float): Boolean = false
     override fun onLongPress(motionEvent: MotionEvent) = Unit
-    override fun onFling(mE: MotionEvent, mE1: MotionEvent, v: Float, v1: Float) = false
+    override fun onFling(e1: MotionEvent?, mE: MotionEvent, v: Float, v1: Float): Boolean = false
 }

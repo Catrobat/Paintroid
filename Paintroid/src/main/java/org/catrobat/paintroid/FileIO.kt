@@ -121,7 +121,7 @@ object FileIO {
             canvas.drawBitmap(currentBitmap, 0f, 0f, null)
             currentBitmap = newBitmap
         }
-        if (currentBitmap != null && !currentBitmap.compress(
+        if (outputStream == null || !currentBitmap.compress(
                 compressFormat,
                 compressQuality,
                 outputStream
