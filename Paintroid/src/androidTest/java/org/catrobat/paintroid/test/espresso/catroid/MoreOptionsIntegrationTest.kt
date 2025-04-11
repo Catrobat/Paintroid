@@ -72,13 +72,10 @@ class MoreOptionsIntegrationTest {
         OptionsMenuViewInteraction.onOptionsMenu()
             .checkItemExists(R.string.menu_load_image)
             .checkItemExists(R.string.menu_hide_menu)
-            .checkItemExists(R.string.help_title)
-            .checkItemExists(R.string.pocketpaint_menu_about)
             .checkItemExists(R.string.share_image_menu)
             .checkItemDoesNotExist(R.string.menu_save_image)
             .checkItemDoesNotExist(R.string.menu_save_copy)
             .checkItemDoesNotExist(R.string.menu_new_image)
-            .checkItemDoesNotExist(R.string.menu_rate_us)
             .checkItemExists(R.string.menu_discard_image)
             .checkItemExists(R.string.menu_export)
     }

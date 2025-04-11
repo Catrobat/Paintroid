@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <include
+        android:id="@+id/pocketpaint_layout_landing_page_top_bar"
+        layout="@layout/pocketpaint_layout_landing_page_top_bar"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/pocketpaint_fab_new_image"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        app:fabCustomSize="60dp"
+        android:backgroundTint="@color/pocketpaint_color_picker_orange3"
+        android:elevation="5dp"
+        android:layout_margin="15dp"
+        android:src="@drawable/ic_pocketpaint_plus_enabled"
+        android:contentDescription="@string/pocketpaint_landing_page_fab_new_image"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

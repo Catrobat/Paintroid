@@ -18,15 +18,10 @@
  */
 package org.catrobat.paintroid.test.espresso
 
-import android.app.Activity
-import android.app.Instrumentation.ActivityResult
 import android.content.Context
-import android.content.Intent
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions
-import androidx.test.espresso.intent.Intents
-import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
@@ -98,27 +93,13 @@ class MoreOptionsIntegrationTest {
         OptionsMenuViewInteraction.onOptionsMenu()
             .checkItemExists(R.string.menu_load_image)
             .checkItemExists(R.string.menu_hide_menu)
-            .checkItemExists(R.string.help_title)
-            .checkItemExists(R.string.pocketpaint_menu_about)
-            .checkItemExists(R.string.menu_rate_us)
             .checkItemExists(R.string.menu_save_image)
             .checkItemExists(R.string.menu_save_copy)
             .checkItemExists(R.string.menu_new_image)
-            .checkItemExists(R.string.menu_feedback)
             .checkItemExists(R.string.share_image_menu)
             .checkItemExists(R.string.menu_advanced)
             .checkItemDoesNotExist(R.string.menu_discard_image)
             .checkItemDoesNotExist(R.string.menu_export)
-    }
-
-    @Test
-    fun testMoreOptionsItemHelpClick() {
-        Espresso.onView(withText(R.string.help_title)).perform(ViewActions.click())
-    }
-
-    @Test
-    fun testMoreOptionsItemAboutClick() {
-        Espresso.onView(withText(R.string.pocketpaint_about_title)).perform(ViewActions.click())
     }
 
     @Test
@@ -143,17 +124,6 @@ class MoreOptionsIntegrationTest {
     @Test
     fun testMoreOptionsItemMenuCopyClick() {
         Espresso.onView(withText(R.string.menu_save_copy)).perform(ViewActions.click())
-    }
-
-    @Test
-    fun testMoreOptionsFeedbackClick() {
-        val intent = Intent()
-        Intents.init()
-        val intentResult = ActivityResult(Activity.RESULT_OK, intent)
-        Intents.intending(IntentMatchers.anyIntent()).respondWith(intentResult)
-        Espresso.onView(withText(R.string.menu_feedback)).perform(ViewActions.click())
-        Intents.intended(IntentMatchers.hasAction(Intent.ACTION_SENDTO))
-        Intents.release()
     }
 
     @Test

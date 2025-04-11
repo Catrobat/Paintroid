@@ -52,7 +52,6 @@ import org.catrobat.paintroid.common.PERMISSION_EXTERNAL_STORAGE_SAVE_COPY
 import org.catrobat.paintroid.common.PERMISSION_REQUEST_CODE_REPLACE_PICTURE
 import org.catrobat.paintroid.common.REQUEST_CODE_INTRO
 import org.catrobat.paintroid.common.REQUEST_CODE_LOAD_PICTURE
-import org.catrobat.paintroid.common.RESULT_INTRO_MW_NOT_SUPPORTED
 import org.catrobat.paintroid.common.SAVE_IMAGE_DEFAULT
 import org.catrobat.paintroid.common.SAVE_IMAGE_FINISH
 import org.catrobat.paintroid.common.SAVE_IMAGE_LOAD_NEW
@@ -349,21 +348,6 @@ class MainActivityPresenterTest {
     }
 
     @Test
-    fun testShowHelpClickedThenStartWelcomeActivity() {
-        presenter!!.showHelpClicked()
-        Mockito.verify<MainActivityContracts.Navigator?>(navigator)
-            .startWelcomeActivity(REQUEST_CODE_INTRO)
-        Mockito.verifyNoMoreInteractions(navigator)
-    }
-
-    @Test
-    fun testShowAboutClickedThenShowAboutDialog() {
-        presenter!!.showAboutClicked()
-        Mockito.verify(navigator)?.showAboutDialog()
-        Mockito.verifyNoMoreInteractions(navigator)
-    }
-
-    @Test
     fun testOnNewImageThenResetCommandManager() {
         val metrics = Mockito.mock(DisplayMetrics::class.java)
         Mockito.`when`(view!!.displayMetrics).thenReturn(metrics)
@@ -452,17 +436,6 @@ class MainActivityPresenterTest {
         Mockito.`when`(view!!.displayMetrics).thenReturn(metrics)
         val intent = Mockito.mock(Intent::class.java)
         presenter!!.handleActivityResult(REQUEST_CODE_INTRO, Activity.RESULT_OK, intent)
-        Mockito.verifyZeroInteractions(interactor, navigator)
-    }
-
-    @Test
-    fun testHandleActivityResultWhenRequestIntroAndResultSplitScreenNotSupportedThenShowToast() {
-        val metrics = Mockito.mock(DisplayMetrics::class.java)
-        Mockito.`when`(view!!.displayMetrics).thenReturn(metrics)
-        val intent = Mockito.mock(Intent::class.java)
-        presenter!!.handleActivityResult(REQUEST_CODE_INTRO, RESULT_INTRO_MW_NOT_SUPPORTED, intent)
-        Mockito.verify(navigator)
-            ?.showToast(R.string.pocketpaint_intro_split_screen_not_supported, Toast.LENGTH_LONG)
         Mockito.verifyZeroInteractions(interactor, navigator)
     }
 
