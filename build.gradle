@@ -27,8 +27,8 @@ buildscript {
         maven { url 'https://jitpack.io' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.2.1'
-        classpath 'com.hiya:jacoco-android:0.2'
+        classpath 'com.android.tools.build:gradle:8.9.1'
+        classpath("com.mxalbert.gradle:jacoco-android:0.2.0")
         classpath 'com.github.Catrobat:Gradle:1.6.2'
         classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:3.1.0'
         classpath "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.20.0"

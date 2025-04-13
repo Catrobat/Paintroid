@@ -27,8 +27,6 @@ android {
         minSdkVersion rootProject.ext.androidMinSdkVersion
         targetSdkVersion rootProject.ext.androidTargetSdkVersion
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
-        versionCode rootProject.ext.androidVersionCode
-        versionName rootProject.ext.androidVersionName
     }
 
     compileOptions {
@@ -48,6 +46,7 @@ android {
         signedRelease {
         }
     }
+    namespace 'org.catrobat.paintroid.colorpicker'
 }
 
 dependencies {
