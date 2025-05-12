@@ -1,5 +1,16 @@
 #!groovy
 
+class DockerParameters {
+    // 'docker build' would normally copy the whole build-dir to the container, changing the
+    // docker build directory avoids that overhead
+    def dir = 'docker'
+    def args = '--device /dev/kvm:/dev/kvm -v /var/local/container_shared/gradle_cache/$EXECUTOR_NUMBER:/home/user/.gradle -m=6.5G'
+    def label = 'LimitedEmulator'
+    def image = 'floriankanduth/paintroid_java17:latest'
+}
+
+def dockerParameters = new DockerParameters()
+
 def reports = 'Paintroid/build/reports'
 
 // place the cobertura xml relative to the source, so that the source can be found
@@ -23,6 +34,11 @@ def useDebugLabelParameter(defaultLabel) {
 }
 
 pipeline {
+     environment {
+        ANDROID_VERSION = 33
+        ADB_INSTALL_TIMEOUT = 60
+    }
+
     parameters {
         string name: 'DEBUG_LABEL', defaultValue: '', description: 'For debugging when entered will be used as label to decide on which slaves the jobs will run.'
         booleanParam name: 'BUILD_WITH_CATROID', defaultValue: false, description: 'When checked then the current Paintroid build will be built with the current develop branch of Catroid'
@@ -31,9 +47,9 @@ pipeline {
 
     agent {
          docker {
-            image 'floriankanduth/paintroid_java17:latest'
-            args '--device /dev/kvm:/dev/kvm -v /var/local/container_shared/gradle_cache/$EXECUTOR_NUMBER:/home/user/.gradle -m=6.5G'
-            label 'LimitedEmulator'
+            image dockerParameters.image
+            args dockerParameters.args
+            label dockerParameters.label
             alwaysPull true
         }
     }
@@ -114,9 +130,9 @@ pipeline {
 
                 stage('Device Tests') {
                     steps {
-                        sh "echo no | avdmanager create avd --force --name android28 --package 'system-images;android-28;default;x86_64'"
-                        sh "/home/user/android/sdk/emulator/emulator -no-window -no-boot-anim -noaudio -avd android28 > /dev/null 2>&1 &"
-                        sh './gradlew -PenableCoverage -Pjenkins -Pemulator=android28 -Pci createDebugCoverageReport -i'
+                        sh "echo no | avdmanager create avd --force --name android${android_version} --package 'system-images;android-${android_version};default;x86_64'"
+                        sh "/home/user/android/sdk/emulator/emulator -no-window -no-boot-anim -noaudio -avd android${android_version} > /dev/null 2>&1 &"
+                        sh './gradlew -PenableCoverage -Pjenkins -Pemulator=android${android_version} -Pci createDebugCoverageReport -i'
                     }
                     post {
                         always {
