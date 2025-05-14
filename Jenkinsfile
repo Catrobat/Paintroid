@@ -16,14 +16,8 @@ def dockerParameters = new DockerParameters()
 def startEmulator(String android_version, String stageName) {
     sh 'adb start-server'
     // creates a new avd, and if it already exists it does nothing.
-    sh "echo no | avdmanager create avd -f --name android${android_version} --package " +
-            "'system-images;android-${android_version};google_apis;x86_64' || true"
-
-    sh "/home/user/android/sdk/emulator/emulator -avd android${android_version}" +
-            ' -logcat *:w' +
-            ' -wipe-data -no-window -no-boot-anim -noaudio' +
-            ' -camera-back emulated -camera-front emulated ' +
-            " -no-snapshot-save -accel on -gpu swiftshader_indirect  > ${stageName}_emulator.log 2>&1 &"
+    sh "echo no | avdmanager create avd --force --name android${android_version}" + " --package 'system-images;android-${android_version};default;x86_64'"
+    sh "/home/user/android/sdk/emulator/emulator -no-window -no-boot-anim -noaudio -avd android${android_version}"
 }
 
 def waitForEmulatorAndPressWakeUpKey() {
