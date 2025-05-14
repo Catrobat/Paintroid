@@ -163,9 +163,6 @@ pipeline {
                             waitForEmulatorAndPressWakeUpKey()
                             sh "./gradlew -PenableCoverage -Pjenkins -Pemulator=android${android_version} -Pci createDebugCoverageReport -i"
                         }
-                        sh 'adb start-server'
-                        sh "echo no | avdmanager create avd --force --name android${android_version} --package 'system-images;android-${android_version};default;x86_64'"
-                        sh "/home/user/android/sdk/emulator/emulator -no-window -no-boot-anim -noaudio -avd android${android_version}"
                     }
                     post {
                         always {
