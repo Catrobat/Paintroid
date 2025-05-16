@@ -155,7 +155,7 @@ pipeline {
                         catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                             startEmulator(ANDROID_VERSION, 'device_tests')
                             waitForEmulatorAndPressWakeUpKey()
-                            sh "./gradlew -PenableCoverage -Pjenkins -Pemulator=android${android_version} -Pci createDebugCoverageReport -i"
+                            sh "./gradlew disableAnimations -PenableCoverage -Pjenkins -Pemulator=android${android_version} -Pci createDebugCoverageReport -i"
                         }
                     }
                     post {
