@@ -29,6 +29,12 @@ timeout 5m adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed) 
 done'
 echo "Emulator started"
 '''
+    sh '''
+        adb shell settings put global window_animation_scale 0 &
+        adb shell settings put global transition_animation_scale 0 &
+        adb shell settings put global animator_duration_scale 0 &
+    '''
+
     // In case the device went to sleep
     sh 'adb shell input keyevent KEYCODE_WAKEUP'
 }
