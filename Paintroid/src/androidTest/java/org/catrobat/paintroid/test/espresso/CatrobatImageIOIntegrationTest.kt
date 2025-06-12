@@ -20,6 +20,9 @@
 
 package org.catrobat.paintroid.test.espresso
 
+import android.app.Activity
+import android.app.Instrumentation
+import android.content.Intent
 import android.net.Uri
 import android.os.Environment
 import androidx.test.espresso.Espresso
@@ -27,6 +30,10 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.intent.Intents.init
+import androidx.test.espresso.intent.Intents.intending
+import androidx.test.espresso.intent.Intents.release
+import androidx.test.espresso.intent.matcher.IntentMatchers.hasAction
 import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
@@ -65,9 +72,9 @@ class CatrobatImageIOIntegrationTest {
     val screenshotOnFailRule = ScreenshotOnFailRule()
 
     @get:Rule
-    val grantPermissionRule: GrantPermissionRule = EspressoUtils.grantPermissionRulesVersionCheck()
+    val grantPermissionRule: GrantPermissionRule =
+        EspressoUtils.grantPermissionRulesVersionCheck()
 
-    private var uriFile: Uri? = null
     private lateinit var activity: MainActivity
 
     companion object {
@@ -75,41 +82,60 @@ class CatrobatImageIOIntegrationTest {
     }
 
     @Before
-    fun setUp() { activity = launchActivityRule.activity }
+    fun setUp() {
+        activity = launchActivityRule.activity
+        init()
+
+        val downloadsDir = activity.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)!!
+        val targetFile = File(downloadsDir, "$IMAGE_NAME.CATROBAT_IMAGE_ENDING")
+
+        downloadsDir.mkdirs()
+
+        if (!targetFile.exists()) {
+            targetFile.createNewFile()
+        }
+
+        val fakeUri = Uri.fromFile(targetFile)
+
+        val resultData = Intent().setData(fakeUri)
+        intending(hasAction(Intent.ACTION_CREATE_DOCUMENT))
+            .respondWith(Instrumentation.ActivityResult(Activity.RESULT_OK, resultData))
+    }
 
     @After
     fun tearDown() {
-        val imagesDirectory =
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString()
-        val pathToFile = imagesDirectory + File.separator + IMAGE_NAME + "." + CATROBAT_IMAGE_ENDING
-        val imageFile = File(pathToFile)
-        if (imageFile.exists()) {
-            imageFile.delete()
-        }
+        // clean up
+        release()
+        activity.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
+            ?.let { dir ->
+                File(dir, "$IMAGE_NAME.$CATROBAT_IMAGE_ENDING").delete()
+            }
     }
 
     @Test
     fun testWriteAndReadCatrobatImage() {
-        onDrawingSurfaceView()
-            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
-        TopBarViewInteraction.onTopBarView()
-            .performOpenMoreOptions()
-        onView(withText(R.string.menu_save_image))
-            .perform(ViewActions.click())
-        onView(withId(R.id.pocketpaint_save_dialog_spinner))
-            .perform(ViewActions.click())
+        onDrawingSurfaceView().perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
+
+        TopBarViewInteraction.onTopBarView().performOpenMoreOptions()
+        onView(withText(R.string.menu_save_image)).perform(ViewActions.click())
+        onView(withId(R.id.pocketpaint_save_dialog_spinner)).perform(ViewActions.click())
         Espresso.onData(
             AllOf.allOf(
-                Matchers.`is`(Matchers.instanceOf<Any>(String::class.java)),
+                Matchers.`is`(Matchers.instanceOf(String::class.java)),
                 Matchers.`is`(FileIO.FileType.CATROBAT.value)
             )
         ).inRoot(RootMatchers.isPlatformPopup()).perform(ViewActions.click())
-        onView(withId(R.id.pocketpaint_image_name_save_text))
-            .perform(replaceText(IMAGE_NAME))
+        onView(withId(R.id.pocketpaint_image_name_save_text)).perform(replaceText(IMAGE_NAME))
         onView(withText(R.string.save_button_text)).check(matches(isDisplayed()))
             .perform(ViewActions.click())
-        uriFile = activity.model.savedPictureUri!!
-        Assert.assertNotNull(uriFile)
-        Assert.assertNotNull(CommandSerializer(activity, activity.commandManager, activity.model).readFromFile(uriFile!!))
+
+        Espresso.onIdle()
+
+        val uriFile = activity.model.savedPictureUri
+        Assert.assertNotNull("savedPictureUri was never set", uriFile)
+
+        val commands = CommandSerializer(activity, activity.commandManager, activity.model)
+            .readFromFile(uriFile!!)
+        Assert.assertNotNull("Failed to read back Catrobat commands", commands)
     }
 }

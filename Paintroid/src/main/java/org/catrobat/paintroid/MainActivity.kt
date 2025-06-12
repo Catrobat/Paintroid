@@ -381,7 +381,6 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         when (item.itemId) {
             R.id.pocketpaint_options_export -> presenterMain.saveCopyClicked(true)
             R.id.pocketpaint_options_save_image -> presenterMain.saveImageClicked()
-            R.id.pocketpaint_options_save_duplicate -> presenterMain.saveCopyClicked(false)
             R.id.pocketpaint_replace_image -> presenterMain.replaceImageClicked()
             R.id.pocketpaint_add_to_current_layer -> presenterMain.addImageToCurrentLayerClicked()
             R.id.pocketpaint_options_new_image -> presenterMain.newImageClicked()
