@@ -55,6 +55,7 @@ class PointCommandTest {
         paintUnderTest!!.strokeWidth = 0f
         paintUnderTest!!.style = Paint.Style.STROKE
         paintUnderTest!!.strokeCap = Cap.BUTT
+        paintUnderTest!!.isAntiAlias = false
         pointUnderTest = PointF((INITIAL_WIDTH / 2).toFloat(), (INITIAL_HEIGHT / 2).toFloat())
         layerModel.addLayerAt(0, layerUnderTest)
         layerModel.currentLayer = layerUnderTest
