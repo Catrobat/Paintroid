@@ -24,12 +24,18 @@ import android.app.Activity
 import android.content.res.Configuration
 import android.graphics.PointF
 import android.os.Build
+import android.os.SystemClock
 import android.util.TypedValue
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.NoMatchingViewException
+import androidx.test.espresso.UiController
+import androidx.test.espresso.ViewAction
+import androidx.test.espresso.ViewAssertion
 import androidx.test.espresso.assertion.ViewAssertions
-import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.GrantPermissionRule
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry
@@ -37,6 +43,10 @@ import androidx.test.runner.lifecycle.Stage
 import org.catrobat.paintroid.MainActivity
 import org.hamcrest.Matcher
 import org.junit.Assert
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.isRoot
+import androidx.test.espresso.util.TreeIterables
+import org.hamcrest.Matchers.not
 
 object EspressoUtils {
     const val DEFAULT_STROKE_WIDTH = 25
@@ -87,19 +97,55 @@ object EspressoUtils {
         val viewInteraction = Espresso.onView(viewMatcher).inRoot(UiMatcher.isToast)
         while (System.currentTimeMillis() < waitTime) {
             try {
-                viewInteraction.check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+                viewInteraction.check(ViewAssertions.matches(isDisplayed()))
                 return
             } catch (e: NoMatchingViewException) {
-                Espresso.onView(ViewMatchers.isRoot()).perform(UiInteractions.waitFor(250))
+                Espresso.onView(isRoot()).perform(UiInteractions.waitFor(250))
             }
         }
-        viewInteraction.check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        viewInteraction.check(ViewAssertions.matches(isDisplayed()))
+    }
+
+    @SuppressWarnings("SwallowedException")
+    fun waitForViewToDisappear(
+        viewMatcher: org.hamcrest.Matcher<android.view.View>,
+        timeoutMillis: Long = 10_000, // Default timeout 10 seconds
+        pollIntervalMillis: Long = 100 // Default poll interval 100 ms
+    ) {
+        val endTime = System.currentTimeMillis() + timeoutMillis
+        var viewFound = true // Assume view is initially present
+
+        while (System.currentTimeMillis() < endTime && viewFound) {
+            try {
+                // Check if the view is still displayed
+                onView(viewMatcher).check(matches(isDisplayed()))
+                // If the check passes, the view is still displayed.
+                // Wait for a short interval before trying again.
+                onView(isRoot()).perform(UiInteractions.waitFor(pollIntervalMillis))
+            } catch (e: NoMatchingViewException) {
+                // View is not found in the hierarchy, so it has "disappeared" in this sense.
+                viewFound = false
+            } catch (e: AssertionError) {
+                // View is in the hierarchy but not displayed (e.g., GONE, INVISIBLE).
+                // This also means it has "disappeared" for the user.
+                viewFound = false
+            }
+        }
+
+        if (viewFound) {
+            try {
+                onView(viewMatcher).check(matches(not(isDisplayed())))
+            } catch (e: NoMatchingViewException) {
+                // This is acceptable, means it's not in hierarchy
+            }
+        }
     }
 
     val configuration: Configuration
         get() = InstrumentationRegistry.getInstrumentation().targetContext.resources.configuration
 
     fun grantPermissionRulesVersionCheck(): GrantPermissionRule {
+
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             GrantPermissionRule.grant(Manifest.permission.READ_EXTERNAL_STORAGE)
         } else {
@@ -108,5 +154,46 @@ object EspressoUtils {
                 Manifest.permission.READ_EXTERNAL_STORAGE
             )
         }
+    }
+    fun searchFor(matcher: Matcher<View>): ViewAction {
+        return object : ViewAction {
+
+            override fun getConstraints(): Matcher<View> {
+                return isRoot()
+            }
+
+            override fun getDescription(): String {
+                return "searching for view $matcher in the root view"
+            }
+
+            override fun perform(uiController: UiController, view: View) {
+                val childViews: Iterable<View> = TreeIterables.breadthFirstViewTraversal(view)
+                childViews.forEach {
+                    if (matcher.matches(it).and(it.isVisible)) {
+                        return
+                    }
+                }
+                throw NoMatchingViewException.Builder()
+                        .withRootView(view)
+                        .withViewMatcher(matcher)
+                        .build()
+            }
+        }
+    }
+
+    @SuppressWarnings("SwallowedException")
+    fun assertOnView(viewMatcher: Matcher<View?>?, assertion: ViewAssertion, waitMillis: Int = 10_000, waitMillisPerTry: Long = 50) {
+        val endTime = System.currentTimeMillis() + waitMillis
+        while (System.currentTimeMillis() < endTime) {
+            try {
+                onView(viewMatcher).check(assertion)
+                return
+            } catch (e: NoMatchingViewException) {
+                SystemClock.sleep(waitMillisPerTry)
+            } catch (e: AssertionError) {
+                SystemClock.sleep(waitMillisPerTry)
+            }
+        }
+        onView(viewMatcher).check(assertion)
     }
 }

@@ -44,6 +44,7 @@ import org.catrobat.paintroid.R
 import org.catrobat.paintroid.colorpicker.HSVColorPickerView
 import org.catrobat.paintroid.colorpicker.PresetSelectorView
 import org.catrobat.paintroid.colorpicker.RgbSelectorView
+import org.catrobat.paintroid.test.espresso.util.EspressoUtils
 import org.catrobat.paintroid.test.espresso.util.UiMatcher.withBackground
 import org.catrobat.paintroid.test.espresso.util.UiMatcher.withBackgroundColor
 import org.catrobat.paintroid.test.espresso.util.wrappers.BottomNavigationViewInteraction.Companion.onBottomNavigationView
@@ -57,7 +58,6 @@ import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.`is`
-import org.hamcrest.Matchers.not
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -109,14 +109,16 @@ class LandscapeIntegrationTest {
             if (tool) { continue }
             onToolBarView()
                 .performSelectTool(toolType)
-            if (toolOptionsViewController?.isVisible?.not() == true) {
+            if (toolOptionsViewController?.isVisible == false) {
                 onToolBarView()
                     .performClickSelectedToolButton()
             }
             onBottomNavigationView()
                 .onCurrentClicked()
-            onView(withId(R.id.pocketpaint_layout_tool_specific_options))
-                .check(matches(not(isDisplayed())))
+            EspressoUtils.waitForViewToDisappear(withId(R.id.pocketpaint_layout_tool_specific_options))
+            // BaseRobot().waitForViewToDisappear(withId(R.id.pocketpaint_layout_tool_specific_options)).check(matches(not(isDisplayed())))
+//            onView(withId(R.id.pocketpaint_layout_tool_specific_options))
+//                .check(matches(not(isDisplayed())))
         }
     }
 
