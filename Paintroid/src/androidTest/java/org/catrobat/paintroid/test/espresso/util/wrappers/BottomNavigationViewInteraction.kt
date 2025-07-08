@@ -58,8 +58,8 @@ class BottomNavigationViewInteraction private constructor() :
 
     fun checkShowsCurrentTool(toolType: ToolType) {
         var matcher = allOf(withId(R.id.icon),
-                ViewMatchers.isDescendantOfA(withId(R.id.action_current_tool)),
-                UiMatcher.withDrawable(R.drawable.ic_pocketpaint_tool_brush))
+                ViewMatchers.isDescendantOfA(withId(R.id.action_current_tool))
+        )
         var assertion = ViewAssertions.matches(
             Matchers.allOf(
                 isDisplayed(),
@@ -68,7 +68,7 @@ class BottomNavigationViewInteraction private constructor() :
         )
         EspressoUtils.assertOnView(matcher, assertion)
 
-        matcher = allOf(withId(R.id.action_current_tool))
+        matcher = withId(R.id.action_current_tool)
         assertion = ViewAssertions.matches(
             Matchers.allOf(
                 isDisplayed(),
