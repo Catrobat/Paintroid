@@ -32,6 +32,7 @@ import org.catrobat.paintroid.tools.ToolType
 import org.hamcrest.Matchers.allOf
 import org.catrobat.paintroid.test.espresso.util.EspressoUtils
 import org.catrobat.paintroid.test.espresso.util.UiMatcher
+import org.hamcrest.Matchers
 
 class BottomNavigationViewInteraction private constructor() :
     CustomViewInteraction(Espresso.onView(withId(R.id.pocketpaint_bottom_navigation))) {
@@ -59,12 +60,35 @@ class BottomNavigationViewInteraction private constructor() :
         var matcher = allOf(withId(R.id.icon),
                 ViewMatchers.isDescendantOfA(withId(R.id.action_current_tool)),
                 UiMatcher.withDrawable(R.drawable.ic_pocketpaint_tool_brush))
-        var assertion = ViewAssertions.matches(isDisplayed())
+        var assertion = ViewAssertions.matches(
+            Matchers.allOf(
+                isDisplayed(),
+                UiMatcher.withDrawable(toolType.drawableResource)
+            )
+        )
         EspressoUtils.assertOnView(matcher, assertion)
 
-        matcher = allOf(withId(R.id.action_current_tool), ViewMatchers.hasDescendant(withText(toolType.nameResource)))
+        matcher = allOf(withId(R.id.action_current_tool))
+        assertion = ViewAssertions.matches(
+            Matchers.allOf(
+                isDisplayed(),
+                ViewMatchers.hasDescendant(withText(toolType.nameResource))
+            )
+        )
         EspressoUtils.assertOnView(matcher, assertion)
     }
+
+    /*fun checkShowsCurrentTool(toolType: ToolType): ViewInteraction {
+        Espresso.onView(
+            allOf(
+                withId(R.id.icon),
+                ViewMatchers.isDescendantOfA(withId(R.id.action_current_tool))
+            )
+        )
+            .check(ViewAssertions.matches(UiMatcher.withDrawable(toolType.drawableResource)))
+        return Espresso.onView(withId(R.id.action_current_tool))
+            .check(ViewAssertions.matches(ViewMatchers.hasDescendant(ViewMatchers.withText(toolType.nameResource))))
+    }*/
 
     fun onColorClicked(): ViewInteraction {
         return Espresso.onView(
