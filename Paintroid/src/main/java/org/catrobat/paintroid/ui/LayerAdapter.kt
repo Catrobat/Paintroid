@@ -139,12 +139,10 @@ class LayerAdapter(
                         MAX_VAL
                     }
 
-                   /* if (opacityPercentage != opacitySeekBar.progress) {
+                    if (opacityPercentage != opacitySeekBar.progress) {
                         opacitySeekBar.progress = opacityPercentage
                         layerPresenter.changeLayerOpacity(position, opacityPercentage)
-                    }*/
-                    opacitySeekBar.progress = opacityPercentage
-                    layerPresenter.changeLayerOpacity(position, opacityPercentage)
+                    }
                     layerPresenter.refreshDrawingSurface()
                 }
             })
