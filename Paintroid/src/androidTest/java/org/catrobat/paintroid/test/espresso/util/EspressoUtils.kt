@@ -27,7 +27,6 @@ import android.os.Build
 import android.os.SystemClock
 import android.util.TypedValue
 import android.view.View
-import androidx.core.view.isVisible
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.NoMatchingViewException
@@ -169,7 +168,7 @@ object EspressoUtils {
             override fun perform(uiController: UiController, view: View) {
                 val childViews: Iterable<View> = TreeIterables.breadthFirstViewTraversal(view)
                 childViews.forEach {
-                    if (matcher.matches(it).and(it.isVisible)) {
+                    if (matcher.matches(it)) {
                         return
                     }
                 }

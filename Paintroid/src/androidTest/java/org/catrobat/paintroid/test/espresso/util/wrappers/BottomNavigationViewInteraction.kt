@@ -19,7 +19,6 @@
 package org.catrobat.paintroid.test.espresso.util.wrappers
 
 import androidx.test.espresso.Espresso
-import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions
@@ -30,9 +29,8 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.tools.ToolType
 import org.hamcrest.Matchers.allOf
-import org.catrobat.paintroid.test.espresso.util.EspressoUtils
 import org.catrobat.paintroid.test.espresso.util.UiMatcher
-import org.hamcrest.Matchers
+import org.catrobat.paintroid.test.espresso.util.ViewRobot
 
 class BottomNavigationViewInteraction private constructor() :
     CustomViewInteraction(Espresso.onView(withId(R.id.pocketpaint_bottom_navigation))) {
@@ -57,25 +55,19 @@ class BottomNavigationViewInteraction private constructor() :
     }
 
     fun checkShowsCurrentTool(toolType: ToolType) {
+        val viewRobot = ViewRobot()
         var matcher = allOf(withId(R.id.icon),
-                ViewMatchers.isDescendantOfA(withId(R.id.action_current_tool))
-        )
-        var assertion = ViewAssertions.matches(
-            Matchers.allOf(
-                isDisplayed(),
+                ViewMatchers.isDescendantOfA(withId(R.id.action_current_tool)),
                 UiMatcher.withDrawable(toolType.drawableResource)
-            )
         )
-        EspressoUtils.assertOnView(matcher, assertion)
+        var assertion = ViewAssertions.matches(isDisplayed())
+        viewRobot.assertOnView(matcher, assertion)
 
-        matcher = withId(R.id.action_current_tool)
-        assertion = ViewAssertions.matches(
-            Matchers.allOf(
-                isDisplayed(),
-                ViewMatchers.hasDescendant(withText(toolType.nameResource))
-            )
+        matcher = allOf(withId(R.id.action_current_tool),
+            ViewMatchers.hasDescendant(withText(toolType.nameResource))
         )
-        EspressoUtils.assertOnView(matcher, assertion)
+        assertion = ViewAssertions.matches(isDisplayed())
+        viewRobot.assertOnView(matcher, assertion)
     }
 
     /*fun checkShowsCurrentTool(toolType: ToolType): ViewInteraction {

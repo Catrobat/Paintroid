@@ -1,7 +1,6 @@
 package org.catrobat.paintroid.test.espresso.util
 
 import android.os.SystemClock.sleep
-import android.util.Log
 import android.view.View
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.ViewAction
@@ -33,7 +32,6 @@ open class ViewRobot {
                 onView(isRoot()).perform(searchFor(viewMatcher))
                 return onView(viewMatcher)
             } catch (e: Exception) {
-                Log.d("asdf", "sleeping...")
                 sleep(waitMillisPerTry)
             }
         }

@@ -31,10 +31,8 @@ import androidx.test.espresso.Espresso.pressBack
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.scrollTo
-import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.idling.CountingIdlingResource
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withClassName
 import androidx.test.espresso.matcher.ViewMatchers.withId
@@ -47,7 +45,6 @@ import org.catrobat.paintroid.colorpicker.HSVColorPickerView
 import org.catrobat.paintroid.colorpicker.PresetSelectorView
 import org.catrobat.paintroid.colorpicker.RgbSelectorView
 import org.catrobat.paintroid.test.espresso.util.EspressoUtils
-import org.catrobat.paintroid.test.espresso.util.UiMatcher
 import org.catrobat.paintroid.test.espresso.util.UiMatcher.withBackground
 import org.catrobat.paintroid.test.espresso.util.UiMatcher.withBackgroundColor
 import org.catrobat.paintroid.test.espresso.util.wrappers.BottomNavigationViewInteraction.Companion.onBottomNavigationView
@@ -59,7 +56,6 @@ import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule
 import org.catrobat.paintroid.tools.Tool
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
-import org.hamcrest.Matchers
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.`is`
 import org.junit.After
@@ -424,13 +420,13 @@ class LandscapeIntegrationTest {
             if (tools) { continue }
             onToolBarView()
                 .performSelectTool(toolType)
-            checkShowsCurrentTool(toolType)
+            onBottomNavigationView().checkShowsCurrentTool(toolType)
         }
     }
 
     private fun setOrientation(orientation: Int) { activityTestRule.activity.requestedOrientation = orientation }
 
-    private fun checkShowsCurrentTool(toolType: ToolType) {
+    /*private fun checkShowsCurrentTool(toolType: ToolType) {
         var matcher = allOf(withId(R.id.icon),
             ViewMatchers.isDescendantOfA(withId(R.id.action_current_tool))
         )
@@ -450,7 +446,7 @@ class LandscapeIntegrationTest {
             )
         )
         EspressoUtils.assertOnView(matcher, assertion)
-    }
+    }*/
 
     companion object {
         @ColorInt
