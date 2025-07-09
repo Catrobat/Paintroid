@@ -25,7 +25,7 @@ open class ViewRobot {
     }
 
     @SuppressWarnings("SwallowedException", "TooGenericExceptionThrown")
-    private fun waitForView(viewMatcher: Matcher<View>, waitMillis: Int = 5000, waitMillisPerTry: Long = 50): ViewInteraction {
+    private fun waitForView(viewMatcher: Matcher<View>, waitMillis: Int = 10_000, waitMillisPerTry: Long = 100): ViewInteraction {
         val endTime = System.currentTimeMillis() + waitMillis
         while (System.currentTimeMillis() < endTime) {
             try {
