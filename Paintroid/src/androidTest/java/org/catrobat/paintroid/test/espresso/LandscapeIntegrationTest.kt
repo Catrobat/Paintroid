@@ -34,6 +34,7 @@ import androidx.test.espresso.action.ViewActions.scrollTo
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.idling.CountingIdlingResource
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.isRoot
 import androidx.test.espresso.matcher.ViewMatchers.withClassName
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
@@ -45,6 +46,7 @@ import org.catrobat.paintroid.colorpicker.HSVColorPickerView
 import org.catrobat.paintroid.colorpicker.PresetSelectorView
 import org.catrobat.paintroid.colorpicker.RgbSelectorView
 import org.catrobat.paintroid.test.espresso.util.EspressoUtils
+import org.catrobat.paintroid.test.espresso.util.UiInteractions.waitFor
 import org.catrobat.paintroid.test.espresso.util.UiMatcher.withBackground
 import org.catrobat.paintroid.test.espresso.util.UiMatcher.withBackgroundColor
 import org.catrobat.paintroid.test.espresso.util.wrappers.BottomNavigationViewInteraction.Companion.onBottomNavigationView
@@ -410,6 +412,7 @@ class LandscapeIntegrationTest {
     @Test
     fun testIfCurrentToolIsShownInBottomNavigation() {
         setOrientation(SCREEN_ORIENTATION_LANDSCAPE)
+        onView(isRoot()).perform(waitFor(5000))
         for (toolType in ToolType.values()) {
             val tools = toolType == ToolType.IMPORTPNG ||
                 toolType == ToolType.COLORCHOOSER ||
@@ -420,6 +423,7 @@ class LandscapeIntegrationTest {
             if (tools) { continue }
             onToolBarView()
                 .performSelectTool(toolType)
+            onView(isRoot()).perform(waitFor(5000))
             onBottomNavigationView().checkShowsCurrentTool(toolType)
         }
     }
