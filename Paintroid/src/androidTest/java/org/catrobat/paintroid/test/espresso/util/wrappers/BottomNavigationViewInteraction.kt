@@ -27,6 +27,7 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import org.catrobat.paintroid.R
+import org.catrobat.paintroid.test.espresso.util.EspressoUtils.assertOnView
 import org.catrobat.paintroid.tools.ToolType
 import org.hamcrest.Matchers.allOf
 import org.catrobat.paintroid.test.espresso.util.UiMatcher
@@ -63,11 +64,9 @@ class BottomNavigationViewInteraction private constructor() :
         var assertion = ViewAssertions.matches(isDisplayed())
         viewRobot.assertOnView(matcher, assertion)
 
-        matcher = allOf(withId(R.id.action_current_tool),
-            ViewMatchers.hasDescendant(withText(toolType.nameResource))
-        )
-        assertion = ViewAssertions.matches(isDisplayed())
-        viewRobot.assertOnView(matcher, assertion)
+        matcher = allOf(withId(R.id.action_current_tool))
+        assertion = ViewAssertions.matches(allOf(ViewMatchers.hasDescendant(withText(toolType.nameResource)), isDisplayed()))
+        assertOnView(matcher, assertion)
     }
 
     /*fun checkShowsCurrentTool(toolType: ToolType): ViewInteraction {
