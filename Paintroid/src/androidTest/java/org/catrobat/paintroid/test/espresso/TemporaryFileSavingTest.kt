@@ -21,10 +21,12 @@ package org.catrobat.paintroid.test.espresso
 import android.content.Intent
 import android.graphics.Color
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.idling.CountingIdlingResource
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.isRoot
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.ActivityTestRule
 import org.catrobat.paintroid.MainActivity
@@ -33,6 +35,7 @@ import org.catrobat.paintroid.common.TEMP_IMAGE_PATH
 import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider
 import org.catrobat.paintroid.test.espresso.util.UiInteractions
+import org.catrobat.paintroid.test.espresso.util.UiInteractions.waitFor
 import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.Companion.onDrawingSurfaceView
 import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction
 import org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction
@@ -120,14 +123,17 @@ class TemporaryFileSavingTest {
     fun testMultipleUserInteractions() {
         onDrawingSurfaceView()
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
+        onView(isRoot()).perform(waitFor(THREAD_WAITING_TIME))
         onDrawingSurfaceView()
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT))
-        Thread.sleep(THREAD_WAITING_TIME)
+        onView(isRoot()).perform(waitFor(THREAD_WAITING_TIME))
         onDrawingSurfaceView()
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_RIGHT))
-        Thread.sleep(THREAD_WAITING_TIME)
+        onView(isRoot()).perform(waitFor(THREAD_WAITING_TIME))
         onDrawingSurfaceView()
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_LEFT))
+        onView(isRoot()).perform(waitFor(THREAD_WAITING_TIME))
+
         launchActivityRule.finishActivity()
         launchActivityRule.launchActivity(intent)
         onDrawingSurfaceView()
