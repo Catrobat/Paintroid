@@ -71,7 +71,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.io.File
-import java.lang.Thread.sleep
 
 private const val FOUR_LAYERS = 4
 
@@ -585,7 +584,6 @@ class LayerIntegrationTest {
             .performOpen()
             .performSetOpacityTo(50, 0)
 
-        sleep(1000)
         LayerMenuViewInteraction.onLayerMenuView().performClose()
 
         ToolBarViewInteraction.onToolBarView()
