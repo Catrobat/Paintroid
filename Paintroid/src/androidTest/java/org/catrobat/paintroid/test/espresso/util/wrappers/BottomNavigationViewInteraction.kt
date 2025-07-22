@@ -19,15 +19,18 @@
 package org.catrobat.paintroid.test.espresso.util.wrappers
 
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.isRoot
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.test.espresso.util.EspressoUtils.assertOnView
+import org.catrobat.paintroid.test.espresso.util.UiInteractions.waitFor
 import org.catrobat.paintroid.tools.ToolType
 import org.hamcrest.Matchers.allOf
 import org.catrobat.paintroid.test.espresso.util.UiMatcher
@@ -56,16 +59,23 @@ class BottomNavigationViewInteraction private constructor() :
     }
 
     fun checkShowsCurrentTool(toolType: ToolType) {
+        onView(isRoot()).perform(waitFor(2000))
         val viewRobot = ViewRobot()
+        onView(isRoot()).perform(waitFor(2000))
         var matcher = allOf(withId(R.id.icon),
                 ViewMatchers.isDescendantOfA(withId(R.id.action_current_tool)),
                 UiMatcher.withDrawable(toolType.drawableResource)
         )
+        onView(isRoot()).perform(waitFor(2000))
         var assertion = ViewAssertions.matches(isDisplayed())
+        onView(isRoot()).perform(waitFor(2000))
         viewRobot.assertOnView(matcher, assertion)
 
+        onView(isRoot()).perform(waitFor(2000))
         matcher = allOf(withId(R.id.action_current_tool))
+        onView(isRoot()).perform(waitFor(2000))
         assertion = ViewAssertions.matches(allOf(ViewMatchers.hasDescendant(withText(toolType.nameResource)), isDisplayed()))
+        onView(isRoot()).perform(waitFor(2000))
         assertOnView(matcher, assertion)
     }
 

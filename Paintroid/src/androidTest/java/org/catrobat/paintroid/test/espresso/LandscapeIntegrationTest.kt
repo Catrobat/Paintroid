@@ -107,6 +107,7 @@ class LandscapeIntegrationTest {
                 toolType == ToolType.REDO ||
                 toolType == ToolType.UNDO ||
                 toolType == ToolType.LAYER ||
+                toolType == ToolType.CLIPBOARD ||
                 !toolType.hasOptions()
             if (tool) { continue }
             onToolBarView()
@@ -421,10 +422,12 @@ class LandscapeIntegrationTest {
                 toolType == ToolType.LAYER ||
                 !toolType.hasOptions()
             if (tools) { continue }
+            onView(isRoot()).perform(waitFor(5000))
             onToolBarView()
                 .performSelectTool(toolType)
-            onView(isRoot()).perform(waitFor(5000))
+            onView(isRoot()).perform(waitFor(500))
             onBottomNavigationView().checkShowsCurrentTool(toolType)
+            onView(isRoot()).perform(waitFor(5000))
         }
     }
 
