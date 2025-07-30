@@ -63,7 +63,7 @@ def useDebugLabelParameter(defaultLabel) {
 
 pipeline {
     environment {
-        ANDROID_VERSION = 33
+        ANDROID_VERSION = 32
         ADB_INSTALL_TIMEOUT = 60
     }
 
