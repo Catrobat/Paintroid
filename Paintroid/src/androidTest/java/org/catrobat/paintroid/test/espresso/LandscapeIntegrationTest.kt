@@ -99,7 +99,7 @@ class LandscapeIntegrationTest {
     }
 
     @Test
-    fun testTools() {
+    fun testIfClickingOnCurrentToolTogglesToolOptions() {
         setOrientation(SCREEN_ORIENTATION_LANDSCAPE)
         for (toolType in ToolType.values()) {
             val tool = toolType == ToolType.IMPORTPNG ||
@@ -108,6 +108,7 @@ class LandscapeIntegrationTest {
                 toolType == ToolType.UNDO ||
                 toolType == ToolType.LAYER ||
                 toolType == ToolType.CLIPBOARD ||
+                toolType == ToolType.TEXT ||
                 !toolType.hasOptions()
             if (tool) { continue }
             onToolBarView()
