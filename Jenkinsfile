@@ -31,7 +31,7 @@ pipeline {
 
     agent {
          docker {
-            image 'catrobat/catrobat-paintroid:stable'
+            image 'floriankanduth/devops-846:bullseye'
             args '--device /dev/kvm:/dev/kvm -v /var/local/container_shared/gradle_cache/$EXECUTOR_NUMBER:/home/user/.gradle -m=6.5G'
             label 'LimitedEmulator'
             alwaysPull true
