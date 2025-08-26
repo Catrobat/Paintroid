@@ -17,7 +17,7 @@ def startEmulator(String android_version, String stageName) {
     sh 'adb start-server'
     // creates a new avd, and if it already exists it does nothing.
     sh "echo no | avdmanager create avd --force --name android${android_version}" + " --package 'system-images;android-${android_version};default;x86_64'"
-    sh "/home/user/android/sdk/emulator/emulator -no-window -no-boot-anim -noaudio -avd android${android_version}"
+    sh "/home/user/android/sdk/emulator/emulator -no-window -no-boot-anim -noaudio -avd android${android_version} > ${stageName}_emulator.log 2>&1 &"
 }
 
 def waitForEmulatorAndPressWakeUpKey() {
@@ -97,6 +97,7 @@ pipeline {
         stage('Build Debug-APK') {
             steps {
                 sh "java --version"
+                sh "whoami"
                 sh "./gradlew -Pindependent='#$env.BUILD_NUMBER $env.BRANCH_NAME' assembleDebug"
                 archiveArtifacts 'app/build/outputs/apk/debug/paintroid-debug*.apk'
                 plot csvFileName: 'dexcount.csv', csvSeries: [[displayTableFlag: false, exclusionValues: '', file: 'Paintroid/build/outputs/dexcount/*.csv', inclusionFlag: 'OFF', url: '']], group: 'APK Stats', numBuilds: '180', style: 'line', title: 'dexcount'
