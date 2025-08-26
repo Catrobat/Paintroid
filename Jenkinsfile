@@ -168,7 +168,8 @@ pipeline {
                     }
                     post {
                         always {
-                            sh '/home/user/android/sdk/platform-tools/adb logcat -d > logcat.txt'
+                            archiveArtifacts "device_tests_emulator.log"
+                            // sh '/home/user/android/sdk/platform-tools/adb logcat -d > logcat.txt'
                             sh './gradlew stopEmulator'
                             junitAndCoverage "$reports/coverage/debug/report.xml", 'device', javaSrc
                             archiveArtifacts 'logcat.txt'
@@ -188,9 +189,7 @@ pipeline {
     post {
         always {
             steps {
-                step([$class: 'LogParserPublisher', failBuildOnError: true, projectRulePath: 'buildScripts/log_parser_rules', unstableOnWarning: true, useProjectRule: true])
-                archiveArtifacts "${stageName}_emulator.log"
-                
+                step([$class: 'LogParserPublisher', failBuildOnError: true, projectRulePath: 'buildScripts/log_parser_rules', unstableOnWarning: true, useProjectRule: true])                
             }
         }
         changed {
