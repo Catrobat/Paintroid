@@ -187,7 +187,7 @@ pipeline {
     post {
         always {
             steps {
-                [$class: 'LogParserPublisher', failBuildOnError: true, projectRulePath: 'buildScripts/log_parser_rules', unstableOnWarning: true, useProjectRule: true]
+                step([$class: 'LogParserPublisher', failBuildOnError: true, projectRulePath: 'buildScripts/log_parser_rules', unstableOnWarning: true, useProjectRule: true])
                 archiveArtifacts "${stageName}_emulator.log"
                 
             }
