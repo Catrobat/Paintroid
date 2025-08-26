@@ -14,6 +14,7 @@ class DockerParameters {
 def dockerParameters = new DockerParameters()
 
 def startEmulator(String android_version, String stageName) {
+    sh "whoami"
     sh 'adb start-server'
     // creates a new avd, and if it already exists it does nothing.
     sh "echo no | avdmanager create avd --force --name android${android_version}" + " --package 'system-images;android-${android_version};default;x86_64'"
@@ -22,7 +23,7 @@ def startEmulator(String android_version, String stageName) {
 
 def waitForEmulatorAndPressWakeUpKey() {
     sh 'adb devices'
-    sh 'timeout 5m adb wait-for-device'
+    // sh 'timeout 5m adb wait-for-device'
     sh '''#!/bin/bash
 adb devices
 timeout 5m adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1;
