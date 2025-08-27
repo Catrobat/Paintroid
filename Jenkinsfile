@@ -97,6 +97,7 @@ pipeline {
         stage('Build Debug-APK') {
             steps {
                 sh "java --version"
+                sh "whoami"
                 sh "./gradlew -Pindependent='#$env.BUILD_NUMBER $env.BRANCH_NAME' assembleDebug"
                 archiveArtifacts 'app/build/outputs/apk/debug/paintroid-debug*.apk'
                 plot csvFileName: 'dexcount.csv', csvSeries: [[displayTableFlag: false, exclusionValues: '', file: 'Paintroid/build/outputs/dexcount/*.csv', inclusionFlag: 'OFF', url: '']], group: 'APK Stats', numBuilds: '180', style: 'line', title: 'dexcount'
@@ -167,6 +168,7 @@ pipeline {
                     }
                     post {
                         always {
+                            archiveArtifacts "device_tests_emulator.log"
                             sh '/home/user/android/sdk/platform-tools/adb logcat -d > logcat.txt'
                             sh './gradlew stopEmulator'
                             junitAndCoverage "$reports/coverage/debug/report.xml", 'device', javaSrc
