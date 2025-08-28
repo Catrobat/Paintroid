@@ -99,6 +99,8 @@ pipeline {
             steps {
                 sh "java --version"
                 sh "whoami"
+                sh "egrep -c '(vmx|svm)' /proc/cpuinfo"
+                sh "kvm-ok"
                 sh "./gradlew -Pindependent='#$env.BUILD_NUMBER $env.BRANCH_NAME' assembleDebug"
                 archiveArtifacts 'app/build/outputs/apk/debug/paintroid-debug*.apk'
                 plot csvFileName: 'dexcount.csv', csvSeries: [[displayTableFlag: false, exclusionValues: '', file: 'Paintroid/build/outputs/dexcount/*.csv', inclusionFlag: 'OFF', url: '']], group: 'APK Stats', numBuilds: '180', style: 'line', title: 'dexcount'
