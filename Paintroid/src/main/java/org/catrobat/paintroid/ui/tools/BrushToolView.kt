@@ -27,7 +27,7 @@ import android.graphics.Paint
 import android.graphics.Shader
 import android.util.AttributeSet
 import android.view.View
-import org.catrobat.paintroid.R
+import org.catrobat.paintroid.colorpicker.R
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.options.BrushToolOptionsView.OnBrushPreviewListener
 import org.catrobat.paintroid.tools.options.BrushToolPreview

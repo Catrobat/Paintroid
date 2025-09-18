@@ -20,7 +20,9 @@
 
 package org.catrobat.paintroid.test.espresso
 
+import android.Manifest
 import android.net.Uri
+import android.os.Build
 import android.os.Environment
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
@@ -32,15 +34,14 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.ActivityTestRule
-import androidx.test.rule.GrantPermissionRule
 import org.catrobat.paintroid.FileIO
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.command.serialization.CommandSerializer
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.common.CATROBAT_IMAGE_ENDING
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider
-import org.catrobat.paintroid.test.espresso.util.EspressoUtils
 import org.catrobat.paintroid.test.espresso.util.UiInteractions
 import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.Companion.onDrawingSurfaceView
 import org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction
@@ -52,6 +53,7 @@ import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
 import java.io.File
 
@@ -59,13 +61,11 @@ import java.io.File
 class CatrobatImageIOIntegrationTest {
 
     @get:Rule
-    val launchActivityRule = ActivityTestRule(MainActivity::class.java)
+    val launchActivityRule =
+        ActivityTestRule(MainActivity::class.java, true, false)
 
     @get:Rule
     val screenshotOnFailRule = ScreenshotOnFailRule()
-
-    @get:Rule
-    val grantPermissionRule: GrantPermissionRule = EspressoUtils.grantPermissionRulesVersionCheck()
 
     private var uriFile: Uri? = null
     private lateinit var activity: MainActivity
@@ -75,12 +75,38 @@ class CatrobatImageIOIntegrationTest {
     }
 
     @Before
-    fun setUp() { activity = launchActivityRule.activity }
+    fun setUp() {
+        val inst = InstrumentationRegistry.getInstrumentation()
+        val targetPkg = inst.targetContext.packageName
+        val perms = when {
+            Build.VERSION.SDK_INT >= 34 -> arrayOf(
+                Manifest.permission.READ_MEDIA_IMAGES,
+                Manifest.permission.READ_MEDIA_VIDEO,
+                "android.permission.READ_MEDIA_VISUAL_USER_SELECTED"
+            )
+            Build.VERSION.SDK_INT >= 33 -> arrayOf(
+                Manifest.permission.READ_MEDIA_IMAGES,
+                Manifest.permission.READ_MEDIA_VIDEO
+            )
+            else -> arrayOf(
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            )
+        }
+        perms.forEach {
+            try {
+                inst.uiAutomation.grantRuntimePermission(targetPkg, it)
+            } catch (_: Exception) {
+            }
+        }
+
+        launchActivityRule.launchActivity(null)
+        activity = launchActivityRule.activity
+    }
 
     @After
     fun tearDown() {
         val imagesDirectory =
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString()
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString()
         val pathToFile = imagesDirectory + File.separator + IMAGE_NAME + "." + CATROBAT_IMAGE_ENDING
         val imageFile = File(pathToFile)
         if (imageFile.exists()) {

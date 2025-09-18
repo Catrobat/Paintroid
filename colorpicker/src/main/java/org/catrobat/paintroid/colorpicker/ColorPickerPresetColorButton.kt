@@ -32,7 +32,7 @@ class ColorPickerPresetColorButton @JvmOverloads constructor(
     context: Context,
     @field:ColorInt @get:ColorInt
     @param:ColorInt var color: Int = Color.BLACK
-) : AppCompatImageButton(context, null, R.attr.borderlessButtonStyle) {
+) : AppCompatImageButton(context, null, android.R.attr.borderlessButtonStyle) {
 
     init {
         val checkeredBitmap =

@@ -22,34 +22,36 @@
  */
 package org.catrobat.paintroid.web;
 
-import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-
-import org.catrobat.paintroid.R;
+import android.net.Uri;
+import android.view.View;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.view.ViewCompat;
+import android.widget.ProgressBar;
 
 public class MediaGalleryWebViewClient extends WebViewClient {
-	private ProgressDialog webViewLoadingDialog;
-	private WebClientCallback callback;
+	private AlertDialog loadingDialog;
+	private final WebClientCallback callback;
 
 	public interface WebClientCallback {
 		void finish();
 	}
 
 	public MediaGalleryWebViewClient(WebClientCallback callback) {
-		super();
 		this.callback = callback;
 	}
 
+	private static final String GALLERY_ROOT = "https://share.catrob.at/pocketcode/";
+
 	@Override
-	public void onPageStarted(WebView view, String urlClient, Bitmap favicon) {
-		if (webViewLoadingDialog == null && !urlClient.matches("https://share.catrob.at/pocketcode/")) {
-			webViewLoadingDialog = new ProgressDialog(view.getContext(), R.style.WebViewLoadingCircle);
-			webViewLoadingDialog.setCancelable(true);
-			webViewLoadingDialog.setCanceledOnTouchOutside(false);
-			webViewLoadingDialog.setProgressStyle(android.R.style.Widget_ProgressBar_Small);
-			webViewLoadingDialog.show();
+	public void onPageStarted(WebView view, String url, Bitmap favicon) {
+		// avoid regex 'matches' – we only want a prefix check
+		if (!startsWithGalleryRoot(url)) {
+			showLoading(view);
 		} else {
 			callback.finish();
 		}
@@ -57,19 +59,71 @@ public class MediaGalleryWebViewClient extends WebViewClient {
 
 	@Override
 	public void onPageFinished(WebView view, String url) {
-		if (webViewLoadingDialog != null) {
-			webViewLoadingDialog.dismiss();
-			webViewLoadingDialog = null;
-		}
+		dismissLoading();
 	}
 
+	// New API (M+) — preferred
+	@Override
+	public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+		// Return false to let the WebView load the URL
+		return false;
+	}
+
+	// Legacy shim for < M
+	@SuppressWarnings("deprecation")
 	@Override
 	public boolean shouldOverrideUrlLoading(WebView view, String url) {
 		return false;
 	}
 
+	// New API (M+) — preferred
 	@Override
-	public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+	public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+		dismissLoading();
 		callback.finish();
 	}
+
+	// Legacy shim for < M
+	@SuppressWarnings("deprecation")
+	@Override
+	public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+		dismissLoading();
+		callback.finish();
+	}
+
+	private boolean startsWithGalleryRoot(String url) {
+		try {
+			Uri u = Uri.parse(url);
+			// normalize to compare robustly
+			String normalized = u.getScheme() + "://" + u.getHost() + (u.getPort() != -1 ? (":" + u.getPort()) : "") + u.getPath();
+			return normalized.startsWith(GALLERY_ROOT);
+		} catch (Exception ignored) {
+			return false;
+		}
+	}
+
+	private void showLoading(View anchor) {
+		if (loadingDialog != null) return;
+
+		ProgressBar progress = new ProgressBar(anchor.getContext());
+		// make it large enough and accessible
+		int padding = (int) (anchor.getResources().getDisplayMetrics().density * 24);
+		progress.setPadding(padding, padding, padding, padding);
+		ViewCompat.setImportantForAccessibility(progress, ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_YES);
+
+		loadingDialog = new AlertDialog.Builder(anchor.getContext())
+				.setView(progress)
+				.setCancelable(true)
+				.create();
+		loadingDialog.setCanceledOnTouchOutside(false);
+		loadingDialog.show();
+	}
+
+	private void dismissLoading() {
+		if (loadingDialog != null) {
+			loadingDialog.dismiss();
+			loadingDialog = null;
+		}
+	}
 }
+

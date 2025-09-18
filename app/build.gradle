@@ -19,42 +19,48 @@ import io.gitlab.arturbosch.detekt.Detekt
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-apply plugin: 'com.android.application'
+plugins {
+    id "com.android.application"
+    id "org.jetbrains.kotlin.android"
+}
 
 ext {
-    appId = 'org.catrobat.paintroid'
-    appName = '@string/pocketpaint_app_name'
+    appId = "org.catrobat.paintroid"
+    appName = "@string/pocketpaint_app_name"
 }
 
-// When -Pindependent was provided on the gradle command the APP name is changed.
-// This allows to have multiple Paintroid versions installed in parallel for testing purposes.
-// Furthermore these installations do not interfere with the actual Paintroid app.
-if (project.hasProperty('independent')) {
+// Allow multiple side-by-side installs when run with -Pindependent
+if (project.hasProperty("independent")) {
     def today = new Date()
-    appId += '.independent_' + today.format('YYYYMMdd_HHmm')
-    appName = property('independent') ?: 'Paint ' + today.format('MMdd HH:mm')
+    appId += ".independent_${today.format('yyyyMMdd_HHmm')}"
+    appName = property("independent") ?: "Paint ${today.format('MMdd HH:mm')}"
 }
 
+// Provide a dummy keystore if none is passed
 if (!project.hasProperty("signingKeystore")) {
     ext.signingKeystore = "dummyKeystore"
 }
 
 android {
-    compileSdkVersion rootProject.ext.androidCompileSdkVersion
+    namespace "org.catrobat.paintroid.app"
+    compileSdk = rootProject.ext.androidCompileSdkVersion
+
     defaultConfig {
         applicationId appId
-        minSdkVersion rootProject.ext.androidMinSdkVersion
-        //noinspection OldTargetApi
-        targetSdkVersion rootProject.ext.androidTargetSdkVersion
-        versionCode rootProject.ext.androidVersionCode
-        versionName rootProject.ext.androidVersionName
+        minSdk  = rootProject.ext.androidMinSdkVersion
+        targetSdk = rootProject.ext.androidTargetSdkVersion
+        versionCode = rootProject.ext.androidVersionCode
+        versionName = rootProject.ext.androidVersionName
         manifestPlaceholders += [appName: appName]
         setProperty("archivesBaseName", "paintroid")
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = "17"
     }
 
     signingConfigs {
@@ -66,40 +72,48 @@ android {
         }
     }
 
-    if (project.hasProperty("signingKeystore") && project.hasProperty("signingKeystorePassword") &&
-            project.hasProperty("signingKeyAlias") && project.hasProperty("signingKeyPassword")) {
-        android.signingConfigs.signedRelease.storePassword = project.property("signingKeystorePassword")
-        android.signingConfigs.signedRelease.keyAlias = project.property("signingKeyAlias")
-        android.signingConfigs.signedRelease.keyPassword = project.property("signingKeyPassword")
+    if (project.hasProperty("signingKeystore") &&
+            project.hasProperty("signingKeystorePassword") &&
+            project.hasProperty("signingKeyAlias") &&
+            project.hasProperty("signingKeyPassword")) {
+
+        signingConfigs.signedRelease.storePassword = project.property("signingKeystorePassword")
+        signingConfigs.signedRelease.keyAlias      = project.property("signingKeyAlias")
+        signingConfigs.signedRelease.keyPassword   = project.property("signingKeyPassword")
     }
 
     buildTypes {
         release {
             minifyEnabled true
             shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
-        signedRelease.initWith(buildTypes.release)
-        signedRelease {
-            signingConfig signingConfigs.signedRelease
+        create("signedRelease") {
+            initWith(buildTypes.release)
+            signingConfig = signingConfigs.signedRelease
         }
     }
 
     publishing {
-        singleVariant('release') {
+        singleVariant("release") {
             withSourcesJar()
+        }
+    }
+    packaging {
+        jniLibs {
+            useLegacyPackaging false
         }
     }
 }
 
-tasks.withType(Detekt).configureEach {
-    jvmTarget = "1.8"
+tasks.withType(io.gitlab.arturbosch.detekt.Detekt).configureEach {
+    jvmTarget = "17"
     exclude("**/resources/**")
     exclude("**/build/**")
 }
 
 dependencies {
-    implementation project(':Paintroid')
-
-    implementation 'com.android.support:support-core-utils:28.0.0'
+    implementation project(":Paintroid")
+    implementation "com.android.support:support-core-utils:28.0.0"
 }
+

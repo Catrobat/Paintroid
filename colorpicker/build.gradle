@@ -21,23 +21,22 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
+    namespace "org.catrobat.paintroid.colorpicker"
     compileSdkVersion rootProject.ext.androidCompileSdkVersion
 
     defaultConfig {
         minSdkVersion rootProject.ext.androidMinSdkVersion
         targetSdkVersion rootProject.ext.androidTargetSdkVersion
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
-        versionCode rootProject.ext.androidVersionCode
-        versionName rootProject.ext.androidVersionName
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
+        jvmTarget = "17"
     }
 
     buildTypes {
