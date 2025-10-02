@@ -7,7 +7,7 @@ class DockerParameters {
     def dir = 'docker'
     def args = '--device /dev/kvm:/dev/kvm -v /var/local/container_shared/gradle_cache/$EXECUTOR_NUMBER:/home/user/.gradle -m=6.5G'
     def label = 'LimitedEmulator'
-    def image = 'floriankanduth/devops-846:bullseye'
+    def image = 'floriankanduth/devops-846:eclipse'
 
 }
 
