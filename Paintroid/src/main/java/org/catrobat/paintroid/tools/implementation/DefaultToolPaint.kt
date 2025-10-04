@@ -27,7 +27,7 @@ import android.graphics.Paint.Cap
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
 import android.graphics.Shader
-import org.catrobat.paintroid.R
+import org.catrobat.paintroid.colorpicker.R
 import org.catrobat.paintroid.tools.ToolPaint
 
 const val STROKE_25 = 25f

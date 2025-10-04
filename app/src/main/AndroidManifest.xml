@@ -21,11 +21,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="org.catrobat.paintroid.app">
 
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+
     <application
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="${appName}"
-        android:extractNativeLibs="false"
         tools:ignore="GoogleAppIndexingWarning,UnusedAttribute">
 
         <provider
@@ -35,7 +40,7 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/filepaths"/>
+                android:resource="@xml/filepaths" />
         </provider>
 
         <activity

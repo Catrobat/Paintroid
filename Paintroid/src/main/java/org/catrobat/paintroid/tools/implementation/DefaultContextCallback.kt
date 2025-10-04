@@ -37,7 +37,7 @@ import androidx.annotation.StringRes
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
-import org.catrobat.paintroid.R
+import org.catrobat.paintroid.colorpicker.R
 import org.catrobat.paintroid.tools.ContextCallback
 import org.catrobat.paintroid.tools.ContextCallback.NotificationDuration
 import org.catrobat.paintroid.tools.ContextCallback.NotificationDuration.SHORT

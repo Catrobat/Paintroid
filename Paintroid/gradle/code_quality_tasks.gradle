@@ -42,30 +42,30 @@ task checkstyle(type: Checkstyle) {
 
     classpath = files()
 
-    // needed for console output of warnings/errors
-    showViolations true
-    ignoreFailures false
+    // console printing is automatic; use ignoreFailures to fail or not
+    ignoreFailures = false
 
     reports {
-        xml.enabled = true
-        xml.destination file("build/reports/checkstyle.xml")
+        xml.required.set(true)
+        html.required.set(false)
+        xml.outputLocation.set(file("$buildDir/reports/checkstyle.xml"))
     }
 }
 
 task pmd(type: Pmd) {
     ruleSetFiles = files('config/pmd.xml')
-    ruleSets = []
+    ruleSets = [] // don't use built-in default sets
 
     source '.'
     include '**/*.java'
     exclude '**/gen/**', '**/build/**', '**/res/**'
 
-    ignoreFailures false
+    ignoreFailures = false
 
     reports {
-        xml.enabled = true
-        html.enabled = true
-        xml.destination file("build/reports/pmd.xml")
+        xml.required.set(true)
+        html.required.set(true)
+        xml.outputLocation.set(file("$buildDir/reports/pmd.xml"))
     }
 }
 

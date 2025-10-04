@@ -124,7 +124,7 @@ class OraFileIntentTest {
         } catch (e: IOException) {
             throw AssertionError("Picture file could not be created.", e)
         }
-        val imageFile = File(imageUri!!.path, "testfile.ora")
+        val imageFile = File(imageUri.path, "testfile.ora")
         deletionFileList!!.add(imageFile)
         return imageUri
     }

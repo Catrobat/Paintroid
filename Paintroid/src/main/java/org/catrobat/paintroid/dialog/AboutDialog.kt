@@ -52,7 +52,7 @@ class AboutDialog : AppCompatDialogFragment() {
         val aboutLicenseView = view.findViewById<TextView>(R.id.pocketpaint_about_license_url)
         val aboutCatrobatView = view.findViewById<TextView>(R.id.pocketpaint_about_catrobat_url)
         val activity = requireActivity() as MainActivity
-        val aboutVersion = getString(R.string.pocketpaint_about_version, activity.getVersionCode())
+        val aboutVersion = getString(R.string.pocketpaint_about_version, activity.getVersionName())
         aboutVersionView.text = aboutVersion
         val aboutContent = getString(
             R.string.pocketpaint_about_content,
