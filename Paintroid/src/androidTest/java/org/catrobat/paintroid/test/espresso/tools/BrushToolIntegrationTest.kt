@@ -20,8 +20,6 @@ package org.catrobat.paintroid.test.espresso.tools
  */
 
 import android.graphics.Color
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.matcher.ViewMatchers.withId
@@ -48,7 +46,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
-@RequiresApi(api = Build.VERSION_CODES.P)
 @RunWith(AndroidJUnit4::class)
 class BrushToolIntegrationTest {
 

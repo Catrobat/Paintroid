@@ -55,6 +55,7 @@ class PathCommandTest {
         paintUnderTest!!.strokeWidth = 0f
         paintUnderTest!!.style = Paint.Style.STROKE
         paintUnderTest!!.strokeCap = Cap.BUTT
+        paintUnderTest!!.isAntiAlias = false
         layerModel.addLayerAt(0, layerUnderTest)
         layerModel.currentLayer = layerUnderTest
         val pathUnderTest = Path()

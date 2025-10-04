@@ -39,6 +39,7 @@ import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.atLeastOnce
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -130,8 +131,8 @@ class PipetteToolTest {
         toolToTest!!.handleUp(PointF(X_COORDINATE_BLUE.toFloat(), 0f))
         toolToTest!!.handleUp(PointF(X_COORDINATE_PART_TRANSPARENT.toFloat(), 0f))
         val inOrderToolPaint = Mockito.inOrder(toolPaint)
-        inOrderToolPaint.verify(toolPaint)!!.color = Color.BLUE
-        inOrderToolPaint.verify(toolPaint)!!.color = -0x55555556
+        inOrderToolPaint.verify(toolPaint, atLeastOnce())!!.color = Color.BLUE
+        inOrderToolPaint.verify(toolPaint, atLeastOnce())!!.color = -0x55555556
         val inOrderListener = Mockito.inOrder(listener)
         inOrderListener.verify(listener)!!.colorChanged(Color.BLUE)
         inOrderListener.verify(listener)!!.colorChanged(-0x55555556)

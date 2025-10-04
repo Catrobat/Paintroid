@@ -18,14 +18,12 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="org.catrobat.paintroid.app">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <application
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="${appName}"
-        android:extractNativeLibs="false"
         tools:ignore="GoogleAppIndexingWarning,UnusedAttribute">
 
         <provider

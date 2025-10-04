@@ -4,9 +4,9 @@ import android.app.Activity
 import android.app.usage.UsageStatsManager
 import android.content.Context
 import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.filters.SdkSuppress
 import org.catrobat.paintroid.MainActivity
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -14,7 +14,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
-@RequiresApi(api = Build.VERSION_CODES.P)
+@SdkSuppress(minSdkVersion = Build.VERSION_CODES.P)
 @RunWith(AndroidJUnit4::class)
 class CorrectStandbyBucketBehaviourTests {
 
