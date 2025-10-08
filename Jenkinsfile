@@ -134,7 +134,6 @@ pipeline {
                     steps {
                         catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                             sh "./buildScripts/startEmulator.sh ${android_version} device_tests"
-                            waitForEmulatorAndPressWakeUpKey()
                             sh "./gradlew -PenableCoverage -Pjenkins -Pemulator=android${android_version} -Pci createDebugCoverageReport -i"
                         }
                     }
