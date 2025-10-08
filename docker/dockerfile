@@ -36,15 +36,15 @@ ARG _SDKMANAGER=$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager
 # x11-commons/x11-utils/libpulse0 needed to start emulator
 RUN apt-get update && apt-get install -y --no-install-recommends \
         git \
-        gnupg \
-        less \
-        libasound2 \
-        libnss3-dev \
-        libpulse0 \
-        libxcursor-dev \
-        make \
+#        gnupg \
+#        less \
+#        libasound2 \
+#        libnss3-dev \
+#        libpulse0 \
+#        libxcursor-dev \
+#       make \
         python2 \
-        software-properties-common \
+#        software-properties-common \
         unzip \
         x11-common \
         x11-utils \
@@ -55,10 +55,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 #
 # add the 'Jenkins' user
 # Add group of the user used by Jenkins during building.
-RUN if [ ! $(getent group $GROUP_ID) ]; then groupadd -g $GROUP_ID user; fi
-RUN groupadd -g $KVM_GROUP_ID kvm
-RUN mkdir -p catroid/build/reports/jacoco/jacocoTestCatroidDebugUnitTestReport/html
-RUN mkdir -p catroid/build/reports/coverage/catroid/debug/
+RUN if [ ! $(getent group $GROUP_ID) ]; then groupadd -g $GROUP_ID user; fi &&\
+    groupadd -g $KVM_GROUP_ID kvm &&\
+    mkdir -p catroid/build/reports/jacoco/jacocoTestCatroidDebugUnitTestReport/html  &&\
+    mkdir -p catroid/build/reports/coverage/catroid/debug/
+
 # Add the user used by Jenkins during building.
 RUN useradd -m -u $USER_ID -g $GROUP_ID -G $KVM_GROUP_ID -d $USER_HOME -s /usr/sbin/nologin user
 # Run all other commands as user
