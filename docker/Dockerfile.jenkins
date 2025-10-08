@@ -1,65 +1,55 @@
-FROM debian:bullseye
+FROM eclipse-temurin:11-jdk-jammy@sha256:f2e5cb53ab0fbcf0b4e0cbe963f684f524ea493835e6c36617536caac53ad4b6
 # Android Dependencies
 # --------------------
-# Adapt the paramters below to change the dependencies.
+# Adapt the parameters below to change the dependencies.
 #
 
 ARG ANDROID_API_LEVEL=28
 ARG ANDROID_BUILD_TOOLS_LEVEL=30.0.3
 ARG ANDROID_NDK_VERSION=21.1.6352462
 ARG ANDROID_CLI_TOOLS_URL="https://dl.google.com/android/repository/commandlinetools-linux-8512546_latest.zip"
-ARG SDKMANAGER_PACKAGES="build-tools;${ANDROID_BUILD_TOOLS_LEVEL} platforms;android-$ANDROID_API_LEVEL cmake;3.6.4111459 system-images;android-28;default;x86_64"
+ARG SDKMANAGER_PACKAGES="build-tools;${ANDROID_BUILD_TOOLS_LEVEL} platforms;android-$ANDROID_API_LEVEL cmake;3.6.4111459 system-images;android-28;default;x86_64 emulator"
 # Arguments, Environment
 # ----------------------
 #
 # Default values for the arguments to be passed from the Jenkinsfile.
 # Those contain the uid and gid of the Jenkins user, and are used to
 # create this user inside of the container, needed for eg ssh-agent to work
+
 ARG USER_ID=1000
 ARG USER_HOME=/home/user
 ARG GROUP_ID=1000
 ARG KVM_GROUP_ID=999
+
 # Environment variables that are needed by the build job.
 ENV ANDROID_SDK_ROOT=$USER_HOME/android/sdk
 ENV ANDROID_AVD_HOME=$USER_HOME/avds
+
 # Deprecated: Still used by gradle, once gradle respects ANDROID_SDK_ROOT, this can be removed
 ENV ANDROID_HOME=$ANDROID_SDK_ROOT
-ENV PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin
+ENV PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$ANDROID_HOME/emulator
 ARG _SDKMANAGER=$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager
+
 # System Packages
 # ---------------
 #
-# curl/openssh-client: upload to web/share
 # x11-commons/x11-utils/libpulse0 needed to start emulator
 RUN apt-get update && apt-get install -y --no-install-recommends \
-        curl \
-        unzip \
-        openssh-client \
-        x11-common \
-        x11-utils \
+        git \
+        gnupg \
+        less \
+        libasound2 \
+        libnss3-dev \
         libpulse0 \
         libxcursor-dev \
-        libnss3-dev \
-        libasound2 \
-        wget \
-        gnupg \
-        software-properties-common \
-    && rm -rf /var/lib/apt/lists/*
-# Install Fastlane
-RUN apt-get update
-RUN apt-get install -y python2
-RUN apt-get install -y --no-install-recommends \
-        openjdk-11-jdk-headless \
-        #ruby-full \
-        rubygems \
-        ruby-dev \
-        g++ \
         make \
-        less \
-        git \
-    && rm -rf /var/lib/apt/lists/* \
-    && gem install rake \
-    && gem install fastlane -NV
+        python2 \
+        software-properties-common \
+        unzip \
+        x11-common \
+        x11-utils \
+    && rm -rf /var/lib/apt/lists/*
+
 # User Management
 # ---------------
 #
@@ -78,22 +68,23 @@ RUN mkdir -p $ANDROID_AVD_HOME
 # ------------------
 #
 ARG _CMD_LINE=$ANDROID_SDK_ROOT/cmdline-tools
-RUN curl $ANDROID_CLI_TOOLS_URL --output /tmp/android_sdk.zip \
-    && mkdir -p $ANDROID_SDK_ROOT \
+ADD --chown=user:user $ANDROID_CLI_TOOLS_URL /tmp/android_sdk.zip
+RUN mkdir -p $ANDROID_SDK_ROOT \
     && unzip -d $ANDROID_SDK_ROOT /tmp/android_sdk.zip \
     && rm /tmp/android_sdk.zip \
                 && mkdir -p $_CMD_LINE/latest \
                 && mv $_CMD_LINE/bin $_CMD_LINE/lib $_CMD_LINE/source.properties $_CMD_LINE/latest/
 # Android NDK
 # ----------------
+# (unused)
+# RUN if [ ! -z "$ANDROID_NDK_URL" ]; then \
+#         curl $ANDROID_NDK_URL --output /tmp/android_ndk.zip \
+#         && mkdir -p $ANDROID_SDK_ROOT /tmp/ndk \
+#         && unzip -d /tmp/ndk /tmp/android_ndk.zip \
+#         && mv /tmp/ndk/* $ANDROID_SDK_ROOT/ndk-bundle \
+#         && rm /tmp/android_ndk.zip; \
+#     fi
 #
-RUN if [ ! -z "$ANDROID_NDK_URL" ]; then \
-        curl $ANDROID_NDK_URL --output /tmp/android_ndk.zip \
-        && mkdir -p $ANDROID_SDK_ROOT /tmp/ndk \
-        && unzip -d /tmp/ndk /tmp/android_ndk.zip \
-        && mv /tmp/ndk/* $ANDROID_SDK_ROOT/ndk-bundle \
-        && rm /tmp/android_ndk.zip; \
-    fi
 # Installing SDK Packages
 # -----------------------
 #
@@ -109,3 +100,5 @@ RUN if [ ! -z "$SDKMANAGER_PACKAGES" ]; then yes | $_SDKMANAGER $SDKMANAGER_PACK
 ENV _JAVA_OPTIONS="-XX:+UnlockExperimentalVMOptions"
 # Accept SDK licenses
 RUN yes | $_SDKMANAGER --licenses
+
+CMD ["bash"]

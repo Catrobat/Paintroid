@@ -13,32 +13,6 @@ class DockerParameters {
 
 def dockerParameters = new DockerParameters()
 
-def startEmulator(String android_version, String stageName) {
-    sh 'adb start-server'
-    // creates a new avd, and if it already exists it does nothing.
-    sh "echo no | avdmanager create avd --force --name android${android_version}" + " --package 'system-images;android-${android_version};default;x86_64'"
-    sh "emulator -no-window -no-boot-anim -noaudio -avd android${android_version} > ${stageName}_emulator.log 2>&1 &"
-}
-
-def waitForEmulatorAndPressWakeUpKey() {
-    sh 'adb devices'
-    // sh 'timeout 5m adb wait-for-device'
-    sh '''#!/bin/bash
-adb devices
-timeout 5m adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1;
-done'
-echo "Emulator started"
-'''
-    sh '''
-        adb shell settings put global window_animation_scale 0 &
-        adb shell settings put global transition_animation_scale 0 &
-        adb shell settings put global animator_duration_scale 0 &
-    '''
-
-    // In case the device went to sleep
-    sh 'adb shell input keyevent KEYCODE_WAKEUP'
-}
-
 def reports = 'Paintroid/build/reports'
 
 // place the cobertura xml relative to the source, so that the source can be found
@@ -159,7 +133,7 @@ pipeline {
                 stage('Device Tests') {
                     steps {
                         catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                            startEmulator(ANDROID_VERSION, 'device_tests')
+                            sh "./buildScripts/startEmulator.sh ${android_version} device_tests"
                             waitForEmulatorAndPressWakeUpKey()
                             sh "./gradlew -PenableCoverage -Pjenkins -Pemulator=android${android_version} -Pci createDebugCoverageReport -i"
                         }
