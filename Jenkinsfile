@@ -47,7 +47,14 @@ pipeline {
         string name: 'CATROID_BRANCH', defaultValue: 'develop', description: 'The branch which to build catroid with, when BUILD_WITH_CATROID is checked.'
     }
 
-    agent { dockerfile true }
+    agent {
+        docker {
+            image dockerParameters.image
+            args dockerParameters.args
+            label dockerParameters.label
+            alwaysPull true
+        }
+    }
 
     options {
         timeout(time: 2, unit: 'HOURS')
