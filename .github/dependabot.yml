@@ -1,0 +1,74 @@
+version: 2
+updates:
+  # Enable version updates for Gradle dependencies
+  - package-ecosystem: "gradle"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "Catrobat/paintroid-maintainers"
+    labels:
+      - "dependencies"
+      - "gradle"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+    ignore:
+      # Ignore major version updates for stable dependencies
+      - dependency-name: "org.jetbrains.kotlin:*"
+        update-types: ["version-update:semver-major"]
+    groups:
+      # Group AndroidX updates together
+      androidx:
+        patterns:
+          - "androidx.*"
+        update-types:
+          - "minor"
+          - "patch"
+      # Group testing dependencies together
+      testing:
+        patterns:
+          - "*junit*"
+          - "*mockito*"
+          - "*espresso*"
+        update-types:
+          - "minor"
+          - "patch"
+      # Group Kotlin dependencies
+      kotlin:
+        patterns:
+          - "org.jetbrains.kotlin*"
+          - "org.jetbrains.kotlinx*"
+
+  # Enable version updates for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "github-actions"
+    commit-message:
+      prefix: "ci"
+      include: "scope"
+
+  # Enable Docker base image updates
+  - package-ecosystem: "docker"
+    directory: "/docker"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "docker"
+    commit-message:
+      prefix: "chore"
+      include: "scope"

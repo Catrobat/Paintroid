@@ -19,7 +19,7 @@
 
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
-    ext.kotlin_version = '1.7.10'
+    ext.kotlin_version = '1.9.25'
     repositories {
         mavenCentral()
         google()
@@ -27,17 +27,17 @@ buildscript {
         maven { url 'https://jitpack.io' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.2.1'
+        classpath 'com.android.tools.build:gradle:8.2.2'
         classpath 'com.hiya:jacoco-android:0.2'
         classpath 'com.github.Catrobat:Gradle:1.6.2'
-        classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:3.1.0'
-        classpath "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.20.0"
+        classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:4.0.0'
+        classpath "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.23.6"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 
 plugins {
-    id "io.gitlab.arturbosch.detekt" version "1.20.0"
+    id "io.gitlab.arturbosch.detekt" version "1.23.6"
 }
 
 ext {
