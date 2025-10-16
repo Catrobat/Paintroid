@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ *  Paintroid: An image manipulation application for Android.
+ *  Copyright (C) 2010-2022 The Catrobat Team
+ *  (<http://developer.catrobat.org/credits>)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<network-security-config>
+    <!-- Base configuration for all connections -->
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <!-- Trust system certificate authorities -->
+            <certificates src="system" />
+            <!-- Optionally trust user-added CAs for debugging -->
+            <!-- <certificates src="user" /> -->
+        </trust-anchors>
+    </base-config>
+
+    <!-- Debug configuration (only active in debug builds) -->
+    <debug-overrides>
+        <trust-anchors>
+            <!-- Trust system CAs -->
+            <certificates src="system" />
+            <!-- Trust user-added CAs for development/debugging -->
+            <certificates src="user" />
+        </trust-anchors>
+    </debug-overrides>
+
+    <!-- 
+        Domain-specific configurations can be added here
+        Example for certificate pinning (uncomment and configure as needed):
+        
+        <domain-config cleartextTrafficPermitted="false">
+            <domain includeSubdomains="true">api.catrobat.org</domain>
+            <pin-set expiration="2026-01-01">
+                <pin digest="SHA-256">base64EncodedPublicKeyHash==</pin>
+                <pin digest="SHA-256">backupKeyHash==</pin>
+            </pin-set>
+        </domain-config>
+    -->
+</network-security-config>
