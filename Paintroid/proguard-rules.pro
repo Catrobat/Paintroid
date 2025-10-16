@@ -83,12 +83,17 @@
 }
 
 # ============================================================================
-# Universal Image Loader
+# Coil Image Loading Library
 # ============================================================================
 
--keep class com.nostra13.universalimageloader.** { *; }
--keepclassmembers class com.nostra13.universalimageloader.** { *; }
--dontwarn com.nostra13.universalimageloader.**
+# Coil uses coroutines and OkHttp internally
+-keep class coil.** { *; }
+-keepclassmembers class coil.** { *; }
+-dontwarn coil.**
+
+# Coil uses Okio and OkHttp
+-dontwarn okhttp3.**
+-dontwarn okio.**
 
 # ============================================================================
 # Image Compression Library
