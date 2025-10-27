@@ -55,11 +55,19 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libnss3-dev \
         libpulse0 \
         libxcursor-dev \
-        python2-minimal=2.7.* \
+        python2=2.7.* \
         unzip \
         x11-common \
         x11-utils \
-    && rm -rf /var/lib/apt/lists/*
+        #ruby-full \
+        rubygems \
+        ruby-dev \
+        g++ \
+        make \
+        less \
+    && rm -rf /var/lib/apt/lists/* \
+    && gem install rake \
+    && gem install fastlane -NV
 
 # User Management
 # ---------------
