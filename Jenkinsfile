@@ -1,5 +1,18 @@
 #!groovy
 
+class DockerParameters {
+
+    // 'docker build' would normally copy the whole build-dir to the container, changing the
+    // docker build directory avoids that overhead
+    def dir = 'docker'
+    def args = '--device /dev/kvm:/dev/kvm -v /var/local/container_shared/gradle_cache/$EXECUTOR_NUMBER:/home/user/.gradle -m=6.5G'
+    def label = 'LimitedEmulator'
+    def image = 'catrobat/catrobat-paintroid:DEVOPS-846-test'
+
+}
+
+def dockerParameters = new DockerParameters()
+
 def reports = 'Paintroid/build/reports'
 
 // place the cobertura xml relative to the source, so that the source can be found
@@ -23,6 +36,11 @@ def useDebugLabelParameter(defaultLabel) {
 }
 
 pipeline {
+    environment {
+        ANDROID_VERSION = 28
+        ADB_INSTALL_TIMEOUT = 60
+    }
+
     parameters {
         string name: 'DEBUG_LABEL', defaultValue: '', description: 'For debugging when entered will be used as label to decide on which slaves the jobs will run.'
         booleanParam name: 'BUILD_WITH_CATROID', defaultValue: false, description: 'When checked then the current Paintroid build will be built with the current develop branch of Catroid'
@@ -30,10 +48,10 @@ pipeline {
     }
 
     agent {
-         docker {
-            image 'catrobat/catrobat-paintroid:stable'
-            args '--device /dev/kvm:/dev/kvm -v /var/local/container_shared/gradle_cache/$EXECUTOR_NUMBER:/home/user/.gradle -m=6.5G'
-            label 'LimitedEmulator'
+        docker {
+            image dockerParameters.image
+            args dockerParameters.args
+            label dockerParameters.label
             alwaysPull true
         }
     }
@@ -70,14 +88,14 @@ pipeline {
                 sh 'rm -rf Catroid; mkdir Catroid'
                 dir('Catroid') {
                     git branch: params.CATROID_BRANCH, url: 'https://github.com/Catrobat/Catroid.git'
-                    sh "rm -f catroid/src/main/libs/*.aar"
-                    sh "mv -f ../colorpicker/build/outputs/aar/colorpicker-debug.aar catroid/src/main/libs/colorpicker-LOCAL.aar"
-                    sh "mv -f ../Paintroid/build/outputs/aar/Paintroid-debug.aar catroid/src/main/libs/Paintroid-LOCAL.aar"
+                    sh 'rm -f catroid/src/main/libs/*.aar'
+                    sh 'mv -f ../colorpicker/build/outputs/aar/colorpicker-debug.aar catroid/src/main/libs/colorpicker-LOCAL.aar'
+                    sh 'mv -f ../Paintroid/build/outputs/aar/Paintroid-debug.aar catroid/src/main/libs/Paintroid-LOCAL.aar'
                 }
                 renameApks("${env.BRANCH_NAME}-${env.BUILD_NUMBER}")
                 dir('Catroid') {
-                    archiveArtifacts "catroid/src/main/libs/*.aar"
-                    sh "./gradlew assembleCatroidDebug"
+                    archiveArtifacts 'catroid/src/main/libs/*.aar'
+                    sh './gradlew assembleCatroidDebug'
                     archiveArtifacts 'catroid/build/outputs/apk/catroid/debug/catroid-catroid-debug.apk'
                 }
             }
@@ -114,13 +132,15 @@ pipeline {
 
                 stage('Device Tests') {
                     steps {
-                        sh "echo no | avdmanager create avd --force --name android28 --package 'system-images;android-28;default;x86_64'"
-                        sh "/home/user/android/sdk/emulator/emulator -no-window -no-boot-anim -noaudio -avd android28 > /dev/null 2>&1 &"
-                        sh './gradlew -PenableCoverage -Pjenkins -Pemulator=android28 -Pci createDebugCoverageReport -i'
+                        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                            sh "./buildScripts/startEmulator.sh ${android_version} device_tests"
+                            sh "./gradlew -PenableCoverage -Pjenkins -Pemulator=android${android_version} -Pci createDebugCoverageReport -i"
+                        }
                     }
                     post {
                         always {
-                            sh '/home/user/android/sdk/platform-tools/adb logcat -d > logcat.txt'
+                            archiveArtifacts "device_tests_emulator.log"
+                            // sh '/home/user/android/sdk/platform-tools/adb logcat -d > logcat.txt'
                             sh './gradlew stopEmulator'
                             junitAndCoverage "$reports/coverage/debug/report.xml", 'device', javaSrc
                             archiveArtifacts 'logcat.txt'
@@ -139,7 +159,9 @@ pipeline {
 
     post {
         always {
-            step([$class: 'LogParserPublisher', failBuildOnError: true, projectRulePath: 'buildScripts/log_parser_rules', unstableOnWarning: true, useProjectRule: true])
+            steps {
+                step([$class: 'LogParserPublisher', failBuildOnError: true, projectRulePath: 'buildScripts/log_parser_rules', unstableOnWarning: true, useProjectRule: true])                
+            }
         }
         changed {
             notifyChat()
