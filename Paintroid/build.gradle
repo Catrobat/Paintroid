@@ -17,23 +17,22 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-apply plugin: 'com.android.library'
-apply plugin: "com.mxalbert.gradle.jacoco-android"
-apply plugin: 'com.getkeepsafe.dexcount'
-apply plugin: 'kotlin-android'
-apply plugin: 'org.catrobat.gradle.androidemulators'
-apply plugin: 'maven-publish'
+plugins {
+    id "com.android.library"
+    id "jacoco"
+    id "com.getkeepsafe.dexcount"
+    id "org.jetbrains.kotlin.android"
+    id "org.catrobat.gradle.androidemulators"
+    id "maven-publish"
+}
 
-apply from: 'gradle/adb_tasks.gradle'
-apply from: 'gradle/code_quality_tasks.gradle'
+apply from: "gradle/adb_tasks.gradle"
+apply from: "gradle/code_quality_tasks.gradle"
 apply from: 'gradle/emulator.gradle'
 
 emulators {
-    install project.hasProperty('installSdk')
-
-    dependencies {
-        sdk()
-    }
+    install project.hasProperty("installSdk")
+    dependencies { sdk() }
 
     emulator 'android28', {
         avd {
@@ -55,48 +54,42 @@ jacoco {
     toolVersion = "0.8.10"
 }
 
-jacocoAndroidUnitTestReport {
-    csv.required = false
-    html.required = true
-    xml.required = true
-    destination = project.getBuildDir().getPath() + "/reports/jacoco/jacocoTestDebugUnitTestReport"
-}
-
 android {
-    compileSdkVersion rootProject.ext.androidCompileSdkVersion
+    namespace = 'org.catrobat.paintroid'
+
+    // New AGP DSL (API 35-ready)
+    compileSdk = rootProject.ext.androidCompileSdkVersion
 
     defaultConfig {
-        minSdkVersion rootProject.ext.androidMinSdkVersion
-        targetSdkVersion rootProject.ext.androidTargetSdkVersion
-        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+        minSdk    = rootProject.ext.androidMinSdkVersion
+        targetSdk = rootProject.ext.androidTargetSdkVersion
+        testInstrumentationRunner = 'androidx.test.runner.AndroidJUnitRunner'
+    }
+
+    buildFeatures {
+        buildConfig = true
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
+    kotlinOptions { jvmTarget = "17" }
 
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-        signedRelease {
-        }
-        debug {
-            enableUnitTestCoverage = 'project.hasProperty(\'enableCoverage\')'
-            enableAndroidTestCoverage = 'project.hasProperty(\'enableCoverage\')'
-            // Multidex is required as espresso and mockito/bytebuddy are adding more functions
-            // than should be allowed by law.
-            // See https://github.com/mockito/mockito/issues/1112
-            multiDexEnabled true
-        }
+        signedRelease { }
+        debug { }
     }
 
     testOptions {
         unitTests.returnDefaultValues = true
         animationsDisabled = true
     }
+
     packagingOptions {
         resources {
             excludes += ['META-INF/AL2.0', 'META-INF/LGPL2.1', "**/attach_hotspot_windows.dll"]
@@ -104,18 +97,14 @@ android {
         }
     }
 
-    namespace 'org.catrobat.paintroid'
     lint {
-        htmlOutput file('build/reports/lint-report.html')
-        htmlReport true
-        ignore 'ClickableViewAccessibility', 'StaticFieldLeak', 'GradleDependency', 'OldTargetApi', 'LintBaseline'
-        lintConfig file('config/lint.xml')
-        textReport true
-        xmlOutput file('build/reports/lint-report.xml')
-        xmlReport true
-    }
-    buildFeatures {
-        buildConfig true
+        lintConfig = file('config/lint.xml')
+        disable = ['ClickableViewAccessibility','StaticFieldLeak','GradleDependency','OldTargetApi','LintBaseline']
+        textReport = true
+        xmlReport  = true
+        htmlReport = true
+        xmlOutput  = file('build/reports/lint-report.xml')
+        htmlOutput = file('build/reports/lint-report.html')
     }
 }
 
@@ -132,6 +121,7 @@ dependencies {
     implementation 'com.esotericsoftware:kryo:5.5.0'
     implementation 'id.zelory:compressor:2.1.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.test:monitor:1.8.0'
 
     debugImplementation 'androidx.multidex:multidex:2.0.0'
 
@@ -153,13 +143,8 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-intents:3.1.0'
     androidTestImplementation "androidx.test.uiautomator:uiautomator:2.2.0"
     testImplementation "androidx.test:core-ktx:1.4.0"
-    implementation 'com.android.support.test.espresso:espresso-idling-resource:3.1.0'
+
+    implementation 'androidx.test.espresso:espresso-idling-resource:3.5.1'
 }
 
-tasks.withType(Javadoc).all {
-    enabled = false
-}
-
-if (project.hasProperty('jenkins')) {
-    android.dexOptions.preDexLibraries = false
-}
+tasks.withType(Javadoc).configureEach { enabled = false }

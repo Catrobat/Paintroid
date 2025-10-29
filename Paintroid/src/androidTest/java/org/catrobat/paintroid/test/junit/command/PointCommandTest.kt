@@ -64,17 +64,17 @@ class PointCommandTest {
 
     @Test
     fun testRun() {
-        bitmapUnderTest!!.setPixel(pointUnderTest!!.x.toInt(), pointUnderTest!!.y.toInt(), paintUnderTest!!.color)
-        commandUnderTest!!.run(canvasUnderTest!!, LayerModel())
-        assertBitmapEquals(bitmapUnderTest!!, canvasBitmapUnderTest)
+        bitmapUnderTest.setPixel(pointUnderTest!!.x.toInt(), pointUnderTest!!.y.toInt(), paintUnderTest!!.color)
+        commandUnderTest.run(canvasUnderTest!!, LayerModel())
+        assertBitmapEquals(bitmapUnderTest, canvasBitmapUnderTest)
     }
 
     @Test
     fun testRunOutOfBounds() {
-        pointUnderTest = PointF((canvasBitmapUnderTest!!.height + 1).toFloat(), (canvasBitmapUnderTest!!.width + 1).toFloat())
+        pointUnderTest = PointF((canvasBitmapUnderTest.height + 1).toFloat(), (canvasBitmapUnderTest.width + 1).toFloat())
         commandUnderTest = PointCommand(paintUnderTest!!, pointUnderTest!!)
         commandUnderTest.run(canvasUnderTest!!, LayerModel())
-        assertBitmapEquals(bitmapUnderTest!!, canvasBitmapUnderTest)
+        assertBitmapEquals(bitmapUnderTest, canvasBitmapUnderTest)
     }
 
     companion object {

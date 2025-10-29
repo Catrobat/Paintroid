@@ -26,13 +26,10 @@ ext {
     appName = '@string/pocketpaint_app_name'
 }
 
-// When -Pindependent was provided on the gradle command the APP name is changed.
-// This allows to have multiple Paintroid versions installed in parallel for testing purposes.
-// Furthermore these installations do not interfere with the actual Paintroid app.
 if (project.hasProperty('independent')) {
     def today = new Date()
-    appId += '.independent_' + today.format('YYYYMMdd_HHmm')
-    appName = property('independent') ?: 'Paint ' + today.format('MMdd HH:mm')
+    appId += ".independent_${today.format('YYYYMMdd_HHmm')}"
+    appName = property('independent') ?: "Paint ${today.format('MMdd HH:mm')}"
 }
 
 if (!project.hasProperty("signingKeystore")) {
@@ -41,61 +38,66 @@ if (!project.hasProperty("signingKeystore")) {
 
 android {
     compileSdkVersion rootProject.ext.androidCompileSdkVersion
+
     defaultConfig {
-        applicationId appId
+        applicationId = appId
         minSdkVersion rootProject.ext.androidMinSdkVersion
         //noinspection OldTargetApi
         targetSdkVersion rootProject.ext.androidTargetSdkVersion
-        versionCode rootProject.ext.androidVersionCode
-        versionName rootProject.ext.androidVersionName
+        versionCode = rootProject.ext.androidVersionCode
+        versionName = rootProject.ext.androidVersionName
         manifestPlaceholders += [appName: appName]
-        setProperty("archivesBaseName", "paintroid")
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     signingConfigs {
         signedRelease {
-            storeFile file(project.property("signingKeystore"))
-            storePassword ""
-            keyAlias ""
-            keyPassword ""
+            storeFile = file(project.property("signingKeystore"))
+            storePassword = ""
+            keyAlias = ""
+            keyPassword = ""
         }
     }
 
-    if (project.hasProperty("signingKeystore") && project.hasProperty("signingKeystorePassword") &&
-            project.hasProperty("signingKeyAlias") && project.hasProperty("signingKeyPassword")) {
-        android.signingConfigs.signedRelease.storePassword = project.property("signingKeystorePassword")
-        android.signingConfigs.signedRelease.keyAlias = project.property("signingKeyAlias")
-        android.signingConfigs.signedRelease.keyPassword = project.property("signingKeyPassword")
+    if (project.hasProperty("signingKeystore") &&
+            project.hasProperty("signingKeystorePassword") &&
+            project.hasProperty("signingKeyAlias") &&
+            project.hasProperty("signingKeyPassword")) {
+
+        signingConfigs.signedRelease.storePassword = project.property("signingKeystorePassword")
+        signingConfigs.signedRelease.keyAlias = project.property("signingKeyAlias")
+        signingConfigs.signedRelease.keyPassword = project.property("signingKeyPassword")
     }
 
     buildTypes {
         release {
-            minifyEnabled true
-            shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            minifyEnabled = true
+            shrinkResources = true
+            proguardFiles(getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro')
         }
-        signedRelease.initWith(buildTypes.release)
         signedRelease {
-            signingConfig signingConfigs.signedRelease
+            initWith(release)
+            signingConfig = signingConfigs.signedRelease
         }
     }
 
     publishing {
-        singleVariant('release') {
+        singleVariant("release") {
             withSourcesJar()
         }
     }
+
     packagingOptions {
         jniLibs {
-            useLegacyPackaging false
+            useLegacyPackaging = false
         }
     }
-    namespace 'org.catrobat.paintroid.app'
+
+    namespace = "org.catrobat.paintroid.app"
 }
 
 tasks.withType(Detekt).configureEach {
@@ -106,6 +108,5 @@ tasks.withType(Detekt).configureEach {
 
 dependencies {
     implementation project(':Paintroid')
-
     implementation 'com.android.support:support-core-utils:28.0.0'
 }

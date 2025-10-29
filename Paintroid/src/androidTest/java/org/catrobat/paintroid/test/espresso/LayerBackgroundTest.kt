@@ -49,7 +49,7 @@ class LayerBackgroundTest(private val language: String) {
     @Test
     fun testOneLayer() {
         var actualBackground = getActualBackground(0)
-        Assert.assertEquals(actualBackground, getSingleBackground()?.constantState)
+        Assert.assertEquals(actualBackground, getSingleBackground().constantState)
     }
 
     @Test
@@ -61,8 +61,8 @@ class LayerBackgroundTest(private val language: String) {
         var backgroundTop = getActualBackground(0)
         var backgroundBottom = getActualBackground(1)
 
-        Assert.assertEquals(backgroundTop, getTopBackground(true)?.constantState)
-        Assert.assertEquals(backgroundBottom, getBottomBackground(false)?.constantState)
+        Assert.assertEquals(backgroundTop, getTopBackground(true).constantState)
+        Assert.assertEquals(backgroundBottom, getBottomBackground(false).constantState)
     }
 
     @Test
@@ -75,8 +75,8 @@ class LayerBackgroundTest(private val language: String) {
         var backgroundTop = getActualBackground(0)
         var backgroundBottom = getActualBackground(1)
 
-        Assert.assertEquals(backgroundTop, getTopBackground(false)?.constantState)
-        Assert.assertEquals(backgroundBottom, getBottomBackground(true)?.constantState)
+        Assert.assertEquals(backgroundTop, getTopBackground(false).constantState)
+        Assert.assertEquals(backgroundBottom, getBottomBackground(true).constantState)
     }
 
     @Test
@@ -90,9 +90,9 @@ class LayerBackgroundTest(private val language: String) {
         var backgroundCenter = getActualBackground(1)
         var backgroundBottom = getActualBackground(2)
 
-        Assert.assertEquals(backgroundTop, getTopBackground(true)?.constantState)
+        Assert.assertEquals(backgroundTop, getTopBackground(true).constantState)
         Assert.assertEquals(backgroundCenter, getCenterBackground(false)?.constantState)
-        Assert.assertEquals(backgroundBottom, getBottomBackground(false)?.constantState)
+        Assert.assertEquals(backgroundBottom, getBottomBackground(false).constantState)
     }
 
     @Test
@@ -107,9 +107,9 @@ class LayerBackgroundTest(private val language: String) {
         var backgroundCenter = getActualBackground(1)
         var backgroundBottom = getActualBackground(2)
 
-        Assert.assertEquals(backgroundTop, getTopBackground(false)?.constantState)
+        Assert.assertEquals(backgroundTop, getTopBackground(false).constantState)
         Assert.assertEquals(backgroundCenter, getCenterBackground(true)?.constantState)
-        Assert.assertEquals(backgroundBottom, getBottomBackground(false)?.constantState)
+        Assert.assertEquals(backgroundBottom, getBottomBackground(false).constantState)
     }
 
     @Test
@@ -125,9 +125,9 @@ class LayerBackgroundTest(private val language: String) {
         var backgroundCenter = getActualBackground(1)
         var backgroundBottom = getActualBackground(2)
 
-        Assert.assertEquals(backgroundTop, getTopBackground(false)?.constantState)
+        Assert.assertEquals(backgroundTop, getTopBackground(false).constantState)
         Assert.assertEquals(backgroundCenter, getCenterBackground(false)?.constantState)
-        Assert.assertEquals(backgroundBottom, getBottomBackground(true)?.constantState)
+        Assert.assertEquals(backgroundBottom, getBottomBackground(true).constantState)
     }
 
     @Test
@@ -143,10 +143,10 @@ class LayerBackgroundTest(private val language: String) {
         val backgroundLowerCenter = getActualBackground(2)
         val backgroundBottom = getActualBackground(3)
 
-        Assert.assertEquals(backgroundTop, getTopBackground(true)?.constantState)
+        Assert.assertEquals(backgroundTop, getTopBackground(true).constantState)
         Assert.assertEquals(backgroundUpperCenter, getCenterBackground(false)?.constantState)
         Assert.assertEquals(backgroundLowerCenter, getCenterBackground(false)?.constantState)
-        Assert.assertEquals(backgroundBottom, getBottomBackground(false)?.constantState)
+        Assert.assertEquals(backgroundBottom, getBottomBackground(false).constantState)
     }
 
     @Test
@@ -163,10 +163,10 @@ class LayerBackgroundTest(private val language: String) {
         val backgroundLowerCenter = getActualBackground(2)
         val backgroundBottom = getActualBackground(3)
 
-        Assert.assertEquals(backgroundTop, getTopBackground(false)?.constantState)
+        Assert.assertEquals(backgroundTop, getTopBackground(false).constantState)
         Assert.assertEquals(backgroundUpperCenter, getCenterBackground(true)?.constantState)
         Assert.assertEquals(backgroundLowerCenter, getCenterBackground(false)?.constantState)
-        Assert.assertEquals(backgroundBottom, getBottomBackground(false)?.constantState)
+        Assert.assertEquals(backgroundBottom, getBottomBackground(false).constantState)
     }
 
     @Test
@@ -184,10 +184,10 @@ class LayerBackgroundTest(private val language: String) {
         val backgroundLowerCenter = getActualBackground(2)
         val backgroundBottom = getActualBackground(3)
 
-        Assert.assertEquals(backgroundTop, getTopBackground(false)?.constantState)
+        Assert.assertEquals(backgroundTop, getTopBackground(false).constantState)
         Assert.assertEquals(backgroundUpperCenter, getCenterBackground(false)?.constantState)
         Assert.assertEquals(backgroundLowerCenter, getCenterBackground(true)?.constantState)
-        Assert.assertEquals(backgroundBottom, getBottomBackground(false)?.constantState)
+        Assert.assertEquals(backgroundBottom, getBottomBackground(false).constantState)
     }
 
     @Test
@@ -205,10 +205,10 @@ class LayerBackgroundTest(private val language: String) {
         val backgroundLowerCenter = getActualBackground(2)
         val backgroundBottom = getActualBackground(3)
 
-        Assert.assertEquals(backgroundTop, getTopBackground(false)?.constantState)
+        Assert.assertEquals(backgroundTop, getTopBackground(false).constantState)
         Assert.assertEquals(backgroundUpperCenter, getCenterBackground(false)?.constantState)
         Assert.assertEquals(backgroundLowerCenter, getCenterBackground(false)?.constantState)
-        Assert.assertEquals(backgroundBottom, getBottomBackground(true)?.constantState)
+        Assert.assertEquals(backgroundBottom, getBottomBackground(true).constantState)
     }
 
     private fun getActualBackground(position: Int): Drawable.ConstantState? {

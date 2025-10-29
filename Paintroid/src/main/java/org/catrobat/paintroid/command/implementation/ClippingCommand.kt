@@ -12,8 +12,8 @@ import org.catrobat.paintroid.contract.LayerContracts
 
 class ClippingCommand(bitmap: Bitmap, pathBitmap: Bitmap) : Command {
 
-    var bitmap: Bitmap? = bitmap.copy(bitmap.config, true); private set
-    var pathBitmap: Bitmap? = pathBitmap.copy(pathBitmap.config, true); private set
+    var bitmap: Bitmap? = bitmap.copy(bitmap.config ?: Bitmap.Config.ARGB_8888, true); private set
+    var pathBitmap: Bitmap? = pathBitmap.copy(pathBitmap.config ?: Bitmap.Config.ARGB_8888, true); private set
 
     override fun run(canvas: Canvas, layerModel: LayerContracts.Model) {
         val bitmapToDraw = bitmap

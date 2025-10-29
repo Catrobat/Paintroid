@@ -21,32 +21,31 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion rootProject.ext.androidCompileSdkVersion
+    namespace = "org.catrobat.paintroid.colorpicker"
+    compileSdk = rootProject.ext.androidCompileSdkVersion
 
     defaultConfig {
-        minSdkVersion rootProject.ext.androidMinSdkVersion
-        targetSdkVersion rootProject.ext.androidTargetSdkVersion
-        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+        minSdk = rootProject.ext.androidMinSdkVersion
+        targetSdk = rootProject.ext.androidTargetSdkVersion
+        testInstrumentationRunner = 'androidx.test.runner.AndroidJUnitRunner'
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
+        jvmTarget = "17"
     }
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled = false  // ← add =
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-        signedRelease {
-        }
+        signedRelease { }
     }
-    namespace 'org.catrobat.paintroid.colorpicker'
 }
 
 dependencies {

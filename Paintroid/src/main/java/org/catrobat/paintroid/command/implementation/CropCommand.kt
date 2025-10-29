@@ -57,7 +57,7 @@ class CropCommand(
         while (iterator.hasNext()) {
             val currentLayer = iterator.next()
             val currentBitmap = currentLayer.bitmap ?: Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-            val resizedBitmap = Bitmap.createBitmap(width, height, currentBitmap.config)
+            val resizedBitmap = Bitmap.createBitmap(width, height, currentBitmap.config ?: Bitmap.Config.ARGB_8888)
             val resizedCanvas = Canvas(resizedBitmap)
             resizedCanvas.drawBitmap(currentBitmap, -resizeCoordinateXLeft.toFloat(), -resizeCoordinateYTop.toFloat(), null)
             currentLayer.bitmap = resizedBitmap
