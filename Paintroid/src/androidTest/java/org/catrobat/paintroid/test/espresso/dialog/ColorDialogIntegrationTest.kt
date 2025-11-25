@@ -38,6 +38,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.ActivityTestRule
+import androidx.test.rule.GrantPermissionRule
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.colorpicker.HSVColorPickerView
@@ -47,6 +48,7 @@ import org.catrobat.paintroid.common.CATROBAT_IMAGE_ENDING
 import org.catrobat.paintroid.common.PAINTROID_PICTURE_NAME
 import org.catrobat.paintroid.common.PAINTROID_PICTURE_PATH
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider
+import org.catrobat.paintroid.test.espresso.util.EspressoUtils
 import org.catrobat.paintroid.test.espresso.util.UiInteractions
 import org.catrobat.paintroid.test.espresso.util.UiMatcher
 import org.catrobat.paintroid.test.espresso.util.wrappers.ColorPickerViewInteraction
@@ -72,6 +74,8 @@ class ColorDialogIntegrationTest {
     var launchActivityRule = ActivityTestRule(
         MainActivity::class.java
     )
+    @get:Rule
+    val grantPermissionRule: GrantPermissionRule = EspressoUtils.grantPermissionRulesVersionCheck()
 
     @get:Rule
     var launchActivityRuleWithIntent = IntentsTestRule(

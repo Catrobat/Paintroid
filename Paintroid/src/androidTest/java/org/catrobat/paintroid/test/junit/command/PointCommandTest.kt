@@ -55,6 +55,7 @@ class PointCommandTest {
         paintUnderTest!!.strokeWidth = 0f
         paintUnderTest!!.style = Paint.Style.STROKE
         paintUnderTest!!.strokeCap = Cap.BUTT
+        paintUnderTest!!.isAntiAlias = false
         pointUnderTest = PointF((INITIAL_WIDTH / 2).toFloat(), (INITIAL_HEIGHT / 2).toFloat())
         layerModel.addLayerAt(0, layerUnderTest)
         layerModel.currentLayer = layerUnderTest
@@ -63,17 +64,17 @@ class PointCommandTest {
 
     @Test
     fun testRun() {
-        bitmapUnderTest!!.setPixel(pointUnderTest!!.x.toInt(), pointUnderTest!!.y.toInt(), paintUnderTest!!.color)
-        commandUnderTest!!.run(canvasUnderTest!!, LayerModel())
-        assertBitmapEquals(bitmapUnderTest!!, canvasBitmapUnderTest)
+        bitmapUnderTest.setPixel(pointUnderTest!!.x.toInt(), pointUnderTest!!.y.toInt(), paintUnderTest!!.color)
+        commandUnderTest.run(canvasUnderTest!!, LayerModel())
+        assertBitmapEquals(bitmapUnderTest, canvasBitmapUnderTest)
     }
 
     @Test
     fun testRunOutOfBounds() {
-        pointUnderTest = PointF((canvasBitmapUnderTest!!.height + 1).toFloat(), (canvasBitmapUnderTest!!.width + 1).toFloat())
+        pointUnderTest = PointF((canvasBitmapUnderTest.height + 1).toFloat(), (canvasBitmapUnderTest.width + 1).toFloat())
         commandUnderTest = PointCommand(paintUnderTest!!, pointUnderTest!!)
         commandUnderTest.run(canvasUnderTest!!, LayerModel())
-        assertBitmapEquals(bitmapUnderTest!!, canvasBitmapUnderTest)
+        assertBitmapEquals(bitmapUnderTest, canvasBitmapUnderTest)
     }
 
     companion object {

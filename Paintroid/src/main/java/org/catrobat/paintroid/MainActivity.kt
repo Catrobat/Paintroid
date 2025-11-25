@@ -21,6 +21,7 @@ package org.catrobat.paintroid
 import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PointF
@@ -810,7 +811,14 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         }
     }
 
-    fun getVersionCode(): String = runCatching {
-        packageManager.getPackageInfo(packageName, 0).versionName
+    fun getVersionName(): String = runCatching {
+        val pm = packageManager
+        val pkgInfo = if (Build.VERSION.SDK_INT >= 33) {
+            pm.getPackageInfo(packageName, PackageManager.PackageInfoFlags.of(0))
+        } else {
+            @Suppress("DEPRECATION")
+            pm.getPackageInfo(packageName, 0)
+        }
+        pkgInfo.versionName ?: ""
     }.getOrDefault("")
 }

@@ -119,11 +119,12 @@ class SaveCompressImageIntegrationTest {
 
         val options = BitmapFactory.Options()
         options.inMutable = true
-        val compressedBitmap = Objects.requireNonNull(
-            activity?.model?.savedPictureUri
-        )?.let {
-            activity?.let { it1 ->
-                getScaledBitmapFromUri(it1.contentResolver, it, activity?.applicationContext)
+        val savedUri = activity?.model?.savedPictureUri
+        Assert.assertNotNull("Saved picture URI should not be null", savedUri)
+
+        val compressedBitmap = savedUri?.let { uri ->
+            activity?.let { activityNonNull ->
+                getScaledBitmapFromUri(activityNonNull.contentResolver, uri, activityNonNull.applicationContext)
             }
         }
         val testBitmap = getBitmapFromFile(testImageFile)

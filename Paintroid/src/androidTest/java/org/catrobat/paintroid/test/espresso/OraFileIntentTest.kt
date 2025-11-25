@@ -112,7 +112,7 @@ class OraFileIntentTest {
         val bitmap = Bitmap.createBitmap(400, 400, Bitmap.Config.ARGB_8888)
         val contentValues = ContentValues()
         contentValues.put(MediaStore.Images.Media.DISPLAY_NAME, "testfile.ora")
-        contentValues.put(MediaStore.Images.Media.MIME_TYPE, "image/*")
+        contentValues.put(MediaStore.Images.Media.MIME_TYPE, "image/png")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             contentValues.put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
         }
@@ -124,7 +124,7 @@ class OraFileIntentTest {
         } catch (e: IOException) {
             throw AssertionError("Picture file could not be created.", e)
         }
-        val imageFile = File(imageUri!!.path, "testfile.ora")
+        val imageFile = File(imageUri.path, "testfile.ora")
         deletionFileList!!.add(imageFile)
         return imageUri
     }

@@ -19,7 +19,7 @@
 
 buildscript {
     repositories {
-        maven { url 'https://jitpack.io' }
+        maven { url = uri('https://jitpack.io') }
     }
     dependencies {
         classpath 'com.github.Catrobat:Gradle:v1.6.2'
@@ -45,7 +45,7 @@ def createAdbInstallTask(variant) {
     }
 }
 
-android.libraryVariants.all { variant ->
+android.libraryVariants.configureEach { variant ->
     createAdbInstallTask(variant)
 }
 
@@ -53,7 +53,7 @@ android.testVariants.all { variant ->
     createAdbInstallTask(variant)
 }
 
-task commandlineAdbRunTests {
+tasks.register('commandlineAdbRunTests') {
     doLast {
         def device = androidDevice()
 
@@ -76,6 +76,6 @@ task commandlineAdbRunTests {
             def adbScreenshotsPath = adbPath + "/robotium_screenshots"
             file(adbScreenshotsPath).mkdirs()
             device.command(['pull', '/sdcard/Robotium-Screenshots', adbScreenshotsPath]).verbose().execute()
-        } catch (GradleScriptException) {}
+        } catch (ignored) {}
     }
 }

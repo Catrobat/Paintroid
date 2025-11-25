@@ -53,18 +53,18 @@ class FlipCommandTest {
     @Test
     fun testVerticalFlip() {
         commandUnderTest = FlipCommand(FlipDirection.FLIP_VERTICAL)
-        bitmapUnderTest!!.setPixel(0, INITIAL_HEIGHT / 2, PAINT_BASE_COLOR)
+        bitmapUnderTest.setPixel(0, INITIAL_HEIGHT / 2, PAINT_BASE_COLOR)
         commandUnderTest.run(canvasUnderTest!!, layerModel!!)
-        val pixel = bitmapUnderTest!!.getPixel(INITIAL_WIDTH - 1, INITIAL_WIDTH / 2)
+        val pixel = bitmapUnderTest.getPixel(INITIAL_WIDTH - 1, INITIAL_WIDTH / 2)
         Assert.assertEquals(PAINT_BASE_COLOR.toLong(), pixel.toLong())
     }
 
     @Test
     fun testHorizontalFlip() {
         commandUnderTest = FlipCommand(FlipDirection.FLIP_HORIZONTAL)
-        bitmapUnderTest!!.setPixel(INITIAL_WIDTH / 2, 0, PAINT_BASE_COLOR)
+        bitmapUnderTest.setPixel(INITIAL_WIDTH / 2, 0, PAINT_BASE_COLOR)
         commandUnderTest.run(canvasUnderTest!!, layerModel!!)
-        val pixel = bitmapUnderTest!!.getPixel(INITIAL_WIDTH / 2, INITIAL_WIDTH - 1)
+        val pixel = bitmapUnderTest.getPixel(INITIAL_WIDTH / 2, INITIAL_WIDTH - 1)
         Assert.assertEquals(PAINT_BASE_COLOR.toLong(), pixel.toLong())
     }
 
