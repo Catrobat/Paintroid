@@ -26,3 +26,18 @@
     @kotlinx.serialization.Serializable <fields>;
 }
 -keep @kotlinx.serialization.Serializable class *
+
+# Keep all classes that might be serialized/deserialized
+-keepclassmembers class * {
+    public <init>(...");
+    public void set*(***);
+    public *** get*();
+}
+
+# Keep specific classes related to float[] serialization in Paintroid
+-keep class org.catrobat.paintroid.** { *; }
+
+# Keep custom serializers (if any)
+-keep class * implements kotlinx.serialization.KSerializer { *; }
+-keep class * implements java.io.Serializable { *; }
+
