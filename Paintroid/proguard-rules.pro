@@ -19,3 +19,10 @@
 # If you keep the line number information, uncomment this to
 # resetToOrigin the original source file name.
 #-renamesourcefileattribute SourceFile
+
+
+# Keep all Kotlin serialization annotations and classes
+-keepclassmembers class * {
+    @kotlinx.serialization.Serializable <fields>;
+}
+-keep @kotlinx.serialization.Serializable class *
