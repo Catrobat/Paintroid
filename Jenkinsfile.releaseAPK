@@ -78,7 +78,7 @@ pipeline {
                         '''
                     }
                 }
-                archiveArtifacts artifacts: 'app/build/outputs/bundle/signedRelease/paintroid-signedRelease.apk', fingerprint: true
+                archiveArtifacts artifacts: 'app/build/outputs/bundle/*/*.apk', fingerprint: true
             }
         }
 
