@@ -54,6 +54,10 @@ jacoco {
     toolVersion = "0.8.10"
 }
 
+if (!project.hasProperty("signingKeystore")) {
+    ext.signingKeystore = "dummyKeystore"
+}
+
 android {
     namespace = 'org.catrobat.paintroid'
 
@@ -76,14 +80,34 @@ android {
     }
     kotlinOptions { jvmTarget = "17" }
 
+    signingConfigs {
+        signedRelease {
+            storeFile = file(project.property("signingKeystore"))
+            storePassword = ""
+            keyAlias = ""
+            keyPassword = ""
+        }
+    }
+
+    if (project.hasProperty("signingKeystore") &&
+            project.hasProperty("signingKeystorePassword") &&
+            project.hasProperty("signingKeyAlias") &&
+            project.hasProperty("signingKeyPassword")) {
+
+        signingConfigs.signedRelease.storePassword = project.property("signingKeystorePassword")
+        signingConfigs.signedRelease.keyAlias = project.property("signingKeyAlias")
+        signingConfigs.signedRelease.keyPassword = project.property("signingKeyPassword")
+    }
+
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         signedRelease {
             initWith(release)
             signingConfig = signingConfigs.signedRelease
+
         }
         debug { }
     }
