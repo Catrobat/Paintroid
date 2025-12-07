@@ -82,8 +82,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         signedRelease {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            initWith(release)
+            signingConfig = signingConfigs.signedRelease
         }
         debug { }
     }
