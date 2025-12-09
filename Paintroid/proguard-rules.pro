@@ -20,4 +20,4 @@
 # resetToOrigin the original source file name.
 #-renamesourcefileattribute SourceFile
 
--dontwarn java.lang.invoke.StringConcatFactory
+-keep class java.lang.invoke.StringConcatFactory**
