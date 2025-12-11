@@ -74,19 +74,20 @@ android {
     }
 
     buildTypes {
+        debug {
+            //minifyEnabled true
+            //proguardFiles(getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro')
+        }
         release {
-            postprocessing {
-                removeUnusedCode true
-                removeUnusedResources true
-                obfuscate false
-                optimizeCode true
-            }
+            minifyEnabled true
+
             proguardFiles(getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro')
         }
         signedRelease {
             initWith(release)
             signingConfig = signingConfigs.signedRelease
         }
+
     }
 
     publishing {
