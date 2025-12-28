@@ -80,6 +80,7 @@ class ClipboardTool(
                 highlightBox()
                 copyBoxContent()
                 this@ClipboardTool.clipboardToolOptionsView.enablePaste(true)
+                this@ClipboardTool.clipboardToolOptionsView.enableClear(true)
             }
 
             override fun cutClicked() {
@@ -87,11 +88,20 @@ class ClipboardTool(
                 copyBoxContent()
                 cutBoxContent()
                 this@ClipboardTool.clipboardToolOptionsView.enablePaste(true)
+                this@ClipboardTool.clipboardToolOptionsView.enableClear(true)
             }
 
             override fun pasteClicked() {
                 highlightBox()
                 pasteBoxContent()
+            }
+
+            override fun clearClicked() {
+                highlightBox()
+                drawingBitmap = null
+                readyForPaste = false
+                this@ClipboardTool.clipboardToolOptionsView.enablePaste(false)
+                this@ClipboardTool.clipboardToolOptionsView.enableClear(false)
             }
         }
         clipboardToolOptionsView.setCallback(callback)
