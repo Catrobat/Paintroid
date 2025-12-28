@@ -23,7 +23,6 @@
 package org.catrobat.paintroid.web;
 
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.view.View;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
@@ -46,16 +45,9 @@ public class MediaGalleryWebViewClient extends WebViewClient {
 		this.callback = callback;
 	}
 
-	private static final String GALLERY_ROOT = "https://share.catrob.at/pocketcode/";
-
 	@Override
 	public void onPageStarted(WebView view, String url, Bitmap favicon) {
-		// avoid regex 'matches' – we only want a prefix check
-		if (!startsWithGalleryRoot(url)) {
-			showLoading(view);
-		} else {
-			callback.finish();
-		}
+		showLoading(view);
 	}
 
 	@Override
@@ -90,17 +82,6 @@ public class MediaGalleryWebViewClient extends WebViewClient {
 	public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
 		dismissLoading();
 		callback.finish();
-	}
-
-	private boolean startsWithGalleryRoot(String url) {
-		try {
-			Uri u = Uri.parse(url);
-			// normalize to compare robustly
-			String normalized = u.getScheme() + "://" + u.getHost() + (u.getPort() != -1 ? ":" + u.getPort() : "") + u.getPath();
-			return normalized.startsWith(GALLERY_ROOT);
-		} catch (Exception ignored) {
-			return false;
-		}
 	}
 
 	private void showLoading(View anchor) {

@@ -110,7 +110,6 @@ android {
         signedRelease {
             initWith(release)
             signingConfig = signingConfigs.signedRelease
-
         }
         debug { }
     }
