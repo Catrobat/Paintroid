@@ -25,6 +25,8 @@ interface ClipboardToolOptionsView {
 
     fun enablePaste(enable: Boolean)
 
+    fun enableClear(enable: Boolean)
+
     fun setShapeSizeText(shapeSize: String)
 
     fun toggleShapeSizeVisibility(isVisible: Boolean)
@@ -37,5 +39,7 @@ interface ClipboardToolOptionsView {
         fun cutClicked()
 
         fun pasteClicked()
+
+        fun clearClicked()
     }
 }
