@@ -30,7 +30,7 @@ class DefaultClipboardToolOptionsView(rootView: ViewGroup) : ClipboardToolOption
     private val pasteChip: Chip
     private val copyChip: Chip
     private val cutChip: Chip
-    private val clearChip: Chip?
+    private val clearChip: Chip
     private val shapeSizeChip: Chip
     private val changeSizeShapeSizeChip: Chip
     private val clipboardToolOptionsView: View
@@ -51,7 +51,7 @@ class DefaultClipboardToolOptionsView(rootView: ViewGroup) : ClipboardToolOption
             callback?.pasteClicked()
         }
 
-        clearChip?.setOnClickListener {
+        clearChip.setOnClickListener {
             callback?.clearClicked()
         }
     }
@@ -65,7 +65,7 @@ class DefaultClipboardToolOptionsView(rootView: ViewGroup) : ClipboardToolOption
     }
 
     override fun enableClear(enable: Boolean) {
-        clearChip?.isEnabled = enable
+        clearChip.isEnabled = enable
     }
 
     override fun toggleShapeSizeVisibility(isVisible: Boolean) {
