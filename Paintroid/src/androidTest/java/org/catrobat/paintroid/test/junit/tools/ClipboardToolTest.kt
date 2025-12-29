@@ -175,14 +175,12 @@ class ClipboardToolTest {
         tool!!.copyBoxContent()
         Mockito.verify(clipboardToolOptionsView)!!.enablePaste(true)
         Mockito.verify(clipboardToolOptionsView)!!.enableClear(true)
-        
         // Now clear and verify both buttons are disabled
         Mockito.clearInvocations(clipboardToolOptionsView)
         // Simulate clear button click by getting the callback and calling clearClicked
         val callbackCaptor = org.mockito.ArgumentCaptor.forClass(ClipboardToolOptionsView.Callback::class.java)
         Mockito.verify(clipboardToolOptionsView, Mockito.atLeastOnce())!!.setCallback(callbackCaptor.capture())
         callbackCaptor.value.clearClicked()
-        
         Mockito.verify(clipboardToolOptionsView)!!.enablePaste(false)
         Mockito.verify(clipboardToolOptionsView)!!.enableClear(false)
     }
