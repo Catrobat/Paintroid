@@ -94,7 +94,6 @@ class DefaultClipboardToolOptionsView(rootView: ViewGroup) : ClipboardToolOption
         cutChip = stampToolOptionsView.findViewById(R.id.action_cut)
         clearChip = stampToolOptionsView.findViewById(R.id.action_clear)
         enablePaste(false)
-        clearChip?.let { enableClear(false) }
         initializeListeners()
         stampToolOptionsView.run {
             val viewShapeSizeLayout =

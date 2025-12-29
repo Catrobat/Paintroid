@@ -105,6 +105,7 @@ class ClipboardTool(
             }
         }
         clipboardToolOptionsView.setCallback(callback)
+        clipboardToolOptionsView.enableClear(false)
         toolOptionsViewController.showDelayed()
         setShapeSizeChangedListener(this)
         createAndSetShapeSizeText(boxWidth, boxHeight)
