@@ -30,6 +30,7 @@ class DefaultClipboardToolOptionsView(rootView: ViewGroup) : ClipboardToolOption
     private val pasteChip: Chip
     private val copyChip: Chip
     private val cutChip: Chip
+    private val clearChip: Chip
     private val shapeSizeChip: Chip
     private val changeSizeShapeSizeChip: Chip
     private val clipboardToolOptionsView: View
@@ -49,6 +50,10 @@ class DefaultClipboardToolOptionsView(rootView: ViewGroup) : ClipboardToolOption
         pasteChip.setOnClickListener {
             callback?.pasteClicked()
         }
+
+        clearChip.setOnClickListener {
+            callback?.clearClicked()
+        }
     }
 
     override fun setCallback(callback: ClipboardToolOptionsView.Callback) {
@@ -57,6 +62,10 @@ class DefaultClipboardToolOptionsView(rootView: ViewGroup) : ClipboardToolOption
 
     override fun enablePaste(enable: Boolean) {
         pasteChip.isEnabled = enable
+    }
+
+    override fun enableClear(enable: Boolean) {
+        clearChip.isEnabled = enable
     }
 
     override fun toggleShapeSizeVisibility(isVisible: Boolean) {
@@ -83,6 +92,7 @@ class DefaultClipboardToolOptionsView(rootView: ViewGroup) : ClipboardToolOption
         copyChip = stampToolOptionsView.findViewById(R.id.action_copy)
         pasteChip = stampToolOptionsView.findViewById(R.id.action_paste)
         cutChip = stampToolOptionsView.findViewById(R.id.action_cut)
+        clearChip = stampToolOptionsView.findViewById(R.id.action_clear)
         enablePaste(false)
         initializeListeners()
         stampToolOptionsView.run {

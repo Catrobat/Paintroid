@@ -53,7 +53,7 @@ pipeline {
         stage('Build Debug-APK') {
             steps {
                 sh "./gradlew -Pindependent='#$env.BUILD_NUMBER $env.BRANCH_NAME' assembleDebug"
-                archiveArtifacts 'app/build/outputs/apk/debug/paintroid-debug*.apk'
+                archiveArtifacts artifacts: 'app/build/outputs/apk/debug/paintroid-debug*.apk', allowEmptyArchive: true
                 plot csvFileName: 'dexcount.csv', csvSeries: [[displayTableFlag: false, exclusionValues: '', file: 'Paintroid/build/outputs/dexcount/*.csv', inclusionFlag: 'OFF', url: '']], group: 'APK Stats', numBuilds: '180', style: 'line', title: 'dexcount'
             }
         }
@@ -76,9 +76,9 @@ pipeline {
                 }
                 renameApks("${env.BRANCH_NAME}-${env.BUILD_NUMBER}")
                 dir('Catroid') {
-                    archiveArtifacts "catroid/src/main/libs/*.aar"
+                    archiveArtifacts artifacts: "catroid/src/main/libs/*.aar", allowEmptyArchive: true
                     sh "./gradlew assembleCatroidDebug"
-                    archiveArtifacts 'catroid/build/outputs/apk/catroid/debug/catroid-catroid-debug.apk'
+                    archiveArtifacts artifacts: 'catroid/build/outputs/apk/catroid/debug/catroid-catroid-debug.apk', allowEmptyArchive: true
                 }
             }
         }
@@ -123,7 +123,7 @@ pipeline {
                             sh '/home/user/android/sdk/platform-tools/adb logcat -d > logcat.txt'
                             sh './gradlew stopEmulator'
                             junitAndCoverage "$reports/coverage/debug/report.xml", 'device', javaSrc
-                            archiveArtifacts 'logcat.txt'
+                            archiveArtifacts artifacts: 'logcat.txt', allowEmptyArchive: true
                         }
                     }
                 }

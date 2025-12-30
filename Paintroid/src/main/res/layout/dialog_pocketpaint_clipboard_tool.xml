@@ -64,6 +64,23 @@
             app:chipIcon="@drawable/ic_pocketpaint_paste_chip_icon_selector"
             app:chipStartPadding="8dp" />
 
+        <Space
+            android:id="@+id/space_three"
+            style="@style/PocketPaintToolHorizontalSpace"
+            android:layout_alignParentBottom="true"
+            android:layout_toEndOf="@+id/action_paste" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/action_clear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_toEndOf="@+id/space_three"
+            android:text="@string/clipboard_tool_clear"
+            android:theme="@style/Theme.MaterialComponents.Light"
+            app:chipIcon="@drawable/ic_pocketpaint_layers_delete"
+            app:chipStartPadding="8dp" />
+
     </RelativeLayout>
 
     <RelativeLayout
