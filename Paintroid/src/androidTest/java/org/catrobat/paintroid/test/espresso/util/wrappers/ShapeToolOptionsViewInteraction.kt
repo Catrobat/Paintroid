@@ -47,12 +47,14 @@ class ShapeToolOptionsViewInteraction private constructor() :
 
     fun performSelectShape(shape: DrawableShape): ShapeToolOptionsViewInteraction {
         Espresso.onView(ViewMatchers.withId(getButtonIdFromBaseShape(shape)))
+            .check(androidx.test.espresso.assertion.ViewAssertions.matches(ViewMatchers.isDisplayed()))
             .perform(ViewActions.click())
         return this
     }
 
     fun performSelectShapeDrawType(shapeDrawType: DrawableStyle): ShapeToolOptionsViewInteraction {
         Espresso.onView(ViewMatchers.withId(getButtonIdFromShapeDrawType(shapeDrawType)))
+            .check(androidx.test.espresso.assertion.ViewAssertions.matches(ViewMatchers.isDisplayed()))
             .perform(ViewActions.click())
         return this
     }
