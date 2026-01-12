@@ -349,26 +349,43 @@ object FileIO {
     }
 
     fun parseFileName(uri: Uri, resolver: ContentResolver) {
-        var fileName = "image"
-        val cursor = resolver.query(
-            uri,
-            arrayOf(MediaStore.Images.ImageColumns.DISPLAY_NAME),
-            null, null, null
-        )
-        cursor?.use {
-            if (cursor.moveToFirst()) {
-                fileName =
-                    cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.DISPLAY_NAME))
+        var fileName: String? = null
+        if (uri.scheme == ContentResolver.SCHEME_CONTENT) {
+            try {
+                val cursor = resolver.query(
+                    uri,
+                    arrayOf(MediaStore.Images.ImageColumns.DISPLAY_NAME),
+                    null, null, null
+                )
+                cursor?.use {
+                    if (cursor.moveToFirst()) {
+                        val columnIndex =
+                            cursor.getColumnIndex(MediaStore.Images.ImageColumns.DISPLAY_NAME)
+                        if (columnIndex != -1) {
+                            fileName = cursor.getString(columnIndex)
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("FileIO", "Failed to query filename from URI", e)
             }
         }
-        if (fileName.endsWith(FileType.JPG.toExtension()) || fileName.endsWith(".jpeg")) {
+        if (fileName == null) {
+            fileName = uri.lastPathSegment
+        }
+        if (fileName == null) {
+            fileName = "image"
+        }
+        if (fileName!!.endsWith(FileType.JPG.toExtension()) || fileName!!.endsWith(".jpeg")) {
             fileType = FileType.JPG
             compressFormat = CompressFormat.JPEG
-            filename = fileName.substring(0, fileName.length - fileType.toExtension().length)
-        } else if (fileName.endsWith(".png")) {
+            filename = fileName!!.substring(0, fileName!!.length - fileType.toExtension().length)
+        } else if (fileName!!.endsWith(".png")) {
             fileType = FileType.PNG
             compressFormat = CompressFormat.PNG
-            filename = fileName.substring(0, fileName.length - fileType.toExtension().length)
+            filename = fileName!!.substring(0, fileName!!.length - fileType.toExtension().length)
+        } else {
+            filename = fileName!!
         }
     }
 
