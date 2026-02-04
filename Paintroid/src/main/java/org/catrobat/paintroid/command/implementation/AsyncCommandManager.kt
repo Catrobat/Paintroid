@@ -68,7 +68,6 @@ open class AsyncCommandManager(
                     synchronized(layerModel) { commandManager.addCommand(command) }
                 }
                 withContext(Dispatchers.Main) {
-                    commandManager.adjustUndoListForClippingTool()
                     notifyCommandPostExecute()
                 }
             }
@@ -153,10 +152,6 @@ open class AsyncCommandManager(
 
     override fun setInitialStateCommand(command: Command) {
         synchronized(layerModel) { commandManager.setInitialStateCommand(command) }
-    }
-
-    override fun adjustUndoListForClippingTool() {
-        synchronized(layerModel) { commandManager.adjustUndoListForClippingTool() }
     }
 
     override fun undoInClippingTool() {
