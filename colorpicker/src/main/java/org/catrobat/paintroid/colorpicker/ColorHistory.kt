@@ -16,7 +16,7 @@ class ColorHistory : Serializable {
         }
 
         if (colorHistory.size > COLOR_HISTORY_SIZE) {
-            colorHistory.removeFirst()
+            colorHistory.removeAt(0)
         }
     }
 }
