@@ -1125,7 +1125,7 @@ open class MainActivityPresenter(
     }
 
     override fun openTemporaryFile(): WorkspaceReturnValue? =
-        FileIO.openTemporaryPictureFile(commandSerializer)
+        FileIO.openTemporaryPictureFile(internalMemoryPath, commandSerializer)
 
     override fun checkForTemporaryFile(): Boolean =
         FileIO.checkForTemporaryFile(internalMemoryPath)

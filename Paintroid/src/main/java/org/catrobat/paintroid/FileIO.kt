@@ -61,6 +61,8 @@ import java.io.InputStream
 import java.io.OutputStream
 import java.util.Locale
 import java.util.UUID
+import java.util.concurrent.locks.ReentrantLock
+import kotlin.concurrent.withLock
 import kotlin.math.min
 import kotlin.math.sqrt
 
@@ -72,6 +74,7 @@ private const val ANGLE_90 = 90f
 private const val ANGLE_180 = 180f
 private const val ANGLE_270 = 270f
 private const val BUFFER_SIZE = 4096
+private const val FILE_IO_TAG = "FileIO"
 
 object FileIO {
 
@@ -94,6 +97,8 @@ object FileIO {
     var storeImageUri: Uri? = null
 
     var temporaryFilePath: String? = null
+
+    private val temporaryImageIoLock = ReentrantLock()
 
     val defaultFileName: String
         get() = filename + fileType.toExtension()
@@ -589,78 +594,130 @@ object FileIO {
     }
 
     fun saveTemporaryPictureFile(internalMemoryPath: File, commandSerializer: CommandSerializer) {
-        val newFileName = "${TEMP_IMAGE_NAME}1.$CATROBAT_IMAGE_ENDING"
-        val tempPath = File(internalMemoryPath, TEMP_IMAGE_DIRECTORY_NAME)
+        if (!temporaryImageIoLock.tryLock()) {
+            Log.d(FILE_IO_TAG, "Skipping temporary image save because another save is in progress.")
+            return
+        }
         try {
-            tempPath.mkdirs()
+            val newFileName = "${TEMP_IMAGE_NAME}1.$CATROBAT_IMAGE_ENDING"
+            val tempPath = File(internalMemoryPath, TEMP_IMAGE_DIRECTORY_NAME)
+            var writeSucceeded = false
+            try {
+                tempPath.mkdirs()
 
-            val stream = FileOutputStream("$tempPath/$newFileName")
-            commandSerializer.writeToInternalMemory(stream)
-            temporaryFilePath = TEMP_IMAGE_TEMP_PATH
-        } catch (e: IOException) {
-            Log.e("Cannot write", "Can't write to stream", e)
-        }
-        val oldFile = File(internalMemoryPath, TEMP_IMAGE_PATH)
-        if (oldFile.exists()) {
-            oldFile.delete()
-        }
-        val newFile = File(internalMemoryPath, TEMP_IMAGE_TEMP_PATH)
-        if (newFile.exists()) {
-            newFile.renameTo(File(internalMemoryPath, TEMP_IMAGE_PATH))
-            temporaryFilePath = TEMP_IMAGE_PATH
-        }
-    }
-
-    fun checkForTemporaryFile(internalMemoryPath: File): Boolean {
-        val tempPath = File(internalMemoryPath, TEMP_IMAGE_DIRECTORY_NAME)
-        if (!tempPath.exists()) {
-            return false
-        }
-        val fileList = tempPath.listFiles()
-        if (fileList != null && fileList.isNotEmpty()) {
-            if (fileList.size == 2) {
-                if (fileList[1].lastModified() > fileList[0].lastModified()) {
-                    reorganizeTempFiles(fileList[1], fileList[0], internalMemoryPath)
-                } else {
-                    reorganizeTempFiles(fileList[0], fileList[1], internalMemoryPath)
+                FileOutputStream("$tempPath/$newFileName").use { stream ->
+                    commandSerializer.writeToInternalMemory(stream)
                 }
-            } else {
-                temporaryFilePath = fileList[0].path
+                writeSucceeded = true
+            } catch (e: Exception) {
+                Log.e(FILE_IO_TAG, "Can't write temporary image to stream.", e)
             }
-            return true
+
+            val newFile = File(internalMemoryPath, TEMP_IMAGE_TEMP_PATH)
+            if (writeSucceeded && newFile.exists()) {
+                val oldFile = File(internalMemoryPath, TEMP_IMAGE_PATH)
+                if (oldFile.exists()) {
+                    oldFile.delete()
+                }
+                newFile.renameTo(File(internalMemoryPath, TEMP_IMAGE_PATH))
+                temporaryFilePath = TEMP_IMAGE_PATH
+            } else if (newFile.exists()) {
+                newFile.delete()
+            }
+        } finally {
+            temporaryImageIoLock.unlock()
         }
-        return false
     }
+
+    fun checkForTemporaryFile(internalMemoryPath: File): Boolean =
+        temporaryImageIoLock.withLock {
+            val tempPath = File(internalMemoryPath, TEMP_IMAGE_DIRECTORY_NAME)
+            if (!tempPath.exists()) {
+                return@withLock false
+            }
+            val fileList = tempPath.listFiles()
+            if (fileList != null && fileList.isNotEmpty()) {
+                if (fileList.size == 2) {
+                    if (fileList[1].lastModified() > fileList[0].lastModified()) {
+                        reorganizeTempFiles(fileList[1], fileList[0], internalMemoryPath)
+                    } else {
+                        reorganizeTempFiles(fileList[0], fileList[1], internalMemoryPath)
+                    }
+                } else {
+                    temporaryFilePath = fileList[0].path
+                }
+                return@withLock true
+            }
+            false
+        }
 
     private fun reorganizeTempFiles(file1: File, file2: File, internalMemoryPath: File) {
         file2.delete()
-        file1.renameTo(File(internalMemoryPath, TEMP_IMAGE_PATH))
-        temporaryFilePath = TEMP_IMAGE_PATH
+        val destination = File(internalMemoryPath, TEMP_IMAGE_PATH)
+        if (file1.renameTo(destination)) {
+            temporaryFilePath = TEMP_IMAGE_PATH
+        } else {
+            temporaryFilePath = file1.path
+        }
     }
 
-    fun openTemporaryPictureFile(commandSerializer: CommandSerializer): WorkspaceReturnValue? {
-        var workspaceReturnValue: WorkspaceReturnValue? = null
-        if (temporaryFilePath != null) {
+    fun openTemporaryPictureFile(
+        internalMemoryPath: File,
+        commandSerializer: CommandSerializer
+    ): WorkspaceReturnValue? =
+        temporaryImageIoLock.withLock {
+            val path = temporaryFilePath ?: return@withLock null
             try {
-                val stream = FileInputStream(temporaryFilePath)
-                workspaceReturnValue = commandSerializer.readFromInternalMemory(stream)
-            } catch (e: IOException) {
-                Log.e("Cannot read", "Can't read from stream", e)
+                val file = resolveTemporaryFile(internalMemoryPath, path)
+                FileInputStream(file).use { stream ->
+                    commandSerializer.readFromInternalMemory(stream)
+                }
+            } catch (e: Exception) {
+                Log.e(FILE_IO_TAG, "Can't read temporary image, deleting corrupted temporary files.", e)
+                cleanupTemporaryFiles(internalMemoryPath)
+                null
             }
         }
-        return workspaceReturnValue
-    }
 
     fun deleteTempFile(internalMemoryPath: File) {
-        tryDeleteFile(internalMemoryPath)
+        temporaryImageIoLock.withLock {
+            tryDeleteFile(internalMemoryPath)
+        }
     }
 
     private fun tryDeleteFile(internalMemoryPath: File) {
         if (temporaryFilePath != null) {
-            val file = File(internalMemoryPath, temporaryFilePath.orEmpty())
+            val file = resolveTemporaryFile(internalMemoryPath, temporaryFilePath.orEmpty())
             if (file.exists()) {
                 file.delete()
             }
         }
+    }
+
+    private fun resolveTemporaryFile(internalMemoryPath: File, path: String): File {
+        val file = File(path)
+        return if (file.isAbsolute) file else File(internalMemoryPath, path)
+    }
+
+    private fun cleanupTemporaryFiles(internalMemoryPath: File) {
+        temporaryFilePath?.let { path ->
+            val absoluteFile = File(path)
+            if (absoluteFile.exists()) {
+                absoluteFile.delete()
+            }
+            val relativeFile = File(internalMemoryPath, path)
+            if (relativeFile.exists()) {
+                relativeFile.delete()
+            }
+        }
+
+        val tempDirectory = File(internalMemoryPath, TEMP_IMAGE_DIRECTORY_NAME)
+        tempDirectory.listFiles()?.forEach { file ->
+            if (file.exists()) {
+                file.delete()
+            }
+        }
+
+        temporaryFilePath = null
     }
 }
