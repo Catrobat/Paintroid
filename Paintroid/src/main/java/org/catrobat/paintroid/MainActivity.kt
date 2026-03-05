@@ -407,12 +407,15 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
     }
 
     private fun getAppFragment() {
-        supportFragmentManager.findFragmentByTag(APP_FRAGMENT_KEY)?.let { fragment ->
-            appFragment = fragment as PaintroidApplicationFragment
-        }
-        if (!this::appFragment.isInitialized) {
+        val existing = supportFragmentManager.findFragmentByTag(APP_FRAGMENT_KEY)
+
+        if (existing is PaintroidApplicationFragment) {
+            appFragment = existing
+        } else {
             appFragment = PaintroidApplicationFragment()
-            supportFragmentManager.beginTransaction().add(appFragment, APP_FRAGMENT_KEY).commit()
+            supportFragmentManager.beginTransaction()
+                .add(appFragment, APP_FRAGMENT_KEY)
+                .commitNow()
         }
     }
 
