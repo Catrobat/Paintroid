@@ -316,12 +316,18 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
                 presenterMain.initializeFromCleanState(picturePath, pictureName)
 
                 if (!model.isOpenedFromCatroid && presenterMain.checkForTemporaryFile() && (!isRunningEspressoTests || isTemporaryFileSavingTest)) {
-                    val workspaceReturnValue = presenterMain.openTemporaryFile()
-                    commandManager.loadCommandsCatrobatImage(workspaceReturnValue?.commandManagerModel)
-                    model.colorHistory = workspaceReturnValue?.colorHistory ?: ColorHistory()
-                    model.colorHistory.colors.lastOrNull()?.let {
-                        toolReference.tool?.changePaintColor(it)
-                        presenterMain.setBottomNavigationColor(it)
+                    try{
+                        val workspaceReturnValue = presenterMain.openTemporaryFile()
+                        commandManager.loadCommandsCatrobatImage(workspaceReturnValue?.commandManagerModel)
+                        model.colorHistory = workspaceReturnValue?.colorHistory ?: ColorHistory()
+                        model.colorHistory.colors.lastOrNull()?.let {
+                            toolReference.tool?.changePaintColor(it)
+                            presenterMain.setBottomNavigationColor(it)
+                        }
+                    }
+                    catch(e: Exception){
+                        Log.e("Paintroid", "Temporary file Corrupted Error: ", e)
+                        presenterMain.initializeFromCleanState(null, null)
                     }
                 }
                 workspace.perspective.setBitmapDimensions(layerModel.width, layerModel.height)

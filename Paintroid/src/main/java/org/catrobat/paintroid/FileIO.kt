@@ -39,6 +39,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.content.FileProvider
 import androidx.exifinterface.media.ExifInterface
 import id.zelory.compressor.Compressor
+import kotlinx.coroutines.Runnable
 import org.catrobat.paintroid.command.serialization.CommandSerializer
 import org.catrobat.paintroid.common.CATROBAT_IMAGE_ENDING
 import org.catrobat.paintroid.common.Constants.DOWNLOADS_DIRECTORY
@@ -642,10 +643,14 @@ object FileIO {
         var workspaceReturnValue: WorkspaceReturnValue? = null
         if (temporaryFilePath != null) {
             try {
-                val stream = FileInputStream(temporaryFilePath)
-                workspaceReturnValue = commandSerializer.readFromInternalMemory(stream)
+                FileInputStream(temporaryFilePath).use { stream ->
+                    workspaceReturnValue = commandSerializer.readFromInternalMemory(stream)
+                }
             } catch (e: IOException) {
                 Log.e("Cannot read", "Can't read from stream", e)
+            } catch (e: RuntimeException){
+                Log.e("Paintroid", "Temporary file corrupted", e)
+                deleteTempFile(File(temporaryFilePath))
             }
         }
         return workspaceReturnValue
