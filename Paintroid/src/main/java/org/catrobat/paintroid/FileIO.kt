@@ -39,7 +39,6 @@ import androidx.annotation.RequiresApi
 import androidx.core.content.FileProvider
 import androidx.exifinterface.media.ExifInterface
 import id.zelory.compressor.Compressor
-import kotlinx.coroutines.Runnable
 import org.catrobat.paintroid.command.serialization.CommandSerializer
 import org.catrobat.paintroid.common.CATROBAT_IMAGE_ENDING
 import org.catrobat.paintroid.common.Constants.DOWNLOADS_DIRECTORY
