@@ -97,6 +97,7 @@ open class CommandSerializer(private val activityContext: Context, private val c
     private fun setRegisterMapVersion(version: Int) {
         // Only add new classes at the end
         // because Kryo assigns an ID to each class
+        registerMap.clear()
         with(registerMap) {
             put(Command::class.java, null)
             put(CompositeCommand::class.java, CompositeCommandSerializer(version))
@@ -226,6 +227,7 @@ open class CommandSerializer(private val activityContext: Context, private val c
         }
     }
 
+    @Synchronized
     fun readFromInternalMemory(stream: FileInputStream): WorkspaceReturnValue {
         var commandModel: CommandManagerModel? = null
         var colorHistory: ColorHistory? = null
@@ -235,13 +237,21 @@ open class CommandSerializer(private val activityContext: Context, private val c
                 throw NotCatrobatImageException("Magic Value doesn't exist.")
             }
             val imageVersion = input.readInt()
-            if (CURRENT_IMAGE_VERSION != imageVersion) {
+            val restoreCurrentRegistration = CURRENT_IMAGE_VERSION != imageVersion
+            if (restoreCurrentRegistration) {
                 setRegisterMapVersion(imageVersion)
                 registerClasses()
             }
-            commandModel = kryo.readObject(input, CommandManagerModel::class.java)
-            if (input.available() != 0) {
-                colorHistory = kryo.readObject(input, ColorHistory::class.java)
+            try {
+                commandModel = kryo.readObject(input, CommandManagerModel::class.java)
+                if (input.available() != 0) {
+                    colorHistory = kryo.readObject(input, ColorHistory::class.java)
+                }
+            } finally {
+                if (restoreCurrentRegistration) {
+                    setRegisterMapVersion(CURRENT_IMAGE_VERSION)
+                    registerClasses()
+                }
             }
         }
 
@@ -250,6 +260,7 @@ open class CommandSerializer(private val activityContext: Context, private val c
         return WorkspaceReturnValue(commandModel, colorHistory)
     }
 
+    @Synchronized
     private fun writeToStream(stream: OutputStream) {
         Output(stream).use { output ->
             output.writeString(MAGIC_VALUE)
@@ -261,6 +272,7 @@ open class CommandSerializer(private val activityContext: Context, private val c
         }
     }
 
+    @Synchronized
     fun readFromFile(uri: Uri): CatrobatFileContent {
         var commandModel: CommandManagerModel
         var colorHistory: ColorHistory? = null
@@ -271,13 +283,21 @@ open class CommandSerializer(private val activityContext: Context, private val c
                     throw NotCatrobatImageException("Magic Value doesn't exist.")
                 }
                 val imageVersion = input.readInt()
-                if (CURRENT_IMAGE_VERSION != imageVersion) {
+                val restoreCurrentRegistration = CURRENT_IMAGE_VERSION != imageVersion
+                if (restoreCurrentRegistration) {
                     setRegisterMapVersion(imageVersion)
                     registerClasses()
                 }
-                commandModel = kryo.readObject(input, CommandManagerModel::class.java)
-                if (input.canReadInt()) {
-                    colorHistory = kryo.readObject(input, ColorHistory::class.java)
+                try {
+                    commandModel = kryo.readObject(input, CommandManagerModel::class.java)
+                    if (input.canReadInt()) {
+                        colorHistory = kryo.readObject(input, ColorHistory::class.java)
+                    }
+                } finally {
+                    if (restoreCurrentRegistration) {
+                        setRegisterMapVersion(CURRENT_IMAGE_VERSION)
+                        registerClasses()
+                    }
                 }
             }
         }

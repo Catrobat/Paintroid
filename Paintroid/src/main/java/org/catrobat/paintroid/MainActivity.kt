@@ -54,6 +54,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.catrobat.paintroid.colorpicker.ColorHistory
@@ -166,13 +167,14 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
     @Volatile
     private var userInteraction = false
     private var isTemporaryFileSavingTest = false
+    private var autoSaveJob: Job? = null
 
     private val isRunningEspressoTests: Boolean by lazy {
         try {
             Class.forName("androidx.test.espresso.Espresso")
             true
         } catch (e: ClassNotFoundException) {
-            Log.e(TAG, "Application is not in test mode.")
+            Log.d(TAG, "Application is not in test mode.")
             false
         }
     }
@@ -363,7 +365,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
         if (!hasFocus) {
-            presenterMain.saveNewTemporaryImage()
+            saveTemporaryImageAsync()
             minuteTemporaryCopiesCounter = 0
             userInteraction = false
         }
@@ -408,8 +410,8 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
     }
 
     private fun getAppFragment() {
-        supportFragmentManager.findFragmentByTag(APP_FRAGMENT_KEY)?.let { fragment ->
-            appFragment = fragment as PaintroidApplicationFragment
+        (supportFragmentManager.findFragmentByTag(APP_FRAGMENT_KEY) as? PaintroidApplicationFragment)?.let { fragment ->
+            appFragment = fragment
         }
         if (!this::appFragment.isInitialized) {
             appFragment = PaintroidApplicationFragment()
@@ -681,8 +683,14 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
     }
 
     override fun onDestroy() {
+        autoSaveJob?.cancel()
+        autoSaveJob = null
         commandManager.removeCommandListener(this)
-        presenterMain.saveNewTemporaryImage()
+        runCatching {
+            presenterMain.saveNewTemporaryImage()
+        }.onFailure { throwable ->
+            Log.e(TAG, "Failed to save temporary image during onDestroy.", throwable)
+        }
         if (finishing) {
             commandManager.shutdown()
             appFragment.currentTool = null
@@ -797,13 +805,28 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         this.minuteTemporaryCopiesCounter += seconds
     }
 
-    private fun startAutoSaveCoroutine() {
+    private fun saveTemporaryImageAsync() {
         CoroutineScope(Dispatchers.Default).launch {
+            runCatching {
+                presenterMain.saveNewTemporaryImage()
+            }.onFailure { throwable ->
+                Log.e(TAG, "Failed to save temporary image.", throwable)
+            }
+        }
+    }
+
+    private fun startAutoSaveCoroutine() {
+        autoSaveJob?.cancel()
+        autoSaveJob = CoroutineScope(Dispatchers.Default).launch {
             while (true) {
                 delay(TEMP_IMAGE_COROUTINE_DELAY_MILLI_SEC.toLong())
                 addToMinuteTemporaryCopiesCounter(TEMP_IMAGE_COROUTINE_DELAY_MILLI_SEC / MILLI_SEC_TO_SEC)
                 if ((System.currentTimeMillis() - lastInteractionTime >= TEMP_IMAGE_IDLE_INTERVAL || minuteTemporaryCopiesCounter >= TEMP_IMAGE_SAVE_INTERVAL) && userInteraction) {
-                    presenterMain.saveNewTemporaryImage()
+                    runCatching {
+                        presenterMain.saveNewTemporaryImage()
+                    }.onFailure { throwable ->
+                        Log.e(TAG, "Failed to save temporary image from autosave coroutine.", throwable)
+                    }
                     minuteTemporaryCopiesCounter = 0
                     userInteraction = false
                 }

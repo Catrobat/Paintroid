@@ -307,7 +307,7 @@ class MainActivityNavigator(
     }
 
     override fun showZoomWindowSettingsDialog(sharedPreferences: UserPreferences) {
-        val zoomWindowSettingsDialog = ZoomWindowSettingsDialog(sharedPreferences)
+        val zoomWindowSettingsDialog = ZoomWindowSettingsDialog()
         zoomWindowSettingsDialog.show(
             mainActivity.supportFragmentManager,
             ZOOM_WINDOW_SETTINGS_DIALOG_FRAGMENT_TAG
