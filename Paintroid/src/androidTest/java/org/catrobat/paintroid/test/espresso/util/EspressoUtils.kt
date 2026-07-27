@@ -101,7 +101,7 @@ object EspressoUtils {
 
     fun grantPermissionRulesVersionCheck(): GrantPermissionRule {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            GrantPermissionRule.grant(Manifest.permission.READ_EXTERNAL_STORAGE)
+            GrantPermissionRule.grant(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.ACCESS_MEDIA_LOCATION)
         } else {
             GrantPermissionRule.grant(
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,

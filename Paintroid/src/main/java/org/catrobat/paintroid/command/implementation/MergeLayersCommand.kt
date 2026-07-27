@@ -19,6 +19,7 @@
 
 package org.catrobat.paintroid.command.implementation
 
+import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.util.Log
 import org.catrobat.paintroid.command.Command
@@ -40,7 +41,7 @@ class MergeLayersCommand(position: Int, mergeWith: Int) : Command {
         if (sourceLayer != null && destinationLayer != null) {
             val destinationBitmap = destinationLayer.bitmap
             destinationBitmap ?: return
-            val copyBitmap = destinationBitmap.copy(destinationBitmap.config, true)
+            val copyBitmap = destinationBitmap.copy(destinationBitmap.config ?: Bitmap.Config.ARGB_8888, true)
             val copyCanvas = Canvas(copyBitmap)
             copyCanvas.drawBitmap(sourceLayer.bitmap ?: return, 0f, 0f, null)
             if (layerModel.removeLayerAt(position)) {

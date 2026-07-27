@@ -19,3 +19,17 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# Auto-generated rules to suppress warnings
+-dontwarn java.beans.BeanInfo
+-dontwarn java.beans.IntrospectionException
+-dontwarn java.beans.Introspector
+-dontwarn java.beans.PropertyDescriptor
+-dontwarn sun.nio.ch.DirectBuffer
+
+# Your custom keep rules for Kryo
+-keep class com.esotericsoftware.kryo.** { *; }
+-keep class com.esotericsoftware.kryo.serializers.** { *; }
+-keepclassmembers class com.esotericsoftware.kryo.serializers.DefaultArraySerializers$* {
+    public <init>();
+}

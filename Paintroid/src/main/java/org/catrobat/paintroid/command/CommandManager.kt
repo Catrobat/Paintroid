@@ -57,8 +57,6 @@ interface CommandManager {
 
     fun getCommandManagerModelForCatrobatImage(): CommandManagerModel?
 
-    fun adjustUndoListForClippingTool()
-
     fun undoInClippingTool()
 
     fun popFirstCommandInUndo()

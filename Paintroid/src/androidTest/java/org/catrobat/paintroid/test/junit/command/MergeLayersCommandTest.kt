@@ -74,10 +74,10 @@ class MergeLayersCommandTest {
     @Test
     fun testRun() {
         commandUnderTest.run(canvasUnderTest, layerModel)
-        Assert.assertEquals(layerModel.getLayerAt(0)!!.bitmap!!.getPixel(5, 5), PAINT_BASE_COLOR)
-        Assert.assertEquals(layerModel.getLayerAt(0)!!.bitmap!!.getPixel(8, 8), PAINT_BASE_COLOR)
-        Assert.assertEquals(layerModel.getLayerAt(0)!!.bitmap!!.getPixel(3, 3), 0)
-        Assert.assertEquals(layerModel.getLayerAt(0)!!.bitmap!!.getPixel(0, 0), 0)
+        Assert.assertEquals(layerModel.getLayerAt(0)!!.bitmap.getPixel(5, 5), PAINT_BASE_COLOR)
+        Assert.assertEquals(layerModel.getLayerAt(0)!!.bitmap.getPixel(8, 8), PAINT_BASE_COLOR)
+        Assert.assertEquals(layerModel.getLayerAt(0)!!.bitmap.getPixel(3, 3), 0)
+        Assert.assertEquals(layerModel.getLayerAt(0)!!.bitmap.getPixel(0, 0), 0)
     }
 
     @Test
@@ -92,10 +92,10 @@ class MergeLayersCommandTest {
     fun testRunMergeSeparatedLayers() {
         commandUnderTest = MergeLayersCommand(2, 0)
         commandUnderTest.run(canvasUnderTest, layerModel)
-        Assert.assertEquals(layerModel.currentLayer!!.bitmap!!.getPixel(0, 0), PAINT_BASE_COLOR)
-        Assert.assertEquals(layerModel.currentLayer!!.bitmap!!.getPixel(8, 8), PAINT_BASE_COLOR)
-        Assert.assertEquals(layerModel.currentLayer!!.bitmap!!.getPixel(3, 3), 0)
-        Assert.assertEquals(layerModel.currentLayer!!.bitmap!!.getPixel(5, 5), 0)
-        Assert.assertEquals(layerModel.getLayerAt(1)!!.bitmap!!.getPixel(5, 5), PAINT_BASE_COLOR)
+        Assert.assertEquals(layerModel.currentLayer!!.bitmap.getPixel(0, 0), PAINT_BASE_COLOR)
+        Assert.assertEquals(layerModel.currentLayer!!.bitmap.getPixel(8, 8), PAINT_BASE_COLOR)
+        Assert.assertEquals(layerModel.currentLayer!!.bitmap.getPixel(3, 3), 0)
+        Assert.assertEquals(layerModel.currentLayer!!.bitmap.getPixel(5, 5), 0)
+        Assert.assertEquals(layerModel.getLayerAt(1)!!.bitmap.getPixel(5, 5), PAINT_BASE_COLOR)
     }
 }

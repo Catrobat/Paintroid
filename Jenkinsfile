@@ -1,6 +1,42 @@
 #!groovy
 
-def reports = 'Paintroid/build/reports'
+class DockerParameters {
+    // 'docker build' would normally copy the whole build-dir to the container, changing the
+    // docker build directory avoids that overhead
+    def dir = 'docker'
+    def args = '--device /dev/kvm:/dev/kvm -v /var/local/container_shared/gradle_cache/$EXECUTOR_NUMBER:/home/user/.gradle -m=6.5G'
+    def label = 'LimitedEmulator'
+    def image = 'floriankanduth/paintroid_java17:latest'
+}
+
+def dockerParameters = new DockerParameters()
+
+def startEmulator(String android_version, String stageName) {
+    sh 'adb start-server'
+    // creates a new avd, and if it already exists it does nothing.
+    sh "echo no | avdmanager create avd --force --name android${android_version} --package 'system-images;android-${android_version};default;x86_64'"
+    sh "/home/user/android/sdk/emulator/emulator -no-window -no-boot-anim -noaudio -avd android${android_version} > ${stageName}_emulator.log 2>&1 &"
+}
+
+def waitForEmulatorAndPressWakeUpKey() {
+    sh 'adb devices'
+    sh 'timeout 5m adb wait-for-device'
+    sh '''#!/bin/bash
+adb devices
+timeout 5m adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done'
+echo "Emulator started"
+'''
+    sh '''
+        adb shell settings put global window_animation_scale 0 &
+        adb shell settings put global transition_animation_scale 0 &
+        adb shell settings put global animator_duration_scale 0 &
+    '''
+    // In case the device went to sleep
+    sh 'adb shell input keyevent KEYCODE_WAKEUP'
+}
+
+// NOTE: use module-agnostic report roots
+def reportsGlobRoot = '**/build/reports'
 
 // place the cobertura xml relative to the source, so that the source can be found
 def javaSrc = 'Paintroid/src/main/java'
@@ -13,16 +49,30 @@ def junitAndCoverage(String jacocoXmlFile, String coverageName, String javaSrcLo
     cleanWs patterns: [[pattern: testPattern, type: 'INCLUDE']]
 
     String coverageFile = "$javaSrcLocation/coverage_${coverageName}.xml"
-    // Convert the JaCoCo coverate to the Cobertura XML file format.
+    // Convert the JaCoCo coverage to the Cobertura XML file format.
     // This is done since the Jenkins JaCoCo plugin does not work well.
-    sh "./buildScripts/cover2cover.py '$jacocoXmlFile' '$coverageFile'"
+    sh "./buildScripts/cover2cover.py '${jacocoXmlFile}' '${coverageFile}'"
 }
 
 def useDebugLabelParameter(defaultLabel) {
     return env.DEBUG_LABEL?.trim() ? env.DEBUG_LABEL : defaultLabel
 }
 
+def checkAnimationScale(scaleName) {
+    def output = sh(script: "adb shell settings get global ${scaleName}", returnStdout: true).trim()
+    if (output != "0" && output != "0.0") {
+        error("Animation scale '${scaleName}' is NOT disabled. Current value: ${output}")
+    } else {
+        echo("Animation scale '${scaleName}' is disabled (Value: ${output})")
+    }
+}
+
 pipeline {
+    environment {
+        ANDROID_VERSION = 33
+        ADB_INSTALL_TIMEOUT = 60
+    }
+
     parameters {
         string name: 'DEBUG_LABEL', defaultValue: '', description: 'For debugging when entered will be used as label to decide on which slaves the jobs will run.'
         booleanParam name: 'BUILD_WITH_CATROID', defaultValue: false, description: 'When checked then the current Paintroid build will be built with the current develop branch of Catroid'
@@ -30,10 +80,10 @@ pipeline {
     }
 
     agent {
-         docker {
-            image 'catrobat/catrobat-paintroid:stable'
-            args '--device /dev/kvm:/dev/kvm -v /var/local/container_shared/gradle_cache/$EXECUTOR_NUMBER:/home/user/.gradle -m=6.5G'
-            label 'LimitedEmulator'
+        docker {
+            image dockerParameters.image
+            args dockerParameters.args
+            label dockerParameters.label
             alwaysPull true
         }
     }
@@ -53,31 +103,31 @@ pipeline {
         stage('Build Debug-APK') {
             steps {
                 sh "./gradlew -Pindependent='#$env.BUILD_NUMBER $env.BRANCH_NAME' assembleDebug"
-                archiveArtifacts 'app/build/outputs/apk/debug/paintroid-debug*.apk'
-                plot csvFileName: 'dexcount.csv', csvSeries: [[displayTableFlag: false, exclusionValues: '', file: 'Paintroid/build/outputs/dexcount/*.csv', inclusionFlag: 'OFF', url: '']], group: 'APK Stats', numBuilds: '180', style: 'line', title: 'dexcount'
+                // archive the app debug APK
+                archiveArtifacts artifacts: 'app/build/outputs/apk/debug/*.apk', fingerprint: true, onlyIfSuccessful: true
+                plot csvFileName: 'dexcount.csv',
+                     csvSeries: [[displayTableFlag: false, exclusionValues: '', file: 'app/build/outputs/dexcount/*.csv', inclusionFlag: 'OFF', url: '']],
+                     group: 'APK Stats', numBuilds: '180', style: 'line', title: 'dexcount'
             }
         }
 
         stage('Build with Catroid') {
             when {
-                expression {
-                    params.BUILD_WITH_CATROID
-                }
+                expression { params.BUILD_WITH_CATROID }
             }
-
             steps {
                 sh './gradlew publishToMavenLocal -Psnapshot'
                 sh 'rm -rf Catroid; mkdir Catroid'
                 dir('Catroid') {
                     git branch: params.CATROID_BRANCH, url: 'https://github.com/Catrobat/Catroid.git'
-                    sh "rm -f catroid/src/main/libs/*.aar"
-                    sh "mv -f ../colorpicker/build/outputs/aar/colorpicker-debug.aar catroid/src/main/libs/colorpicker-LOCAL.aar"
-                    sh "mv -f ../Paintroid/build/outputs/aar/Paintroid-debug.aar catroid/src/main/libs/Paintroid-LOCAL.aar"
+                    sh 'rm -f catroid/src/main/libs/*.aar'
+                    sh 'mv -f ../colorpicker/build/outputs/aar/colorpicker-debug.aar catroid/src/main/libs/colorpicker-LOCAL.aar'
+                    sh 'mv -f ../Paintroid/build/outputs/aar/Paintroid-debug.aar catroid/src/main/libs/Paintroid-LOCAL.aar'
                 }
                 renameApks("${env.BRANCH_NAME}-${env.BUILD_NUMBER}")
                 dir('Catroid') {
-                    archiveArtifacts "catroid/src/main/libs/*.aar"
-                    sh "./gradlew assembleCatroidDebug"
+                    archiveArtifacts 'catroid/src/main/libs/*.aar'
+                    sh './gradlew assembleCatroidDebug'
                     archiveArtifacts 'catroid/build/outputs/apk/catroid/debug/catroid-catroid-debug.apk'
                 }
             }
@@ -85,16 +135,23 @@ pipeline {
 
         stage('Static Analysis') {
             steps {
+                // Ensure the tools actually run and generate reports
                 sh './gradlew pmd checkstyle lint detekt'
             }
-
             post {
                 always {
-                    recordIssues aggregatingResults: true, enabledForFailure: true, qualityGates: [[threshold: 1, type: 'TOTAL', unstable: true]],
-                            tools: [androidLintParser(pattern: "$reports/lint*.xml"),
-                                    checkStyle(pattern: "$reports/checkstyle.xml"),
-                                    pmdParser(pattern: "$reports/pmd.xml"),
-                                    detekt(pattern: "$reports/detekt/detekt.xml")]
+                    // Use module-agnostic patterns so we don't miss files
+                    recordIssues(
+                        aggregatingResults: true,
+                        enabledForFailure: true,
+                        qualityGates: [[threshold: 1, type: 'TOTAL', unstable: true]],
+                        tools: [
+                            androidLintParser(pattern: "${reportsGlobRoot}/lint-results-*.xml,${reportsGlobRoot}/lint-*.xml,${reportsGlobRoot}/lint/*.xml"),
+                            checkStyle(pattern: "${reportsGlobRoot}/checkstyle.xml"),
+                            pmdParser(pattern: "${reportsGlobRoot}/pmd.xml"),
+                            detekt(pattern: "${reportsGlobRoot}/detekt/detekt.xml")
+                        ]
+                    )
                 }
             }
         }
@@ -107,31 +164,45 @@ pipeline {
                     }
                     post {
                         always {
-                            junitAndCoverage "$reports/jacoco/jacocoTestDebugUnitTestReport/jacoco.xml", 'unit', javaSrc
+                            // Most modules (app or Paintroid) will end up with this path
+                            junitAndCoverage "**/build/reports/jacoco/jacocoTestDebugUnitTestReport/jacoco.xml", 'unit', javaSrc
                         }
                     }
                 }
 
                 stage('Device Tests') {
                     steps {
-                        sh "echo no | avdmanager create avd --force --name android28 --package 'system-images;android-28;default;x86_64'"
-                        sh "/home/user/android/sdk/emulator/emulator -no-window -no-boot-anim -noaudio -avd android28 > /dev/null 2>&1 &"
-                        sh './gradlew -PenableCoverage -Pjenkins -Pemulator=android28 -Pci createDebugCoverageReport -i'
+                        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                            startEmulator(ANDROID_VERSION as String, 'device_tests')
+                            waitForEmulatorAndPressWakeUpKey()
+                            script {
+                                checkAnimationScale("window_animation_scale")
+                                checkAnimationScale("transition_animation_scale")
+                                checkAnimationScale("animator_duration_scale")
+                            }
+                            // FIX: reference env var correctly
+                            sh "./gradlew disableAnimations -PenableCoverage -Pjenkins -Pemulator=android${ANDROID_VERSION} -Pci createDebugCoverageReport -i"
+                        }
                     }
                     post {
                         always {
                             sh '/home/user/android/sdk/platform-tools/adb logcat -d > logcat.txt'
                             sh './gradlew stopEmulator'
-                            junitAndCoverage "$reports/coverage/debug/report.xml", 'device', javaSrc
+                            junitAndCoverage "**/build/reports/coverage/debug/report.xml", 'device', javaSrc
                             archiveArtifacts 'logcat.txt'
                         }
                     }
                 }
             }
-
             post {
                 always {
-                    step([$class: 'CoberturaPublisher', autoUpdateHealth: false, autoUpdateStability: false, coberturaReportFile: "$javaSrc/coverage*.xml", failUnhealthy: false, failUnstable: false, maxNumberOfBuilds: 0, onlyStable: false, sourceEncoding: 'ASCII', zoomCoverageChart: false, failNoReports: false])
+                    step([$class: 'CoberturaPublisher',
+                          autoUpdateHealth: false,
+                          autoUpdateStability: false,
+                          coberturaReportFile: "${javaSrc}/coverage*.xml",
+                          failUnhealthy: false, failUnstable: false, maxNumberOfBuilds: 0,
+                          onlyStable: false, sourceEncoding: 'ASCII',
+                          zoomCoverageChart: false, failNoReports: false])
                 }
             }
         }
@@ -139,7 +210,11 @@ pipeline {
 
     post {
         always {
-            step([$class: 'LogParserPublisher', failBuildOnError: true, projectRulePath: 'buildScripts/log_parser_rules', unstableOnWarning: true, useProjectRule: true])
+            step([$class: 'LogParserPublisher',
+                  failBuildOnError: true,
+                  projectRulePath: 'buildScripts/log_parser_rules',
+                  unstableOnWarning: true,
+                  useProjectRule: true])
         }
         changed {
             notifyChat()

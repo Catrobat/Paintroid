@@ -43,16 +43,16 @@ class CropCommandTest {
     @Before
     fun setUp() {
         layerModel = LayerModel()
-        layerModel!!.width = INITIAL_WIDTH
-        layerModel!!.height = INITIAL_HEIGHT
+        layerModel.width = INITIAL_WIDTH
+        layerModel.height = INITIAL_HEIGHT
         val canvasBitmapUnderTest = Bitmap.createBitmap(INITIAL_WIDTH, INITIAL_HEIGHT, Bitmap.Config.ARGB_8888)
         canvasBitmapUnderTest.eraseColor(BITMAP_BASE_COLOR)
         bitmapUnderTest = canvasBitmapUnderTest.copy(Bitmap.Config.ARGB_8888, true)
         layerUnderTest = Layer(bitmapUnderTest)
         canvasUnderTest = Canvas()
-        canvasUnderTest!!.setBitmap(canvasBitmapUnderTest)
-        layerModel!!.addLayerAt(0, layerUnderTest!!)
-        layerModel!!.currentLayer = layerUnderTest
+        canvasUnderTest.setBitmap(canvasBitmapUnderTest)
+        layerModel.addLayerAt(0, layerUnderTest)
+        layerModel.currentLayer = layerUnderTest
         resizeCoordinateXLeft = 0
         resizeCoordinateYTop = 0
         resizeCoordinateXRight = bitmapUnderTest.width - 1
@@ -64,16 +64,16 @@ class CropCommandTest {
 
     @Test
     fun testIfBitmapIsCropped() {
-        val widthOriginal = bitmapUnderTest!!.width
-        val heightOriginal = bitmapUnderTest!!.height
+        val widthOriginal = bitmapUnderTest.width
+        val heightOriginal = bitmapUnderTest.height
         resizeCoordinateXLeft = 1
         resizeCoordinateYTop = 1
-        resizeCoordinateXRight = bitmapUnderTest!!.width - 2
-        resizeCoordinateYBottom = bitmapUnderTest!!.height - 2
+        resizeCoordinateXRight = bitmapUnderTest.width - 2
+        resizeCoordinateYBottom = bitmapUnderTest.height - 2
         commandUnderTest = CropCommand(resizeCoordinateXLeft, resizeCoordinateYTop,
                 resizeCoordinateXRight, resizeCoordinateYBottom, maximumBitmapResolution)
-        commandUnderTest.run(canvasUnderTest!!, layerModel!!)
-        val croppedBitmap = layerUnderTest!!.bitmap
+        commandUnderTest.run(canvasUnderTest, layerModel)
+        val croppedBitmap = layerUnderTest.bitmap
         Assert.assertEquals("Cropping failed, width not correct ", (widthOriginal - resizeCoordinateXLeft - (widthOriginal - (resizeCoordinateXRight + 1))).toLong(), croppedBitmap.width.toLong())
         Assert.assertEquals("Cropping failed, height not correct ", (heightOriginal - resizeCoordinateYTop - (widthOriginal - (resizeCoordinateYBottom + 1))).toLong(), croppedBitmap.height.toLong())
         croppedBitmap.recycle()
@@ -81,16 +81,16 @@ class CropCommandTest {
 
     @Test
     fun testIfBitmapIsEnlarged() {
-        val widthOriginal = bitmapUnderTest!!.width
-        val heightOriginal = bitmapUnderTest!!.height
+        val widthOriginal = bitmapUnderTest.width
+        val heightOriginal = bitmapUnderTest.height
         resizeCoordinateXLeft = -1
         resizeCoordinateYTop = -1
-        resizeCoordinateXRight = bitmapUnderTest!!.width
-        resizeCoordinateYBottom = bitmapUnderTest!!.height
+        resizeCoordinateXRight = bitmapUnderTest.width
+        resizeCoordinateYBottom = bitmapUnderTest.height
         commandUnderTest = CropCommand(resizeCoordinateXLeft, resizeCoordinateYTop,
                 resizeCoordinateXRight, resizeCoordinateYBottom, maximumBitmapResolution)
-        commandUnderTest.run(canvasUnderTest!!, layerModel!!)
-        val enlargedBitmap = layerUnderTest!!.bitmap
+        commandUnderTest.run(canvasUnderTest, layerModel)
+        val enlargedBitmap = layerUnderTest.bitmap
         Assert.assertEquals("Enlarging failed, width not correct ", (widthOriginal - resizeCoordinateXLeft - (widthOriginal - (resizeCoordinateXRight + 1))).toLong(), enlargedBitmap.width.toLong())
         Assert.assertEquals("Enlarging failed, height not correct ", (heightOriginal - resizeCoordinateYTop - (widthOriginal - (resizeCoordinateYBottom + 1))).toLong(), enlargedBitmap.height.toLong())
         enlargedBitmap.recycle()
@@ -98,16 +98,16 @@ class CropCommandTest {
 
     @Test
     fun testIfBitmapIsShifted() {
-        val widthOriginal = bitmapUnderTest!!.width
-        val heightOriginal = bitmapUnderTest!!.height
-        resizeCoordinateXLeft = bitmapUnderTest!!.width / 2 - 1
-        resizeCoordinateYTop = bitmapUnderTest!!.height / 2 - 1
-        resizeCoordinateXRight = resizeCoordinateXLeft + bitmapUnderTest!!.width - 1
-        resizeCoordinateYBottom = resizeCoordinateYTop + bitmapUnderTest!!.height - 1
+        val widthOriginal = bitmapUnderTest.width
+        val heightOriginal = bitmapUnderTest.height
+        resizeCoordinateXLeft = bitmapUnderTest.width / 2 - 1
+        resizeCoordinateYTop = bitmapUnderTest.height / 2 - 1
+        resizeCoordinateXRight = resizeCoordinateXLeft + bitmapUnderTest.width - 1
+        resizeCoordinateYBottom = resizeCoordinateYTop + bitmapUnderTest.height - 1
         commandUnderTest = CropCommand(resizeCoordinateXLeft, resizeCoordinateYTop,
                 resizeCoordinateXRight, resizeCoordinateYBottom, maximumBitmapResolution)
-        commandUnderTest.run(canvasUnderTest!!, layerModel!!)
-        val enlargedBitmap = layerUnderTest!!.bitmap
+        commandUnderTest.run(canvasUnderTest, layerModel)
+        val enlargedBitmap = layerUnderTest.bitmap
         Assert.assertEquals("Enlarging failed, width not correct ", widthOriginal.toLong(), enlargedBitmap.width.toLong())
         Assert.assertEquals("Enlarging failed, height not correct ", heightOriginal.toLong(), enlargedBitmap.height.toLong())
         enlargedBitmap.recycle()
@@ -115,41 +115,49 @@ class CropCommandTest {
 
     @Test
     fun testIfMaximumResolutionIsRespected() {
-        val widthOriginal = bitmapUnderTest!!.width
-        val heightOriginal = bitmapUnderTest!!.height
+        val widthOriginal = bitmapUnderTest.width
+        val heightOriginal = bitmapUnderTest.height
         commandUnderTest = CropCommand(0, 0, widthOriginal * 2, heightOriginal * 2, maximumBitmapResolution)
-        commandUnderTest.run(canvasUnderTest!!, layerModel!!)
-        Assert.assertEquals("Width should not have changed", widthOriginal.toLong(), layerUnderTest!!.bitmap.width.toLong())
-        Assert.assertEquals("Height should not have changed", heightOriginal.toLong(), layerUnderTest!!.bitmap.height.toLong())
+        commandUnderTest.run(canvasUnderTest, layerModel)
+        Assert.assertEquals("Width should not have changed", widthOriginal.toLong(), layerUnderTest.bitmap.width.toLong())
+        Assert.assertEquals("Height should not have changed", heightOriginal.toLong(), layerUnderTest.bitmap.height.toLong())
     }
 
     @Test
     fun testIfBitmapIsNotResizedWithInvalidBounds() {
-        val originalBitmap = layerUnderTest!!.bitmap
-        commandUnderTest = CropCommand(bitmapUnderTest!!.width, 0, bitmapUnderTest!!.width,
+        val originalBitmap = layerUnderTest.bitmap
+        commandUnderTest = CropCommand(
+            bitmapUnderTest.width, 0, bitmapUnderTest.width,
                 0, maximumBitmapResolution)
-        commandUnderTest.run(canvasUnderTest!!, layerModel!!)
-        Assert.assertTrue("bitmap must not change if X left is larger than bitmap scope", originalBitmap.sameAs(layerUnderTest!!.bitmap))
+        commandUnderTest.run(canvasUnderTest, layerModel)
+        Assert.assertTrue("bitmap must not change if X left is larger than bitmap scope", originalBitmap.sameAs(
+            layerUnderTest.bitmap))
         commandUnderTest = CropCommand(-1, 0, -1, 0, maximumBitmapResolution)
-        commandUnderTest.run(canvasUnderTest!!, layerModel!!)
-        Assert.assertTrue("bitmap must not change if X right is smaller than bitmap scope", originalBitmap.sameAs(layerUnderTest!!.bitmap))
-        commandUnderTest = CropCommand(0, bitmapUnderTest!!.height, 0,
-                bitmapUnderTest!!.height, maximumBitmapResolution)
-        commandUnderTest.run(canvasUnderTest!!, layerModel!!)
-        Assert.assertTrue("bitmap must not change if Y top is larger than bitmap scope", originalBitmap.sameAs(layerUnderTest!!.bitmap))
+        commandUnderTest.run(canvasUnderTest, layerModel)
+        Assert.assertTrue("bitmap must not change if X right is smaller than bitmap scope", originalBitmap.sameAs(
+            layerUnderTest.bitmap))
+        commandUnderTest = CropCommand(0, bitmapUnderTest.height, 0,
+                bitmapUnderTest.height, maximumBitmapResolution)
+        commandUnderTest.run(canvasUnderTest, layerModel)
+        Assert.assertTrue("bitmap must not change if Y top is larger than bitmap scope", originalBitmap.sameAs(
+            layerUnderTest.bitmap))
         commandUnderTest = CropCommand(0, -1, 0, -1, maximumBitmapResolution)
-        commandUnderTest.run(canvasUnderTest!!, layerModel!!)
-        Assert.assertTrue("bitmap must not change if Y bottom is smaller than bitmap scope", originalBitmap.sameAs(layerUnderTest!!.bitmap))
+        commandUnderTest.run(canvasUnderTest, layerModel)
+        Assert.assertTrue("bitmap must not change if Y bottom is smaller than bitmap scope", originalBitmap.sameAs(
+            layerUnderTest.bitmap))
         commandUnderTest = CropCommand(1, 0, 0, 0, maximumBitmapResolution)
-        commandUnderTest.run(canvasUnderTest!!, layerModel!!)
-        Assert.assertTrue("bitmap must not change with widthXRight < widthXLeft bound", originalBitmap.sameAs(layerUnderTest!!.bitmap))
+        commandUnderTest.run(canvasUnderTest, layerModel)
+        Assert.assertTrue("bitmap must not change with widthXRight < widthXLeft bound", originalBitmap.sameAs(
+            layerUnderTest.bitmap))
         commandUnderTest = CropCommand(0, 1, 0, 0, maximumBitmapResolution)
-        commandUnderTest.run(canvasUnderTest!!, layerModel!!)
-        Assert.assertTrue("bitmap must not change with widthYBottom < widthYTop bound", originalBitmap.sameAs(layerUnderTest!!.bitmap))
-        commandUnderTest = CropCommand(0, 0, bitmapUnderTest!!.width - 1,
-                bitmapUnderTest!!.height - 1, maximumBitmapResolution)
-        commandUnderTest.run(canvasUnderTest!!, layerModel!!)
-        Assert.assertTrue("bitmap must not change because bounds are the same as original bitmap", originalBitmap.sameAs(layerUnderTest!!.bitmap))
+        commandUnderTest.run(canvasUnderTest, layerModel)
+        Assert.assertTrue("bitmap must not change with widthYBottom < widthYTop bound", originalBitmap.sameAs(
+            layerUnderTest.bitmap))
+        commandUnderTest = CropCommand(0, 0, bitmapUnderTest.width - 1,
+                bitmapUnderTest.height - 1, maximumBitmapResolution)
+        commandUnderTest.run(canvasUnderTest, layerModel)
+        Assert.assertTrue("bitmap must not change because bounds are the same as original bitmap", originalBitmap.sameAs(
+            layerUnderTest.bitmap))
     }
 
     companion object {

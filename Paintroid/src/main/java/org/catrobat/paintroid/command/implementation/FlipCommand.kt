@@ -19,6 +19,7 @@
 
 package org.catrobat.paintroid.command.implementation
 
+import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Matrix
@@ -44,7 +45,7 @@ class FlipCommand(flipDirection: FlipDirection) : Command {
             }
         }
         layerModel.currentLayer?.bitmap?.let { bitmap ->
-            val bitmapCopy = bitmap.copy(bitmap.config, bitmap.isMutable)
+            val bitmapCopy = bitmap.copy(bitmap.config ?: Bitmap.Config.ARGB_8888, bitmap.isMutable)
             val flipCanvas = Canvas(bitmap)
             bitmap.eraseColor(Color.TRANSPARENT)
             flipCanvas.drawBitmap(bitmapCopy, flipMatrix, Paint())

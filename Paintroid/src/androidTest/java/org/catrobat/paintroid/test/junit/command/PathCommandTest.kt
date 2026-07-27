@@ -55,6 +55,7 @@ class PathCommandTest {
         paintUnderTest!!.strokeWidth = 0f
         paintUnderTest!!.style = Paint.Style.STROKE
         paintUnderTest!!.strokeCap = Cap.BUTT
+        paintUnderTest!!.isAntiAlias = false
         layerModel.addLayerAt(0, layerUnderTest)
         layerModel.currentLayer = layerUnderTest
         val pathUnderTest = Path()
@@ -66,10 +67,10 @@ class PathCommandTest {
     @Test
     fun testPathOutOfBounds() {
         val path = Path()
-        val left = (canvasBitmapUnderTest!!.width + 50).toFloat()
-        val top = (canvasBitmapUnderTest!!.height + 50).toFloat()
-        val right = (canvasBitmapUnderTest!!.width + 100).toFloat()
-        val bottom = (canvasBitmapUnderTest!!.height + 100).toFloat()
+        val left = (canvasBitmapUnderTest.width + 50).toFloat()
+        val top = (canvasBitmapUnderTest.height + 50).toFloat()
+        val right = (canvasBitmapUnderTest.width + 100).toFloat()
+        val bottom = (canvasBitmapUnderTest.height + 100).toFloat()
         path.addRect(RectF(left, top, right, bottom), Path.Direction.CW)
         commandUnderTest = PathCommand(paintUnderTest!!, path)
         commandUnderTest.run(canvasUnderTest!!, LayerModel())

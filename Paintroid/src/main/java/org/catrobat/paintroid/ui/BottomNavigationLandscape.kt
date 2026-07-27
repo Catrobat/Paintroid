@@ -23,41 +23,40 @@ import android.view.LayoutInflater
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import com.google.android.material.bottomnavigation.BottomNavigationItemView
-import com.google.android.material.bottomnavigation.BottomNavigationMenuView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.contract.MainActivityContracts.BottomNavigationAppearance
 import org.catrobat.paintroid.tools.ToolType
+import androidx.core.view.size
+import androidx.core.view.get
 
 class BottomNavigationLandscape(context: Context, private val bottomNavigationView: BottomNavigationView) : BottomNavigationAppearance {
-    private val bottomNavigationMenuView: BottomNavigationMenuView = bottomNavigationView.getChildAt(0) as BottomNavigationMenuView
 
     init {
         setAppearance(context)
     }
 
     override fun showCurrentTool(toolType: ToolType) {
-        val item = bottomNavigationMenuView.getChildAt(1)
-        val icon = item.findViewById<ImageView>(R.id.icon)
-        val title = item.findViewById<TextView>(R.id.title)
-        icon.setImageResource(toolType.drawableResource)
-        title.setText(toolType.nameResource)
+        val item = bottomNavigationView.menu[1]
+        item.icon = ContextCompat.getDrawable(bottomNavigationView.context, toolType.drawableResource)
+        item.title = bottomNavigationView.context.getString(toolType.nameResource)
     }
 
     private fun setAppearance(context: Context) {
         val inflater = LayoutInflater.from(context)
         val menu = bottomNavigationView.menu
-        for (i in 0 until menu.size()) {
-            val item = bottomNavigationMenuView.getChildAt(i) as BottomNavigationItemView
-            val itemBottomNavigation = inflater.inflate(R.layout.pocketpaint_layout_bottom_navigation_item, bottomNavigationMenuView, false)
+        for (i in 0 until menu.size) {
+            val item = menu[i]
+            val itemBottomNavigation = inflater.inflate(R.layout.pocketpaint_layout_bottom_navigation_item, bottomNavigationView, false)
             val icon = itemBottomNavigation.findViewById<ImageView>(R.id.icon)
             val text = itemBottomNavigation.findViewById<TextView>(R.id.title)
-            icon.setImageDrawable(menu.getItem(i).icon)
+            icon.setImageDrawable(item.icon)
             icon.setColorFilter(ContextCompat.getColor(context, R.color.pocketpaint_welcome_dot_active))
-            text.text = menu.getItem(i).title
-            item.removeAllViews()
-            item.addView(itemBottomNavigation)
+            text.text = item.title
+            if (item.actionView != null) {
+                bottomNavigationView.removeView(item.actionView)
+            }
+            item.actionView = itemBottomNavigation
         }
     }
 }

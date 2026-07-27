@@ -65,18 +65,14 @@ open class LayerModel : LayerContracts.Model {
 
     @Synchronized
     override fun getBitmapOfAllLayers(): Bitmap? {
-        synchronized(this) {
-            if (layers.isEmpty()) {
-                return null
-            }
-            val referenceBitmap = layers[0].bitmap
-            val bitmap = Bitmap.createBitmap(referenceBitmap.width, referenceBitmap.height, Bitmap.Config.ARGB_8888)
-            val canvas = bitmap?.let { Canvas(it) }
-
-            drawLayersOntoCanvas(canvas)
-
-            return bitmap
+        if (layers.isEmpty()) {
+            return null
         }
+        val referenceBitmap = layers[0].bitmap
+        val bitmap = Bitmap.createBitmap(referenceBitmap.width, referenceBitmap.height, Bitmap.Config.ARGB_8888)
+        val canvas = bitmap?.let { Canvas(it) }
+        drawLayersOntoCanvas(canvas)
+        return bitmap
     }
 
     override fun getBitmapListOfAllLayers(): List<Bitmap?> = layers.map { it.bitmap }
