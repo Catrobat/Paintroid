@@ -18,6 +18,7 @@
  */
 package org.catrobat.paintroid.ui.viewholder
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.ActivityInfo
 import android.graphics.Color
@@ -33,6 +34,7 @@ import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.ui.BottomNavigationLandscape
 import org.catrobat.paintroid.ui.BottomNavigationPortrait
 
+@SuppressLint("RestrictedApi")
 class BottomNavigationViewHolder(
     private val layout: View,
     private val orientation: Int,

@@ -124,6 +124,7 @@ class BrushToolView : View, BrushToolPreview {
         when (callback?.toolType) {
             ToolType.BRUSH, ToolType.CURSOR, ToolType.LINE, ToolType.WATERCOLOR -> drawLinePreview(canvas)
             ToolType.ERASER -> drawEraserPreview(canvas)
+            else -> {}
         }
     }
 

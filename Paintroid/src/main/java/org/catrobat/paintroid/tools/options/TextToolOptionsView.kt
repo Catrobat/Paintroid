@@ -41,6 +41,10 @@ interface TextToolOptionsView {
 
     fun getBottomLayout(): View
 
+    fun setShapeSizeText(shapeSize: String)
+
+    fun toggleShapeSizeVisibility(isVisible: Boolean)
+
     interface Callback {
         fun setText(text: String)
 

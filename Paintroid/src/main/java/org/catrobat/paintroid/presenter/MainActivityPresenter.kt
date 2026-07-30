@@ -758,6 +758,7 @@ open class MainActivityPresenter(
     private fun enterHideButtons() {
         if (toolController.toolOptionsViewVisible()) {
             toolOptionsViewWasShown = true
+            toolController.hideToolOptionsViewForShapeTools()
         }
         view.hideKeyboard()
         view.enterHideButtons()
@@ -784,6 +785,9 @@ open class MainActivityPresenter(
         model.cameraImageUri = cameraImageUri
         navigator.restoreFragmentListeners()
         toolController.resetToolInternalStateOnImageLoaded()
+        if (model.isFullscreen) {
+            toolController.adaptLayoutForFullScreen()
+        }
     }
 
     override fun onCreateTool() {

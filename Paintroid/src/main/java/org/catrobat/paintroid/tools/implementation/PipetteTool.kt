@@ -22,6 +22,7 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.PointF
 import androidx.test.espresso.idling.CountingIdlingResource
+import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.colorpicker.OnColorPickedListener
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.tools.ContextCallback
@@ -37,7 +38,8 @@ class PipetteTool(
     workspace: Workspace,
     idlingResource: CountingIdlingResource,
     commandManager: CommandManager,
-    private val listener: OnColorPickedListener
+    private val listener: OnColorPickedListener,
+    private val mainActivity: MainActivity
 ) : BaseTool(contextCallback, toolOptionsViewController, toolPaint, workspace, idlingResource, commandManager) {
     private var surfaceBitmap: Bitmap? = null
 
@@ -63,7 +65,7 @@ class PipetteTool(
 
     override fun handleMove(coordinate: PointF?, shouldAnimate: Boolean): Boolean = setColor(coordinate)
 
-    override fun handleUp(coordinate: PointF?): Boolean = setColor(coordinate)
+    override fun handleUp(coordinate: PointF?): Boolean = setColor(coordinate, true)
 
     override fun toolPositionCoordinates(coordinate: PointF): PointF = coordinate
 
@@ -71,7 +73,7 @@ class PipetteTool(
         updateSurfaceBitmap()
     }
 
-    private fun setColor(coordinate: PointF?): Boolean {
+    private fun setColor(coordinate: PointF?, saveCommand: Boolean = false): Boolean {
         if (coordinate == null || !workspace.contains(coordinate)) {
             return false
         }
@@ -79,6 +81,11 @@ class PipetteTool(
             surfaceBitmap?.getPixel(coordinate.x.toInt(), coordinate.y.toInt()) ?: return false
         listener.colorChanged(color)
         changePaintColor(color)
+        if (saveCommand) {
+            val command = commandFactory.createColorChangedCommand(this, mainActivity, color)
+            mainActivity.model.colorHistory.addColor(color)
+            mainActivity.commandManager.addCommand(command)
+        }
         return true
     }
 

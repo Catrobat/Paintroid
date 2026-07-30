@@ -166,6 +166,7 @@ abstract class BaseToolWithRectangleShape(
     private var resizeAction: ResizeAction
     private var touchDownPositionX = 0f
     private var touchDownPositionY = 0f
+    private var shapeSizeChangedListener: ShapeSizeChangedListener? = null
 
     init {
         val orientation = contextCallback.orientation
@@ -194,6 +195,7 @@ abstract class BaseToolWithRectangleShape(
         respectMaximumBorderRatio = DEFAULT_RESPECT_MAXIMUM_BORDER_RATIO
         respectMaximumBoxResolution = DEFAULT_RESPECT_MAXIMUM_BOX_RESOLUTION
         maximumBoxResolution = DEFAULT_MAXIMUM_BOX_RESOLUTION
+
         initScaleDependedValues()
         createOverlayDrawable()
         linePaint.apply {
@@ -249,29 +251,39 @@ abstract class BaseToolWithRectangleShape(
         workspace.invalidate()
     }
 
-    private fun hideToolSpecificLayout() {
-        if (this !is TextTool &&
-            toolOptionsViewController.isVisible &&
+    fun hideToolSpecificLayout(displayToolOptions: Boolean = false) {
+        if (toolOptionsViewController.isVisible &&
             toolOptionsViewController.toolSpecificOptionsLayout.visibility == View.VISIBLE) {
-            toolOptionsViewController.slideDown(
-                toolOptionsViewController.toolSpecificOptionsLayout,
-                willHide = true,
-                showOptionsView = false
-            )
+            when (this) {
+                is ShapeTool -> changeShapeToolLayoutVisibility(true, false)
+                is ClipboardTool -> changeClipboardToolLayoutVisibility(true, false)
+                else -> if (this !is TextTool && this !is ImportTool || this is ImportTool && !displayToolOptions) {
+                    toolOptionsViewController.slideDown(
+                        toolOptionsViewController.toolSpecificOptionsLayout,
+                        willHide = true,
+                        showOptionsView = false
+                    )
+                }
+            }
         }
         toolOptionsViewController.animateBottomAndTopNavigation(true)
     }
 
-     private fun showToolSpecificLayout() {
-        if (this !is TextTool &&
-            !toolOptionsViewController.isVisible &&
-            toolOptionsViewController.toolSpecificOptionsLayout.visibility == View.INVISIBLE) {
-            toolOptionsViewController.slideUp(
-                toolOptionsViewController.toolSpecificOptionsLayout,
-                willHide = false,
-                showOptionsView = true
-            )
-        }
+     fun showToolSpecificLayout() {
+         if (!toolOptionsViewController.isVisible) {
+             when (this) {
+                 is ShapeTool -> changeShapeToolLayoutVisibility(false)
+                 is ClipboardTool -> changeClipboardToolLayoutVisibility(false)
+                 else -> if (this !is TextTool &&
+                     toolOptionsViewController.toolSpecificOptionsLayout.visibility == View.INVISIBLE) {
+                     toolOptionsViewController.slideUp(
+                         toolOptionsViewController.toolSpecificOptionsLayout,
+                         willHide = false,
+                         showOptionsView = true
+                     )
+                 }
+             }
+         }
         toolOptionsViewController.animateBottomAndTopNavigation(false)
     }
 
@@ -291,7 +303,9 @@ abstract class BaseToolWithRectangleShape(
         if (previousEventCoordinate == null || currentAction == null) {
             return false
         }
-        hideToolSpecificLayout()
+        if (this !is ImportTool) {
+            hideToolSpecificLayout()
+        }
         ifNotNull(coordinate, previousEventCoordinate) { (coordinate, previousEventCoordinate) ->
             val delta = PointF(
                 coordinate.x - previousEventCoordinate.x,
@@ -310,6 +324,7 @@ abstract class BaseToolWithRectangleShape(
     }
 
     override fun handleUp(coordinate: PointF?): Boolean {
+            toggleShapeSizeVisibility(false)
         if (previousEventCoordinate == null) {
             return false
         }
@@ -452,11 +467,17 @@ abstract class BaseToolWithRectangleShape(
     }
 
     private fun move(deltaX: Float, deltaY: Float) {
+        if (this is ImportTool) {
+            hideToolSpecificLayout()
+        }
         toolPosition.x += deltaX
         toolPosition.y += deltaY
     }
 
     private fun rotate(deltaX: Float, deltaY: Float) {
+        if (this is ImportTool) {
+            hideToolSpecificLayout()
+        }
         previousEventCoordinate?.let {
             val currentPoint = PointF(it.x, it.y)
             val previousXLength = (it.x - deltaX - toolPosition.x).toDouble()
@@ -638,6 +659,7 @@ abstract class BaseToolWithRectangleShape(
     }
 
     private fun resize(deltaX: Float, deltaY: Float) {
+        toggleShapeSizeVisibility(true)
         val rotationRadian = toRadians(boxRotation.toDouble())
         var deltaXCorrected = cos(-rotationRadian) * deltaX - sin(-rotationRadian) * deltaY
         var deltaYCorrected = sin(-rotationRadian) * deltaX + cos(-rotationRadian) * deltaY
@@ -686,6 +708,7 @@ abstract class BaseToolWithRectangleShape(
         if (respectMaximumBoxResolution && maximumBoxResolution > 0 && boxWidth * boxHeight > maximumBoxResolution) {
             preventThatBoxGetsTooLarge(oldWidth, oldHeight, oldPosX, oldPosY)
         }
+        createAndSetShapeSizeText(boxWidth, boxHeight)
     }
 
     protected open fun preventThatBoxGetsTooLarge(
@@ -808,11 +831,50 @@ abstract class BaseToolWithRectangleShape(
         }
     }
 
+    protected fun setShapeSizeChangedListener(listener: ShapeSizeChangedListener) {
+        this.shapeSizeChangedListener = listener
+    }
+
+    protected fun createAndSetShapeSizeText(width: Float, height: Float) {
+        shapeSizeChangedListener?.onShapeSizeChanged("${width.toInt()} x ${height.toInt()} px")
+    }
+
+    protected fun toggleShapeSizeVisibility(isVisible: Boolean) {
+        shapeSizeChangedListener?.onToggleVisibility(isVisible)
+    }
+
+    fun changeToolLayoutVisibility(toolOptionsView: View, willHide: Boolean, disabled: Boolean = false) {
+        if (willHide) {
+            if (toolOptionsView.visibility == View.VISIBLE) {
+                toolOptionsViewController.slideDown(
+                    toolOptionsView,
+                    willHide = true,
+                    showOptionsView = false,
+                    setViewGone = disabled
+                )
+            }
+        } else {
+            val visibility = toolOptionsView.visibility
+            if (visibility == View.GONE && disabled || visibility == View.INVISIBLE && !disabled) {
+                toolOptionsViewController.slideUp(
+                    toolOptionsView,
+                    willHide = false,
+                    showOptionsView = true
+                )
+            }
+        }
+    }
+
     private enum class FloatingBoxAction {
         NONE, MOVE, RESIZE, ROTATE
     }
 
     private enum class ResizeAction {
         NONE, TOP, RIGHT, BOTTOM, LEFT, TOPLEFT, TOPRIGHT, BOTTOMLEFT, BOTTOMRIGHT
+    }
+
+    interface ShapeSizeChangedListener {
+        fun onShapeSizeChanged(shapeText: String)
+        fun onToggleVisibility(isVisible: Boolean)
     }
 }

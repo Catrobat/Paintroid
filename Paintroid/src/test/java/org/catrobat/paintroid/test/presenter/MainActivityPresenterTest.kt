@@ -968,7 +968,6 @@ class MainActivityPresenterTest {
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
             ), intArrayOf(PackageManager.PERMISSION_GRANTED)
         )
-        val uri = model!!.savedPictureUri
         Mockito.verify<Interactor?>(interactor).saveImage(
             any<SaveImageCallback>(),
             ArgumentMatchers.eq(SAVE_IMAGE_DEFAULT),
@@ -1570,7 +1569,7 @@ class MainActivityPresenterTest {
     fun testOnSaveImagePostExecuteWhenDefaultThenDoNotShowDialog() {
         val uri = Mockito.mock(Uri::class.java)
         presenter!!.onSaveImagePostExecute(SAVE_IMAGE_DEFAULT, uri, false)
-        Mockito.verify(navigator, Mockito.never())?.startLoadImageActivity(ArgumentMatchers.anyInt())
+        Mockito.verify(navigator, Mockito.never())?.startLoadImageActivity(anyInt())
         Mockito.verify(navigator, Mockito.never())?.returnToPocketCode(ArgumentMatchers.anyString())
         Mockito.verify(navigator, Mockito.never())?.finishActivity()
     }
@@ -1630,7 +1629,7 @@ class MainActivityPresenterTest {
     fun testShowScaleDialogWhenNotEnoughMemory() {
         val bmr = BitmapReturnValue(
             workspace!!.layerModel.layers,
-            workspace.layerModel.getBitmapOfAllLayers(),
+            bitmap,
             true
         )
         presenter!!.onLoadImagePostExecute(LOAD_IMAGE_IMPORT_PNG, null, bmr)

@@ -18,7 +18,6 @@
  */
 package org.catrobat.paintroid
 
-import android.content.Context
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -39,7 +38,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import org.catrobat.paintroid.common.RESULT_INTRO_MW_NOT_SUPPORTED
 import org.catrobat.paintroid.intro.IntroPageViewAdapter
 import org.catrobat.paintroid.tools.ToolType
-import java.util.Locale
 
 private const val DEFAULT_TEXT_SIZE = 30f
 
@@ -106,17 +104,35 @@ class WelcomeActivity : AppCompatActivity() {
             }
         }
 
+    private fun mirrorUndoAndRedoButtonsForRtlLanguage(undoButton: AppCompatImageButton, redoButton: AppCompatImageButton) {
+        val undoDrawable = ContextCompat.getDrawable(this, R.drawable.ic_pocketpaint_undo)
+        val redoDrawable = ContextCompat.getDrawable(this, R.drawable.ic_pocketpaint_redo)
+
+        undoDrawable?.let {
+            it.isAutoMirrored = true
+            undoButton.setImageDrawable(it)
+        }
+
+        redoDrawable?.let {
+            it.isAutoMirrored = true
+            redoButton.setImageDrawable(it)
+        }
+    }
+
     private fun setUpUndoAndRedoButtons(head: AppCompatTextView, description: AppCompatTextView) {
-        val topBar: AppBarLayout =
-            findViewById(R.id.pocketpaint_intro_possibilities_topbar)
-        val undo: AppCompatImageButton =
-            topBar.findViewById(R.id.pocketpaint_btn_top_undo)
-        val redo: AppCompatImageButton =
-            topBar.findViewById(R.id.pocketpaint_btn_top_redo)
+        val topBar: AppBarLayout = findViewById(R.id.pocketpaint_intro_possibilities_topbar)
+        val undo: AppCompatImageButton = topBar.findViewById(R.id.pocketpaint_btn_top_undo)
+        val redo: AppCompatImageButton = topBar.findViewById(R.id.pocketpaint_btn_top_redo)
+
+        if (LanguageHelper.isCurrentLanguageRTL()) {
+            mirrorUndoAndRedoButtonsForRtlLanguage(undo, redo)
+        }
+
         undo.setOnClickListener {
             head.setText(ToolType.UNDO.nameResource)
             description.setText(ToolType.UNDO.helpTextResource)
         }
+
         redo.setOnClickListener {
             head.setText(ToolType.REDO.nameResource)
             description.setText(ToolType.REDO.helpTextResource)
@@ -158,6 +174,7 @@ class WelcomeActivity : AppCompatActivity() {
             finish()
             return
         }
+
         setContentView(R.layout.activity_pocketpaint_welcome)
         viewPager = findViewById(R.id.pocketpaint_view_pager)
         dotsLayout = findViewById(R.id.pocketpaint_layout_dots)
@@ -179,7 +196,7 @@ class WelcomeActivity : AppCompatActivity() {
             var finished: Boolean
             var current = getItem(1)
             finished = current > layouts.size - 1
-            if (isRTL(this@WelcomeActivity)) {
+            if (LanguageHelper.isCurrentLanguageRTL()) {
                 current = getItem(-1)
                 finished = current < 0
             }
@@ -192,12 +209,12 @@ class WelcomeActivity : AppCompatActivity() {
     }
 
     private fun initViewPager() {
-        if (isRTL(this)) {
+        if (LanguageHelper.isCurrentLanguageRTL()) {
             layouts.reverse()
         }
         viewPager.adapter = IntroPageViewAdapter(layouts)
         viewPager.addOnPageChangeListener(viewPagerPageChangeListener)
-        if (isRTL(this)) {
+        if (LanguageHelper.isCurrentLanguageRTL()) {
             val pos = layouts.size
             viewPager.currentItem = pos
             addBottomDots(layouts.size - 1)
@@ -232,23 +249,8 @@ class WelcomeActivity : AppCompatActivity() {
         }
     }
 
-    private fun defaultLocaleIsRTL(): Boolean {
-        val locale = Locale.getDefault()
-        if (locale.toString().isEmpty()) {
-            return false
-        }
-        val directionality = Character.getDirectionality(locale.displayName[0]).toInt()
-        return directionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT.toInt() || directionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT_ARABIC.toInt()
-    }
-
-    private fun isRTL(context: Context): Boolean {
-        val layoutDirection = context.resources.configuration.layoutDirection
-        val layoutDirectionIsRTL = layoutDirection == View.LAYOUT_DIRECTION_RTL
-        return layoutDirectionIsRTL || defaultLocaleIsRTL()
-    }
-
     private fun getDotsIndex(position: Int): Int =
-        if (isRTL(this)) layouts.size - position - 1 else position
+        if (LanguageHelper.isCurrentLanguageRTL()) layouts.size - position - 1 else position
 
     override fun onBackPressed() {
         finish()

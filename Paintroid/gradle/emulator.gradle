@@ -1,6 +1,6 @@
 /**
  *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2022 The Catrobat Team
+ *  Copyright (C) 2010-2025 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -17,25 +17,11 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// settings.gradle (Groovy)
-
-pluginManagement {
-    repositories {
-        google()
-        mavenCentral()
-        gradlePluginPortal()
+tasks.register('disableAnimations') {
+    it.group 'android'
+    doLast {
+        'adb shell settings put global window_animation_scale 0'.execute()
+        'adb shell settings put global transition_animation_scale 0'.execute()
+        'adb shell settings put global animator_duration_scale 0'.execute()
     }
 }
-
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.PREFER_PROJECT)
-    repositories {
-        google()
-        mavenCentral()
-        mavenLocal()
-    }
-}
-
-rootProject.name = "Paintroid"
-
-include(":Paintroid", ":app", ":colorpicker")

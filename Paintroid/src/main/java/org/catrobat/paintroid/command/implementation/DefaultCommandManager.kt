@@ -29,8 +29,6 @@ import java.util.Deque
 import java.util.ArrayDeque
 import java.util.Collections
 
-const val FIVE = 5
-
 class DefaultCommandManager(
     private val commonFactory: CommonFactory,
     private val layerModel: LayerContracts.Model
@@ -193,6 +191,10 @@ class DefaultCommandManager(
     }
 
     override fun isLastColorCommandOnTop(): Boolean {
+        if (undoCommandList.isEmpty()) {
+            return false
+        }
+
         var retVal = false
         if (undoCommandList.first is ColorChangedCommand) {
             val commandIterator = undoCommandList.iterator()
@@ -377,20 +379,6 @@ class DefaultCommandManager(
             )
         }
         return adaptedModel
-    }
-
-    override fun adjustUndoListForClippingTool() {
-        if (isUndoAvailable) {
-            if (undoCommandList.first.toString().split(".", "@").size < FIVE) {
-                return
-            }
-            val commandName = undoCommandList.first.toString().split(".", "@")[FIVE]
-            if (commandName == ClippingCommand::class.java.simpleName) {
-                val clippingCommand = undoCommandList.pop()
-                undoCommandList.pop()
-                undoCommandList.addFirst(clippingCommand)
-            }
-        }
     }
 
     override fun undoInClippingTool() {

@@ -296,17 +296,17 @@ class TransformTool(
         resizeBoundHeightYBottom = 0f
         resizeBoundWidthXLeft = workspace.width.toFloat()
         resizeBoundHeightYTop = workspace.height.toFloat()
-        if (!checkMarkClicked) {
+        if (checkMarkClicked) {
+            resizeBoundWidthXRight = toolPosition.x + workspace.width / 2 + 1
+            resizeBoundWidthXLeft = toolPosition.x - workspace.width / 2 + 1
+            resizeBoundHeightYBottom = toolPosition.y + workspace.height / 2 + 1
+            resizeBoundHeightYTop = toolPosition.y - workspace.height / 2 + 1
+        } else {
             resetScaleAndTranslation()
             resizeBoundWidthXRight = workspace.width - 1f
             resizeBoundHeightYBottom = workspace.height - 1f
             resizeBoundWidthXLeft = 0f
             resizeBoundHeightYTop = 0f
-        } else {
-            resizeBoundWidthXRight = toolPosition.x + workspace.width / 2 + 1
-            resizeBoundWidthXLeft = toolPosition.x - workspace.width / 2 + 1
-            resizeBoundHeightYBottom = toolPosition.y + workspace.height / 2 + 1
-            resizeBoundHeightYTop = toolPosition.y - workspace.height / 2 + 1
         }
 
         setRectangle(
@@ -331,6 +331,7 @@ class TransformTool(
 
     private fun executeSetCenterCommand() {
         CoroutineScope(Dispatchers.Default).launch {
+            idlingResource.increment()
             val shapeBounds = setCenterCropAlgorithm.crop(workspace.bitmapOfAllLayers, toolPosition)
             if (shapeBounds != null) {
                 boxWidth = shapeBounds.width() + 1f
@@ -348,6 +349,7 @@ class TransformTool(
                 workspace.invalidate()
                 toolOptionsViewController.hide()
             }
+            idlingResource.decrement()
         }
     }
 

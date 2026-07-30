@@ -525,16 +525,26 @@ class LayerIntegrationTest {
             .checkMatchesColor(Color.TRANSPARENT)
         TopBarViewInteraction.onTopBarView()
             .performUndo()
-        DrawingSurfaceInteraction.onDrawingSurfaceView()
-            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE))
-        ToolPropertiesInteraction.onToolProperties()
-            .checkMatchesColor(Color.BLACK)
+        TopBarViewInteraction.onTopBarView()
+            .performUndo()
+        TopBarViewInteraction.onTopBarView()
+            .performRedo()
         TopBarViewInteraction.onTopBarView()
             .performRedo()
         DrawingSurfaceInteraction.onDrawingSurfaceView()
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE))
         ToolPropertiesInteraction.onToolProperties()
             .checkMatchesColor(Color.TRANSPARENT)
+        TopBarViewInteraction.onTopBarView()
+            .performUndo()
+        TopBarViewInteraction.onTopBarView()
+            .performUndo()
+        TopBarViewInteraction.onTopBarView()
+            .performUndo()
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE))
+        ToolPropertiesInteraction.onToolProperties()
+            .checkMatchesColor(Color.BLACK)
     }
 
     @Test
@@ -854,7 +864,7 @@ class LayerIntegrationTest {
         )
         val imageUri = Uri.fromFile(imageFile)
         launchActivityRule.activity.myContentResolver.openOutputStream(imageUri).use { fos ->
-            Assert.assertTrue(bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos))
+            Assert.assertTrue(bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos!!))
         }
         deletionFileList.add(imageFile)
         return imageUri

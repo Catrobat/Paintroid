@@ -96,15 +96,21 @@ class ClippingTool(
 
     fun copyBitmapOfCurrentLayer() {
         if (workspace.bitmapOfCurrentLayer != null) {
-            newBitmap = workspace.bitmapOfCurrentLayer?.copy(workspace.bitmapOfCurrentLayer?.config, true)
+            newBitmap = workspace.bitmapOfCurrentLayer?.config?.let {
+                workspace.bitmapOfCurrentLayer?.copy(
+                    it, true
+                )
+            }
         }
     }
 
     override fun handleDown(coordinate: PointF?): Boolean {
         if (areaClosed) {
+            pathToDraw.rewind()
+            pointArray.clear()
             super.resetInternalState()
             areaClosed = false
-            commandManager.undoInClippingTool()
+
             changePaintColor(toolPaint.previewPaint.color)
             brushToolOptionsView.setCurrentPaint(toolPaint.paint)
             brushToolOptionsView.invalidate()
@@ -113,19 +119,37 @@ class ClippingTool(
         return super.handleDown(coordinate)
     }
 
+    override fun handleMove(coordinate: PointF?, shouldAnimate: Boolean): Boolean {
+        if (areaClosed) {
+            return false
+        }
+        return super.handleMove(coordinate, shouldAnimate)
+    }
+
     override fun handleUp(coordinate: PointF?): Boolean {
+        if (coordinate == null) {
+            return false
+        }
+
         val tempPoint = initialEventCoordinate
         if (previousEventCoordinate == initialEventCoordinate) {
             super.resetInternalState()
             return false
         }
-        if (!areaClosed && coordinate != null && tempPoint != null) {
+        if (!areaClosed && tempPoint != null) {
             pathToDraw.incReserve(1)
             pathToDraw.quadTo(coordinate.x, coordinate.y, tempPoint.x, tempPoint.y)
             pointArray.add(PointF(coordinate.x, coordinate.y))
             areaClosed = true
         }
-        return super.handleUp(coordinate)
+
+        handleUpAnimations(coordinate)
+
+        initialEventCoordinate = null
+        previousEventCoordinate = null
+        pointArray.clear()
+
+        return true
     }
 
     fun onClickOnButton() {
@@ -159,7 +183,6 @@ class ClippingTool(
                     )
                 }
                 commandManager.addCommand(command)
-                commandManager.adjustUndoListForClippingTool()
             }
             areaClosed = false
             wasRecentlyApplied = true

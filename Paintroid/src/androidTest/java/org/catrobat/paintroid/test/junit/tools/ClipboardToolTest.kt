@@ -104,6 +104,7 @@ class ClipboardToolTest {
         )
         Mockito.`when`(toolOptionsViewController.toolSpecificOptionsLayout).thenReturn(viewMock)
         Mockito.`when`(toolOptionsViewController.toolSpecificOptionsLayout).thenReturn(viewMock)
+        Mockito.`when`(clipboardToolOptionsView.getClipboardToolOptionsLayout()).thenReturn(viewMock)
     }
 
     @After

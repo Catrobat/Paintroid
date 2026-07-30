@@ -32,10 +32,12 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.pressBack
+import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
+import androidx.test.espresso.idling.CountingIdlingResource
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withHint
@@ -66,7 +68,9 @@ import org.catrobat.paintroid.tools.implementation.TEXT_SIZE_MAGNIFICATION_FACTO
 import org.catrobat.paintroid.tools.implementation.TextTool
 import org.catrobat.paintroid.ui.tools.FontListAdapter
 import org.hamcrest.CoreMatchers.not
+import org.hamcrest.Matchers
 import org.junit.Assert
+import org.junit.After
 import org.junit.Before
 import org.junit.Ignore
 import org.junit.Rule
@@ -99,6 +103,7 @@ class TextToolIntegrationTest {
     private val pixelsDrawingSurface = surfaceBitmapHeight?.let { IntArray(it) }
     private val canvasPoint = centerBox()
     private var pixelAmountBefore = pixelsDrawingSurface?.let { countPixelsWithColor(it, Color.BLACK) }
+    private lateinit var idlingResource: CountingIdlingResource
 
     @Before
     fun setUp() {
@@ -118,6 +123,13 @@ class TextToolIntegrationTest {
         boldToggleButton = activity.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_bold)
         textSize = activity.findViewById(R.id.pocketpaint_font_size_text)
         textTool?.resetBoxPosition()
+        idlingResource = activity.idlingResource
+        IdlingRegistry.getInstance().register(idlingResource)
+    }
+
+    @After
+    fun tearDown() {
+        IdlingRegistry.getInstance().unregister(idlingResource)
     }
 
     @Test
@@ -382,7 +394,7 @@ class TextToolIntegrationTest {
             testVariablesInIfStatementsWithSurfacseBitmap()
             testSurfacseBitmapAndPixelAmountAfter()
 
-            if (surfaceBitmapHeight != null && canvasPoint != null) {
+            if (surfaceBitmapHeight != null && canvasPoint != null && pixelsDrawingSurface != null) {
                 layerModel?.currentLayer?.bitmap?.getPixels(
                     pixelsDrawingSurface, 0, 1,
                     canvasPoint.x.toInt(), 0, 1, surfaceBitmapHeight
@@ -400,7 +412,7 @@ class TextToolIntegrationTest {
     }
 
     private fun testSurfacseBitmapAndPixelAmountAfter() {
-        if (surfaceBitmapHeight != null && canvasPoint != null) {
+        if (surfaceBitmapHeight != null && canvasPoint != null && pixelsDrawingSurface != null) {
             layerModel?.currentLayer?.bitmap?.getPixels(
                 pixelsDrawingSurface, 0, 1,
                 canvasPoint.x.toInt(), 0, 1, surfaceBitmapHeight
@@ -440,7 +452,7 @@ class TextToolIntegrationTest {
 
         layerModel?.currentLayer?.bitmap?.eraseColor(Color.TRANSPARENT)
         onTopBarView().performClickCheckmark()
-        if (surfaceBitmapHeight != null && canvasPoint != null) {
+        if (surfaceBitmapHeight != null && canvasPoint != null && pixelsDrawingSurface != null) {
             layerModel?.currentLayer?.bitmap?.getPixels(
                 pixelsDrawingSurface, 0, 1,
                 canvasPoint.x.toInt(), 0, 1, surfaceBitmapHeight
@@ -449,7 +461,7 @@ class TextToolIntegrationTest {
     }
 
     private fun testVariablesInIfStatementsWithSurfacseBitmap() {
-        if (surfaceBitmapHeight != null && canvasPoint != null) {
+        if (surfaceBitmapHeight != null && canvasPoint != null && pixelsDrawingSurface != null) {
             layerModel?.currentLayer?.bitmap?.getPixels(
                 pixelsDrawingSurface, 0, 1,
                 canvasPoint.x.toInt(), 0, 1, surfaceBitmapHeight
@@ -531,7 +543,7 @@ class TextToolIntegrationTest {
         val surfaceBitmapWidth = layerModel?.width
         val pixelsDrawingSurface = surfaceBitmapWidth?.let { IntArray(it) }
 
-        if (surfaceBitmapWidth != null && canvasPoint != null) {
+        if (surfaceBitmapWidth != null && canvasPoint != null && pixelsDrawingSurface != null) {
             layerModel?.currentLayer?.bitmap?.getPixels(
                 pixelsDrawingSurface, 0, surfaceBitmapWidth, 0,
                 canvasPoint.y.toInt(), surfaceBitmapWidth, 1
@@ -543,7 +555,7 @@ class TextToolIntegrationTest {
             assert(pixelAmount > 0)
         }
         onTopBarView().performUndo()
-        if (surfaceBitmapWidth != null && canvasPoint != null) {
+        if (surfaceBitmapWidth != null && canvasPoint != null && pixelsDrawingSurface != null) {
             layerModel?.currentLayer?.bitmap?.getPixels(
                 pixelsDrawingSurface, 0, surfaceBitmapWidth, 0,
                 canvasPoint.y.toInt(), surfaceBitmapWidth, 1
@@ -556,7 +568,7 @@ class TextToolIntegrationTest {
         )
         onTopBarView().performRedo()
 
-        if (surfaceBitmapWidth != null && canvasPoint != null) {
+        if (surfaceBitmapWidth != null && canvasPoint != null && pixelsDrawingSurface != null) {
             layerModel?.currentLayer?.bitmap?.getPixels(
                 pixelsDrawingSurface, 0, surfaceBitmapWidth, 0,
                 canvasPoint.y.toInt(), surfaceBitmapWidth, 1
@@ -587,7 +599,7 @@ class TextToolIntegrationTest {
         val surfaceBitmapWidth = layerModel?.width
         val pixelsDrawingSurface = surfaceBitmapWidth?.let { IntArray(it) }
 
-        if (surfaceBitmapWidth != null && canvasPoint != null) {
+        if (surfaceBitmapWidth != null && canvasPoint != null && pixelsDrawingSurface != null) {
             layerModel?.currentLayer?.bitmap?.getPixels(
                 pixelsDrawingSurface, 0, surfaceBitmapWidth, 0,
                 canvasPoint.y.toInt(), surfaceBitmapWidth, 1
@@ -605,7 +617,7 @@ class TextToolIntegrationTest {
 
         Assert.assertEquals(Color.BLACK.toLong(), selectedColor?.toLong())
         onTopBarView().performClickCheckmark()
-        if (surfaceBitmapWidth != null && canvasPoint != null) {
+        if (surfaceBitmapWidth != null && canvasPoint != null && pixelsDrawingSurface != null) {
             layerModel?.currentLayer?.bitmap?.getPixels(
                 pixelsDrawingSurface, 0, surfaceBitmapWidth, 0,
                 canvasPoint.y.toInt(), surfaceBitmapWidth, 1
@@ -653,10 +665,12 @@ class TextToolIntegrationTest {
 
         if (surfaceBitmapWidth != null) {
             textTool?.toolPosition?.y?.let {
-                layerModel?.currentLayer?.bitmap?.getPixels(
-                    pixelsDrawingSurface, 0, surfaceBitmapWidth, 0,
-                    it.toInt(), surfaceBitmapWidth, 1
-                )
+                if (pixelsDrawingSurface != null) {
+                    layerModel?.currentLayer?.bitmap?.getPixels(
+                        pixelsDrawingSurface, 0, surfaceBitmapWidth, 0,
+                        it.toInt(), surfaceBitmapWidth, 1
+                    )
+                }
             }
         }
 
@@ -676,10 +690,12 @@ class TextToolIntegrationTest {
 
         if (surfaceBitmapWidth != null) {
             textTool?.toolPosition?.y?.let {
-                layerModel?.currentLayer?.bitmap?.getPixels(
-                    pixelsDrawingSurface, 0, surfaceBitmapWidth, 0,
-                    it.toInt(), surfaceBitmapWidth, 1
-                )
+                if (pixelsDrawingSurface != null) {
+                    layerModel?.currentLayer?.bitmap?.getPixels(
+                        pixelsDrawingSurface, 0, surfaceBitmapWidth, 0,
+                        it.toInt(), surfaceBitmapWidth, 1
+                    )
+                }
             }
         }
 
@@ -710,6 +726,9 @@ class TextToolIntegrationTest {
     @Test
     fun testTextToolBoxIsPlacedCorrectlyWhenZoomedIn() {
         onToolBarView().performSelectTool(ToolType.TEXT)
+        runBlocking {
+            delay(1500)
+        }
         enterTestText()
 
         val initialPosition = toolMemberBoxPosition
@@ -762,6 +781,41 @@ class TextToolIntegrationTest {
             Assert.assertTrue(boxWidth < toolMemberBoxWidth && boxHeight < toolMemberBoxHeight)
         }
     }
+
+    @Test
+    fun testTextToolSizeDisplay() {
+        onToolBarView().performSelectTool(ToolType.TEXT)
+
+        onView(
+            Matchers.allOf(ViewMatchers.withParent(withId(R.id.pocketpaint_layout_text_tool_options_view_shape_size)),
+            withId(R.id.pocketpaint_fill_shape_size_text)))
+            .check(matches(ViewMatchers.withText(getShapeSizeText())))
+
+        enterMultilineTestText()
+
+        onView(
+            Matchers.allOf(ViewMatchers.withParent(withId(R.id.pocketpaint_layout_text_tool_options_view_shape_size)),
+            withId(R.id.pocketpaint_fill_shape_size_text)))
+            .check(matches(ViewMatchers.withText(getShapeSizeText())))
+
+        onView(withId(R.id.pocketpaint_font_size_text))
+            .perform(ViewActions.replaceText("100"))
+
+        onView(
+            Matchers.allOf(ViewMatchers.withParent(withId(R.id.pocketpaint_layout_text_tool_options_view_shape_size)),
+            withId(R.id.pocketpaint_fill_shape_size_text)))
+            .check(matches(ViewMatchers.withText(getShapeSizeText())))
+
+        selectFontType(FontType.STC)
+
+        onView(
+            Matchers.allOf(ViewMatchers.withParent(withId(R.id.pocketpaint_layout_text_tool_options_view_shape_size)),
+            withId(R.id.pocketpaint_fill_shape_size_text)))
+            .check(matches(ViewMatchers.withText(getShapeSizeText())))
+    }
+
+    private fun getShapeSizeText(): String =
+        "${toolMemberBoxWidth.toInt()} x ${toolMemberBoxHeight.toInt()} px"
 
     private fun centerBox(): PointF? {
         val screenPoint =

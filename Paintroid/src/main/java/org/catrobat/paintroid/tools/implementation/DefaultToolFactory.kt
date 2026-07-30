@@ -34,6 +34,7 @@ import org.catrobat.paintroid.ui.tools.DefaultFillToolOptionsView
 import org.catrobat.paintroid.ui.tools.DefaultShapeToolOptionsView
 import org.catrobat.paintroid.ui.tools.DefaultSprayToolOptionsView
 import org.catrobat.paintroid.ui.tools.DefaultClipboardToolOptionsView
+import org.catrobat.paintroid.ui.tools.DefaultImportToolOptionsView
 import org.catrobat.paintroid.ui.tools.DefaultTextToolOptionsView
 import org.catrobat.paintroid.ui.tools.DefaultTransformToolOptionsView
 import org.catrobat.paintroid.ui.tools.DefaultSmudgeToolOptionsView
@@ -41,8 +42,7 @@ import org.catrobat.paintroid.ui.tools.DefaultSmudgeToolOptionsView
 private const val DRAW_TIME_INIT: Long = 30_000_000
 
 @SuppressWarnings("LongMethod")
-class DefaultToolFactory(mainActivity: MainActivity) : ToolFactory {
-    var mainActivity: MainActivity = mainActivity
+class DefaultToolFactory(var mainActivity: MainActivity) : ToolFactory {
     override fun createTool(
         toolType: ToolType,
         toolOptionsViewController: ToolOptionsViewController,
@@ -76,6 +76,7 @@ class DefaultToolFactory(mainActivity: MainActivity) : ToolFactory {
                 DRAW_TIME_INIT
             )
             ToolType.IMPORTPNG -> ImportTool(
+                DefaultImportToolOptionsView(toolLayout),
                 contextCallback,
                 toolOptionsViewController,
                 toolPaint,
@@ -92,6 +93,7 @@ class DefaultToolFactory(mainActivity: MainActivity) : ToolFactory {
                 idlingResource,
                 commandManager,
                 onColorPickedListener,
+                mainActivity
             )
             ToolType.FILL -> FillTool(
                 DefaultFillToolOptionsView(toolLayout),

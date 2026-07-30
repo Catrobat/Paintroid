@@ -22,13 +22,13 @@ import android.content.pm.ActivityInfo
 import android.content.res.Resources
 import android.graphics.PointF
 import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.DialogFragment
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.filters.SdkSuppress
 import androidx.test.rule.ActivityTestRule
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.R
@@ -61,7 +61,7 @@ class IndeterminateProgressDialogIntegrationTest {
         dialog.dismiss()
     }
 
-    @RequiresApi(Build.VERSION_CODES.N)
+    @SdkSuppress(minSdkVersion = Build.VERSION_CODES.N)
     @Test
     fun testDialogIsShown() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -70,7 +70,7 @@ class IndeterminateProgressDialogIntegrationTest {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.N)
+    @SdkSuppress(minSdkVersion = Build.VERSION_CODES.N)
     @Test
     fun testDialogIsNotCancelableOnBack() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -80,7 +80,7 @@ class IndeterminateProgressDialogIntegrationTest {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.N)
+    @SdkSuppress(minSdkVersion = Build.VERSION_CODES.N)
     @Test
     fun testDialogIsNotCancelable() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -92,7 +92,7 @@ class IndeterminateProgressDialogIntegrationTest {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.N)
+    @SdkSuppress(minSdkVersion = Build.VERSION_CODES.N)
     @Test
     fun testDialogIsRotateAble() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {

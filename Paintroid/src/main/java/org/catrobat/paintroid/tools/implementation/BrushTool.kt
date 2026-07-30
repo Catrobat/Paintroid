@@ -230,20 +230,25 @@ open class BrushTool(
             return false
         }
 
-        var distance: Double? = null
-        initialEventCoordinate?.apply {
-            distance =
-                sqrt(((coordinate.x - x) * (coordinate.x - x) + (coordinate.y - y) * (coordinate.y - y)).toDouble())
-        }
-        val speed = distance?.div(drawTime)
-
-        if (!smoothing || speed != null && speed < threshold) {
+        if (toolType == ToolType.ERASER) {
             val command = commandFactory.createPathCommand(bitmapPaint, pathToDraw)
             commandManager.addCommand(command)
         } else {
-            val pathNew = AdvancedSettingsAlgorithms.smoothingAlgorithm(pointArray)
-            val command = commandFactory.createPathCommand(bitmapPaint, pathNew)
-            commandManager.addCommand(command)
+            var distance: Double? = null
+            initialEventCoordinate?.apply {
+                distance =
+                    sqrt(((coordinate.x - x) * (coordinate.x - x) + (coordinate.y - y) * (coordinate.y - y)).toDouble())
+            }
+            val speed = distance?.div(drawTime)
+
+            if (!smoothing || speed != null && speed < threshold) {
+                val command = commandFactory.createPathCommand(bitmapPaint, pathToDraw)
+                commandManager.addCommand(command)
+            } else {
+                val pathNew = AdvancedSettingsAlgorithms.smoothingAlgorithm(pointArray)
+                val command = commandFactory.createPathCommand(bitmapPaint, pathNew)
+                commandManager.addCommand(command)
+            }
         }
 
         pointArray.clear()

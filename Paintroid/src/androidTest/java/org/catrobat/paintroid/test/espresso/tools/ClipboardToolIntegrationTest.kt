@@ -25,9 +25,13 @@ import android.content.pm.ActivityInfo
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.PointF
+import androidx.test.espresso.Espresso
+import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.ActivityTestRule
 import org.catrobat.paintroid.MainActivity
+import org.catrobat.paintroid.R
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider
 import org.catrobat.paintroid.test.espresso.util.UiInteractions
 import org.catrobat.paintroid.test.espresso.util.wrappers.ClipboardToolViewInteraction.Companion.onClipboardToolViewInteraction
@@ -45,6 +49,7 @@ import org.catrobat.paintroid.tools.drawable.DrawableStyle
 import org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShape
 import org.catrobat.paintroid.tools.implementation.ClipboardTool
 import org.catrobat.paintroid.ui.Perspective
+import org.hamcrest.Matchers
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
@@ -235,6 +240,33 @@ class ClipboardToolIntegrationTest {
         onToolBarView().performSelectTool(ToolType.CLIPBOARD)
         perspective?.scale?.let { Assert.assertEquals(scale, it, 0.0001f) }
     }
+
+    @Test
+    fun testClipboardToolSizeDisplay() {
+        onToolBarView().performSelectTool(ToolType.CLIPBOARD)
+        val clipboardTool = toolReference?.tool as ClipboardTool
+
+        Espresso.onView(
+            Matchers.allOf(ViewMatchers.withParent(ViewMatchers.withId(R.id.pocketpaint_layout_clipboard_tool_options_view_shape_size)),
+                ViewMatchers.withId(R.id.pocketpaint_fill_shape_size_text)))
+            .check(ViewAssertions.matches(ViewMatchers.withText(getShapeSizeText(clipboardTool))))
+
+        onDrawingSurfaceView()
+            .perform(
+                UiInteractions.swipe(
+                    DrawingSurfaceLocationProvider.TOOL_POSITION,
+                    DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT
+                )
+            )
+
+        Espresso.onView(
+            Matchers.allOf(ViewMatchers.withParent(ViewMatchers.withId(R.id.pocketpaint_layout_clipboard_tool_options_view_shape_size)),
+            ViewMatchers.withId(R.id.pocketpaint_fill_shape_size_text)))
+            .check(ViewAssertions.matches(ViewMatchers.withText(getShapeSizeText(clipboardTool))))
+    }
+
+    private fun getShapeSizeText(clipboardTool: ClipboardTool): String =
+        "${clipboardTool.boxWidth.toInt()} x ${clipboardTool.boxHeight.toInt()} px"
 
     companion object {
         private const val SCALE_25 = 0.25f

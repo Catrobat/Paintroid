@@ -39,6 +39,7 @@ import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.atLeastOnce
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -66,12 +67,14 @@ class PipetteToolTest {
     private val contextCallback: ContextCallback? = null
     private var toolToTest: PipetteTool? = null
     private var idlingResource: CountingIdlingResource? = null
+    private var mainActivity: MainActivity? = null
 
     @Rule
     @JvmField
     var launchActivityRule = ActivityTestRule(MainActivity::class.java)
     @Before
     fun setUp() {
+        mainActivity = launchActivityRule.activity
         idlingResource = launchActivityRule.activity.idlingResource
         IdlingRegistry.getInstance().register(idlingResource)
         val bitmap = Bitmap.createBitmap(10, 10, Bitmap.Config.ARGB_8888)
@@ -84,7 +87,8 @@ class PipetteToolTest {
             val argument = invocation.getArgument<PointF>(0)
             argument.x >= 0 && argument.y >= 0 && argument.x < 10 && argument.y < 10
         }
-        toolToTest = PipetteTool(contextCallback!!, toolOptionsViewController!!, toolPaint!!, workspace, idlingResource!!, commandManager!!, listener!!)
+        toolToTest = PipetteTool(contextCallback!!, toolOptionsViewController!!, toolPaint!!,
+            workspace, idlingResource!!, commandManager!!, listener!!, mainActivity!!)
     }
 
     @After
@@ -127,8 +131,8 @@ class PipetteToolTest {
         toolToTest!!.handleUp(PointF(X_COORDINATE_BLUE.toFloat(), 0f))
         toolToTest!!.handleUp(PointF(X_COORDINATE_PART_TRANSPARENT.toFloat(), 0f))
         val inOrderToolPaint = Mockito.inOrder(toolPaint)
-        inOrderToolPaint.verify(toolPaint)!!.color = Color.BLUE
-        inOrderToolPaint.verify(toolPaint)!!.color = -0x55555556
+        inOrderToolPaint.verify(toolPaint, atLeastOnce())!!.color = Color.BLUE
+        inOrderToolPaint.verify(toolPaint, atLeastOnce())!!.color = -0x55555556
         val inOrderListener = Mockito.inOrder(listener)
         inOrderListener.verify(listener)!!.colorChanged(Color.BLUE)
         inOrderListener.verify(listener)!!.colorChanged(-0x55555556)

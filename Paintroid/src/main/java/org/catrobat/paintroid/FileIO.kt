@@ -115,13 +115,13 @@ object FileIO {
         require(currentBitmap != null && !currentBitmap.isRecycled) { "Bitmap is invalid" }
         if (compressFormat == CompressFormat.JPEG) {
             val newBitmap =
-                Bitmap.createBitmap(currentBitmap.width, currentBitmap.height, currentBitmap.config)
+                Bitmap.createBitmap(currentBitmap.width, currentBitmap.height, currentBitmap.config ?: Bitmap.Config.ARGB_8888)
             val canvas = Canvas(newBitmap)
             canvas.drawColor(Color.WHITE)
             canvas.drawBitmap(currentBitmap, 0f, 0f, null)
             currentBitmap = newBitmap
         }
-        if (currentBitmap != null && !currentBitmap.compress(
+        if (outputStream == null || !currentBitmap.compress(
                 compressFormat,
                 compressQuality,
                 outputStream

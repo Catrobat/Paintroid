@@ -24,12 +24,14 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatSeekBar
 import androidx.appcompat.widget.AppCompatTextView
+import com.google.android.material.chip.Chip
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.tools.drawable.DrawableShape
 import org.catrobat.paintroid.tools.drawable.DrawableStyle
@@ -57,6 +59,10 @@ class DefaultShapeToolOptionsView(rootView: ViewGroup) : ShapeToolOptionsView {
     private val outlineWidthEditText: AppCompatEditText
     private val shapeToolDialogTitle: AppCompatTextView
     private val shapeToolFillOutline: AppCompatTextView
+    private val shapeSizeChip: Chip
+    private val changeSizeShapeSizeChip: Chip
+    private val shapeToolOptionsView: View
+    private var changeSizeShapeSizeChipVisible = false
 
     init {
         val inflater = LayoutInflater.from(rootView.context)
@@ -74,7 +80,11 @@ class DefaultShapeToolOptionsView(rootView: ViewGroup) : ShapeToolOptionsView {
             outlineTextView = findViewById(R.id.pocketpaint_outline_view_text_view)
             outlineWidthSeekBar = findViewById(R.id.pocketpaint_shape_stroke_width_seek_bar)
             outlineWidthEditText = findViewById(R.id.pocketpaint_shape_outline_edit)
+            shapeSizeChip = findViewById<LinearLayout>(R.id.pocketpaint_layout_shape_tool_options_view_shape_size).findViewById(R.id.pocketpaint_fill_shape_size_text)
+            changeSizeShapeSizeChip = findViewById<LinearLayout>(R.id.pocketpaint_layout_shape_tool_change_size_shape_size).findViewById(R.id.pocketpaint_fill_shape_size_text)
+            shapeToolOptionsView = findViewById(R.id.pocketpaint_layout_shape_tool_options)
         }
+        toggleShapeSizeVisibility(false)
         outlineWidthEditText.filters =
             arrayOf<InputFilter>(DefaultNumberRangeFilter(MIN_VAL, MAX_VAL))
         outlineWidthEditText.setText(STARTING_OUTLINE_WIDTH.toString())
@@ -233,4 +243,21 @@ class DefaultShapeToolOptionsView(rootView: ViewGroup) : ShapeToolOptionsView {
     override fun setCallback(callback: ShapeToolOptionsView.Callback) {
         this.callback = callback
     }
+
+    override fun setShapeSizeText(shapeSize: String) {
+        shapeSizeChip.setText(shapeSize)
+        changeSizeShapeSizeChip.setText(shapeSize)
+    }
+
+    override fun toggleShapeSizeVisibility(isVisible: Boolean) {
+        if (isVisible && !changeSizeShapeSizeChipVisible && shapeToolOptionsView.visibility == View.INVISIBLE) {
+            changeSizeShapeSizeChip.visibility = View.VISIBLE
+        } else {
+            if (isVisible && shapeToolOptionsView.visibility == View.GONE) changeSizeShapeSizeChip.visibility = View.VISIBLE
+            if (!isVisible) changeSizeShapeSizeChip.visibility = View.GONE
+        }
+        changeSizeShapeSizeChipVisible = isVisible
+    }
+
+    override fun getShapeToolOptionsLayout(): View = shapeToolOptionsView
 }

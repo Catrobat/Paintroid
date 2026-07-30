@@ -56,6 +56,7 @@ import org.catrobat.paintroid.common.PAINTROID_PICTURE_PATH
 import org.hamcrest.Matchers
 import org.junit.After
 import org.junit.Assert
+import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 import java.io.File
@@ -175,9 +176,8 @@ class OpenedFromPocketCodeNewImageTest {
         val imageUri = Uri.fromFile(imageFile)
         try {
             val fos = activity?.contentResolver?.openOutputStream(Objects.requireNonNull(imageUri))
-            Assert.assertTrue(bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos))
-            assert(fos != null)
-            fos?.close()
+            assertTrue(bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos!!))
+            fos.close()
         } catch (e: IOException) {
             throw AssertionError("Picture file could not be created.", e)
         }

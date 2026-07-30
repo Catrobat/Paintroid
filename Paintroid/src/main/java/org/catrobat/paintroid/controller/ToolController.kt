@@ -44,6 +44,8 @@ interface ToolController {
 
     fun hideToolOptionsView()
 
+    fun hideToolOptionsViewForShapeTools()
+
     fun showToolOptionsView()
 
     fun toolOptionsViewVisible(): Boolean
@@ -61,6 +63,8 @@ interface ToolController {
     fun enableToolOptionsView()
 
     fun createTool()
+
+    fun adaptLayoutForFullScreen()
 
     fun toggleToolOptionsView()
 

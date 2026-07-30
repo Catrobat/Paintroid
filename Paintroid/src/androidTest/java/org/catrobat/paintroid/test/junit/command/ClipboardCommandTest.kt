@@ -52,7 +52,7 @@ class ClipboardCommandTest {
         val bitmapUnderTest = canvasBitmapUnderTest.copy(Bitmap.Config.ARGB_8888, true)
         val layerUnderTest = Layer(bitmapUnderTest)
         canvasUnderTest = Canvas()
-        canvasUnderTest!!.setBitmap(canvasBitmapUnderTest)
+        canvasUnderTest.setBitmap(canvasBitmapUnderTest)
         pointUnderTest = PointF((INITIAL_WIDTH / 2).toFloat(), (INITIAL_HEIGHT / 2).toFloat())
         layerModel!!.addLayerAt(0, layerUnderTest)
         layerModel!!.currentLayer = layerUnderTest
@@ -70,7 +70,7 @@ class ClipboardCommandTest {
         val model = LayerModel()
         model.addLayerAt(0, layer)
         model.currentLayer = layer
-        commandUnderTest!!.run(canvasUnderTest!!, model)
+        commandUnderTest!!.run(canvasUnderTest, model)
         PaintroidAsserts.assertBitmapEquals(stampBitmapUnderTest, canvasBitmapUnderTest)
         Assert.assertNull("Stamp bitmap not recycled.", commandUnderTest!!.bitmap)
         Assert.assertNotNull("Bitmap not stored", commandUnderTest!!.fileToStoredBitmap)
@@ -78,17 +78,18 @@ class ClipboardCommandTest {
         val secondModel = LayerModel()
         secondModel.addLayerAt(0, secondLayer)
         secondModel.currentLayer = secondLayer
-        commandUnderTest!!.run(canvasUnderTest!!, secondModel)
+        commandUnderTest!!.run(canvasUnderTest, secondModel)
         PaintroidAsserts.assertBitmapEquals(stampBitmapUnderTest, canvasBitmapUnderTest)
     }
 
     @Test
     fun testRunRotateStamp() {
-        stampBitmapUnderTest!!.setPixel(0, 0, Color.GREEN)
-        commandUnderTest = ClipboardCommand(stampBitmapUnderTest!!, Point(pointUnderTest!!.x.toInt(), pointUnderTest!!.y.toInt()), canvasBitmapUnderTest!!.width.toFloat(), canvasBitmapUnderTest!!.height.toFloat(), 180f)
-        commandUnderTest!!.run(canvasUnderTest!!, LayerModel())
-        stampBitmapUnderTest!!.setPixel(0, 0, Color.CYAN)
-        stampBitmapUnderTest!!.setPixel(stampBitmapUnderTest!!.width - 1, stampBitmapUnderTest!!.height - 1,
+        stampBitmapUnderTest.setPixel(0, 0, Color.GREEN)
+        commandUnderTest = ClipboardCommand(stampBitmapUnderTest, Point(pointUnderTest!!.x.toInt(), pointUnderTest!!.y.toInt()), canvasBitmapUnderTest.width.toFloat(), canvasBitmapUnderTest.height.toFloat(), 180f)
+        commandUnderTest!!.run(canvasUnderTest, LayerModel())
+        stampBitmapUnderTest.setPixel(0, 0, Color.CYAN)
+        stampBitmapUnderTest.setPixel(
+            stampBitmapUnderTest.width - 1, stampBitmapUnderTest.height - 1,
                 Color.GREEN)
         PaintroidAsserts.assertBitmapEquals(stampBitmapUnderTest, canvasBitmapUnderTest)
         Assert.assertNull("Stamp bitmap not recycled.", commandUnderTest!!.bitmap)
@@ -120,7 +121,7 @@ class ClipboardCommandTest {
     fun testStoreBitmap() {
         var storedBitmap: File? = null
         try {
-            val bitmapCopy = canvasBitmapUnderTest!!.copy(canvasBitmapUnderTest!!.config, canvasBitmapUnderTest!!.isMutable)
+            val bitmapCopy = canvasBitmapUnderTest.copy(canvasBitmapUnderTest.config ?: Bitmap.Config.ARGB_8888, canvasBitmapUnderTest.isMutable)
             commandUnderTest!!.storeBitmap(bitmapCopy, bitmapCopy.width.toFloat(), bitmapCopy.height.toFloat())
             storedBitmap = commandUnderTest!!.fileToStoredBitmap
             Assert.assertNotNull(storedBitmap)
