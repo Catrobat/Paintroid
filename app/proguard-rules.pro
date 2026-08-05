@@ -33,3 +33,8 @@
 -keepclassmembers class com.esotericsoftware.kryo.serializers.DefaultArraySerializers$* {
     public <init>();
 }
+
+# Fragments are restored reflectively, so R8 must not drop the no-arg constructor
+-keepclassmembers,allowobfuscation class * extends androidx.fragment.app.Fragment {
+    <init>();
+}
