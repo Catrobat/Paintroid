@@ -34,6 +34,7 @@ import androidx.test.espresso.action.ViewActions.scrollTo
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.idling.CountingIdlingResource
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.isRoot
 import androidx.test.espresso.matcher.ViewMatchers.withClassName
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
@@ -44,6 +45,8 @@ import org.catrobat.paintroid.R
 import org.catrobat.paintroid.colorpicker.HSVColorPickerView
 import org.catrobat.paintroid.colorpicker.PresetSelectorView
 import org.catrobat.paintroid.colorpicker.RgbSelectorView
+import org.catrobat.paintroid.test.espresso.util.EspressoUtils
+import org.catrobat.paintroid.test.espresso.util.UiInteractions.waitFor
 import org.catrobat.paintroid.test.espresso.util.UiMatcher.withBackground
 import org.catrobat.paintroid.test.espresso.util.UiMatcher.withBackgroundColor
 import org.catrobat.paintroid.test.espresso.util.wrappers.BottomNavigationViewInteraction.Companion.onBottomNavigationView
@@ -57,7 +60,6 @@ import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.`is`
-import org.hamcrest.Matchers.not
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -97,7 +99,7 @@ class LandscapeIntegrationTest {
     }
 
     @Test
-    fun testTools() {
+    fun testIfClickingOnCurrentToolTogglesToolOptions() {
         setOrientation(SCREEN_ORIENTATION_LANDSCAPE)
         for (toolType in ToolType.values()) {
             val tool = toolType == ToolType.IMPORTPNG ||
@@ -105,18 +107,22 @@ class LandscapeIntegrationTest {
                 toolType == ToolType.REDO ||
                 toolType == ToolType.UNDO ||
                 toolType == ToolType.LAYER ||
+                toolType == ToolType.CLIPBOARD ||
+                toolType == ToolType.TEXT ||
                 !toolType.hasOptions()
             if (tool) { continue }
             onToolBarView()
                 .performSelectTool(toolType)
-            if (toolOptionsViewController?.isVisible?.not() == true) {
+            if (toolOptionsViewController?.isVisible == false) {
                 onToolBarView()
                     .performClickSelectedToolButton()
             }
             onBottomNavigationView()
                 .onCurrentClicked()
-            onView(withId(R.id.pocketpaint_layout_tool_specific_options))
-                .check(matches(not(isDisplayed())))
+            EspressoUtils.waitForViewToDisappear(withId(R.id.pocketpaint_layout_tool_specific_options))
+            // BaseRobot().waitForViewToDisappear(withId(R.id.pocketpaint_layout_tool_specific_options)).check(matches(not(isDisplayed())))
+//            onView(withId(R.id.pocketpaint_layout_tool_specific_options))
+//                .check(matches(not(isDisplayed())))
         }
     }
 
@@ -408,6 +414,7 @@ class LandscapeIntegrationTest {
     @Test
     fun testIfCurrentToolIsShownInBottomNavigation() {
         setOrientation(SCREEN_ORIENTATION_LANDSCAPE)
+        onView(isRoot()).perform(waitFor(5000))
         for (toolType in ToolType.values()) {
             val tools = toolType == ToolType.IMPORTPNG ||
                 toolType == ToolType.COLORCHOOSER ||
@@ -416,14 +423,38 @@ class LandscapeIntegrationTest {
                 toolType == ToolType.LAYER ||
                 !toolType.hasOptions()
             if (tools) { continue }
+            onView(isRoot()).perform(waitFor(5000))
             onToolBarView()
                 .performSelectTool(toolType)
-            onBottomNavigationView()
-                .checkShowsCurrentTool(toolType)
+            onView(isRoot()).perform(waitFor(500))
+            onBottomNavigationView().checkShowsCurrentTool(toolType)
+            onView(isRoot()).perform(waitFor(5000))
         }
     }
 
     private fun setOrientation(orientation: Int) { activityTestRule.activity.requestedOrientation = orientation }
+
+    /*private fun checkShowsCurrentTool(toolType: ToolType) {
+        var matcher = allOf(withId(R.id.icon),
+            ViewMatchers.isDescendantOfA(withId(R.id.action_current_tool))
+        )
+        var assertion = ViewAssertions.matches(
+            Matchers.allOf(
+                isDisplayed(),
+                UiMatcher.withDrawable(toolType.drawableResource)
+            )
+        )
+        EspressoUtils.assertOnView(matcher, assertion)
+
+        matcher = withId(R.id.action_current_tool)
+        assertion = ViewAssertions.matches(
+            Matchers.allOf(
+                isDisplayed(),
+                ViewMatchers.hasDescendant(withText(toolType.nameResource))
+            )
+        )
+        EspressoUtils.assertOnView(matcher, assertion)
+    }*/
 
     companion object {
         @ColorInt

@@ -583,7 +583,8 @@ class LayerIntegrationTest {
         LayerMenuViewInteraction.onLayerMenuView()
             .performOpen()
             .performSetOpacityTo(50, 0)
-            .performClose()
+
+        LayerMenuViewInteraction.onLayerMenuView().performClose()
 
         ToolBarViewInteraction.onToolBarView()
             .performSelectTool(ToolType.PIPETTE)

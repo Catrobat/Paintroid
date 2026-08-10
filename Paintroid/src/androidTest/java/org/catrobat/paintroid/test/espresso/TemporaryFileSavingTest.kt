@@ -21,8 +21,12 @@ package org.catrobat.paintroid.test.espresso
 import android.content.Intent
 import android.graphics.Color
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.idling.CountingIdlingResource
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.isRoot
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.ActivityTestRule
 import org.catrobat.paintroid.MainActivity
@@ -31,6 +35,7 @@ import org.catrobat.paintroid.common.TEMP_IMAGE_PATH
 import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider
 import org.catrobat.paintroid.test.espresso.util.UiInteractions
+import org.catrobat.paintroid.test.espresso.util.UiInteractions.waitFor
 import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.Companion.onDrawingSurfaceView
 import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction
 import org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction
@@ -38,6 +43,7 @@ import org.catrobat.paintroid.tools.ToolReference
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.Workspace
 import org.catrobat.paintroid.ui.Perspective
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -58,13 +64,17 @@ class TemporaryFileSavingTest {
     private lateinit var toolReference: ToolReference
     private lateinit var mainActivity: MainActivity
     private lateinit var intent: Intent
+    private var idlingResource: CountingIdlingResource? = null
 
     @Before
     fun setUp() {
-        ToolBarViewInteraction.onToolBarView()
-            .performSelectTool(ToolType.BRUSH)
         intent = Intent().putExtra("isTemporaryFileSavingTest", true)
         mainActivity = launchActivityRule.launchActivity(intent)
+        idlingResource = mainActivity.idlingResource
+        IdlingRegistry.getInstance().register(idlingResource)
+        ToolBarViewInteraction.onToolBarView()
+            .performSelectTool(ToolType.BRUSH)
+
         workspace = mainActivity.workspace
         perspective = mainActivity.perspective
         toolReference = mainActivity.toolReference
@@ -73,6 +83,9 @@ class TemporaryFileSavingTest {
             file.delete()
         }
     }
+
+    @After
+    fun tearDown() { IdlingRegistry.getInstance().unregister(idlingResource) }
 
     @Test
     fun testOneUserInteraction() {
@@ -110,15 +123,20 @@ class TemporaryFileSavingTest {
     fun testMultipleUserInteractions() {
         onDrawingSurfaceView()
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
+        onView(isRoot()).perform(waitFor(1000))
         onDrawingSurfaceView()
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT))
-        Thread.sleep(THREAD_WAITING_TIME)
+        onView(isRoot()).perform(waitFor(1000))
         onDrawingSurfaceView()
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_RIGHT))
-        Thread.sleep(THREAD_WAITING_TIME)
+        onView(isRoot()).perform(waitFor(1000))
         onDrawingSurfaceView()
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_LEFT))
+        Thread.sleep(4000)
+        onView(isRoot()).perform(waitFor(5000))
         launchActivityRule.finishActivity()
+        onView(isRoot()).perform(waitFor(1000))
+        Thread.sleep(1000)
         launchActivityRule.launchActivity(intent)
         onDrawingSurfaceView()
             .checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
