@@ -30,7 +30,6 @@ import android.graphics.RectF
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
-import android.os.Environment
 import android.provider.MediaStore
 import com.esotericsoftware.kryo.Kryo
 import com.esotericsoftware.kryo.io.Input
@@ -63,7 +62,8 @@ import org.catrobat.paintroid.command.implementation.SprayCommand
 import org.catrobat.paintroid.command.implementation.ClipboardCommand
 import org.catrobat.paintroid.command.implementation.TextToolCommand
 import org.catrobat.paintroid.command.implementation.SmudgePathCommand
-import org.catrobat.paintroid.common.Constants.DOWNLOADS_DIRECTORY
+import org.catrobat.paintroid.common.CATROBAT_IMAGE_STORAGE
+import org.catrobat.paintroid.common.Constants.ANDROID_DIRECTORY
 import org.catrobat.paintroid.common.SPECIFIC_FILETYPE_SHARED_PREFERENCES_NAME
 import org.catrobat.paintroid.iotasks.OpenRasterFileFormatConversion
 import org.catrobat.paintroid.contract.MainActivityContracts
@@ -163,7 +163,7 @@ open class CommandSerializer(private val activityContext: Context, private val c
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             val contentValues = ContentValues().apply {
                 put(MediaStore.Images.Media.DISPLAY_NAME, fileName)
-                put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
+                put(MediaStore.Images.Media.RELATIVE_PATH, CATROBAT_IMAGE_STORAGE)
             }
             contentResolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)?.let { uri ->
                 contentResolver.openOutputStream(uri)?.use { stream ->
@@ -172,10 +172,10 @@ open class CommandSerializer(private val activityContext: Context, private val c
                 }
             }
         } else {
-            if (!(DOWNLOADS_DIRECTORY.exists() || DOWNLOADS_DIRECTORY.mkdirs())) {
+            if (!(ANDROID_DIRECTORY.exists() || ANDROID_DIRECTORY.mkdirs())) {
                 return null
             }
-            val imageFile = File(DOWNLOADS_DIRECTORY, fileName)
+            val imageFile = File(ANDROID_DIRECTORY, fileName)
             FileOutputStream(imageFile).use { fileStream ->
                 writeToStream(fileStream)
                 returnUri = Uri.fromFile(imageFile)
