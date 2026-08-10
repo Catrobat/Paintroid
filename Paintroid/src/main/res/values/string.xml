@@ -104,7 +104,6 @@
     <string name="saved">Image saved</string>
     <string name="copy_to">Copy saved to\n</string>
     <string name="copy">Copy saved</string>
-    <string name="menu_quit">Quit</string>
     <string name="save_button_text">Save</string>
     <string name="discard_button_text">Discard</string>
     <string name="cancel_button_text">Cancel</string>
@@ -220,7 +219,6 @@
     <string name="pocketpaint_intro_split_screen_not_supported">Intro does not support split screen.</string>
 
     <string name="pocketpaint_overwrite_title">Overwrite File?</string>
-    <string name="pocketpaint_overwrite">You are about to overwrite an existing image (hint: To save it as a new image, use the \"%s\" option). Save anyway?</string>
 
     <string name="pocketpaint_like_us">Do you like Pocket Paint?</string>
     <string name="pocketpaint_rate_us">Would you like to rate Pocket Paint?</string>
@@ -249,5 +247,7 @@
     <string name="dialog_scale_message">The image is too big to load. Tap OK to scale down the image automatically.</string>
 
     <string name="zoom_window_description">Used to display a zoomed in part of the drawing surface</string>
+
+    <string name="compress_quality_percentage">%1$d%%</string>
 
 </resources>

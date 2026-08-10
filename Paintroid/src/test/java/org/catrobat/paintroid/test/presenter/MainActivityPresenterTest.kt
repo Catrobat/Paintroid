@@ -32,7 +32,6 @@ import android.view.Menu
 import android.widget.Toast
 import androidx.core.view.GravityCompat
 import com.nhaarman.mockitokotlin2.any
-import org.catrobat.paintroid.FileIO
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.UserPreferences
@@ -44,12 +43,8 @@ import org.catrobat.paintroid.common.CREATE_FILE_DEFAULT
 import org.catrobat.paintroid.common.LOAD_IMAGE_CATROID
 import org.catrobat.paintroid.common.LOAD_IMAGE_DEFAULT
 import org.catrobat.paintroid.common.LOAD_IMAGE_IMPORT_PNG
-import org.catrobat.paintroid.common.PERMISSION_EXTERNAL_STORAGE_SAVE
-import org.catrobat.paintroid.common.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH
-import org.catrobat.paintroid.common.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW
-import org.catrobat.paintroid.common.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY
-import org.catrobat.paintroid.common.PERMISSION_EXTERNAL_STORAGE_SAVE_COPY
 import org.catrobat.paintroid.common.PERMISSION_REQUEST_CODE_REPLACE_PICTURE
+import org.catrobat.paintroid.common.REQUEST_CODE_CREATE_DOCUMENT
 import org.catrobat.paintroid.common.REQUEST_CODE_INTRO
 import org.catrobat.paintroid.common.REQUEST_CODE_LOAD_PICTURE
 import org.catrobat.paintroid.common.RESULT_INTRO_MW_NOT_SUPPORTED
@@ -63,7 +58,6 @@ import org.catrobat.paintroid.contract.MainActivityContracts.MainView
 import org.catrobat.paintroid.controller.ToolController
 import org.catrobat.paintroid.dialog.PermissionInfoDialog
 import org.catrobat.paintroid.iotasks.BitmapReturnValue
-import org.catrobat.paintroid.iotasks.SaveImage.SaveImageCallback
 import org.catrobat.paintroid.model.Layer
 import org.catrobat.paintroid.model.LayerModel
 import org.catrobat.paintroid.presenter.MainActivityPresenter
@@ -290,42 +284,6 @@ class MainActivityPresenterTest {
         presenter!!.loadNewImage()
         Mockito.verify<MainActivityContracts.Navigator?>(navigator)
             .startLoadImageActivity(REQUEST_CODE_LOAD_PICTURE)
-        Mockito.verifyNoMoreInteractions(interactor)
-    }
-
-    @Test
-    fun testSaveCopyClickedThenSaveImage() {
-        presenter!!.saveCopyClicked(false)
-        Mockito.verify<MainActivityContracts.Navigator?>(navigator)
-            .showSaveImageInformationDialogWhenStandalone(
-                PERMISSION_EXTERNAL_STORAGE_SAVE_COPY,
-                sharedPreferences!!.preferenceImageNumber,
-                false
-            )
-        presenter!!.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY)
-        Mockito.verify<Interactor?>(interactor).saveCopy(
-            presenter!!, SAVE_IMAGE_DEFAULT, workspace!!.layerModel,
-            commandSerializer!!, null,
-            context!!
-        )
-        Mockito.verifyNoMoreInteractions(interactor)
-    }
-
-    @Test
-    fun testSaveImageClickedThenSaveImage() {
-        presenter!!.saveImageClicked()
-        Mockito.verify<MainActivityContracts.Navigator?>(navigator)
-            .showSaveImageInformationDialogWhenStandalone(
-                PERMISSION_EXTERNAL_STORAGE_SAVE,
-                sharedPreferences!!.preferenceImageNumber,
-                false
-            )
-        presenter!!.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE)
-        Mockito.verify<Interactor?>(interactor).saveImage(
-            presenter!!, SAVE_IMAGE_DEFAULT, workspace!!.layerModel,
-            commandSerializer!!, null,
-            context!!
-        )
         Mockito.verifyNoMoreInteractions(interactor)
     }
 
@@ -957,227 +915,6 @@ class MainActivityPresenterTest {
     }
 
     @Test
-    fun testHandlePermissionResultSavePermissionGranted() {
-        Mockito.`when`(workspace!!.layerModel).thenReturn(
-            Mockito.mock(
-                LayerModel::class.java
-            )
-        )
-        presenter!!.handleRequestPermissionsResult(
-            PERMISSION_EXTERNAL_STORAGE_SAVE, arrayOf<String>(
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ), intArrayOf(PackageManager.PERMISSION_GRANTED)
-        )
-        Mockito.verify<Interactor?>(interactor).saveImage(
-            any<SaveImageCallback>(),
-            ArgumentMatchers.eq(SAVE_IMAGE_DEFAULT),
-            any<LayerModel>(),
-            any<CommandSerializer>(),
-            ArgumentMatchers.eq<Uri?>(null),
-            any<Context>(),
-        )
-    }
-
-    @Test
-    fun testHandlePermissionResultSavePermissionPermanentlyDenied() {
-        val permission = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        Mockito.`when`(navigator!!.isPermissionPermanentlyDenied(permission)).thenReturn(true)
-        presenter!!.handleRequestPermissionsResult(
-            PERMISSION_EXTERNAL_STORAGE_SAVE,
-            permission, intArrayOf(PackageManager.PERMISSION_DENIED)
-        )
-        Mockito.verify(navigator).showRequestPermanentlyDeniedPermissionRationaleDialog()
-    }
-
-    @Test
-    fun testHandlePermissionResultSavePermissionNotGranted() {
-        val permission = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        Mockito.`when`(navigator!!.isPermissionPermanentlyDenied(permission)).thenReturn(false)
-        presenter!!.handleRequestPermissionsResult(
-            PERMISSION_EXTERNAL_STORAGE_SAVE,
-            permission, intArrayOf(PackageManager.PERMISSION_DENIED)
-        )
-        Mockito.verify<MainActivityContracts.Navigator?>(navigator)
-            .showRequestPermissionRationaleDialog(
-                PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
-                permission,
-                PERMISSION_EXTERNAL_STORAGE_SAVE
-            )
-    }
-
-    @Test
-    fun testHandlePermissionResultSaveCopyPermissionGranted() {
-        Mockito.`when`(workspace!!.layerModel).thenReturn(
-            Mockito.mock(
-                LayerModel::class.java
-            )
-        )
-        presenter!!.handleRequestPermissionsResult(
-            PERMISSION_EXTERNAL_STORAGE_SAVE_COPY, arrayOf<String>(
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ), intArrayOf(PackageManager.PERMISSION_GRANTED)
-        )
-        Mockito.verify<Interactor?>(interactor).saveCopy(
-            any<SaveImageCallback>(),
-            ArgumentMatchers.eq(SAVE_IMAGE_DEFAULT),
-            any<LayerModel>(),
-            any<CommandSerializer>(),
-            ArgumentMatchers.eq<Uri?>(null),
-            any<Context>(),
-        )
-    }
-
-    @Test
-    fun testHandlePermissionResultSaveCopyPermissionNotGranted() {
-        val permission = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        Mockito.`when`(navigator!!.isPermissionPermanentlyDenied(permission)).thenReturn(false)
-        presenter!!.handleRequestPermissionsResult(
-            PERMISSION_EXTERNAL_STORAGE_SAVE_COPY,
-            permission, intArrayOf(PackageManager.PERMISSION_DENIED)
-        )
-        Mockito.verify<MainActivityContracts.Navigator?>(navigator)
-            .showRequestPermissionRationaleDialog(
-                PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
-                permission,
-                PERMISSION_EXTERNAL_STORAGE_SAVE_COPY
-            )
-    }
-
-    @Test
-    fun testHandlePermissionResultSaveCopyPermissionPermanentlyDenied() {
-        val permission = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        Mockito.`when`(navigator!!.isPermissionPermanentlyDenied(permission)).thenReturn(true)
-        presenter!!.handleRequestPermissionsResult(
-            PERMISSION_EXTERNAL_STORAGE_SAVE_COPY,
-            permission, intArrayOf(PackageManager.PERMISSION_DENIED)
-        )
-        Mockito.verify(navigator).showRequestPermanentlyDeniedPermissionRationaleDialog()
-    }
-
-    @Test
-    fun testHandlePermissionResultSaveBeforeFinishPermissionGranted() {
-        presenter!!.handleRequestPermissionsResult(
-            PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH, arrayOf<String>(
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ), intArrayOf(PackageManager.PERMISSION_GRANTED)
-        )
-        Mockito.verify<Interactor?>(interactor).saveImage(
-            presenter!!, SAVE_IMAGE_FINISH, workspace!!.layerModel,
-            commandSerializer!!, FileIO.storeImageUri,
-            context!!
-        )
-    }
-
-    @Test
-    fun testHandlePermissionResultSaveBeforeFinishPermissionNotGranted() {
-        val permission = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        Mockito.`when`(navigator!!.isPermissionPermanentlyDenied(permission)).thenReturn(false)
-        presenter!!.handleRequestPermissionsResult(
-            PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH,
-            permission, intArrayOf(PackageManager.PERMISSION_DENIED)
-        )
-        Mockito.verify<MainActivityContracts.Navigator?>(navigator)
-            .showRequestPermissionRationaleDialog(
-                PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
-                permission,
-                PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH
-            )
-    }
-
-    @Test
-    fun testHandlePermissionResultSaveBeforeFinishPermissionPermanentlyDenied() {
-        val permission = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        Mockito.`when`(navigator!!.isPermissionPermanentlyDenied(permission)).thenReturn(true)
-        presenter!!.handleRequestPermissionsResult(
-            PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH,
-            permission, intArrayOf(PackageManager.PERMISSION_DENIED)
-        )
-        Mockito.verify(navigator).showRequestPermanentlyDeniedPermissionRationaleDialog()
-    }
-
-    @Test
-    fun testHandlePermissionResultSaveBeforeLoadNewPermissionNotGranted() {
-        val permission = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        Mockito.`when`(navigator!!.isPermissionPermanentlyDenied(permission)).thenReturn(false)
-        presenter!!.handleRequestPermissionsResult(
-            PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW,
-            permission, intArrayOf(PackageManager.PERMISSION_DENIED)
-        )
-        Mockito.verify<MainActivityContracts.Navigator?>(navigator)
-            .showRequestPermissionRationaleDialog(
-                PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
-                permission,
-                PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW
-            )
-    }
-
-    @Test
-    fun testHandlePermissionResultSaveBeforeLoadNewPermissionPermanentlyDenied() {
-        val permission = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        Mockito.`when`(navigator!!.isPermissionPermanentlyDenied(permission)).thenReturn(true)
-        presenter!!.handleRequestPermissionsResult(
-            PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW,
-            permission, intArrayOf(PackageManager.PERMISSION_DENIED)
-        )
-        Mockito.verify(navigator).showRequestPermanentlyDeniedPermissionRationaleDialog()
-    }
-
-    @Test
-    fun testHandlePermissionResultSaveBeforeLoadNewPermissionGranted() {
-        presenter!!.handleRequestPermissionsResult(
-            PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW, arrayOf<String>(
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ), intArrayOf(PackageManager.PERMISSION_GRANTED)
-        )
-        Mockito.verify<Interactor?>(interactor).saveImage(
-            presenter!!, SAVE_IMAGE_LOAD_NEW, workspace!!.layerModel,
-            commandSerializer!!, FileIO.storeImageUri,
-            context!!
-        )
-    }
-
-    @Test
-    fun testHandlePermissionResultSaveBeforeNewEmptyPermissionNotGranted() {
-        val permission = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        Mockito.`when`(navigator!!.isPermissionPermanentlyDenied(permission)).thenReturn(false)
-        presenter!!.handleRequestPermissionsResult(
-            PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY,
-            permission, intArrayOf(PackageManager.PERMISSION_DENIED)
-        )
-        Mockito.verify<MainActivityContracts.Navigator?>(navigator)
-            .showRequestPermissionRationaleDialog(
-                PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
-                permission,
-                PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY
-            )
-    }
-
-    @Test
-    fun testHandlePermissionResultSaveBeforeNewEmptyPermissionPermanentlyDenied() {
-        val permission = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        Mockito.`when`(navigator!!.isPermissionPermanentlyDenied(permission)).thenReturn(true)
-        presenter!!.handleRequestPermissionsResult(
-            PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY,
-            permission, intArrayOf(PackageManager.PERMISSION_DENIED)
-        )
-        Mockito.verify(navigator).showRequestPermanentlyDeniedPermissionRationaleDialog()
-    }
-
-    @Test
-    fun testHandlePermissionResultSaveBeforeNewEmptyPermissionGranted() {
-        presenter!!.handleRequestPermissionsResult(
-            PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY, arrayOf<String>(
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ), intArrayOf(PackageManager.PERMISSION_GRANTED)
-        )
-        Mockito.verify<Interactor?>(interactor).saveImage(
-            presenter!!, SAVE_IMAGE_NEW_EMPTY, workspace!!.layerModel,
-            commandSerializer!!, FileIO.storeImageUri,
-            context!!
-        )
-    }
-
-    @Test
     fun testHandlePermissionResultWhenStoragePermissionGrantedAndRequestCodeUnknownThenCallBaseHandle() {
         presenter!!.handleRequestPermissionsResult(
             100,
@@ -1222,243 +959,6 @@ class MainActivityPresenterTest {
             456,
             arrayOf(Manifest.permission.CAMERA, Manifest.permission.CAMERA),
             intArrayOf(PackageManager.PERMISSION_GRANTED, PackageManager.PERMISSION_DENIED)
-        )
-    }
-
-    @Test
-    fun testOnNavigationItemSelectedSaveCopyPermissionGranted() {
-        presenter!!.saveCopyClicked(false)
-        Mockito.verify<MainActivityContracts.Navigator?>(navigator)
-            .showSaveImageInformationDialogWhenStandalone(
-                PERMISSION_EXTERNAL_STORAGE_SAVE_COPY,
-                sharedPreferences!!.preferenceImageNumber,
-                false
-            )
-        presenter!!.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY)
-        Mockito.verify<Interactor?>(interactor).saveCopy(
-            presenter!!, SAVE_IMAGE_DEFAULT, workspace!!.layerModel,
-            commandSerializer!!, null,
-            context!!
-        )
-    }
-
-    @Test
-    fun testOnNavigationItemSelectedSaveCopyPermissionNotGranted() {
-        Mockito.`when`(navigator!!.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE))
-            .thenReturn(false)
-        Mockito.`when`(navigator.isSdkAboveOrEqualM).thenReturn(false).thenReturn(true)
-        presenter!!.saveCopyClicked(false)
-        Mockito.verify<MainActivityContracts.Navigator?>(navigator)
-            .showSaveImageInformationDialogWhenStandalone(
-                PERMISSION_EXTERNAL_STORAGE_SAVE_COPY,
-                sharedPreferences!!.preferenceImageNumber,
-                false
-            )
-        presenter!!.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY)
-        Mockito.verify<MainActivityContracts.Navigator?>(navigator).askForPermission(
-            arrayOf<String>(
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ), PERMISSION_EXTERNAL_STORAGE_SAVE_COPY
-        )
-    }
-
-    @Test
-    fun testNoPermissionCheckOnSaveBeforeFinishWhenOpenedFromCatroid() {
-        Mockito.`when`(workspace!!.layerModel).thenReturn(
-            Mockito.mock(
-                LayerModel::class.java
-            )
-        )
-        Mockito.`when`(navigator!!.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE))
-            .thenReturn(false)
-        Mockito.`when`(navigator.isSdkAboveOrEqualM).thenReturn(true)
-        Mockito.`when`(model!!.isOpenedFromCatroid).thenReturn(true)
-        presenter!!.saveBeforeFinish()
-        Mockito.verify<MainActivityContracts.Navigator?>(navigator)
-            .showSaveImageInformationDialogWhenStandalone(
-                PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH,
-                sharedPreferences!!.preferenceImageNumber,
-                false
-            )
-        presenter!!.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH)
-
-        Mockito.verify(interactor)?.saveImage(
-            any<MainActivityPresenter>(),
-            anyInt(),
-            any<LayerModel>(),
-            any<CommandSerializer>(),
-            ArgumentMatchers.eq(null as Uri?),
-            any<Context>()
-        )
-    }
-
-    @Test
-    fun testPermissionCheckOnExportWhenOpenedFromCatroid() {
-        Mockito.`when`(navigator!!.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE))
-            .thenReturn(false)
-        Mockito.`when`(navigator.isSdkAboveOrEqualM).thenReturn(false).thenReturn(true)
-        Mockito.`when`(model!!.isOpenedFromCatroid).thenReturn(true)
-        presenter!!.saveCopyClicked(false)
-        Mockito.verify<MainActivityContracts.Navigator?>(navigator)
-            .showSaveImageInformationDialogWhenStandalone(
-                PERMISSION_EXTERNAL_STORAGE_SAVE_COPY,
-                sharedPreferences!!.preferenceImageNumber,
-                false
-            )
-        presenter!!.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY)
-        Mockito.verify<MainActivityContracts.Navigator?>(navigator).askForPermission(
-            arrayOf<String>(
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ), PERMISSION_EXTERNAL_STORAGE_SAVE_COPY
-        )
-    }
-
-    @Test
-    fun testOnNavigationItemSelectedSavePermissionGranted() {
-        presenter!!.saveImageClicked()
-        Mockito.verify<MainActivityContracts.Navigator?>(navigator)
-            .showSaveImageInformationDialogWhenStandalone(
-                PERMISSION_EXTERNAL_STORAGE_SAVE,
-                sharedPreferences!!.preferenceImageNumber,
-                false
-            )
-        presenter!!.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE)
-        Mockito.verify<Interactor?>(interactor).saveImage(
-            presenter!!, SAVE_IMAGE_DEFAULT, workspace!!.layerModel,
-            commandSerializer!!, FileIO.storeImageUri,
-            context!!
-        )
-    }
-
-    @Test
-    fun testOnNavigationItemSelectedSavePermissionNotGranted() {
-        Mockito.`when`(navigator!!.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE))
-            .thenReturn(false)
-        Mockito.`when`(navigator.isSdkAboveOrEqualM).thenReturn(false).thenReturn(true)
-        presenter!!.saveImageClicked()
-        Mockito.verify<MainActivityContracts.Navigator?>(navigator)
-            .showSaveImageInformationDialogWhenStandalone(
-                PERMISSION_EXTERNAL_STORAGE_SAVE,
-                sharedPreferences!!.preferenceImageNumber,
-                false
-            )
-        presenter!!.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE)
-        Mockito.verify<MainActivityContracts.Navigator?>(navigator).askForPermission(
-            arrayOf<String>(
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ), PERMISSION_EXTERNAL_STORAGE_SAVE
-        )
-    }
-
-    @Test
-    fun testSaveAndFinishPermissionGranted() {
-        presenter!!.saveBeforeFinish()
-        Mockito.verify<MainActivityContracts.Navigator?>(navigator)
-            .showSaveImageInformationDialogWhenStandalone(
-                PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH,
-                sharedPreferences!!.preferenceImageNumber,
-                false
-            )
-        presenter!!.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH)
-        Mockito.verify<Interactor?>(interactor).saveImage(
-            presenter!!, SAVE_IMAGE_FINISH, workspace!!.layerModel,
-            commandSerializer!!, FileIO.storeImageUri,
-            context!!
-        )
-    }
-
-    @Test
-    fun testSaveAndFinishPermissionNotGranted() {
-        Mockito.`when`(navigator!!.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE))
-            .thenReturn(false)
-        Mockito.`when`(navigator.isSdkAboveOrEqualM).thenReturn(false).thenReturn(true)
-        presenter!!.saveBeforeFinish()
-        Mockito.verify<MainActivityContracts.Navigator?>(navigator)
-            .showSaveImageInformationDialogWhenStandalone(
-                PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH,
-                sharedPreferences!!.preferenceImageNumber,
-                false
-            )
-        presenter!!.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH)
-        Mockito.verify<MainActivityContracts.Navigator?>(navigator).askForPermission(
-            arrayOf<String>(
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ), PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH
-        )
-    }
-
-    @Test
-    fun testSaveAndNewImagePermissionGranted() {
-        presenter!!.saveBeforeNewImage()
-        Mockito.verify<MainActivityContracts.Navigator?>(navigator)
-            .showSaveImageInformationDialogWhenStandalone(
-                PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY,
-                sharedPreferences!!.preferenceImageNumber,
-                false
-            )
-        presenter!!.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY)
-        Mockito.verify<Interactor?>(interactor).saveImage(
-            presenter!!, SAVE_IMAGE_NEW_EMPTY, workspace!!.layerModel,
-            commandSerializer!!, FileIO.storeImageUri,
-            context!!
-        )
-    }
-
-    @Test
-    fun testSaveAndNewImagePermissionNotGranted() {
-        Mockito.`when`(navigator!!.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE))
-            .thenReturn(false)
-        Mockito.`when`(navigator.isSdkAboveOrEqualM).thenReturn(false).thenReturn(true)
-        presenter!!.saveBeforeNewImage()
-        Mockito.verify<MainActivityContracts.Navigator?>(navigator)
-            .showSaveImageInformationDialogWhenStandalone(
-                PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY,
-                sharedPreferences!!.preferenceImageNumber,
-                false
-            )
-        presenter!!.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY)
-        Mockito.verify<MainActivityContracts.Navigator?>(navigator).askForPermission(
-            arrayOf<String>(
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ), PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY
-        )
-    }
-
-    @Test
-    fun testSaveAndLoadImagePermissionGranted() {
-        presenter!!.saveBeforeLoadImage()
-        Mockito.verify<MainActivityContracts.Navigator?>(navigator)
-            .showSaveImageInformationDialogWhenStandalone(
-                PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW,
-                sharedPreferences!!.preferenceImageNumber,
-                false
-            )
-        presenter!!.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW)
-
-        Mockito.verify<Interactor?>(interactor).saveImage(
-            presenter!!, SAVE_IMAGE_LOAD_NEW, workspace!!.layerModel,
-            commandSerializer!!, FileIO.storeImageUri,
-            context!!
-        )
-    }
-
-    @Test
-    fun testSaveAndLoadImagePermissionNotGranted() {
-        Mockito.`when`(navigator!!.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE))
-                .thenReturn(false)
-        Mockito.`when`(navigator.isSdkAboveOrEqualM).thenReturn(false).thenReturn(true)
-        presenter!!.saveBeforeLoadImage()
-        Mockito.verify<MainActivityContracts.Navigator?>(navigator)
-                .showSaveImageInformationDialogWhenStandalone(
-                        PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW,
-                        sharedPreferences!!.preferenceImageNumber,
-                        false
-                )
-        presenter!!.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW)
-        Mockito.verify<MainActivityContracts.Navigator?>(navigator).askForPermission(
-                arrayOf<String>(
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE
-                ), PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW
         )
     }
 
@@ -1635,5 +1135,54 @@ class MainActivityPresenterTest {
         presenter!!.onLoadImagePostExecute(LOAD_IMAGE_IMPORT_PNG, null, bmr)
         Mockito.verify<MainActivityContracts.Navigator?>(navigator)
             .showScaleImageRequestDialog(null, LOAD_IMAGE_IMPORT_PNG)
+    }
+
+    @Test
+    fun testSaveImageClickedThenShowDialog() {
+        presenter!!.saveImageClicked()
+        Mockito.verify(navigator)?.showSaveInformationDialog(
+            sharedPreferences!!.preferenceImageNumber,
+            false
+        )
+        Mockito.verifyNoMoreInteractions(interactor)
+    }
+
+    @Test
+    fun testSaveImageClickedLaunchesSaveDialogAndPicker() {
+        presenter!!.saveImageClicked()
+        Mockito.verify(navigator)!!.showSaveInformationDialog(
+            sharedPreferences!!.preferenceImageNumber,
+            false
+        )
+    }
+
+    @Test
+    fun testStartCreateDocumentDelegatesToNavigator() {
+        val fakeIntent = Intent(Intent.ACTION_CREATE_DOCUMENT)
+        presenter!!.startCreateDocument(fakeIntent, REQUEST_CODE_CREATE_DOCUMENT)
+        Mockito.verify(navigator)!!.startCreateDocument(fakeIntent, REQUEST_CODE_CREATE_DOCUMENT)
+    }
+
+    @Test
+    fun testHandleActivityResultCreateDocumentOkCallsSaveImage() {
+        val uri = Mockito.mock(Uri::class.java)
+        val intent = Mockito.mock(Intent::class.java).apply {
+            Mockito.`when`(this.data).thenReturn(uri)
+        }
+
+        presenter!!.handleActivityResult(
+            REQUEST_CODE_CREATE_DOCUMENT,
+            Activity.RESULT_OK,
+            intent
+        )
+
+        Mockito.verify(interactor)!!.saveImage(
+            presenter!!,
+            SAVE_IMAGE_DEFAULT,
+            workspace!!.layerModel,
+            commandSerializer!!,
+            uri,
+            context!!
+        )
     }
 }
