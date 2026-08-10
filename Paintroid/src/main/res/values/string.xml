@@ -32,6 +32,7 @@
     <string name="button_transform">Transform</string>
     <string name="button_fill">Fill</string>
     <string name="button_line">Line</string>
+    <string name="button_dynamic_line">Dynamic Line (Beta)</string>
     <string name="button_text">Text</string>
     <string name="button_shape">Shapes</string>
     <string name="button_hand">Hand</string>
@@ -72,6 +73,7 @@
     <string name="help_content_clipboard">Move and resize the rectangle to cover the area you want to stamp. Tap on copy or cut to select the area. Move it, then tap on paste to stamp.</string>
     <string name="help_content_import_png">Import an image from the gallery to the clipboard.</string>
     <string name="help_content_line">Draw a straight line.</string>
+    <string name="help_content_dynamic_line">Draw a straight line and move the vertices.</string>
     <string name="help_content_text">Write text and format it. Resize the text box afterwards. Tap on the checkmark to insert the text on the image.</string>
     <string name="help_content_shape">Choose a shape and tap on the checkmark to insert the selected shape.</string>
     <string name="help_content_layer">Create new layers or modify existing ones.</string>

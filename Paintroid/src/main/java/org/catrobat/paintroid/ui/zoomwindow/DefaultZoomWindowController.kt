@@ -220,6 +220,7 @@ class DefaultZoomWindowController
     override fun checkIfToolCompatibleWithZoomWindow(tool: Tool?): Constants {
         return when (tool?.toolType?.name) {
             ToolType.LINE.name,
+            ToolType.DYNAMICLINE.name,
             ToolType.CURSOR.name,
             ToolType.WATERCOLOR.name,
             ToolType.SPRAY.name,

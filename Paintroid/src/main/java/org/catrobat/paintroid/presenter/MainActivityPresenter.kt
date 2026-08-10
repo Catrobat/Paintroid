@@ -97,6 +97,7 @@ import org.catrobat.paintroid.tools.implementation.CLICK_TIMEOUT_MILLIS
 import org.catrobat.paintroid.tools.implementation.CONSTANT_3
 import org.catrobat.paintroid.tools.implementation.ClippingTool
 import org.catrobat.paintroid.tools.implementation.LineTool
+import org.catrobat.paintroid.tools.implementation.DynamicLineTool
 import org.catrobat.paintroid.tools.implementation.DefaultToolPaint
 import org.catrobat.paintroid.tools.implementation.EraserTool
 import org.catrobat.paintroid.ui.LayerAdapter
@@ -155,12 +156,14 @@ open class MainActivityPresenter(
 
     override fun replaceImageClicked() {
         checkIfClippingToolNeedsAdjustment()
+        resetDynamicLineToolIfInUse()
         switchBetweenVersions(PERMISSION_REQUEST_CODE_REPLACE_PICTURE, false)
         setFirstCheckBoxInLayerMenu()
     }
 
     override fun addImageToCurrentLayerClicked() {
         checkIfClippingToolNeedsAdjustment()
+        resetDynamicLineToolIfInUse()
         setTool(ToolType.IMPORTPNG)
         switchBetweenVersions(PERMISSION_REQUEST_CODE_IMPORT_PICTURE)
     }
@@ -179,12 +182,14 @@ open class MainActivityPresenter(
 
     override fun loadNewImage() {
         checkIfClippingToolNeedsAdjustment()
+        resetDynamicLineToolIfInUse()
         navigator.startLoadImageActivity(REQUEST_CODE_LOAD_PICTURE)
         setFirstCheckBoxInLayerMenu()
     }
 
     override fun newImageClicked() {
         checkIfClippingToolNeedsAdjustment()
+        resetDynamicLineToolIfInUse()
         if (isImageUnchanged || model.isSaved) {
             onNewImage()
             setFirstCheckBoxInLayerMenu()
@@ -196,6 +201,7 @@ open class MainActivityPresenter(
 
     override fun saveBeforeNewImage() {
         checkIfClippingToolNeedsAdjustment()
+        resetDynamicLineToolIfInUse()
         navigator.showSaveImageInformationDialogWhenStandalone(
             PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY,
             imageNumber,
@@ -219,6 +225,7 @@ open class MainActivityPresenter(
 
     override fun saveBeforeFinish() {
         checkIfClippingToolNeedsAdjustment()
+        resetDynamicLineToolIfInUse()
         navigator.showSaveImageInformationDialogWhenStandalone(
             PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH,
             imageNumber,
@@ -244,6 +251,7 @@ open class MainActivityPresenter(
 
     override fun shareImageClicked() {
         checkIfClippingToolNeedsAdjustment()
+        resetDynamicLineToolIfInUse()
         view.refreshDrawingSurface()
         val bitmap: Bitmap? = workspace.bitmapOfAllLayers
         navigator.startShareImageActivity(bitmap)
@@ -577,12 +585,14 @@ open class MainActivityPresenter(
 
     override fun saveImageConfirmClicked(requestCode: Int, uri: Uri?) {
         checkIfClippingToolNeedsAdjustment()
+        resetDynamicLineToolIfInUse()
         view.refreshDrawingSurface()
         interactor.saveImage(this, requestCode, workspace.layerModel, commandSerializer, uri, context)
     }
 
     override fun saveCopyConfirmClicked(requestCode: Int, uri: Uri?) {
         checkIfClippingToolNeedsAdjustment()
+        resetDynamicLineToolIfInUse()
         view.refreshDrawingSurface()
         interactor.saveCopy(this, requestCode, workspace.layerModel, commandSerializer, uri, context)
     }
@@ -591,6 +601,8 @@ open class MainActivityPresenter(
         idlingResource.increment()
         if (view.isKeyboardShown) {
             view.hideKeyboard()
+        } else if (toolController.currentTool is DynamicLineTool) {
+            commandManager.undo()
         } else {
             if (toolController.currentTool !is EraserTool && (commandManager.isLastColorCommandOnTop() || commandManager.getColorCommandCount() == 0)) {
                 toolController.currentTool?.changePaintColor(Color.BLACK)
@@ -807,6 +819,13 @@ open class MainActivityPresenter(
         }
     }
 
+    override fun switchToDynamicLineTool() {
+        if (toolController.toolType == ToolType.DYNAMICLINE) return
+        idlingResource.increment()
+        checkForImplicitToolApplication()
+        switchTool(ToolType.DYNAMICLINE)
+        idlingResource.decrement()
+    }
     override fun toolClicked(toolType: ToolType) {
         idlingResource.increment()
         bottomBarViewHolder.hide()
@@ -1162,6 +1181,12 @@ open class MainActivityPresenter(
                 (toolController.currentTool as ClippingTool).wasRecentlyApplied = true
                 clippingTool.resetInternalState(Tool.StateChange.NEW_IMAGE_LOADED)
             }
+        }
+    }
+
+    private fun resetDynamicLineToolIfInUse() {
+        if (toolController.currentTool is DynamicLineTool) {
+            (toolController.currentTool as DynamicLineTool).onClickOnButton()
         }
     }
 

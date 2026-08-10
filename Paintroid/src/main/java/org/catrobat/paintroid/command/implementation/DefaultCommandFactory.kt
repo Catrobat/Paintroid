@@ -132,6 +132,17 @@ class DefaultCommandFactory : CommandFactory {
         commonFactory.createSerializablePath(path)
     )
 
+    override fun createDynamicPathCommand(
+        paint: Paint,
+        path: SerializablePath,
+        startPoint: PointF,
+        endPoint: PointF
+    ): Command = DynamicPathCommand(
+        commonFactory.createPaint(paint),
+        commonFactory.createSerializablePath(path),
+        startPoint, endPoint
+    )
+
     override fun createSmudgePathCommand(
         bitmap: Bitmap,
         pointPath: MutableList<PointF>,

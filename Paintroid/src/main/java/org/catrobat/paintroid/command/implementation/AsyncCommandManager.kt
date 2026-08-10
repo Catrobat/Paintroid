@@ -74,6 +74,10 @@ open class AsyncCommandManager(
         }
     }
 
+    override fun executeCommand(command: Command?) {
+        synchronized(layerModel) { commandManager.executeCommand(command) }
+    }
+
     override fun addCommandWithoutUndo(command: Command?) {
         CoroutineScope(Dispatchers.Default).launch {
             mutex.withLock {
@@ -102,6 +106,14 @@ open class AsyncCommandManager(
 
     override fun undo() {
         manageUndoAndRedo(commandManager::undo, isUndoAvailable)
+    }
+
+    override fun getFirstRedoCommand(): Command? {
+        synchronized(layerModel) { return commandManager.getFirstRedoCommand() }
+    }
+
+    override fun clearRedoCommandList() {
+        synchronized(layerModel) { commandManager.clearRedoCommandList() }
     }
 
     override fun redo() {
