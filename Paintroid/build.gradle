@@ -61,13 +61,13 @@ if (!project.hasProperty("signingKeystore")) {
 android {
     namespace = 'org.catrobat.paintroid'
 
-    // New AGP DSL (API 35-ready)
     compileSdk = rootProject.ext.androidCompileSdkVersion
 
     defaultConfig {
         minSdk    = rootProject.ext.androidMinSdkVersion
         targetSdk = rootProject.ext.androidTargetSdkVersion
         testInstrumentationRunner = 'androidx.test.runner.AndroidJUnitRunner'
+        consumerProguardFiles 'proguard-rules.pro'
     }
 
     buildFeatures {
@@ -104,8 +104,9 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            // Minification happens once, in the consuming app — a second R8 pass
+            // here would double-obfuscate stack traces and break retrace.
+            minifyEnabled false
         }
         signedRelease {
             initWith(release)
