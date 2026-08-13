@@ -31,7 +31,9 @@
 
     <application
         android:largeHeap="true"
-        android:supportsRtl="true">
+        android:supportsRtl="true"
+        android:enableOnBackInvokedCallback="false"
+        tools:targetApi="tiramisu">
         <provider
             android:name=".MyProvider"
             android:authorities="${applicationId}.fileprovider"
