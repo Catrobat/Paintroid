@@ -98,8 +98,8 @@
     <string name="copy_to">Copy saved to\n</string>
     <string name="copy">Copy saved</string>
     <string name="menu_quit">Quit</string>
-    <string name="save_button_text">Save</string>
-    <string name="discard_button_text">Discard</string>
+    <string name="save_button_text">Lagre</string>
+    <string name="discard_button_text">Slett</string>
     <string name="cancel_button_text">Avbryt</string>
     <string name="overwrite_button_text">Overwrite</string>
     <string name="resize_nothing_to_resize">nothing to resize</string>

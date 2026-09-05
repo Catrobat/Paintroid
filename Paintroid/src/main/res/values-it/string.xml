@@ -26,7 +26,7 @@
     <string name="button_undo">Annulla</string>
     <string name="button_redo">Ripeti</string>
     <string name="button_info">Informazioni</string>
-    <string name="button_clipboard">Clipboard</string>
+    <string name="button_clipboard">Appunti</string>
     <string name="button_import_image">Importa immagine</string>
     <string name="button_eraser">Cancella</string>
     <string name="button_transform">Trasforma</string>
@@ -44,9 +44,9 @@
     <string name="done">Fatto</string>
     <string name="gallery">Galleria</string>
     <string name="no_connection_sticker">Adesivi non disponibili, controlla la tua connessione dati.</string>
-    <string name="clipboard_tool_paste">Paste</string>
+    <string name="clipboard_tool_paste">Incolla</string>
     <string name="clipboard_tool_copy">Copiare</string>
-    <string name="clipboard_tool_cut">Cut</string>
+    <string name="clipboard_tool_cut">Taglia</string>
     <string name="stickers">Adesivi</string>
     <string name="dialog_tools_title">Strumenti</string>
     <string name="dialog_error_save_title">Errore durante il caricamento/salvataggio File</string>
@@ -63,7 +63,7 @@
     <string name="help_content_fill">Cliccare sull\'immagine per riempire un\'area con il colore selezionato.</string>
     <string name="help_content_cursor">Posizionare il cursore dove si vuole disegnare. Fare clic per attivare il cursore. Spostare il dito per disegnare. Cliccare di nuovo per disattivare.</string>
     <string name="help_content_transform">Utilizzalo per trasformare l\'immagine.</string>
-    <string name="help_content_clipboard">Move and resize the rectangle to cover the area you want to stamp. Tap on copy or cut to select the area. Move it, then tap on paste to stamp.</string>
+    <string name="help_content_clipboard">Copri l\'area che vuoi timbrare spostando e ridimensionando il rettangolo. Tocca su copia o taglia per selezionare l\'area. Spostala e poi tocca su incolla per mettere il timbro.</string>
     <string name="help_content_import_png">Importare un\'immagine dalla galleria per lo strumento timbro.</string>
     <string name="help_content_line">Disegnare una linea retta.</string>
     <string name="help_content_text">Scrivi testo e formattalo. In seguito, ridimensiona la casella di testo. Toccare per inserire il testo sull\'immagine.</string>
@@ -92,7 +92,7 @@
     <string name="menu_export">Esporta</string>
     <string name="menu_feedback">Feedback</string>
     <string name="menu_advanced">Impostazioni avanzate</string>
-    <string name="menu_zoom_settings">Zoom window settings</string>
+    <string name="menu_zoom_settings">Impostazioni sullo zoom della finestra</string>
     <string name="saved_to">Immagine salvata in\n</string>
     <string name="saved">Immagine salvata</string>
     <string name="copy_to">Copia salvata in\n</string>
@@ -134,7 +134,7 @@
     <string name="transform_auto_crop_text">Auto</string>
     <string name="transform_set_center_text">Imposta il centro</string>
     <string name="pixel">px</string>
-    <string name="clipboard_tool_copy_hint">Tap on copy to copy content</string>
+    <string name="clipboard_tool_copy_hint">Tocca su copia per copiare il contenuto</string>
     <string name="layers_title">Livelli</string>
     <string name="layer_new">Nuovo livello</string>
     <string name="layer_delete">Elimina livello</string>
@@ -149,7 +149,7 @@
     <string name="dialog_save_image_format">Formato immagine</string>
     <string name="dialog_antialiasing">Antialiasing</string>
     <string name="dialog_smoothing">Levigante</string>
-    <string name="dialog_zoom_window_enabled">Enabled</string>
+    <string name="dialog_zoom_window_enabled">Abilitato</string>
     <string name="dialog_save_jpg_option_quality">Qualità:</string>
     <string name="pocketpaint_jpg_message_dialog">Prende il minimo <b>spazio di archiviazione</b>. <b>Nessuna trasparenza</b> viene ricordata.</string>
     <string name="pocketpaint_png_message_dialog">Compressione senza perdite. La trasparenza è preservata.</string>
