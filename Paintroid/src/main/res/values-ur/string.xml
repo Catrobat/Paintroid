@@ -44,9 +44,9 @@
     <string name="done">مکمل ہوا</string>
     <string name="gallery">گیلری</string>
     <string name="no_connection_sticker">Stickers not available, check your internet connection.</string>
-    <string name="clipboard_tool_paste">Paste</string>
+    <string name="clipboard_tool_paste"> چسپاں کریں</string>
     <string name="clipboard_tool_copy">نقل بنائین</string>
-    <string name="clipboard_tool_cut">Cut</string>
+    <string name="clipboard_tool_cut">جدا کریں</string>
     <string name="stickers">اسٹیکرز</string>
     <string name="dialog_tools_title">اوزار</string>
     <string name="dialog_error_save_title">لادنے کی غلطٖی/فائل محفوظ کریں</string>
@@ -81,7 +81,7 @@
     <string name="no_longclick_on_hidden_layer">اگر آپ تمام تہوں کو نظر انداز کررہے ہیں تو آپ صرف ضم یا دوبارہ ترتیب دینے میں کامیاب ہیں</string>
     <string name="no_tools_on_hidden_layer">پوشیدہ پرت پر کوئی اوزار دستیاب نہیں ہیں</string>
     <string name="menu_load_image">تصویر لادنا</string>
-    <string name="menu_replace_image">Replace image</string>
+    <string name="menu_replace_image">تبدیل کریں</string>
     <string name="menu_add_to_current_layer">Add to current layer</string>
     <string name="menu_save_image">تصویر محفوظ کریں</string>
     <string name="menu_save_copy">نقل محفوظ کریں.</string>
