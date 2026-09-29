@@ -18,21 +18,21 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="color_picker_title">Color Picker</string>
-    <string name="color_picker_tab_icon">Color Picker tab icon</string>
+    <string name="color_picker_title">Izbor barve</string>
+    <string name="color_picker_tab_icon">Ikona zavihka za izbor barve </string>
     <string name="color_red">Rdeče</string>
     <string name="color_green">Zeleno</string>
     <string name="color_blue">Modro</string>
     <string name="color_alpha">Alpha</string>
-    <string name="color_hex">HEX</string>
-    <string name="color_picker_apply">Apply</string>
+    <string name="color_hex">hex</string>
+    <string name="color_picker_apply">Uporabi</string>
     <string name="color_picker_cancel">Prekliči</string>
-    <string name="color_picker_current_color" tools:ignore="MissingTranslation">current</string>
-    <string name="color_picker_new_color" tools:ignore="MissingTranslation">new</string>
+    <string name="color_picker_current_color" tools:ignore="MissingTranslation">Trenutno</string>
+    <string name="color_picker_new_color" tools:ignore="MissingTranslation">Novo</string>
     <string name="color_picker_pipette" tools:ignore="MissingTranslation">Pipeta</string>
     <string name="color_picker_save_dialog_title" tools:ignore="MissingTranslation">Shrani spremembe?</string>
     <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">Ali želite shraniti spremembe?</string>
-    <string name="color_picker_no" tools:ignore="MissingTranslation">no</string>
-    <string name="color_picker_yes" tools:ignore="MissingTranslation">yes</string>
-    <string name="color_picker_history_recently_used" tools:ignore="MissingTranslation">recently used</string>
+    <string name="color_picker_no" tools:ignore="MissingTranslation">ne</string>
+    <string name="color_picker_yes" tools:ignore="MissingTranslation">ja</string>
+    <string name="color_picker_history_recently_used" tools:ignore="MissingTranslation">Nedavno uporabljeno</string>
 </resources>
