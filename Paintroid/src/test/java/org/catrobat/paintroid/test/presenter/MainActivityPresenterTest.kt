@@ -300,7 +300,6 @@ class MainActivityPresenterTest {
     fun testImportFromGalleryOnAndroid13WithoutStoragePermissionOpensPicker() {
         Mockito.`when`(navigator!!.isSdkAboveOrEqualM).thenReturn(true)
         Mockito.`when`(navigator.isSdkAboveOrEqualQ).thenReturn(true)
-        Mockito.`when`(navigator.isSdkAboveOrEqualT).thenReturn(true)
 
         presenter!!.importFromGalleryClicked()
 
@@ -322,7 +321,18 @@ class MainActivityPresenterTest {
     fun testReplaceImageOnAndroid13WithoutStoragePermissionOpensPicker() {
         Mockito.`when`(navigator!!.isSdkAboveOrEqualM).thenReturn(true)
         Mockito.`when`(navigator.isSdkAboveOrEqualQ).thenReturn(true)
-        Mockito.`when`(navigator.isSdkAboveOrEqualT).thenReturn(true)
+
+        presenter!!.replaceImageClicked()
+
+        Mockito.verify(navigator).startLoadImageActivity(REQUEST_CODE_LOAD_PICTURE)
+        Mockito.verify(navigator, Mockito.never()).askForPermission(any(), anyInt())
+    }
+
+    @Test
+    fun testReplaceImageOnAndroid9WithoutStoragePermissionOpensPicker() {
+        Mockito.`when`(navigator!!.isSdkAboveOrEqualM).thenReturn(true)
+        Mockito.`when`(navigator.isSdkAboveOrEqualQ).thenReturn(false)
+        Mockito.`when`(navigator.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)).thenReturn(false)
 
         presenter!!.replaceImageClicked()
 
@@ -334,7 +344,6 @@ class MainActivityPresenterTest {
     fun testReplaceEditedImageOnAndroid13StillPromptsToSave() {
         Mockito.`when`(navigator!!.isSdkAboveOrEqualM).thenReturn(true)
         Mockito.`when`(navigator.isSdkAboveOrEqualQ).thenReturn(true)
-        Mockito.`when`(navigator.isSdkAboveOrEqualT).thenReturn(true)
         Mockito.`when`(commandManager!!.isUndoAvailable).thenReturn(true)
 
         presenter!!.replaceImageClicked()
@@ -362,7 +371,6 @@ class MainActivityPresenterTest {
     fun testSaveCopyOnAndroid13WithoutStoragePermissionSavesCopy() {
         Mockito.`when`(navigator!!.isSdkAboveOrEqualM).thenReturn(true)
         Mockito.`when`(navigator.isSdkAboveOrEqualQ).thenReturn(true)
-        Mockito.`when`(navigator.isSdkAboveOrEqualT).thenReturn(true)
 
         presenter!!.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY)
 
@@ -377,7 +385,6 @@ class MainActivityPresenterTest {
     fun testSaveBeforeReplaceOnAndroid13WithoutStoragePermissionSavesImage() {
         Mockito.`when`(navigator!!.isSdkAboveOrEqualM).thenReturn(true)
         Mockito.`when`(navigator.isSdkAboveOrEqualQ).thenReturn(true)
-        Mockito.`when`(navigator.isSdkAboveOrEqualT).thenReturn(true)
 
         presenter!!.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW)
 
@@ -392,7 +399,24 @@ class MainActivityPresenterTest {
     fun testSaveToCatroidOnAndroid13WithoutStoragePermissionReturnsEditedImage() {
         Mockito.`when`(navigator!!.isSdkAboveOrEqualM).thenReturn(true)
         Mockito.`when`(navigator.isSdkAboveOrEqualQ).thenReturn(true)
-        Mockito.`when`(navigator.isSdkAboveOrEqualT).thenReturn(true)
+        Mockito.`when`(model!!.isOpenedFromCatroid).thenReturn(true)
+        val imageUri = Mockito.mock(Uri::class.java)
+        Mockito.`when`(model.savedPictureUri).thenReturn(imageUri)
+
+        presenter!!.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH)
+
+        Mockito.verify(interactor)?.saveImage(
+            presenter!!, SAVE_IMAGE_FINISH, workspace!!.layerModel,
+            commandSerializer!!, imageUri, context!!
+        )
+        Mockito.verify(navigator, Mockito.never()).askForPermission(any(), anyInt())
+    }
+
+    @Test
+    fun testSaveToCatroidOnAndroid9WithoutStoragePermissionReturnsEditedImage() {
+        Mockito.`when`(navigator!!.isSdkAboveOrEqualM).thenReturn(true)
+        Mockito.`when`(navigator.isSdkAboveOrEqualQ).thenReturn(false)
+        Mockito.`when`(navigator.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)).thenReturn(false)
         Mockito.`when`(model!!.isOpenedFromCatroid).thenReturn(true)
         val imageUri = Mockito.mock(Uri::class.java)
         Mockito.`when`(model.savedPictureUri).thenReturn(imageUri)

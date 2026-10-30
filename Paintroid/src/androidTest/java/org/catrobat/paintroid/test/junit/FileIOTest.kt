@@ -28,6 +28,7 @@ class FileIOTest {
         imageDirectory.mkdirs()
         val imageFile = File.createTempFile("picker-image", ".jpg", imageDirectory)
         val source = Bitmap.createBitmap(2, 3, Bitmap.Config.ARGB_8888)
+        var decodedBitmap: Bitmap? = null
         try {
             imageFile.outputStream().use { source.compress(Bitmap.CompressFormat.JPEG, 100, it) }
             ExifInterface(imageFile.absolutePath).apply {
@@ -36,16 +37,16 @@ class FileIOTest {
             }
             val uri = FileProvider.getUriForFile(context, context.packageName + ".fileprovider", imageFile)
 
-            val bitmap = FileIO.decodeBitmapFromUri(
+            decodedBitmap = FileIO.decodeBitmapFromUri(
                 context.contentResolver, uri,
                 BitmapFactory.Options(), context
             )
 
-            Assert.assertNotNull(bitmap)
-            Assert.assertEquals(3, bitmap!!.width)
-            Assert.assertEquals(2, bitmap.height)
-            bitmap.recycle()
+            Assert.assertNotNull(decodedBitmap)
+            Assert.assertEquals(3, decodedBitmap!!.width)
+            Assert.assertEquals(2, decodedBitmap.height)
         } finally {
+            decodedBitmap?.recycle()
             source.recycle()
             imageFile.delete()
         }
