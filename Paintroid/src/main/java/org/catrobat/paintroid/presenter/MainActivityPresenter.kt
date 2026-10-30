@@ -468,13 +468,12 @@ open class MainActivityPresenter(
                 saveCopyConfirmClicked(SAVE_IMAGE_DEFAULT, FileIO.storeImageUri)
                 checkForDefaultFilename()
             }
-            PERMISSION_REQUEST_CODE_REPLACE_PICTURE -> {
+            PERMISSION_REQUEST_CODE_REPLACE_PICTURE ->
                 if (isImageUnchanged || model.isSaved) {
                     navigator.startLoadImageActivity(REQUEST_CODE_LOAD_PICTURE)
                 } else {
                     navigator.showSaveBeforeLoadImageDialog()
                 }
-            }
             PERMISSION_REQUEST_CODE_IMPORT_PICTURE -> navigator.startImportImageActivity(REQUEST_CODE_IMPORT_PNG)
             else -> return false
         }
