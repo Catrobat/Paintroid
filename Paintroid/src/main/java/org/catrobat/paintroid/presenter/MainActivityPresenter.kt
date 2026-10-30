@@ -19,7 +19,6 @@
 package org.catrobat.paintroid.presenter
 
 import android.Manifest
-import android.annotation.TargetApi
 import android.app.Activity
 import android.content.ContentResolver
 import android.content.ContentUris
@@ -353,82 +352,18 @@ open class MainActivityPresenter(
             FileIO.storeImageUri = model.savedPictureUri
         }
 
-        if (navigator.isSdkAboveOrEqualM) {
-            askForReadAndWriteExternalStoragePermission(requestCode)
-            when (requestCode) {
-                PERMISSION_REQUEST_CODE_REPLACE_PICTURE,
-                PERMISSION_REQUEST_CODE_IMPORT_PICTURE -> Unit
-                PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW,
-                PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY,
-                PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH,
-                PERMISSION_EXTERNAL_STORAGE_SAVE_COPY,
-                PERMISSION_EXTERNAL_STORAGE_SAVE -> checkForDefaultFilename()
-            }
-        } else {
-            if (requestCode == PERMISSION_REQUEST_CODE_REPLACE_PICTURE) {
-                if (isImageUnchanged || model.isSaved) {
-                    navigator.startLoadImageActivity(REQUEST_CODE_LOAD_PICTURE)
-                    setFirstCheckBoxInLayerMenu()
-                } else {
-                    navigator.showSaveBeforeLoadImageDialog()
-                    setFirstCheckBoxInLayerMenu()
-                }
-            } else {
-                askForReadAndWriteExternalStoragePermission(requestCode)
-            }
-        }
-    }
+        val usesPicker = requestCode == PERMISSION_REQUEST_CODE_IMPORT_PICTURE ||
+            requestCode == PERMISSION_REQUEST_CODE_REPLACE_PICTURE
+        val savesToCatroid = model.isOpenedFromCatroid &&
+            requestCode == PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH
 
-    private fun askForReadAndWriteExternalStoragePermission(@PermissionRequestCode requestCode: Int) {
-        if (model.isOpenedFromCatroid && requestCode == PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH) {
-            handleRequestPermissionsResult(
-                requestCode,
-                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                intArrayOf(PackageManager.PERMISSION_GRANTED)
-            )
-            return
-        }
-
-        @TargetApi(Build.VERSION_CODES.TIRAMISU)
-        if (navigator.isSdkAboveOrEqualT) {
-            if (!navigator.doIHavePermission(Manifest.permission.READ_MEDIA_IMAGES)) {
-                navigator.askForPermission(
-                        arrayOf(Manifest.permission.READ_MEDIA_IMAGES),
-                        requestCode
-                )
-            } else {
-                handleRequestPermissionsResult(
-                        requestCode,
-                        arrayOf(Manifest.permission.READ_MEDIA_IMAGES),
-                        intArrayOf(PackageManager.PERMISSION_GRANTED)
-                )
-            }
-        } else if (navigator.isSdkAboveOrEqualQ) {
-            if (!navigator.doIHavePermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                navigator.askForPermission(
-                    arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                    requestCode
-                )
-            } else {
-                handleRequestPermissionsResult(
-                    requestCode,
-                    arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                    intArrayOf(PackageManager.PERMISSION_GRANTED)
-                )
-            }
+        // Picker URI grants and app-owned media on Android 10+ do not need storage permission.
+        if (usesPicker || savesToCatroid || navigator.isSdkAboveOrEqualQ || !navigator.isSdkAboveOrEqualM) {
+            performStorageAction(requestCode)
+        } else if (navigator.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            performStorageAction(requestCode)
         } else {
-            if (navigator.isSdkAboveOrEqualM && !navigator.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                navigator.askForPermission(
-                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                    requestCode
-                )
-            } else {
-                handleRequestPermissionsResult(
-                    requestCode,
-                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                    intArrayOf(PackageManager.PERMISSION_GRANTED)
-                )
-            }
+            navigator.askForPermission(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), requestCode)
         }
     }
 
@@ -490,60 +425,10 @@ open class MainActivityPresenter(
         grantResults: IntArray
     ) {
         if (permissions.size == 1 && (permissions[0] == Manifest.permission.READ_EXTERNAL_STORAGE ||
-                        permissions[0] == Manifest.permission.WRITE_EXTERNAL_STORAGE ||
-                        permissions[0] == Manifest.permission.READ_MEDIA_IMAGES)) {
+                        permissions[0] == Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                when (requestCode) {
-                    PERMISSION_EXTERNAL_STORAGE_SAVE -> {
-                        saveImageConfirmClicked(
-                            SAVE_IMAGE_DEFAULT,
-                            FileIO.storeImageUri
-                        )
-                        checkForDefaultFilename()
-                        showLikeUsDialogIfFirstTimeSave()
-                    }
-                    PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH -> {
-                        saveImageConfirmClicked(
-                            SAVE_IMAGE_FINISH,
-                            FileIO.storeImageUri
-                        )
-                        checkForDefaultFilename()
-                    }
-                    PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW -> {
-                        saveImageConfirmClicked(
-                            SAVE_IMAGE_LOAD_NEW,
-                            FileIO.storeImageUri
-                        )
-                        checkForDefaultFilename()
-                    }
-                    PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY -> {
-                        saveImageConfirmClicked(
-                            SAVE_IMAGE_NEW_EMPTY,
-                            FileIO.storeImageUri
-                        )
-                        checkForDefaultFilename()
-                    }
-                    PERMISSION_EXTERNAL_STORAGE_SAVE_COPY -> {
-                        saveCopyConfirmClicked(
-                            SAVE_IMAGE_DEFAULT,
-                            FileIO.storeImageUri
-                        )
-                        checkForDefaultFilename()
-                    }
-                    PERMISSION_REQUEST_CODE_REPLACE_PICTURE ->
-                        if (isImageUnchanged || model.isSaved) {
-                            navigator.startLoadImageActivity(REQUEST_CODE_LOAD_PICTURE)
-                        } else {
-                            navigator.showSaveBeforeLoadImageDialog()
-                        }
-                    PERMISSION_REQUEST_CODE_IMPORT_PICTURE -> navigator.startImportImageActivity(
-                        REQUEST_CODE_IMPORT_PNG
-                    )
-                    else -> view.superHandleRequestPermissionsResult(
-                        requestCode,
-                        permissions,
-                        grantResults
-                    )
+                if (!performStorageAction(requestCode)) {
+                    view.superHandleRequestPermissionsResult(requestCode, permissions, grantResults)
                 }
             } else {
                 if (navigator.isPermissionPermanentlyDenied(permissions)) {
@@ -558,6 +443,42 @@ open class MainActivityPresenter(
         } else {
             view.superHandleRequestPermissionsResult(requestCode, permissions, grantResults)
         }
+    }
+
+    private fun performStorageAction(@PermissionRequestCode requestCode: Int): Boolean {
+        when (requestCode) {
+            PERMISSION_EXTERNAL_STORAGE_SAVE -> {
+                saveImageConfirmClicked(SAVE_IMAGE_DEFAULT, FileIO.storeImageUri)
+                checkForDefaultFilename()
+                showLikeUsDialogIfFirstTimeSave()
+            }
+            PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH -> {
+                saveImageConfirmClicked(SAVE_IMAGE_FINISH, FileIO.storeImageUri)
+                checkForDefaultFilename()
+            }
+            PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW -> {
+                saveImageConfirmClicked(SAVE_IMAGE_LOAD_NEW, FileIO.storeImageUri)
+                checkForDefaultFilename()
+            }
+            PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY -> {
+                saveImageConfirmClicked(SAVE_IMAGE_NEW_EMPTY, FileIO.storeImageUri)
+                checkForDefaultFilename()
+            }
+            PERMISSION_EXTERNAL_STORAGE_SAVE_COPY -> {
+                saveCopyConfirmClicked(SAVE_IMAGE_DEFAULT, FileIO.storeImageUri)
+                checkForDefaultFilename()
+            }
+            PERMISSION_REQUEST_CODE_REPLACE_PICTURE -> {
+                if (isImageUnchanged || model.isSaved) {
+                    navigator.startLoadImageActivity(REQUEST_CODE_LOAD_PICTURE)
+                } else {
+                    navigator.showSaveBeforeLoadImageDialog()
+                }
+            }
+            PERMISSION_REQUEST_CODE_IMPORT_PICTURE -> navigator.startImportImageActivity(REQUEST_CODE_IMPORT_PNG)
+            else -> return false
+        }
+        return true
     }
 
     override fun onBackPressed() {

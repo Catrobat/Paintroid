@@ -1,13 +1,18 @@
 package org.catrobat.paintroid.test.junit
 
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import androidx.core.content.FileProvider
 import androidx.exifinterface.media.ExifInterface
+import androidx.test.platform.app.InstrumentationRegistry
+import org.catrobat.paintroid.FileIO
 import org.catrobat.paintroid.FileIO.getBitmapOrientation
 import org.catrobat.paintroid.FileIO.getOrientedBitmap
 import org.junit.Assert
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.Mockito
+import java.io.File
 
 class FileIOTest {
     @Mock
@@ -15,6 +20,37 @@ class FileIOTest {
 
     @Mock
     var exifInterface: ExifInterface? = null
+
+    @Test
+    fun testDecodePickerUriWithoutFileSystemPathPreservesOrientation() {
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        val imageDirectory = File(context.cacheDir, "images")
+        imageDirectory.mkdirs()
+        val imageFile = File.createTempFile("picker-image", ".jpg", imageDirectory)
+        val source = Bitmap.createBitmap(2, 3, Bitmap.Config.ARGB_8888)
+        try {
+            imageFile.outputStream().use { source.compress(Bitmap.CompressFormat.JPEG, 100, it) }
+            ExifInterface(imageFile.absolutePath).apply {
+                setAttribute(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_ROTATE_90.toString())
+                saveAttributes()
+            }
+            val uri = FileProvider.getUriForFile(context, context.packageName + ".fileprovider", imageFile)
+
+            val bitmap = FileIO.decodeBitmapFromUri(
+                context.contentResolver, uri,
+                BitmapFactory.Options(), context
+            )
+
+            Assert.assertNotNull(bitmap)
+            Assert.assertEquals(3, bitmap!!.width)
+            Assert.assertEquals(2, bitmap.height)
+            bitmap.recycle()
+        } finally {
+            source.recycle()
+            imageFile.delete()
+        }
+    }
+
     @Test
     fun testGetOrientedBitmap() {
         Assert.assertNull(getOrientedBitmap(bitmap, 0f))

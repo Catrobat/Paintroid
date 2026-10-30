@@ -49,7 +49,9 @@ import org.catrobat.paintroid.common.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_
 import org.catrobat.paintroid.common.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW
 import org.catrobat.paintroid.common.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY
 import org.catrobat.paintroid.common.PERMISSION_EXTERNAL_STORAGE_SAVE_COPY
+import org.catrobat.paintroid.common.PERMISSION_REQUEST_CODE_IMPORT_PICTURE
 import org.catrobat.paintroid.common.PERMISSION_REQUEST_CODE_REPLACE_PICTURE
+import org.catrobat.paintroid.common.REQUEST_CODE_IMPORT_PNG
 import org.catrobat.paintroid.common.REQUEST_CODE_INTRO
 import org.catrobat.paintroid.common.REQUEST_CODE_LOAD_PICTURE
 import org.catrobat.paintroid.common.RESULT_INTRO_MW_NOT_SUPPORTED
@@ -143,6 +145,7 @@ class MainActivityPresenterTest {
     private var presenter: MainActivityPresenter? = null
     @Before
     fun setUp() {
+        FileIO.storeImageUri = null
         val layerModel = LayerModel()
         layerModel.addLayerAt(0, Layer(bitmap!!))
         Mockito.`when`(workspace!!.layerModel)
@@ -291,6 +294,116 @@ class MainActivityPresenterTest {
         Mockito.verify<MainActivityContracts.Navigator?>(navigator)
             .startLoadImageActivity(REQUEST_CODE_LOAD_PICTURE)
         Mockito.verifyNoMoreInteractions(interactor)
+    }
+
+    @Test
+    fun testImportFromGalleryOnAndroid13WithoutStoragePermissionOpensPicker() {
+        Mockito.`when`(navigator!!.isSdkAboveOrEqualM).thenReturn(true)
+        Mockito.`when`(navigator.isSdkAboveOrEqualQ).thenReturn(true)
+        Mockito.`when`(navigator.isSdkAboveOrEqualT).thenReturn(true)
+
+        presenter!!.importFromGalleryClicked()
+
+        Mockito.verify(navigator).startImportImageActivity(REQUEST_CODE_IMPORT_PNG)
+        Mockito.verify(navigator, Mockito.never()).askForPermission(any(), anyInt())
+    }
+
+    @Test
+    fun testImportOnAndroid9WithoutStoragePermissionOpensPicker() {
+        Mockito.`when`(navigator!!.isSdkAboveOrEqualM).thenReturn(true)
+
+        presenter!!.switchBetweenVersions(PERMISSION_REQUEST_CODE_IMPORT_PICTURE)
+
+        Mockito.verify(navigator).startImportImageActivity(REQUEST_CODE_IMPORT_PNG)
+        Mockito.verify(navigator, Mockito.never()).askForPermission(any(), anyInt())
+    }
+
+    @Test
+    fun testReplaceImageOnAndroid13WithoutStoragePermissionOpensPicker() {
+        Mockito.`when`(navigator!!.isSdkAboveOrEqualM).thenReturn(true)
+        Mockito.`when`(navigator.isSdkAboveOrEqualQ).thenReturn(true)
+        Mockito.`when`(navigator.isSdkAboveOrEqualT).thenReturn(true)
+
+        presenter!!.replaceImageClicked()
+
+        Mockito.verify(navigator).startLoadImageActivity(REQUEST_CODE_LOAD_PICTURE)
+        Mockito.verify(navigator, Mockito.never()).askForPermission(any(), anyInt())
+    }
+
+    @Test
+    fun testReplaceEditedImageOnAndroid13StillPromptsToSave() {
+        Mockito.`when`(navigator!!.isSdkAboveOrEqualM).thenReturn(true)
+        Mockito.`when`(navigator.isSdkAboveOrEqualQ).thenReturn(true)
+        Mockito.`when`(navigator.isSdkAboveOrEqualT).thenReturn(true)
+        Mockito.`when`(commandManager!!.isUndoAvailable).thenReturn(true)
+
+        presenter!!.replaceImageClicked()
+
+        Mockito.verify(navigator).showSaveBeforeLoadImageDialog()
+        Mockito.verify(navigator, Mockito.never()).startLoadImageActivity(anyInt())
+        Mockito.verify(navigator, Mockito.never()).askForPermission(any(), anyInt())
+    }
+
+    @Test
+    fun testSaveOnAndroid10WithoutStoragePermissionSavesImage() {
+        Mockito.`when`(navigator!!.isSdkAboveOrEqualM).thenReturn(true)
+        Mockito.`when`(navigator.isSdkAboveOrEqualQ).thenReturn(true)
+
+        presenter!!.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE)
+
+        Mockito.verify(interactor)?.saveImage(
+            presenter!!, SAVE_IMAGE_DEFAULT, workspace!!.layerModel,
+            commandSerializer!!, FileIO.storeImageUri, context!!
+        )
+        Mockito.verify(navigator, Mockito.never()).askForPermission(any(), anyInt())
+    }
+
+    @Test
+    fun testSaveCopyOnAndroid13WithoutStoragePermissionSavesCopy() {
+        Mockito.`when`(navigator!!.isSdkAboveOrEqualM).thenReturn(true)
+        Mockito.`when`(navigator.isSdkAboveOrEqualQ).thenReturn(true)
+        Mockito.`when`(navigator.isSdkAboveOrEqualT).thenReturn(true)
+
+        presenter!!.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY)
+
+        Mockito.verify(interactor)?.saveCopy(
+            presenter!!, SAVE_IMAGE_DEFAULT, workspace!!.layerModel,
+            commandSerializer!!, FileIO.storeImageUri, context!!
+        )
+        Mockito.verify(navigator, Mockito.never()).askForPermission(any(), anyInt())
+    }
+
+    @Test
+    fun testSaveBeforeReplaceOnAndroid13WithoutStoragePermissionSavesImage() {
+        Mockito.`when`(navigator!!.isSdkAboveOrEqualM).thenReturn(true)
+        Mockito.`when`(navigator.isSdkAboveOrEqualQ).thenReturn(true)
+        Mockito.`when`(navigator.isSdkAboveOrEqualT).thenReturn(true)
+
+        presenter!!.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW)
+
+        Mockito.verify(interactor)?.saveImage(
+            presenter!!, SAVE_IMAGE_LOAD_NEW, workspace!!.layerModel,
+            commandSerializer!!, FileIO.storeImageUri, context!!
+        )
+        Mockito.verify(navigator, Mockito.never()).askForPermission(any(), anyInt())
+    }
+
+    @Test
+    fun testSaveToCatroidOnAndroid13WithoutStoragePermissionReturnsEditedImage() {
+        Mockito.`when`(navigator!!.isSdkAboveOrEqualM).thenReturn(true)
+        Mockito.`when`(navigator.isSdkAboveOrEqualQ).thenReturn(true)
+        Mockito.`when`(navigator.isSdkAboveOrEqualT).thenReturn(true)
+        Mockito.`when`(model!!.isOpenedFromCatroid).thenReturn(true)
+        val imageUri = Mockito.mock(Uri::class.java)
+        Mockito.`when`(model.savedPictureUri).thenReturn(imageUri)
+
+        presenter!!.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH)
+
+        Mockito.verify(interactor)?.saveImage(
+            presenter!!, SAVE_IMAGE_FINISH, workspace!!.layerModel,
+            commandSerializer!!, imageUri, context!!
+        )
+        Mockito.verify(navigator, Mockito.never()).askForPermission(any(), anyInt())
     }
 
     @Test
@@ -1247,7 +1360,7 @@ class MainActivityPresenterTest {
     fun testOnNavigationItemSelectedSaveCopyPermissionNotGranted() {
         Mockito.`when`(navigator!!.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE))
             .thenReturn(false)
-        Mockito.`when`(navigator.isSdkAboveOrEqualM).thenReturn(false).thenReturn(true)
+        Mockito.`when`(navigator.isSdkAboveOrEqualM).thenReturn(true)
         presenter!!.saveCopyClicked(false)
         Mockito.verify<MainActivityContracts.Navigator?>(navigator)
             .showSaveImageInformationDialogWhenStandalone(
@@ -1297,7 +1410,7 @@ class MainActivityPresenterTest {
     fun testPermissionCheckOnExportWhenOpenedFromCatroid() {
         Mockito.`when`(navigator!!.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE))
             .thenReturn(false)
-        Mockito.`when`(navigator.isSdkAboveOrEqualM).thenReturn(false).thenReturn(true)
+        Mockito.`when`(navigator.isSdkAboveOrEqualM).thenReturn(true)
         Mockito.`when`(model!!.isOpenedFromCatroid).thenReturn(true)
         presenter!!.saveCopyClicked(false)
         Mockito.verify<MainActivityContracts.Navigator?>(navigator)
@@ -1335,7 +1448,7 @@ class MainActivityPresenterTest {
     fun testOnNavigationItemSelectedSavePermissionNotGranted() {
         Mockito.`when`(navigator!!.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE))
             .thenReturn(false)
-        Mockito.`when`(navigator.isSdkAboveOrEqualM).thenReturn(false).thenReturn(true)
+        Mockito.`when`(navigator.isSdkAboveOrEqualM).thenReturn(true)
         presenter!!.saveImageClicked()
         Mockito.verify<MainActivityContracts.Navigator?>(navigator)
             .showSaveImageInformationDialogWhenStandalone(
@@ -1372,7 +1485,7 @@ class MainActivityPresenterTest {
     fun testSaveAndFinishPermissionNotGranted() {
         Mockito.`when`(navigator!!.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE))
             .thenReturn(false)
-        Mockito.`when`(navigator.isSdkAboveOrEqualM).thenReturn(false).thenReturn(true)
+        Mockito.`when`(navigator.isSdkAboveOrEqualM).thenReturn(true)
         presenter!!.saveBeforeFinish()
         Mockito.verify<MainActivityContracts.Navigator?>(navigator)
             .showSaveImageInformationDialogWhenStandalone(
@@ -1409,7 +1522,7 @@ class MainActivityPresenterTest {
     fun testSaveAndNewImagePermissionNotGranted() {
         Mockito.`when`(navigator!!.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE))
             .thenReturn(false)
-        Mockito.`when`(navigator.isSdkAboveOrEqualM).thenReturn(false).thenReturn(true)
+        Mockito.`when`(navigator.isSdkAboveOrEqualM).thenReturn(true)
         presenter!!.saveBeforeNewImage()
         Mockito.verify<MainActivityContracts.Navigator?>(navigator)
             .showSaveImageInformationDialogWhenStandalone(
@@ -1447,7 +1560,7 @@ class MainActivityPresenterTest {
     fun testSaveAndLoadImagePermissionNotGranted() {
         Mockito.`when`(navigator!!.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE))
                 .thenReturn(false)
-        Mockito.`when`(navigator.isSdkAboveOrEqualM).thenReturn(false).thenReturn(true)
+        Mockito.`when`(navigator.isSdkAboveOrEqualM).thenReturn(true)
         presenter!!.saveBeforeLoadImage()
         Mockito.verify<MainActivityContracts.Navigator?>(navigator)
                 .showSaveImageInformationDialogWhenStandalone(
