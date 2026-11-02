@@ -23,7 +23,7 @@
     <string name="color_red">紅</string>
     <string name="color_green">綠</string>
     <string name="color_blue">藍</string>
-    <string name="color_alpha">透明度</string>
+    <string name="color_alpha">不透明度</string>
     <string name="color_hex">HEX</string>
     <string name="color_picker_apply">套用</string>
     <string name="color_picker_cancel">取消</string>

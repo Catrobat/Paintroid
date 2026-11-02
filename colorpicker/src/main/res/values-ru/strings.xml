@@ -23,7 +23,7 @@
     <string name="color_red">Красный</string>
     <string name="color_green">Зеленый</string>
     <string name="color_blue">Синий</string>
-    <string name="color_alpha">Прозрачность</string>
+    <string name="color_alpha">Непрозрачность</string>
     <string name="color_hex">HEX</string>
     <string name="color_picker_apply">Применить</string>
     <string name="color_picker_cancel">Отменить</string>

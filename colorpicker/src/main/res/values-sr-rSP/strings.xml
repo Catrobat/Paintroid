@@ -23,7 +23,7 @@
     <string name="color_red">Црвена</string>
     <string name="color_green">Зелена</string>
     <string name="color_blue">Плава</string>
-    <string name="color_alpha">Провидност</string>
+    <string name="color_alpha">Непрозирност</string>
     <string name="color_hex">HEX</string>
     <string name="color_picker_apply">Примени</string>
     <string name="color_picker_cancel">Откажи</string>

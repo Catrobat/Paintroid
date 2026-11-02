@@ -23,7 +23,7 @@
     <string name="color_red">แดง</string>
     <string name="color_green">เขียว</string>
     <string name="color_blue">น้ำเงิน</string>
-    <string name="color_alpha">ความโปร่งใส</string>
+    <string name="color_alpha">ความทึบ</string>
     <string name="color_hex">HEX</string>
     <string name="color_picker_apply">ใช้</string>
     <string name="color_picker_cancel">ยกเลิก</string>

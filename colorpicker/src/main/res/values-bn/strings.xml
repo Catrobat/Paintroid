@@ -23,7 +23,7 @@
     <string name="color_red">লাল</string>
     <string name="color_green">সবুজ</string>
     <string name="color_blue">নীল</string>
-    <string name="color_alpha">স্বচ্ছতা</string>
+    <string name="color_alpha">অস্বচ্ছতা</string>
     <string name="color_hex">HEX</string>
     <string name="color_picker_apply">প্রয়োগ করুন</string>
     <string name="color_picker_cancel">বাতিল</string>

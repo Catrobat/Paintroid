@@ -23,7 +23,7 @@
     <string name="color_red">E kuqe</string>
     <string name="color_green">Jeshile</string>
     <string name="color_blue">Blu</string>
-    <string name="color_alpha">Transparenca</string>
+    <string name="color_alpha">Opaciteti</string>
     <string name="color_hex">HEX</string>
     <string name="color_picker_apply">Apliko</string>
     <string name="color_picker_cancel">Anulo</string>

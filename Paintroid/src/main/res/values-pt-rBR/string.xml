@@ -63,7 +63,7 @@
     <string name="help_content_fill">Toque na imagem para preencher uma área com a cor selecionada.</string>
     <string name="help_content_cursor">Posicione o cursor onde você deseja desenhar. Toque para ativar o cursor. Mova seu dedo para desenhar. Toque novamente para desativar.</string>
     <string name="help_content_transform">Gire, espelhe, recorte ou redimensione a imagem.</string>
-    <string name="help_content_clipboard">Mova e redimensione o retângulo para cobrir a área que você quer carimbar. Toque em Copiar ou Recortar para selecionar a área. Mova-a e toque em Colar para carimbar.</string>
+    <string name="help_content_clipboard">Mova e redimensione o retângulo para cobrir a área que você quer carimbar. Toque em Copiar ou Cortar para selecionar a área. Mova-a e toque em Colar para carimbar.</string>
     <string name="help_content_import_png">Importe uma imagem da galeria para a área de transferência.</string>
     <string name="help_content_line">Desenhe uma linha reta.</string>
     <string name="help_content_text">Escreva um texto e formate-o. Depois, redimensione a caixa de texto. Toque na marca de seleção para inserir o texto na imagem.</string>

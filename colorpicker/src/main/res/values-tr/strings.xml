@@ -23,7 +23,7 @@
     <string name="color_red">Kırmızı</string>
     <string name="color_green">Yeşil</string>
     <string name="color_blue">Mavi</string>
-    <string name="color_alpha">Saydamlık</string>
+    <string name="color_alpha">Opaklık</string>
     <string name="color_hex">HEX</string>
     <string name="color_picker_apply">Uygula</string>
     <string name="color_picker_cancel">İptal et</string>

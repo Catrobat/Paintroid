@@ -23,7 +23,7 @@
     <string name="color_red">Crvena</string>
     <string name="color_green">Zelena</string>
     <string name="color_blue">Plava</string>
-    <string name="color_alpha">Prozirnost</string>
+    <string name="color_alpha">Neprozirnost</string>
     <string name="color_hex">HEX</string>
     <string name="color_picker_apply">Primijeni</string>
     <string name="color_picker_cancel">Odustani</string>

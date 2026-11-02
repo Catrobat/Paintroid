@@ -23,7 +23,7 @@
     <string name="color_red">Merah</string>
     <string name="color_green">Hijau</string>
     <string name="color_blue">Biru</string>
-    <string name="color_alpha">Transparansi</string>
+    <string name="color_alpha">Opasitas</string>
     <string name="color_hex">HEX</string>
     <string name="color_picker_apply">Terapkan</string>
     <string name="color_picker_cancel">Batal</string>

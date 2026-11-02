@@ -23,7 +23,7 @@
     <string name="color_red">أحمر</string>
     <string name="color_green">أخضر</string>
     <string name="color_blue">أزرق</string>
-    <string name="color_alpha">الشفافية</string>
+    <string name="color_alpha">العتامة</string>
     <string name="color_hex">HEX</string>
     <string name="color_picker_apply">تطبيق</string>
     <string name="color_picker_cancel">إلغاء</string>

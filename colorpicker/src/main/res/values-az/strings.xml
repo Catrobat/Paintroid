@@ -23,7 +23,7 @@
     <string name="color_red">Qırmızı</string>
     <string name="color_green">Yaşıl</string>
     <string name="color_blue">Mavi</string>
-    <string name="color_alpha">Şəffaflıq</string>
+    <string name="color_alpha">Qeyri-şəffaflıq</string>
     <string name="color_hex">HEX</string>
     <string name="color_picker_apply">Tətbiq et</string>
     <string name="color_picker_cancel">Ləğv et</string>

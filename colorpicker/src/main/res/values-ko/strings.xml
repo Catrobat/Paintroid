@@ -23,7 +23,7 @@
     <string name="color_red">빨강</string>
     <string name="color_green">초록</string>
     <string name="color_blue">파랑</string>
-    <string name="color_alpha">투명도</string>
+    <string name="color_alpha">불투명도</string>
     <string name="color_hex">HEX</string>
     <string name="color_picker_apply">적용</string>
     <string name="color_picker_cancel">취소</string>

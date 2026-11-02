@@ -77,7 +77,7 @@
     <string name="closing_security_question_title">Выход</string>
     <string name="closing_security_question">Сохранить изменения?</string>
     <string name="menu_new_image">Новое изображение</string>
-    <string name="menu_discard_image">Отменить изменения изображения</string>
+    <string name="menu_discard_image">Очистить изображение</string>
     <string name="no_longclick_on_hidden_layer">Объединять слои и менять их порядок можно, только когда все слои видимы</string>
     <string name="no_tools_on_hidden_layer">На скрытом слое инструменты недоступны</string>
     <string name="menu_load_image">Загрузить изображение</string>

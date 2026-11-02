@@ -23,7 +23,7 @@
     <string name="color_red">Rosso</string>
     <string name="color_green">Verde</string>
     <string name="color_blue">Blu</string>
-    <string name="color_alpha">Trasparenza</string>
+    <string name="color_alpha">Opacità</string>
     <string name="color_hex">HEX</string>
     <string name="color_picker_apply">Applica</string>
     <string name="color_picker_cancel">Annulla</string>

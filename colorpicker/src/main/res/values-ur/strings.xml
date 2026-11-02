@@ -23,7 +23,7 @@
     <string name="color_red">سرخ</string>
     <string name="color_green">سبز</string>
     <string name="color_blue">نیلا</string>
-    <string name="color_alpha">شفافیت</string>
+    <string name="color_alpha">الفا</string>
     <string name="color_hex">HEX</string>
     <string name="color_picker_apply">لاگو کریں</string>
     <string name="color_picker_cancel">منسوخ کریں</string>
