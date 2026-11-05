@@ -103,7 +103,9 @@ class DefaultToolController(
     }
 
     override fun switchTool(toolType: ToolType) {
+        idlingResource.increment()
         switchTool(createAndSetupTool(toolType))
+        idlingResource.decrement()
     }
 
     override fun hideToolOptionsView() {

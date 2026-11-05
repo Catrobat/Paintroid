@@ -29,6 +29,9 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
+import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.contrib.DrawerActions
 import androidx.test.espresso.contrib.RecyclerViewActions
@@ -64,8 +67,8 @@ class LayerMenuViewInteraction private constructor() : CustomViewInteraction(Esp
 
     fun performSetOpacityTo(opacityPercentage: Int, listPosition: Int): LayerMenuViewInteraction {
         Espresso.onView(withRecyclerView(R.id.pocketpaint_layer_side_nav_list)
-                .atPositionOnView(listPosition, R.id.pocketpaint_layer_opacity_seekbar))
-                .perform(UiInteractions.setProgress(opacityPercentage))
+                .atPositionOnView(listPosition, R.id.pocketpaint_layer_opacity_value))
+                .perform(click(), replaceText(opacityPercentage.toString()), closeSoftKeyboard())
         return this
     }
 

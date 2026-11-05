@@ -21,17 +21,21 @@
 package org.catrobat.paintroid.test.espresso.tools
 
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.idling.CountingIdlingResource
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.ActivityTestRule
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.test.espresso.rtl.util.RtlActivityTestRule
+import org.catrobat.paintroid.test.espresso.util.ViewRobot
 import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule
 import org.catrobat.paintroid.tools.ToolType
+import org.junit.After
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
@@ -47,14 +51,21 @@ class ImportToolIntegrationTest {
     @get:Rule
     var screenshotOnFailRule = ScreenshotOnFailRule()
     private var mainActivity: MainActivity? = null
+    private var idlingResource: CountingIdlingResource? = null
+
     @Before
     fun setUp() {
         mainActivity = launchActivityRule.activity
-        ToolBarViewInteraction.onToolBarView().performSelectTool(ToolType.IMPORTPNG)
+        idlingResource = mainActivity?.idlingResource
+        IdlingRegistry.getInstance().register(idlingResource)
     }
+
+    @After
+    fun tearDown() { IdlingRegistry.getInstance().unregister(idlingResource) }
 
     @Test
     fun testImportDialogShownOnImportToolSelected() {
+        ToolBarViewInteraction.onToolBarView().performSelectTool(ToolType.IMPORTPNG)
         Espresso.onView(ViewMatchers.withId(R.id.pocketpaint_dialog_import_stickers))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
         Espresso.onView(ViewMatchers.withId(R.id.pocketpaint_dialog_import_gallery))
@@ -63,8 +74,6 @@ class ImportToolIntegrationTest {
 
     @Test
     fun testImportDialogDismissedOnCancelClicked() {
-        Espresso.onView(ViewMatchers.withText(R.string.pocketpaint_cancel))
-            .perform(ViewActions.click())
         Espresso.onView(ViewMatchers.withId(R.id.pocketpaint_dialog_import_stickers))
             .check(ViewAssertions.doesNotExist())
         Espresso.onView(ViewMatchers.withId(R.id.pocketpaint_dialog_import_gallery))
@@ -73,8 +82,6 @@ class ImportToolIntegrationTest {
 
     @Test
     fun testImportDoesNotResetPerspectiveScale() {
-        Espresso.onView(ViewMatchers.withText(R.string.pocketpaint_cancel))
-            .perform(ViewActions.click())
         ToolBarViewInteraction.onToolBarView()
             .performSelectTool(ToolType.BRUSH)
         val scale = 2.0f
@@ -82,8 +89,7 @@ class ImportToolIntegrationTest {
         mainActivity?.refreshDrawingSurface()
         ToolBarViewInteraction.onToolBarView()
             .performSelectTool(ToolType.IMPORTPNG)
-        Espresso.onView(ViewMatchers.withText(R.string.pocketpaint_cancel))
-            .perform(ViewActions.click())
+        ViewRobot().doOnView(ViewMatchers.withText(R.string.pocketpaint_cancel), ViewActions.click())
         mainActivity?.perspective?.let { Assert.assertEquals(scale, it.scale, Float.MIN_VALUE) }
     }
 }

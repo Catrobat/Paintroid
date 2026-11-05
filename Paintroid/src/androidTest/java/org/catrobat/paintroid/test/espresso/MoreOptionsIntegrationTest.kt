@@ -23,8 +23,10 @@ import android.app.Instrumentation.ActivityResult
 import android.content.Context
 import android.content.Intent
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.idling.CountingIdlingResource
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.RootMatchers
@@ -65,9 +67,22 @@ class MoreOptionsIntegrationTest {
     @JvmField
     @Rule
     var screenshotOnFailRule = ScreenshotOnFailRule()
+
+    private var idlingResource: CountingIdlingResource? = null
+    private var mainActivity: MainActivity? = null
     var defaultPictureName = "moreOptionsImageTest"
+
+    companion object {
+        @JvmField
+        @ClassRule
+        var grantPermissionRule = grantPermissionRulesVersionCheck()
+    }
+
     @Before
     fun setUp() {
+        mainActivity = activityTestRule.activity
+        idlingResource = mainActivity?.idlingResource
+        IdlingRegistry.getInstance().register(idlingResource)
         TopBarViewInteraction.onTopBarView()
             .performOpenMoreOptions()
         activityTestRule.activity.getPreferences(Context.MODE_PRIVATE)
@@ -78,6 +93,7 @@ class MoreOptionsIntegrationTest {
 
     @After
     fun tearDown() {
+        IdlingRegistry.getInstance().unregister(idlingResource)
         activityTestRule.activity.getPreferences(Context.MODE_PRIVATE)
             .edit()
             .clear()
@@ -274,11 +290,5 @@ class MoreOptionsIntegrationTest {
         Espresso.onView(withId(R.id.pocketpaint_smoothing)).perform(ViewActions.click())
         Espresso.onView(withText(R.string.cancel_button_text)).perform(ViewActions.click())
         Assert.assertTrue("Smoothing is off after cancel!", AdvancedSettingsAlgorithms.smoothing)
-    }
-
-    companion object {
-        @JvmField
-        @ClassRule
-        var grantPermissionRule = grantPermissionRulesVersionCheck()
     }
 }
