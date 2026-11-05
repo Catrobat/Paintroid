@@ -397,9 +397,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             R.id.pocketpaint_share_image_button -> presenterMain.shareImageClicked()
             R.id.pocketpaint_options_feedback -> presenterMain.sendFeedback()
             R.id.pocketpaint_zoom_window_settings ->
-                presenterMain.showZoomWindowSettingsClicked(
-                    UserPreferences(getPreferences(MODE_PRIVATE))
-                )
+                presenterMain.showZoomWindowSettingsClicked()
             R.id.pocketpaint_advanced_settings -> presenterMain.showAdvancedSettingsClicked()
             android.R.id.home -> presenterMain.backToPocketCodeClicked()
             else -> return false

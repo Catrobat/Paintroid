@@ -2,6 +2,7 @@ package org.catrobat.paintroid.dialog
 
 import android.annotation.SuppressLint
 import android.app.Dialog
+import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.View
@@ -12,15 +13,25 @@ import com.google.android.material.slider.Slider
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.UserPreferences
 
-class ZoomWindowSettingsDialog(
-        private val sharedPreferences: UserPreferences
-) : MainActivityDialogFragment() {
+class ZoomWindowSettingsDialog : MainActivityDialogFragment() {
 
-    private val initialEnabledValue = sharedPreferences.preferenceZoomWindowEnabled
-    private val initialPercentageValue = sharedPreferences.preferenceZoomWindowZoomPercentage
+    private val sharedPreferences by lazy {
+        UserPreferences(requireActivity().getPreferences(Context.MODE_PRIVATE))
+    }
 
-    private var enabled = sharedPreferences.preferenceZoomWindowEnabled
-    private var percentage = sharedPreferences.preferenceZoomWindowZoomPercentage
+    private var initialEnabledValue = true
+    private var initialPercentageValue = UserPreferences.initialZoomPercent
+
+    private var enabled = initialEnabledValue
+    private var percentage = initialPercentageValue
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        initialEnabledValue = sharedPreferences.preferenceZoomWindowEnabled
+        initialPercentageValue = sharedPreferences.preferenceZoomWindowZoomPercentage
+        enabled = initialEnabledValue
+        percentage = initialPercentageValue
+    }
 
     @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

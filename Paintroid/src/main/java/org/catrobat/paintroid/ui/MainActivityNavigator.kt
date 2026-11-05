@@ -37,7 +37,6 @@ import androidx.fragment.app.Fragment
 import org.catrobat.paintroid.FileIO
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.R
-import org.catrobat.paintroid.UserPreferences
 import org.catrobat.paintroid.WelcomeActivity
 import org.catrobat.paintroid.colorpicker.ColorPickerDialog
 import org.catrobat.paintroid.colorpicker.OnColorPickedListener
@@ -306,8 +305,8 @@ class MainActivityNavigator(
         )
     }
 
-    override fun showZoomWindowSettingsDialog(sharedPreferences: UserPreferences) {
-        val zoomWindowSettingsDialog = ZoomWindowSettingsDialog(sharedPreferences)
+    override fun showZoomWindowSettingsDialog() {
+        val zoomWindowSettingsDialog = ZoomWindowSettingsDialog()
         zoomWindowSettingsDialog.show(
             mainActivity.supportFragmentManager,
             ZOOM_WINDOW_SETTINGS_DIALOG_FRAGMENT_TAG
