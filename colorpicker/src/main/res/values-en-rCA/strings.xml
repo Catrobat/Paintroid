@@ -18,8 +18,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="color_picker_title">Colour picker</string>
-    <string name="color_picker_tab_icon">Colour picker tab icon</string>
+    <string name="color_picker_title">Colour Picker</string>
+    <string name="color_picker_tab_icon">Colour Picker tab icon</string>
     <string name="color_red">Red</string>
     <string name="color_green">Green</string>
     <string name="color_blue">Blue</string>

@@ -27,7 +27,7 @@
     <string name="button_redo">Redo</string>
     <string name="button_info">Information</string>
     <string name="button_clipboard">Clipboard</string>
-    <string name="button_import_image">Import Image</string>
+    <string name="button_import_image">Import image</string>
     <string name="button_eraser">Eraser</string>
     <string name="button_transform">Transform</string>
     <string name="button_fill">Fill</string>
@@ -49,10 +49,10 @@
     <string name="clipboard_tool_cut">Cut</string>
     <string name="stickers">Stickers</string>
     <string name="dialog_tools_title">Tools</string>
-    <string name="dialog_error_save_title">Error load/save File</string>
-    <string name="dialog_error_sdcard_text">Check Image or SD-Card!</string>
-    <string name="dialog_brush_width_text">Stroke Width</string>
-    <string name="dialog_warning_new_image">Save Changes?</string>
+    <string name="dialog_error_save_title">Error load/save file</string>
+    <string name="dialog_error_sdcard_text">Check image or SD-card!</string>
+    <string name="dialog_brush_width_text">Stroke width</string>
+    <string name="dialog_warning_new_image">Save changes?</string>
     <string name="help_title">Help</string>
     <string name="help_content_eraser">Remove parts of the image like with an eraser.</string>
     <string name="help_content_brush">Tap on the symbols on the bottom bar to change the colour or the brush size.</string>
@@ -64,10 +64,10 @@
     <string name="help_content_cursor">Position the cursor where you want to draw. Tap to activate the cursor. Move your finger to draw. Tap again to deactivate.</string>
     <string name="help_content_transform">Use to transform the image.</string>
     <string name="help_content_clipboard">Move and resize the rectangle to cover the area you want to stamp. Tap on copy or cut to select the area. Move it, then tap on paste to stamp.</string>
-    <string name="help_content_import_png">Import an image from the gallery to the stamp tool.</string>
+    <string name="help_content_import_png">Import an image from the gallery to the clipboard.</string>
     <string name="help_content_line">Draw a straight line.</string>
-    <string name="help_content_text">Write text and format it. Resize the text box afterwards. Tap to insert the text on the image.</string>
-    <string name="help_content_shape">Choose a shape and tap it to insert the selected shape.</string>
+    <string name="help_content_text">Write text and format it. Resize the text box afterwards. Tap on the checkmark to insert the text on the image.</string>
+    <string name="help_content_shape">Choose a shape and tap on the checkmark to insert the selected shape.</string>
     <string name="help_content_layer">Create new layers or modify existing ones.</string>
     <string name="help_content_color_chooser">Select or adjust a colour.</string>
     <string name="help_content_hand">Move your finger to move the canvas.</string>
@@ -75,7 +75,7 @@
     <string name="help_content_smudge">Move your finger on the image on different drawings to smudge them.</string>
     <string name="help_content_clip">Mark area which should not be erased.</string>
     <string name="closing_security_question_title">Quit</string>
-    <string name="closing_security_question">Save Changes?</string>
+    <string name="closing_security_question">Save changes?</string>
     <string name="menu_new_image">New image</string>
     <string name="menu_discard_image">Discard image</string>
     <string name="no_longclick_on_hidden_layer">You are only able to merge or reorder if all layers are visible</string>
@@ -85,7 +85,7 @@
     <string name="menu_add_to_current_layer">Add to current layer</string>
     <string name="menu_save_image">Save image</string>
     <string name="menu_save_copy">Save copy</string>
-    <string name="menu_hide_menu">Fullscreen</string>
+    <string name="menu_hide_menu">Hide buttons</string>
     <string name="share_image_menu">Share image</string>
     <string name="share_image_via_text">Send image via</string>
     <string name="menu_rate_us">Rate us!</string>
@@ -132,7 +132,7 @@
     <string name="transform_width_text">Width</string>
     <string name="transform_height_text">Height</string>
     <string name="transform_auto_crop_text">Auto</string>
-    <string name="transform_set_center_text">Set center</string>
+    <string name="transform_set_center_text">Set centre</string>
     <string name="pixel">px</string>
     <string name="clipboard_tool_copy_hint">Tap on copy to copy content</string>
     <string name="layers_title">Layers</string>
@@ -156,10 +156,9 @@
     <string name="pocketpaint_ora_message_dialog">This format remembers <b>layers</b>. <b>It can be opened by apps that support the Openraster format.</b></string>
     <string name="pocketpaint_catrobat_message_dialog">Pocket Paint\'s native image format. This format remembers commands and layers.</string>
     <string name="permission_info_external_storage_text">This app needs the requested permission to function properly. In order to save images to the local memory, the app needs read and write access to it.</string>
-    <string name="permission_info_permanent_denial_text">This app needs the requested permission to function properly. In order to save images to the local memory, the app needs read and write access to it.
-        As you have denied permission with do not ask again, please go to your phone settings and grant the required permissions if you wish to use the associated functions.</string>
-    <string name="set_center_info_text">Tap the screen to define the new center position.</string>
-    <string name="transform_info_text">Drag edges to their new position, then tap to enlarge or crop the image area.</string>
+    <string name="permission_info_permanent_denial_text">This app needs the requested permission to function properly. In order to save images to the local memory, the app needs read and write access to it. As you have denied permission with do not ask again, please go to your phone settings and grant the required permissions if you wish to use the associated functions.</string>
+    <string name="set_center_info_text">Tap the screen to define the new centre position.</string>
+    <string name="transform_info_text">Drag edges to their new position, tap on the checkmark to enlarge or crop the image area.</string>
     <string name="cursor_draw_inactive">Pan to position, then tap to start painting.</string>
     <string name="cursor_draw_active">Pan to draw, then tap again to stop painting.</string>
     <string name="welcome_to_pocket_paint">Welcome To Pocket Paint</string>

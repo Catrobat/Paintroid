@@ -18,21 +18,21 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="color_picker_title">Kolore aukeratzailea</string>
-    <string name="color_picker_tab_icon">Kolorea aukeratzeko fitxaren ikona</string>
+    <string name="color_picker_title">Kolore-hautatzailea</string>
+    <string name="color_picker_tab_icon">Kolore-hautatzailearen fitxaren ikonoa</string>
     <string name="color_red">Gorria</string>
     <string name="color_green">Berdea</string>
     <string name="color_blue">Urdina</string>
-    <string name="color_alpha">Gardentasuna</string>
+    <string name="color_alpha">Opakutasuna</string>
     <string name="color_hex">HEX</string>
     <string name="color_picker_apply">Ezarri</string>
     <string name="color_picker_cancel">Ezeztatu</string>
-    <string name="color_picker_current_color" tools:ignore="MissingTranslation">zeneukana</string>
+    <string name="color_picker_current_color" tools:ignore="MissingTranslation">unekoa</string>
     <string name="color_picker_new_color" tools:ignore="MissingTranslation">berria</string>
     <string name="color_picker_pipette" tools:ignore="MissingTranslation">Pipeta</string>
     <string name="color_picker_save_dialog_title" tools:ignore="MissingTranslation">Gorde aldaketak?</string>
-    <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">Ziur aldaketak gorde nahi dituzula?</string>
+    <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">Aldaketak gorde nahi dituzu?</string>
     <string name="color_picker_no" tools:ignore="MissingTranslation">ez</string>
     <string name="color_picker_yes" tools:ignore="MissingTranslation">bai</string>
-    <string name="color_picker_history_recently_used" tools:ignore="MissingTranslation">recently used</string>
+    <string name="color_picker_history_recently_used" tools:ignore="MissingTranslation">azkenaldian erabiliak</string>
 </resources>

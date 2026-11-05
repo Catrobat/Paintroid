@@ -19,20 +19,20 @@
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="color_picker_title">Renk seçici</string>
-    <string name="color_picker_tab_icon">Renk Seçici sekme ikonu</string>
+    <string name="color_picker_tab_icon">Renk seçici sekmesi simgesi</string>
     <string name="color_red">Kırmızı</string>
     <string name="color_green">Yeşil</string>
     <string name="color_blue">Mavi</string>
-    <string name="color_alpha">Şefaflık</string>
+    <string name="color_alpha">Opaklık</string>
     <string name="color_hex">HEX</string>
     <string name="color_picker_apply">Uygula</string>
     <string name="color_picker_cancel">İptal et</string>
     <string name="color_picker_current_color" tools:ignore="MissingTranslation">mevcut</string>
     <string name="color_picker_new_color" tools:ignore="MissingTranslation">yeni</string>
-    <string name="color_picker_pipette" tools:ignore="MissingTranslation">Renk Seçici</string>
-    <string name="color_picker_save_dialog_title" tools:ignore="MissingTranslation">Değişiklikleri kaydet?</string>
+    <string name="color_picker_pipette" tools:ignore="MissingTranslation">Damlalık</string>
+    <string name="color_picker_save_dialog_title" tools:ignore="MissingTranslation">Değişiklikler kaydedilsin mi?</string>
     <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">Değişiklikleri kaydetmek istiyor musunuz?</string>
     <string name="color_picker_no" tools:ignore="MissingTranslation">hayır</string>
     <string name="color_picker_yes" tools:ignore="MissingTranslation">evet</string>
-    <string name="color_picker_history_recently_used" tools:ignore="MissingTranslation">En son kullanılanlar</string>
+    <string name="color_picker_history_recently_used" tools:ignore="MissingTranslation">son kullanılanlar</string>
 </resources>

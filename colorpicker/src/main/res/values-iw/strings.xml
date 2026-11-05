@@ -18,21 +18,21 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="color_picker_title">Color Picker</string>
-    <string name="color_picker_tab_icon">Color Picker tab icon</string>
+    <string name="color_picker_title">בוחר צבעים</string>
+    <string name="color_picker_tab_icon">סמל הכרטיסייה של בוחר הצבעים</string>
     <string name="color_red">אדום</string>
     <string name="color_green">ירוק</string>
     <string name="color_blue">כחול</string>
     <string name="color_alpha">אלפא</string>
     <string name="color_hex">HEX</string>
-    <string name="color_picker_apply">Apply</string>
-    <string name="color_picker_cancel">בטל</string>
-    <string name="color_picker_current_color" tools:ignore="MissingTranslation">current</string>
-    <string name="color_picker_new_color" tools:ignore="MissingTranslation">new</string>
-    <string name="color_picker_pipette" tools:ignore="MissingTranslation">שואב צבע</string>
-    <string name="color_picker_save_dialog_title" tools:ignore="MissingTranslation">האם לשמור שינויים?</string>
-    <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">האם ברצונך לשמור את השינויים?</string>
-    <string name="color_picker_no" tools:ignore="MissingTranslation">no</string>
-    <string name="color_picker_yes" tools:ignore="MissingTranslation">yes</string>
-    <string name="color_picker_history_recently_used" tools:ignore="MissingTranslation">recently used</string>
+    <string name="color_picker_apply">החלה</string>
+    <string name="color_picker_cancel">ביטול</string>
+    <string name="color_picker_current_color" tools:ignore="MissingTranslation">נוכחי</string>
+    <string name="color_picker_new_color" tools:ignore="MissingTranslation">חדש</string>
+    <string name="color_picker_pipette" tools:ignore="MissingTranslation">דוגם צבע</string>
+    <string name="color_picker_save_dialog_title" tools:ignore="MissingTranslation">לשמור את השינויים?</string>
+    <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">לשמור את השינויים שלך?</string>
+    <string name="color_picker_no" tools:ignore="MissingTranslation">לא</string>
+    <string name="color_picker_yes" tools:ignore="MissingTranslation">כן</string>
+    <string name="color_picker_history_recently_used" tools:ignore="MissingTranslation">בשימוש לאחרונה</string>
 </resources>

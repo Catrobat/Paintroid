@@ -19,20 +19,20 @@
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="color_picker_title">منتقي الألوان</string>
-    <string name="color_picker_tab_icon">أيقونة منتقي الألوان</string>
+    <string name="color_picker_tab_icon">رمز علامة تبويب منتقي الألوان</string>
     <string name="color_red">أحمر</string>
     <string name="color_green">أخضر</string>
     <string name="color_blue">أزرق</string>
-    <string name="color_alpha">ألفا</string>
-    <string name="color_hex">هيكس</string>
+    <string name="color_alpha">العتامة</string>
+    <string name="color_hex">HEX</string>
     <string name="color_picker_apply">تطبيق</string>
     <string name="color_picker_cancel">إلغاء</string>
-    <string name="color_picker_current_color" tools:ignore="MissingTranslation">تيار</string>
+    <string name="color_picker_current_color" tools:ignore="MissingTranslation">الحالي</string>
     <string name="color_picker_new_color" tools:ignore="MissingTranslation">الجديد</string>
-    <string name="color_picker_pipette" tools:ignore="MissingTranslation">التقاط اللون</string>
-    <string name="color_picker_save_dialog_title" tools:ignore="MissingTranslation">حفظ التغييرات؟</string>
-    <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">هل تريد حفظ التغييرات؟</string>
+    <string name="color_picker_pipette" tools:ignore="MissingTranslation">القطّارة</string>
+    <string name="color_picker_save_dialog_title" tools:ignore="MissingTranslation">هل تريد حفظ التغييرات؟</string>
+    <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">هل تريد حفظ تغييراتك؟</string>
     <string name="color_picker_no" tools:ignore="MissingTranslation">لا</string>
     <string name="color_picker_yes" tools:ignore="MissingTranslation">نعم</string>
-    <string name="color_picker_history_recently_used" tools:ignore="MissingTranslation">recently used</string>
+    <string name="color_picker_history_recently_used" tools:ignore="MissingTranslation">المستخدمة مؤخرًا</string>
 </resources>

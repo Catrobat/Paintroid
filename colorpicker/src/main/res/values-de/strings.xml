@@ -19,7 +19,7 @@
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="color_picker_title">Farbauswahl</string>
-    <string name="color_picker_tab_icon">Farbauswahl-Tab-Symbol</string>
+    <string name="color_picker_tab_icon">Symbol des Farbauswahl-Tabs</string>
     <string name="color_red">Rot</string>
     <string name="color_green">Grün</string>
     <string name="color_blue">Blau</string>
@@ -34,5 +34,5 @@
     <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">Möchtest du deine Änderungen speichern?</string>
     <string name="color_picker_no" tools:ignore="MissingTranslation">nein</string>
     <string name="color_picker_yes" tools:ignore="MissingTranslation">ja</string>
-    <string name="color_picker_history_recently_used" tools:ignore="MissingTranslation">recently used</string>
+    <string name="color_picker_history_recently_used" tools:ignore="MissingTranslation">zuletzt verwendet</string>
 </resources>

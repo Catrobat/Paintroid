@@ -19,20 +19,20 @@
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="color_picker_title">색상 선택기</string>
-    <string name="color_picker_tab_icon">색상 선택기 아이콘</string>
+    <string name="color_picker_tab_icon">색상 선택기 탭 아이콘</string>
     <string name="color_red">빨강</string>
     <string name="color_green">초록</string>
     <string name="color_blue">파랑</string>
-    <string name="color_alpha">투명도</string>
-    <string name="color_hex">헥사편집기</string>
-    <string name="color_picker_apply">사용하기</string>
+    <string name="color_alpha">불투명도</string>
+    <string name="color_hex">HEX</string>
+    <string name="color_picker_apply">적용</string>
     <string name="color_picker_cancel">취소</string>
-    <string name="color_picker_current_color" tools:ignore="MissingTranslation">흐름</string>
-    <string name="color_picker_new_color" tools:ignore="MissingTranslation">새로운</string>
-    <string name="color_picker_pipette" tools:ignore="MissingTranslation">색 고르기</string>
-    <string name="color_picker_save_dialog_title" tools:ignore="MissingTranslation">변경사항을 저장하시겠습니까?</string>
-    <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">변경 내용을 저장 하시겠습니까?</string>
-    <string name="color_picker_no" tools:ignore="MissingTranslation">아니</string>
+    <string name="color_picker_current_color" tools:ignore="MissingTranslation">현재</string>
+    <string name="color_picker_new_color" tools:ignore="MissingTranslation">새 색</string>
+    <string name="color_picker_pipette" tools:ignore="MissingTranslation">스포이트</string>
+    <string name="color_picker_save_dialog_title" tools:ignore="MissingTranslation">변경사항을 저장할까요?</string>
+    <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">변경사항을 저장하시겠습니까?</string>
+    <string name="color_picker_no" tools:ignore="MissingTranslation">아니요</string>
     <string name="color_picker_yes" tools:ignore="MissingTranslation">예</string>
-    <string name="color_picker_history_recently_used" tools:ignore="MissingTranslation">recently used</string>
+    <string name="color_picker_history_recently_used" tools:ignore="MissingTranslation">최근 사용</string>
 </resources>

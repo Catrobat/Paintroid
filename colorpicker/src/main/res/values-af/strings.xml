@@ -18,21 +18,21 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="color_picker_title">Color Picker</string>
-    <string name="color_picker_tab_icon">Color Picker tab icon</string>
-    <string name="color_red">Red</string>
-    <string name="color_green">Green</string>
-    <string name="color_blue">Blue</string>
-    <string name="color_alpha">Alpha</string>
+    <string name="color_picker_title">Kleurkieser</string>
+    <string name="color_picker_tab_icon">Ikoon van Kleurkieser-oortjie</string>
+    <string name="color_red">Rooi</string>
+    <string name="color_green">Groen</string>
+    <string name="color_blue">Blou</string>
+    <string name="color_alpha">Alfa</string>
     <string name="color_hex">HEX</string>
-    <string name="color_picker_apply">Apply</string>
-    <string name="color_picker_cancel">Cancel</string>
-    <string name="color_picker_current_color" tools:ignore="MissingTranslation">current</string>
-    <string name="color_picker_new_color" tools:ignore="MissingTranslation">new</string>
-    <string name="color_picker_pipette" tools:ignore="MissingTranslation">Pipette</string>
-    <string name="color_picker_save_dialog_title" tools:ignore="MissingTranslation">Save changes?</string>
-    <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">Do you want to save your changes?</string>
-    <string name="color_picker_no" tools:ignore="MissingTranslation">no</string>
-    <string name="color_picker_yes" tools:ignore="MissingTranslation">yes</string>
-    <string name="color_picker_history_recently_used" tools:ignore="MissingTranslation">recently used</string>
+    <string name="color_picker_apply">Pas toe</string>
+    <string name="color_picker_cancel">Kanselleer</string>
+    <string name="color_picker_current_color" tools:ignore="MissingTranslation">huidig</string>
+    <string name="color_picker_new_color" tools:ignore="MissingTranslation">nuut</string>
+    <string name="color_picker_pipette" tools:ignore="MissingTranslation">Pipet</string>
+    <string name="color_picker_save_dialog_title" tools:ignore="MissingTranslation">Stoor veranderinge?</string>
+    <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">Wil jy jou veranderinge stoor?</string>
+    <string name="color_picker_no" tools:ignore="MissingTranslation">nee</string>
+    <string name="color_picker_yes" tools:ignore="MissingTranslation">ja</string>
+    <string name="color_picker_history_recently_used" tools:ignore="MissingTranslation">onlangs gebruik</string>
 </resources>

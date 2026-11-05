@@ -18,21 +18,21 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="color_picker_title">رنګ غوره کونکی</string>
-    <string name="color_picker_tab_icon">د رنګ غوره کونکي ټب آئیکون</string>
+    <string name="color_picker_title">رنګ ټاکونکی</string>
+    <string name="color_picker_tab_icon">د رنګ ټاکونکي د ټب نښه</string>
     <string name="color_red">سور</string>
     <string name="color_green">شین</string>
     <string name="color_blue">آبي</string>
     <string name="color_alpha">الفا</string>
-    <string name="color_hex">هیکس</string>
-    <string name="color_picker_apply">تطبیق کړئ</string>
-    <string name="color_picker_cancel">لغوه کړئ</string>
+    <string name="color_hex">HEX</string>
+    <string name="color_picker_apply">پلي کول</string>
+    <string name="color_picker_cancel">لغوه کول</string>
     <string name="color_picker_current_color" tools:ignore="MissingTranslation">اوسنی</string>
     <string name="color_picker_new_color" tools:ignore="MissingTranslation">نوی</string>
-    <string name="color_picker_pipette" tools:ignore="MissingTranslation">پایپټ</string>
-    <string name="color_picker_save_dialog_title" tools:ignore="MissingTranslation">بدلونونه خوندي کړئ؟</string>
-    <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">ایا تاسو غواړئ خپل بدلونونه خوندي کړئ؟</string>
+    <string name="color_picker_pipette" tools:ignore="MissingTranslation">څاڅکي اخیستونکی</string>
+    <string name="color_picker_save_dialog_title" tools:ignore="MissingTranslation">بدلونونه خوندي شي؟</string>
+    <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">ایا غواړئ خپل بدلونونه خوندي کړئ؟</string>
     <string name="color_picker_no" tools:ignore="MissingTranslation">نه</string>
     <string name="color_picker_yes" tools:ignore="MissingTranslation">هو</string>
-    <string name="color_picker_history_recently_used" tools:ignore="MissingTranslation">recently used</string>
+    <string name="color_picker_history_recently_used" tools:ignore="MissingTranslation">وروستي کارول شوي</string>
 </resources>

@@ -19,20 +19,20 @@
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="color_picker_title">রং বাছাইকারী</string>
-    <string name="color_picker_tab_icon">রঙ বাছাইকারী ট্যাব আইকন</string>
+    <string name="color_picker_tab_icon">রং বাছাইকারী ট্যাবের আইকন</string>
     <string name="color_red">লাল</string>
     <string name="color_green">সবুজ</string>
     <string name="color_blue">নীল</string>
-    <string name="color_alpha">আলফা</string>
-    <string name="color_hex">হেক্স</string>
+    <string name="color_alpha">অস্বচ্ছতা</string>
+    <string name="color_hex">HEX</string>
     <string name="color_picker_apply">প্রয়োগ করুন</string>
-    <string name="color_picker_cancel">বাতিল করুন</string>
-    <string name="color_picker_current_color" tools:ignore="MissingTranslation">কারেন্ট</string>
+    <string name="color_picker_cancel">বাতিল</string>
+    <string name="color_picker_current_color" tools:ignore="MissingTranslation">বর্তমান</string>
     <string name="color_picker_new_color" tools:ignore="MissingTranslation">নতুন</string>
     <string name="color_picker_pipette" tools:ignore="MissingTranslation">পিপেট</string>
-    <string name="color_picker_save_dialog_title" tools:ignore="MissingTranslation">পরিবর্তনগুলোর সংরক্ষন?</string>
+    <string name="color_picker_save_dialog_title" tools:ignore="MissingTranslation">পরিবর্তনগুলি সংরক্ষণ করবেন?</string>
     <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">আপনি কি আপনার পরিবর্তনগুলি সংরক্ষণ করতে চান?</string>
     <string name="color_picker_no" tools:ignore="MissingTranslation">না</string>
     <string name="color_picker_yes" tools:ignore="MissingTranslation">হ্যাঁ</string>
-    <string name="color_picker_history_recently_used" tools:ignore="MissingTranslation">recently used</string>
+    <string name="color_picker_history_recently_used" tools:ignore="MissingTranslation">সম্প্রতি ব্যবহৃত</string>
 </resources>

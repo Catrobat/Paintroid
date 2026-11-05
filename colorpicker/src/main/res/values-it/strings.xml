@@ -19,11 +19,11 @@
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="color_picker_title">Selettore dei colori</string>
-    <string name="color_picker_tab_icon">Icona scheda selettore colore</string>
+    <string name="color_picker_tab_icon">Icona della scheda del selettore dei colori</string>
     <string name="color_red">Rosso</string>
     <string name="color_green">Verde</string>
     <string name="color_blue">Blu</string>
-    <string name="color_alpha">Alpha (opacità)</string>
+    <string name="color_alpha">Opacità</string>
     <string name="color_hex">HEX</string>
     <string name="color_picker_apply">Applica</string>
     <string name="color_picker_cancel">Annulla</string>
@@ -31,8 +31,8 @@
     <string name="color_picker_new_color" tools:ignore="MissingTranslation">nuovo</string>
     <string name="color_picker_pipette" tools:ignore="MissingTranslation">Pipetta</string>
     <string name="color_picker_save_dialog_title" tools:ignore="MissingTranslation">Salvare le modifiche?</string>
-    <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">Si desidera salvare le modifiche?</string>
+    <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">Vuoi salvare le modifiche?</string>
     <string name="color_picker_no" tools:ignore="MissingTranslation">no</string>
     <string name="color_picker_yes" tools:ignore="MissingTranslation">sì</string>
-    <string name="color_picker_history_recently_used" tools:ignore="MissingTranslation">Utilizzati di recente</string>
+    <string name="color_picker_history_recently_used" tools:ignore="MissingTranslation">usati di recente</string>
 </resources>

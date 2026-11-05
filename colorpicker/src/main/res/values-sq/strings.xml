@@ -23,16 +23,16 @@
     <string name="color_red">E kuqe</string>
     <string name="color_green">Jeshile</string>
     <string name="color_blue">Blu</string>
-    <string name="color_alpha">Transparenca</string>
-    <string name="color_hex">Hex</string>
+    <string name="color_alpha">Opaciteti</string>
+    <string name="color_hex">HEX</string>
     <string name="color_picker_apply">Apliko</string>
-    <string name="color_picker_cancel">Anullo</string>
-    <string name="color_picker_current_color" tools:ignore="MissingTranslation">Aktual</string>
-    <string name="color_picker_new_color" tools:ignore="MissingTranslation">E re</string>
+    <string name="color_picker_cancel">Anulo</string>
+    <string name="color_picker_current_color" tools:ignore="MissingTranslation">aktuale</string>
+    <string name="color_picker_new_color" tools:ignore="MissingTranslation">e re</string>
     <string name="color_picker_pipette" tools:ignore="MissingTranslation">Pipetë</string>
-    <string name="color_picker_save_dialog_title" tools:ignore="MissingTranslation">Ruaji ndryshimet?</string>
+    <string name="color_picker_save_dialog_title" tools:ignore="MissingTranslation">Të ruhen ndryshimet?</string>
     <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">Dëshironi të ruani ndryshimet?</string>
-    <string name="color_picker_no" tools:ignore="MissingTranslation">Jo</string>
-    <string name="color_picker_yes" tools:ignore="MissingTranslation">Po</string>
-    <string name="color_picker_history_recently_used" tools:ignore="MissingTranslation">recently used</string>
+    <string name="color_picker_no" tools:ignore="MissingTranslation">jo</string>
+    <string name="color_picker_yes" tools:ignore="MissingTranslation">po</string>
+    <string name="color_picker_history_recently_used" tools:ignore="MissingTranslation">përdorur së fundi</string>
 </resources>

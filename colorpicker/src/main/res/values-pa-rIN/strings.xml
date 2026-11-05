@@ -23,16 +23,16 @@
     <string name="color_red">ਲਾਲ</string>
     <string name="color_green">ਹਰਾ</string>
     <string name="color_blue">ਨੀਲਾ</string>
-    <string name="color_alpha">ਅਲਫ਼ਾ</string>
-    <string name="color_hex">ਹੈਕਸ</string>
+    <string name="color_alpha">ਅਪਾਰਦਰਸ਼ਤਾ</string>
+    <string name="color_hex">HEX</string>
     <string name="color_picker_apply">ਲਾਗੂ ਕਰੋ</string>
     <string name="color_picker_cancel">ਰੱਦ ਕਰੋ</string>
     <string name="color_picker_current_color" tools:ignore="MissingTranslation">ਮੌਜੂਦਾ</string>
     <string name="color_picker_new_color" tools:ignore="MissingTranslation">ਨਵਾਂ</string>
-    <string name="color_picker_pipette" tools:ignore="MissingTranslation">ਪਾਈਪੇਟ</string>
-    <string name="color_picker_save_dialog_title" tools:ignore="MissingTranslation">ਤਬਦੀਲੀ ਸੰਭਾਲੋ?</string>
-    <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">ਤੁਹਾਨੂੰ ਆਪਣੇ ਤਬਦੀਲੀ ਨੂੰ ਸੰਭਾਲਣ ਲਈ ਚਾਹੁੰਦੇ ਹੋ?</string>
+    <string name="color_picker_pipette" tools:ignore="MissingTranslation">ਪਿਪੇਟ</string>
+    <string name="color_picker_save_dialog_title" tools:ignore="MissingTranslation">ਤਬਦੀਲੀਆਂ ਰੱਖਿਅਤ ਕਰਨੀਆਂ ਹਨ?</string>
+    <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">ਕੀ ਤੁਸੀਂ ਆਪਣੀਆਂ ਤਬਦੀਲੀਆਂ ਰੱਖਿਅਤ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ?</string>
     <string name="color_picker_no" tools:ignore="MissingTranslation">ਨਹੀਂ</string>
     <string name="color_picker_yes" tools:ignore="MissingTranslation">ਹਾਂ</string>
-    <string name="color_picker_history_recently_used" tools:ignore="MissingTranslation">recently used</string>
+    <string name="color_picker_history_recently_used" tools:ignore="MissingTranslation">ਹਾਲ ਹੀ ਵਿੱਚ ਵਰਤੇ ਗਏ</string>
 </resources>

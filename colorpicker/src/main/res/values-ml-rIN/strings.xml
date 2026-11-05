@@ -18,21 +18,21 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="color_picker_title">Color Picker</string>
-    <string name="color_picker_tab_icon">Color Picker tab icon</string>
-    <string name="color_red">Red</string>
-    <string name="color_green">Green</string>
-    <string name="color_blue">Blue</string>
-    <string name="color_alpha">Alpha</string>
+    <string name="color_picker_title">നിറം തിരഞ്ഞെടുക്കൽ</string>
+    <string name="color_picker_tab_icon">നിറം തിരഞ്ഞെടുക്കൽ ടാബ് ഐക്കൺ</string>
+    <string name="color_red">ചുവപ്പ്</string>
+    <string name="color_green">പച്ച</string>
+    <string name="color_blue">നീല</string>
+    <string name="color_alpha">ആൽഫ</string>
     <string name="color_hex">HEX</string>
-    <string name="color_picker_apply">Apply</string>
-    <string name="color_picker_cancel">വേണ്ടെന്നു വയ്ക്കുക</string>
-    <string name="color_picker_current_color" tools:ignore="MissingTranslation">current</string>
-    <string name="color_picker_new_color" tools:ignore="MissingTranslation">new</string>
-    <string name="color_picker_pipette" tools:ignore="MissingTranslation">Pipette</string>
-    <string name="color_picker_save_dialog_title" tools:ignore="MissingTranslation">Save changes?</string>
-    <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">Do you want to save your changes?</string>
-    <string name="color_picker_no" tools:ignore="MissingTranslation">no</string>
-    <string name="color_picker_yes" tools:ignore="MissingTranslation">yes</string>
-    <string name="color_picker_history_recently_used" tools:ignore="MissingTranslation">recently used</string>
+    <string name="color_picker_apply">പ്രയോഗിക്കുക</string>
+    <string name="color_picker_cancel">റദ്ദാക്കുക</string>
+    <string name="color_picker_current_color" tools:ignore="MissingTranslation">നിലവിലുള്ളത്</string>
+    <string name="color_picker_new_color" tools:ignore="MissingTranslation">പുതിയത്</string>
+    <string name="color_picker_pipette" tools:ignore="MissingTranslation">നിറം പിപ്പെറ്റ്</string>
+    <string name="color_picker_save_dialog_title" tools:ignore="MissingTranslation">മാറ്റങ്ങൾ സംരക്ഷിക്കണോ?</string>
+    <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">നിങ്ങളുടെ മാറ്റങ്ങൾ സംരക്ഷിക്കണോ?</string>
+    <string name="color_picker_no" tools:ignore="MissingTranslation">ഇല്ല</string>
+    <string name="color_picker_yes" tools:ignore="MissingTranslation">അതെ</string>
+    <string name="color_picker_history_recently_used" tools:ignore="MissingTranslation">അടുത്തിടെ ഉപയോഗിച്ചവ</string>
 </resources>

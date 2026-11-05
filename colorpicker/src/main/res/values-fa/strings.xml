@@ -18,21 +18,21 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="color_picker_title">انتخاب کننده رنگ</string>
-    <string name="color_picker_tab_icon">آیکون انتخاب کننده رنگ</string>
-    <string name="color_red">سرخ</string>
+    <string name="color_picker_title">انتخابگر رنگ</string>
+    <string name="color_picker_tab_icon">نماد زبانهٔ انتخابگر رنگ</string>
+    <string name="color_red">قرمز</string>
     <string name="color_green">سبز</string>
     <string name="color_blue">آبی</string>
-    <string name="color_alpha">آلفا</string>
+    <string name="color_alpha">کدری</string>
     <string name="color_hex">HEX</string>
-    <string name="color_picker_apply">بکار ببر</string>
-    <string name="color_picker_cancel">لغو </string>
-    <string name="color_picker_current_color" tools:ignore="MissingTranslation">جاری</string>
+    <string name="color_picker_apply">اعمال</string>
+    <string name="color_picker_cancel">لغو</string>
+    <string name="color_picker_current_color" tools:ignore="MissingTranslation">فعلی</string>
     <string name="color_picker_new_color" tools:ignore="MissingTranslation">جدید</string>
-    <string name="color_picker_pipette" tools:ignore="MissingTranslation">پاپت</string>
-    <string name="color_picker_save_dialog_title" tools:ignore="MissingTranslation">ذخیره تغییرات؟</string>
-    <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">آیا می خواهید تغییرات خود را ذخیره کنید؟</string>
-    <string name="color_picker_no" tools:ignore="MissingTranslation">نه</string>
-    <string name="color_picker_yes" tools:ignore="MissingTranslation">آره</string>
-    <string name="color_picker_history_recently_used" tools:ignore="MissingTranslation">recently used</string>
+    <string name="color_picker_pipette" tools:ignore="MissingTranslation">قطره‌چکان</string>
+    <string name="color_picker_save_dialog_title" tools:ignore="MissingTranslation">تغییرات ذخیره شود؟</string>
+    <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">می‌خواهید تغییراتتان را ذخیره کنید؟</string>
+    <string name="color_picker_no" tools:ignore="MissingTranslation">خیر</string>
+    <string name="color_picker_yes" tools:ignore="MissingTranslation">بله</string>
+    <string name="color_picker_history_recently_used" tools:ignore="MissingTranslation">اخیراً استفاده‌شده</string>
 </resources>

@@ -18,21 +18,21 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="color_picker_title">Color Picker</string>
-    <string name="color_picker_tab_icon">Color Picker tab icon</string>
-    <string name="color_red">Vörös</string>
+    <string name="color_picker_title">Színválasztó</string>
+    <string name="color_picker_tab_icon">Színválasztó lap ikonja</string>
+    <string name="color_red">Piros</string>
     <string name="color_green">Zöld</string>
     <string name="color_blue">Kék</string>
-    <string name="color_alpha">Alpha</string>
+    <string name="color_alpha">Alfa</string>
     <string name="color_hex">HEX</string>
-    <string name="color_picker_apply">Apply</string>
+    <string name="color_picker_apply">Alkalmaz</string>
     <string name="color_picker_cancel">Mégse</string>
-    <string name="color_picker_current_color" tools:ignore="MissingTranslation">current</string>
-    <string name="color_picker_new_color" tools:ignore="MissingTranslation">new</string>
+    <string name="color_picker_current_color" tools:ignore="MissingTranslation">aktuális</string>
+    <string name="color_picker_new_color" tools:ignore="MissingTranslation">új</string>
     <string name="color_picker_pipette" tools:ignore="MissingTranslation">Pipetta</string>
-    <string name="color_picker_save_dialog_title" tools:ignore="MissingTranslation">Módosítások mentése?</string>
-    <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">Szeretnéd menteni a módosításokat?</string>
-    <string name="color_picker_no" tools:ignore="MissingTranslation">no</string>
-    <string name="color_picker_yes" tools:ignore="MissingTranslation">yes</string>
-    <string name="color_picker_history_recently_used" tools:ignore="MissingTranslation">recently used</string>
+    <string name="color_picker_save_dialog_title" tools:ignore="MissingTranslation">Mented a változtatásokat?</string>
+    <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">Szeretnéd menteni a változtatásokat?</string>
+    <string name="color_picker_no" tools:ignore="MissingTranslation">nem</string>
+    <string name="color_picker_yes" tools:ignore="MissingTranslation">igen</string>
+    <string name="color_picker_history_recently_used" tools:ignore="MissingTranslation">nemrég használt</string>
 </resources>

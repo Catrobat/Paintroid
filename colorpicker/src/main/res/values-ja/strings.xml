@@ -19,20 +19,20 @@
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="color_picker_title">カラーピッカー</string>
-    <string name="color_picker_tab_icon">カラーピッカータブアイコン</string>
+    <string name="color_picker_tab_icon">カラーピッカーのタブアイコン</string>
     <string name="color_red">赤</string>
     <string name="color_green">緑</string>
     <string name="color_blue">青</string>
-    <string name="color_alpha">透過度</string>
+    <string name="color_alpha">不透明度</string>
     <string name="color_hex">HEX</string>
     <string name="color_picker_apply">適用</string>
     <string name="color_picker_cancel">キャンセル</string>
-    <string name="color_picker_current_color" tools:ignore="MissingTranslation">カレント</string>
-    <string name="color_picker_new_color" tools:ignore="MissingTranslation">新</string>
-    <string name="color_picker_pipette" tools:ignore="MissingTranslation">ピペット</string>
+    <string name="color_picker_current_color" tools:ignore="MissingTranslation">現在</string>
+    <string name="color_picker_new_color" tools:ignore="MissingTranslation">新規</string>
+    <string name="color_picker_pipette" tools:ignore="MissingTranslation">スポイト</string>
     <string name="color_picker_save_dialog_title" tools:ignore="MissingTranslation">変更を保存しますか？</string>
     <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">変更内容を保存しますか？</string>
-    <string name="color_picker_no" tools:ignore="MissingTranslation">ノー</string>
-    <string name="color_picker_yes" tools:ignore="MissingTranslation">そう</string>
-    <string name="color_picker_history_recently_used" tools:ignore="MissingTranslation">recently used</string>
+    <string name="color_picker_no" tools:ignore="MissingTranslation">いいえ</string>
+    <string name="color_picker_yes" tools:ignore="MissingTranslation">はい</string>
+    <string name="color_picker_history_recently_used" tools:ignore="MissingTranslation">最近使用した色</string>
 </resources>

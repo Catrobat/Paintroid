@@ -19,15 +19,15 @@
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="color_picker_title">Wybór kolorów</string>
-    <string name="color_picker_tab_icon">Ikona zakładki Wyboru kolorów</string>
+    <string name="color_picker_tab_icon">Ikona karty wyboru kolorów</string>
     <string name="color_red">Czerwony</string>
     <string name="color_green">Zielony</string>
     <string name="color_blue">Niebieski</string>
-    <string name="color_alpha">Przezroczystość</string>
+    <string name="color_alpha">Krycie</string>
     <string name="color_hex">HEX</string>
     <string name="color_picker_apply">Zastosuj</string>
     <string name="color_picker_cancel">Anuluj</string>
-    <string name="color_picker_current_color" tools:ignore="MissingTranslation">obecny</string>
+    <string name="color_picker_current_color" tools:ignore="MissingTranslation">bieżący</string>
     <string name="color_picker_new_color" tools:ignore="MissingTranslation">nowy</string>
     <string name="color_picker_pipette" tools:ignore="MissingTranslation">Pipeta</string>
     <string name="color_picker_save_dialog_title" tools:ignore="MissingTranslation">Zapisać zmiany?</string>
