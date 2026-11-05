@@ -51,7 +51,6 @@ import org.catrobat.paintroid.common.RATE_US_DIALOG_FRAGMENT_TAG
 import org.catrobat.paintroid.common.FEEDBACK_DIALOG_FRAGMENT_TAG
 import org.catrobat.paintroid.common.ZOOM_WINDOW_SETTINGS_DIALOG_FRAGMENT_TAG
 import org.catrobat.paintroid.common.ADVANCED_SETTINGS_DIALOG_FRAGMENT_TAG
-import org.catrobat.paintroid.common.OVERWRITE_INFORMATION_DIALOG_TAG
 import org.catrobat.paintroid.common.PNG_INFORMATION_DIALOG_TAG
 import org.catrobat.paintroid.common.JPG_INFORMATION_DIALOG_TAG
 import org.catrobat.paintroid.common.ORA_INFORMATION_DIALOG_TAG
@@ -70,7 +69,6 @@ import org.catrobat.paintroid.contract.MainActivityContracts
 import org.catrobat.paintroid.dialog.FeedbackDialog
 import org.catrobat.paintroid.dialog.ZoomWindowSettingsDialog
 import org.catrobat.paintroid.dialog.AdvancedSettingsDialog
-import org.catrobat.paintroid.dialog.OverwriteDialog
 import org.catrobat.paintroid.dialog.PngInfoDialog
 import org.catrobat.paintroid.dialog.JpgInfoDialog
 import org.catrobat.paintroid.dialog.OraInfoDialog
@@ -322,16 +320,6 @@ class MainActivityNavigator(
         )
     }
 
-    override fun showOverwriteDialog(permissionCode: Int, isExport: Boolean) {
-        mainActivity.idlingResource.increment()
-        val overwriteDialog = OverwriteDialog.newInstance(permissionCode, isExport)
-        overwriteDialog.show(
-            mainActivity.supportFragmentManager,
-            OVERWRITE_INFORMATION_DIALOG_TAG
-        )
-        mainActivity.idlingResource.decrement()
-    }
-
     override fun showPngInformationDialog() {
         val pngInfoDialog = PngInfoDialog()
         pngInfoDialog.show(
@@ -473,6 +461,14 @@ class MainActivityNavigator(
         showDialogFragmentSafely(dialog, SCALE_IMAGE_FRAGMENT_TAG)
     }
 
+    override fun showSaveInformationDialog(imageNumber: Int, isCatroid: Boolean) {
+        val dialog = SaveInformationDialog.newInstance(imageNumber, isCatroid)
+        dialog.show(
+            mainActivity.supportFragmentManager,
+            SAVE_INFORMATION_DIALOG_TAG
+        )
+    }
+
     @SuppressLint("VisibleForTests")
     override fun showSaveImageInformationDialogWhenStandalone(
         permissionCode: Int,
@@ -497,16 +493,16 @@ class MainActivityNavigator(
             mainActivity.presenter.switchBetweenVersions(permissionCode, isExport)
             return
         }
-        var isStandard = false
-        if (permissionCode == PERMISSION_EXTERNAL_STORAGE_SAVE_COPY) {
-            isStandard = true
-        }
         val saveInfoDialog =
-            SaveInformationDialog.newInstance(permissionCode, imageNumber, isStandard, isExport)
+            SaveInformationDialog.newInstance(imageNumber, mainActivity.model.isOpenedFromCatroid)
         saveInfoDialog.show(
             mainActivity.supportFragmentManager,
             SAVE_INFORMATION_DIALOG_TAG
         )
+    }
+
+    override fun startCreateDocument(intent: Intent, requestCode: Int) {
+        mainActivity.startActivityForResult(intent, requestCode)
     }
 
     override fun showToolChangeToast(offset: Int, idRes: Int) {
@@ -550,5 +546,9 @@ class MainActivityNavigator(
             mainActivity.toolPaint.paint.alpha = it.drawPaint.alpha
             mainActivity.toolPaint.previewPaint.alpha = it.drawPaint.alpha
         }
+    }
+
+    override fun startCreateDocumentIntent(intent: Intent, requestCode: Int) {
+        mainActivity.startActivityForResult(intent, requestCode)
     }
 }

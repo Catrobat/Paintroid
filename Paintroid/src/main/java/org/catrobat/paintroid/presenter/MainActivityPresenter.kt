@@ -70,6 +70,7 @@ import org.catrobat.paintroid.common.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_
 import org.catrobat.paintroid.common.PERMISSION_EXTERNAL_STORAGE_SAVE_COPY
 import org.catrobat.paintroid.common.PERMISSION_REQUEST_CODE_IMPORT_PICTURE
 import org.catrobat.paintroid.common.PERMISSION_REQUEST_CODE_REPLACE_PICTURE
+import org.catrobat.paintroid.common.REQUEST_CODE_CREATE_DOCUMENT
 import org.catrobat.paintroid.common.REQUEST_CODE_IMPORT_PNG
 import org.catrobat.paintroid.common.REQUEST_CODE_INTRO
 import org.catrobat.paintroid.common.REQUEST_CODE_LOAD_PICTURE
@@ -128,6 +129,8 @@ open class MainActivityPresenter(
     private var resetPerspectiveAfterNextCommand = false
     private var isExport = false
     private var wasImageLoaded = false
+    private var pendingSaveRequestCode: Int? = null
+
     private val isImageUnchanged: Boolean
         get() = !commandManager.isUndoAvailable
 
@@ -152,6 +155,10 @@ open class MainActivityPresenter(
     var clippingToolInUseAndUndoRedoClicked = false
     var clippingToolPaint = Paint()
     var toolOptionsViewWasShown = false
+
+    override fun startCreateDocument(intent: Intent, requestCode: Int) {
+        navigator.startCreateDocument(intent, requestCode)
+    }
 
     override fun replaceImageClicked() {
         checkIfClippingToolNeedsAdjustment()
@@ -196,6 +203,7 @@ open class MainActivityPresenter(
 
     override fun saveBeforeNewImage() {
         checkIfClippingToolNeedsAdjustment()
+        pendingSaveRequestCode = SAVE_IMAGE_NEW_EMPTY
         navigator.showSaveImageInformationDialogWhenStandalone(
             PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY,
             imageNumber,
@@ -235,11 +243,26 @@ open class MainActivityPresenter(
     }
 
     override fun saveImageClicked() {
-        navigator.showSaveImageInformationDialogWhenStandalone(
-            PERMISSION_EXTERNAL_STORAGE_SAVE,
-            imageNumber,
-            false
-        )
+        prepareFileIOForExistingUri(model.savedPictureUri)
+        navigator.showSaveInformationDialog(imageNumber, model.isOpenedFromCatroid)
+    }
+
+    private fun prepareFileIOForExistingUri(uri: Uri?) {
+        uri?.let { FileIO.parseFileName(it, view.myContentResolver) }
+
+        if (model.isOpenedFromCatroid) {
+            val nameFromUri = uri?.let(::getFileName)
+            FileIO.filename = nameFromUri ?: "image$imageNumber"
+            if (nameFromUri?.endsWith(FileIO.FileType.JPG.value, true) == true ||
+                nameFromUri?.endsWith("jpeg", true) == true
+            ) {
+                FileIO.compressFormat = Bitmap.CompressFormat.JPEG
+                FileIO.fileType = FileIO.FileType.JPG
+            } else {
+                FileIO.compressFormat = Bitmap.CompressFormat.PNG
+                FileIO.fileType = FileIO.FileType.PNG
+            }
+        }
     }
 
     override fun shareImageClicked() {
@@ -299,10 +322,6 @@ open class MainActivityPresenter(
 
     override fun showFeedbackDialog() {
         navigator.showFeedbackDialog()
-    }
-
-    override fun showOverwriteDialog(permissionCode: Int, isExport: Boolean) {
-        navigator.showOverwriteDialog(permissionCode, isExport)
     }
 
     override fun showPngInformationDialog() {
@@ -445,6 +464,17 @@ open class MainActivityPresenter(
         data: Intent?
     ) {
         val imageUri = data?.data
+
+        if (requestCode == REQUEST_CODE_CREATE_DOCUMENT) {
+            if (resultCode == Activity.RESULT_OK) {
+                val uri = data?.data
+                val saveCode = pendingSaveRequestCode ?: SAVE_IMAGE_DEFAULT
+                pendingSaveRequestCode = null
+                saveImageConfirmClicked(saveCode, uri)
+            }
+            return
+        }
+
         when (requestCode) {
             REQUEST_CODE_IMPORT_PNG -> {
                 if (resultCode != Activity.RESULT_OK) {
@@ -489,74 +519,37 @@ open class MainActivityPresenter(
         permissions: Array<String>,
         grantResults: IntArray
     ) {
-        if (permissions.size == 1 && (permissions[0] == Manifest.permission.READ_EXTERNAL_STORAGE ||
-                        permissions[0] == Manifest.permission.WRITE_EXTERNAL_STORAGE ||
-                        permissions[0] == Manifest.permission.READ_MEDIA_IMAGES)) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                when (requestCode) {
-                    PERMISSION_EXTERNAL_STORAGE_SAVE -> {
-                        saveImageConfirmClicked(
-                            SAVE_IMAGE_DEFAULT,
-                            FileIO.storeImageUri
-                        )
-                        checkForDefaultFilename()
-                        showLikeUsDialogIfFirstTimeSave()
+        when (requestCode) {
+            PERMISSION_REQUEST_CODE_REPLACE_PICTURE ->
+                if (grantResults.firstOrNull() == PackageManager.PERMISSION_GRANTED) {
+                    if (isImageUnchanged || model.isSaved) {
+                        navigator.startLoadImageActivity(REQUEST_CODE_LOAD_PICTURE)
+                    } else {
+                        navigator.showSaveBeforeLoadImageDialog()
                     }
-                    PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH -> {
-                        saveImageConfirmClicked(
-                            SAVE_IMAGE_FINISH,
-                            FileIO.storeImageUri
-                        )
-                        checkForDefaultFilename()
-                    }
-                    PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW -> {
-                        saveImageConfirmClicked(
-                            SAVE_IMAGE_LOAD_NEW,
-                            FileIO.storeImageUri
-                        )
-                        checkForDefaultFilename()
-                    }
-                    PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY -> {
-                        saveImageConfirmClicked(
-                            SAVE_IMAGE_NEW_EMPTY,
-                            FileIO.storeImageUri
-                        )
-                        checkForDefaultFilename()
-                    }
-                    PERMISSION_EXTERNAL_STORAGE_SAVE_COPY -> {
-                        saveCopyConfirmClicked(
-                            SAVE_IMAGE_DEFAULT,
-                            FileIO.storeImageUri
-                        )
-                        checkForDefaultFilename()
-                    }
-                    PERMISSION_REQUEST_CODE_REPLACE_PICTURE ->
-                        if (isImageUnchanged || model.isSaved) {
-                            navigator.startLoadImageActivity(REQUEST_CODE_LOAD_PICTURE)
-                        } else {
-                            navigator.showSaveBeforeLoadImageDialog()
-                        }
-                    PERMISSION_REQUEST_CODE_IMPORT_PICTURE -> navigator.startImportImageActivity(
-                        REQUEST_CODE_IMPORT_PNG
-                    )
-                    else -> view.superHandleRequestPermissionsResult(
-                        requestCode,
-                        permissions,
-                        grantResults
-                    )
-                }
-            } else {
-                if (navigator.isPermissionPermanentlyDenied(permissions)) {
-                    navigator.showRequestPermanentlyDeniedPermissionRationaleDialog()
                 } else {
-                    navigator.showRequestPermissionRationaleDialog(
-                        PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
-                        permissions, requestCode
-                    )
+                    showPermissionRationaleOrDenied(permissions)
                 }
-            }
+            PERMISSION_REQUEST_CODE_IMPORT_PICTURE ->
+                if (grantResults.firstOrNull() == PackageManager.PERMISSION_GRANTED) {
+                    navigator.startImportImageActivity(REQUEST_CODE_IMPORT_PNG)
+                } else {
+                    showPermissionRationaleOrDenied(permissions)
+                }
+            else ->
+                view.superHandleRequestPermissionsResult(requestCode, permissions, grantResults)
+        }
+    }
+
+    private fun showPermissionRationaleOrDenied(permissions: Array<String>) {
+        if (navigator.isPermissionPermanentlyDenied(permissions)) {
+            navigator.showRequestPermanentlyDeniedPermissionRationaleDialog()
         } else {
-            view.superHandleRequestPermissionsResult(requestCode, permissions, grantResults)
+            navigator.showRequestPermissionRationaleDialog(
+                PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
+                permissions,
+                PERMISSION_REQUEST_CODE_REPLACE_PICTURE
+            )
         }
     }
 
@@ -1012,18 +1005,19 @@ open class MainActivityPresenter(
             if (model.isOpenedFromCatroid && !isExport) {
                 navigator.showToast(R.string.saved, Toast.LENGTH_LONG)
             } else {
-                var msg: String? = context.getString(R.string.saved_to)
-                fileActivity?.let {
-                    msg += getPathFromUri(it, uri)
-                }
-                navigator.showToast(msg ?: "null", Toast.LENGTH_LONG)
+                val name = uri.displayNameOrFallback(contentResolver)
+                val msg = context.getString(R.string.saved_to) + name
+                navigator.showToast(msg, Toast.LENGTH_LONG)
             }
+            showLikeUsDialogIfFirstTimeSave()
+
             model.savedPictureUri = uri
             model.isSaved = true
         }
         if (!model.isOpenedFromCatroid || saveAsCopy) {
             navigator.broadcastAddPictureToGallery(uri)
         }
+
         when (requestCode) {
             SAVE_IMAGE_NEW_EMPTY -> onNewImage()
             SAVE_IMAGE_DEFAULT -> {
@@ -1210,6 +1204,22 @@ open class MainActivityPresenter(
                 return uri.path.toString()
             }
             return ""
+        }
+
+        private fun Uri.displayNameOrFallback(resolver: ContentResolver?): String {
+            val fallback = lastPathSegment.orEmpty()
+            if (resolver == null) return fallback
+            return try {
+                resolver.query(this, null, null, null, null)?.use { cursor ->
+                    val idx = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+                    if (idx >= 0 && cursor.moveToFirst()) {
+                        return cursor.getString(idx)
+                    }
+                }
+                fallback
+            } catch (_: Exception) {
+                fallback
+            }
         }
 
         @SuppressWarnings("SwallowedException")

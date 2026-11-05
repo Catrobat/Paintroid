@@ -35,6 +35,7 @@ const val CREATE_FILE_DEFAULT = 1
 const val REQUEST_CODE_IMPORT_PNG = 1
 const val REQUEST_CODE_LOAD_PICTURE = 2
 const val REQUEST_CODE_INTRO = 3
+const val REQUEST_CODE_CREATE_DOCUMENT = 4
 
 const val PERMISSION_EXTERNAL_STORAGE_SAVE = 1
 const val PERMISSION_EXTERNAL_STORAGE_SAVE_COPY = 2
@@ -71,7 +72,8 @@ class MainActivityConstants private constructor() {
     @IntDef(
         REQUEST_CODE_IMPORT_PNG,
         REQUEST_CODE_LOAD_PICTURE,
-        REQUEST_CODE_INTRO
+        REQUEST_CODE_INTRO,
+        REQUEST_CODE_CREATE_DOCUMENT
     )
     @Retention(AnnotationRetention.SOURCE)
     annotation class ActivityRequestCode

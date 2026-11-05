@@ -71,7 +71,6 @@ class TopBarViewHolder(val layout: ViewGroup) : MainActivityContracts.TopBarView
     override fun removeStandaloneMenuItems(menu: Menu?) {
         menu?.apply {
             removeItem(R.id.pocketpaint_options_save_image)
-            removeItem(R.id.pocketpaint_options_save_duplicate)
             removeItem(R.id.pocketpaint_options_new_image)
             removeItem(R.id.pocketpaint_options_rate_us)
         }

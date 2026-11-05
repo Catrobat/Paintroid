@@ -46,6 +46,10 @@ interface MainActivityContracts {
         val isSdkAboveOrEqualQ: Boolean
         val isSdkAboveOrEqualT: Boolean
 
+        fun startCreateDocument(intent: Intent, @ActivityRequestCode requestCode: Int)
+
+        fun showSaveInformationDialog(imageNumber: Int, isCatroid: Boolean)
+
         fun showColorPickerDialog()
 
         fun startLoadImageActivity(@ActivityRequestCode requestCode: Int)
@@ -63,8 +67,6 @@ interface MainActivityContracts {
         fun showZoomWindowSettingsDialog(sharedPreferences: UserPreferences)
 
         fun showAdvancedSettingsDialog()
-
-        fun showOverwriteDialog(permissionCode: Int, isExport: Boolean)
 
         fun showPngInformationDialog()
 
@@ -139,6 +141,8 @@ interface MainActivityContracts {
         fun showScaleImageRequestDialog(uri: Uri?, requestCode: Int)
 
         fun setMaskFilterToNull()
+
+        fun startCreateDocumentIntent(intent: Intent, @ActivityRequestCode requestCode: Int)
     }
 
     interface MainView {
@@ -227,8 +231,6 @@ interface MainActivityContracts {
 
         fun showFeedbackDialog()
 
-        fun showOverwriteDialog(permissionCode: Int, isExport: Boolean)
-
         fun showPngInformationDialog()
 
         fun showJpgInformationDialog()
@@ -308,6 +310,8 @@ interface MainActivityContracts {
         fun checkForTemporaryFile(): Boolean
 
         fun setColorHistoryAfterLoadImage(colorHistory: ColorHistory?)
+
+        fun startCreateDocument(intent: Intent, @ActivityRequestCode requestCode: Int)
     }
 
     interface Model {
