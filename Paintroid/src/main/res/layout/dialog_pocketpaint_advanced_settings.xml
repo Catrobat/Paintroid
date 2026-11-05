@@ -45,4 +45,16 @@
         android:textColor="@color/design_default_color_on_secondary"
         android:theme="@style/CustomSwitchTheme" />
 
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="16dp" />
+
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/pocketpaint_auto_save"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:checked="false"
+        android:text="@string/dialog_auto_save"
+        android:textColor="@color/design_default_color_on_secondary"
+        android:theme="@style/CustomSwitchTheme" />
 </LinearLayout>

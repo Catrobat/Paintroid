@@ -167,6 +167,7 @@
 
     <string name="dialog_antialiasing">Antialiasing</string>
     <string name="dialog_smoothing">Smoothing</string>
+    <string name="dialog_auto_save" translatable="false">Auto-save</string>
 
     <string name="dialog_zoom_window_enabled">Enabled</string>
     <string name="dialog_zoom_window_from_size" translatable="false">100</string>

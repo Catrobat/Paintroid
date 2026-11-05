@@ -73,14 +73,17 @@ class DefaultToolController(
         } else if (toolType != ToolType.CLIP) {
             toolOptionsViewController.removeToolViews()
         }
-        if (toolList.contains(toolType)) {
+
+        if (toolsThatUseCheckmark.contains(toolType)) {
             toolOptionsViewController.showCheckmark()
         } else {
             toolOptionsViewController.hideCheckmark()
         }
+
         if (toolReference.tool?.toolType == ToolType.SPRAY) {
             (currentTool as SprayTool).resetRadiusToStrokeWidth()
         }
+
         val tool: Tool = toolFactory.createTool(
             toolType,
             toolOptionsViewController,
