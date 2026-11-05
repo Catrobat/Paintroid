@@ -30,6 +30,7 @@ class DefaultClipboardToolOptionsView(rootView: ViewGroup) : ClipboardToolOption
     private val pasteChip: Chip
     private val copyChip: Chip
     private val cutChip: Chip
+    private val clearChip: Chip
     private val shapeSizeChip: Chip
     private val changeSizeShapeSizeChip: Chip
     private val clipboardToolOptionsView: View
@@ -48,6 +49,10 @@ class DefaultClipboardToolOptionsView(rootView: ViewGroup) : ClipboardToolOption
 
         pasteChip.setOnClickListener {
             callback?.pasteClicked()
+        }
+
+        clearChip.setOnClickListener {
+            callback?.clearClicked()
         }
     }
 
@@ -81,8 +86,9 @@ class DefaultClipboardToolOptionsView(rootView: ViewGroup) : ClipboardToolOption
         val stampToolOptionsView: View =
             inflater.inflate(R.layout.dialog_pocketpaint_clipboard_tool, rootView)
         copyChip = stampToolOptionsView.findViewById(R.id.action_copy)
-        pasteChip = stampToolOptionsView.findViewById(R.id.action_paste)
         cutChip = stampToolOptionsView.findViewById(R.id.action_cut)
+        pasteChip = stampToolOptionsView.findViewById(R.id.action_paste)
+        clearChip = stampToolOptionsView.findViewById(R.id.action_clear)
         enablePaste(false)
         initializeListeners()
         stampToolOptionsView.run {

@@ -93,6 +93,10 @@ class ClipboardTool(
                 highlightBox()
                 pasteBoxContent()
             }
+
+            override fun clearClicked() {
+                clearClipboardContent()
+            }
         }
         clipboardToolOptionsView.setCallback(callback)
         toolOptionsViewController.showDelayed()
@@ -137,6 +141,13 @@ class ClipboardTool(
         val command =
             commandFactory.createCutCommand(toolPosition, boxWidth, boxHeight, boxRotation)
         commandManager.addCommand(command)
+    }
+
+    private fun clearClipboardContent() {
+        drawingBitmap?.recycle()
+        drawingBitmap = null
+        readyForPaste = false
+        clipboardToolOptionsView.enablePaste(false)
     }
 
     override fun onClickOnButton() {

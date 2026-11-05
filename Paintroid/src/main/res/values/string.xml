@@ -50,6 +50,7 @@
     <string name="clipboard_tool_paste">Paste</string>
     <string name="clipboard_tool_copy">Copy</string>
     <string name="clipboard_tool_cut">Cut</string>
+    <string name="clipboard_tool_clear">Clear</string>
 
     <string name="stickers">Stickers</string>
     <string name="dialog_import_image_title" translatable="false">@string/button_import_image</string>

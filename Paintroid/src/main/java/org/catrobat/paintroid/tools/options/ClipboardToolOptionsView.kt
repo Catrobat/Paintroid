@@ -37,5 +37,7 @@ interface ClipboardToolOptionsView {
         fun cutClicked()
 
         fun pasteClicked()
+
+        fun clearClicked()
     }
 }
