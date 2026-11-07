@@ -2,6 +2,9 @@
 
 package org.catrobat.paintroid.test.espresso.intro
 
+import android.graphics.Rect
+import android.view.View
+import androidx.core.view.ViewCompat
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions
@@ -29,6 +32,28 @@ class IntroIntegrationTest {
     @JvmField
     @Rule
     var screenshotOnFailRule = ScreenshotOnFailRule()
+
+    @Test
+    fun testNavigationButtonsStayAboveSystemNavigationBar() {
+        onView(withId(R.id.pocketpaint_btn_next)).check { view, error ->
+            if (error != null) throw error
+            val insets = ViewCompat.getRootWindowInsets(view)
+            Assert.assertNotNull("Window insets must be available", insets)
+            val decor = activityTestRule.activity.window.decorView
+            val decorLocation = IntArray(2)
+            decor.getLocationOnScreen(decorLocation)
+            val navigationTop = decorLocation[1] + decor.height - insets!!.systemWindowInsetBottom
+            for (id in intArrayOf(R.id.pocketpaint_btn_next, R.id.pocketpaint_btn_skip)) {
+                val button = activityTestRule.activity.findViewById<View>(id)
+                val bounds = Rect()
+                Assert.assertTrue(button.getGlobalVisibleRect(bounds))
+                Assert.assertTrue(
+                    "Tutorial button overlaps system navigation: $bounds, navigation top $navigationTop",
+                    bounds.bottom <= navigationTop
+                )
+            }
+        }
+    }
 
     @Test
     fun testIntroWelcomePage() {
