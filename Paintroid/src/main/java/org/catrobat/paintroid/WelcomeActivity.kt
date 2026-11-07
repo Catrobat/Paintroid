@@ -32,6 +32,7 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -176,6 +177,7 @@ class WelcomeActivity : AppCompatActivity() {
         }
 
         setContentView(R.layout.activity_pocketpaint_welcome)
+        applyNavigationBarInsets()
         viewPager = findViewById(R.id.pocketpaint_view_pager)
         dotsLayout = findViewById(R.id.pocketpaint_layout_dots)
         btnSkip = findViewById(R.id.pocketpaint_btn_skip)
@@ -206,6 +208,25 @@ class WelcomeActivity : AppCompatActivity() {
                 viewPager.currentItem = current
             }
         }
+    }
+
+    private fun applyNavigationBarInsets() {
+        val root = findViewById<View>(R.id.pocketpaint_welcome_root)
+        val left = root.paddingLeft
+        val top = root.paddingTop
+        val right = root.paddingRight
+        val bottom = root.paddingBottom
+        // Keep the tutorial controls above system navigation, including when hosted by Catroid.
+        ViewCompat.setOnApplyWindowInsetsListener(root) { view, insets ->
+            view.setPadding(
+                left + insets.systemWindowInsetLeft,
+                top,
+                right + insets.systemWindowInsetRight,
+                bottom + insets.systemWindowInsetBottom
+            )
+            insets
+        }
+        ViewCompat.requestApplyInsets(root)
     }
 
     private fun initViewPager() {
