@@ -35,7 +35,6 @@ import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.core.content.FileProvider
 import androidx.exifinterface.media.ExifInterface
 import id.zelory.compressor.Compressor
@@ -282,25 +281,18 @@ object FileIO {
         resolver: ContentResolver,
         uri: Uri,
         options: BitmapFactory.Options,
-        context: Context?
+        @Suppress("UNUSED_PARAMETER") context: Context?
     ): Bitmap? {
         val inputStream =
             resolver.openInputStream(uri) ?: throw IOException("Can't open input stream")
-        return inputStream.use {
-            val bitmap = BitmapFactory.decodeStream(it, null, options)
-            if (options.inJustDecodeBounds) {
-                return bitmap
-            }
-            val angle = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                getBitmapOrientationFromInputStream(resolver, uri)
-            } else {
-                getBitmapOrientationFromUri(uri, context)
-            }
-            getOrientedBitmap(bitmap, angle)
+        val bitmap = inputStream.use { BitmapFactory.decodeStream(it, null, options) }
+        if (options.inJustDecodeBounds) {
+            return bitmap
         }
+        val angle = getBitmapOrientationFromInputStream(resolver, uri)
+        return getOrientedBitmap(bitmap, angle)
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     @Throws(IOException::class)
     private fun getBitmapOrientationFromInputStream(
         resolver: ContentResolver,
@@ -311,14 +303,6 @@ object FileIO {
             val exifInterface = ExifInterface(it)
             getBitmapOrientation(exifInterface)
         }
-    }
-
-    @Throws(IOException::class)
-    private fun getBitmapOrientationFromUri(uri: Uri, context: Context?): Float {
-        val exifInterface = context?.let {
-            ExifInterface(MainActivityPresenter.getPathFromUri(it, uri))
-        }
-        return getBitmapOrientation(exifInterface)
     }
 
     @JvmStatic
