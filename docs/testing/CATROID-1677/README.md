@@ -1,6 +1,6 @@
 # CATROID-1677: Paintroid tutorial navigation
 
-Validated on 2026-11-07. Existing Jira ticket: https://catrobat.atlassian.net/browse/CATROID-1677
+Emulator validation on 2026-11-07; BrowserStack validation on 2026-11-08. Existing Jira ticket: https://catrobat.atlassian.net/browse/CATROID-1677
 
 ## Change
 
@@ -60,4 +60,32 @@ On API 35 with three-button navigation, both tutorial buttons occupy y=2169..227
 
 ## Android 14 compatibility attempt
 
-The existing API 34 AVD repeatedly lost test-window focus to unrelated launcher and System UI ANR dialogs. A clean disposable API 34 AVD also failed to become usable during this session (ADB stayed offline). These attempts do not establish a pass or a Paintroid regression on Android 14. API 34 compatibility remains unverified; only the API 35 results above are claimed.
+The existing API 34 AVD repeatedly lost test-window focus to unrelated launcher and System UI ANR dialogs. A clean disposable API 34 AVD also failed to become usable during this session (ADB stayed offline). These attempts do not establish a pass or a Paintroid regression on Android 14. The API 34 automated suite remains unverified. The subsequent manual BrowserStack checks below establish narrower Android 14 compatibility coverage.
+
+## BrowserStack real-device verification (2026-11-08)
+
+Manually tested the fixed standalone Pocket Paint debug APK in BrowserStack App Live. Build source: this branch at c0b5a4f5539ea55a7bb585b14e1436e0a9384620, including the production fix at b422d19079ca19c89f7ce98b0873a812f6e34adb. The documentation-only changes following that build do not alter the APK.
+
+APK: app-debug.apk, version 2.14.0. SHA-256: B30C2EAB8515CE6E2E8870D2ACE271E7F991BF88C721A5DA074760D76F55E68D.
+
+Opened the tutorial through the editor's overflow menu > Help because the debug build does not automatically show the first-install tutorial. Tapped the actual tutorial controls through the remote device screen and verified the resulting pages.
+
+| Real device | Android | Navigation | Manual result |
+| --- | --- | --- | --- |
+| Google Pixel 8 | 14 | Gesture | PASS: Next advances through every tutorial page; Let's go closes the tutorial and returns to the editor. Skip was not exercised on this device. |
+| Samsung Galaxy S22 | 12 | Three-button | PASS: Next advances from Welcome to More possibilities; Skip closes the tutorial and returns to the editor. Both controls stay above the system navigation bar. The final-page action was not exercised on this device. |
+| Samsung Galaxy S26 Ultra (marked New in the device selector) | 16 | Three-button | PASS: Next advances from Welcome to More possibilities; Skip closes the tutorial and returns to the editor. Both controls stay above system navigation. The final-page action was not exercised on this device. |
+
+These are manual standalone compatibility checks, not reruns of the instrumentation suite. Embedded Catroid was tested in the API 35 emulator as described above; it was not tested on BrowserStack. All three remote device sessions were stopped after testing.
+
+| Pixel 8 / Android 14: welcome | Pixel 8 / Android 14: final page |
+| --- | --- |
+| ![Pixel 8 welcome](browserstack-pixel8-android14-welcome.png) | ![Pixel 8 final page](browserstack-pixel8-android14-final.png) |
+
+| Galaxy S22 / Android 12: welcome | Galaxy S22 / Android 12: Next works | Galaxy S22 / Android 12: editor after Skip |
+| --- | --- | --- |
+| ![S22 welcome](browserstack-s22-android12-welcome.png) | ![S22 after Next](browserstack-s22-android12-next.png) | ![S22 after Skip](browserstack-s22-android12-skip.png) |
+
+| Galaxy S26 Ultra / Android 16: welcome | Galaxy S26 Ultra / Android 16: Next works | Galaxy S26 Ultra / Android 16: editor after Skip |
+| --- | --- | --- |
+| ![S26 Ultra welcome](browserstack-s26ultra-android16-welcome.png) | ![S26 Ultra after Next](browserstack-s26ultra-android16-next.png) | ![S26 Ultra after Skip](browserstack-s26ultra-android16-skip.png) |
